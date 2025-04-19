@@ -1,4 +1,5 @@
 import * as THREE from "three";
+import { COLORS } from "../Node";
 
 /**
  * SimpleMode component - Renders node as a simple white sphere
@@ -21,10 +22,28 @@ export class SimpleMode {
       size = 2;
     }
 
-    // Création d'une sphère blanche simple
+    // Déterminer la couleur du nœud en fonction de son type et de son groupe thématique
+    let nodeColor = "white";
+
+    if (this.node.id === "central_joshua") {
+      nodeColor = COLORS.centralJoshua;
+    } else if (this.node.isJoshua) {
+      nodeColor = COLORS.joshua;
+    } else if (this.node.type === "source" || this.node.type === "platform") {
+      nodeColor = COLORS.source;
+    } else if (this.node.type === "character" && this.node.thematicGroup) {
+      // Utiliser la couleur du groupe thématique si disponible
+      nodeColor =
+        COLORS.thematicGroups[this.node.thematicGroup] ||
+        COLORS.thematicGroups.default;
+    } else if (this.node.type === "character") {
+      nodeColor = COLORS.character;
+    }
+
+    // Création d'une sphère avec la couleur appropriée
     const geometry = new THREE.SphereGeometry(size, 16, 16);
     const material = new THREE.MeshBasicMaterial({
-      color: new THREE.Color("white"),
+      color: new THREE.Color(nodeColor),
       transparent: true,
     });
 

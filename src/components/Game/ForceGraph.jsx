@@ -16,6 +16,7 @@ import {
 } from "./utils/nodeUtils";
 import { Html } from "@react-three/drei";
 import * as d3 from "d3";
+import { COLORS } from "./Node/Node";
 
 // Contexte pour l'affichage d'informations UI (simplifié)
 export const ForceGraphContext = createContext(null);
@@ -498,13 +499,6 @@ const ForceGraphComponent = forwardRef((props, ref) => {
     };
   }, [dataIsReady]);
 
-  // Définition des couleurs pour une référence constante
-  const COLORS = {
-    joshua: "#FF5733", // orange foncé pour Joshua
-    character: "#3498DB", // bleu pour les personnages
-    source: "#2ECC71", // vert pour les sources/plateformes
-  };
-
   // Déterminer les connexions pour chaque nœud
   const getNodeConnections = useCallback(() => {
     if (!displayData || !displayData.nodes || !displayData.links) return {};
@@ -581,9 +575,22 @@ const ForceGraphComponent = forwardRef((props, ref) => {
         // Utiliser notre propre positionnement initial des nœuds
         nodeVal={(node) => node.value || 1}
         nodeColor={(node) => {
-          // Coloration basée sur le cluster pour distinguer les mini-graphes
+          // Coloration basée sur le groupe thématique pour les personnages
           if (node.color) return node.color;
 
+          if (node.isJoshua) {
+            return COLORS.joshua;
+          } else if (node.type === "platform" || node.type === "source") {
+            return COLORS.source;
+          } else if (node.type === "character" && node.thematicGroup) {
+            // Utiliser la palette de couleurs pour les groupes thématiques
+            return (
+              COLORS.thematicGroups[node.thematicGroup] ||
+              COLORS.thematicGroups.default
+            );
+          }
+
+          // Fallback aux couleurs par cluster pour les autres nœuds
           const clusterColors = [
             "#e41a1c", // rouge
             "#377eb8", // bleu
@@ -601,17 +608,29 @@ const ForceGraphComponent = forwardRef((props, ref) => {
             return clusterColors[node.cluster % clusterColors.length];
           }
 
-          return node.isJoshua
-            ? COLORS.joshua
-            : node.type === "platform"
-            ? COLORS.source
-            : COLORS.character;
+          return COLORS.character;
         }}
         linkColor={(link) => {
-          // Utiliser la couleur du nœud source pour le lien
-          const sourceNode = displayData.nodes.find(
-            (n) => n.id === link.source
-          );
+          // Utiliser la couleur du nœud source pour le lien, en privilégiant le groupe thématique
+          const sourceId =
+            typeof link.source === "object" ? link.source.id : link.source;
+          const targetId =
+            typeof link.target === "object" ? link.target.id : link.target;
+
+          const sourceNode = displayData.nodes.find((n) => n.id === sourceId);
+          const targetNode = displayData.nodes.find((n) => n.id === targetId);
+
+          if (!sourceNode) return "#aaaaaa";
+
+          // Si le nœud source est un personnage avec un groupe thématique, utiliser cette couleur
+          if (sourceNode.type === "character" && sourceNode.thematicGroup) {
+            return (
+              COLORS.thematicGroups[sourceNode.thematicGroup] ||
+              COLORS.thematicGroups.default
+            );
+          }
+
+          // Fallback aux couleurs par cluster
           if (sourceNode && sourceNode.cluster !== undefined) {
             const clusterColors = [
               "#e41a1c",
@@ -627,6 +646,7 @@ const ForceGraphComponent = forwardRef((props, ref) => {
             ];
             return clusterColors[sourceNode.cluster % clusterColors.length];
           }
+
           return "#aaaaaa";
         }}
         nodeAutoColorBy="cluster" // Coloration automatique par cluster

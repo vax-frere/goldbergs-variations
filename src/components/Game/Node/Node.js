@@ -13,6 +13,21 @@ export const COLORS = {
   background: "#000119",
   centralJoshua: "#FF6700",
   fbi: "#FFD700",
+  // Couleurs pour les groupes thématiques
+  thematicGroups: {
+    politics: "#8e44ad", // Violet
+    entertainment: "#3498db", // Bleu
+    science: "#2ecc71", // Vert
+    business: "#f39c12", // Orange
+    sports: "#e74c3c", // Rouge
+    technology: "#1abc9c", // Turquoise
+    health: "#d35400", // Orange foncé
+    education: "#27ae60", // Vert foncé
+    media: "#c0392b", // Rouge foncé
+    religion: "#f1c40f", // Jaune
+    military: "#7f8c8d", // Gris
+    default: "#ecf0f1", // Blanc cassé (pour les groupes non définis)
+  },
 };
 
 /**
