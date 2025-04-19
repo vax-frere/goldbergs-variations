@@ -21,33 +21,37 @@ const Home = () => {
             Goldberg's Variations
           </Typography>
 
-          <Typography variant="body1" paragraph>
-            Une expérience interactive inspirée des Variations Goldberg de
-            Johann Sebastian Bach. Explorez la musique et les motifs à travers
-            une interface ludique et visuelle.
+          <Typography
+            variant="h4"
+            component="h2"
+            gutterBottom
+            sx={{
+              fontStyle: "italic",
+              opacity: 0.9,
+              mb: 3,
+            }}
+          >
+            A journey inside Joshua's Thought Loop
+          </Typography>
+
+          <Typography variant="body1" paragraph sx={{ lineHeight: 1.7 }}>
+            From an archive of over 40,000 posts accumulated between 2006 and
+            2015, across twenty-hour days spent online, this work unfolds a
+            narrative galaxy of extremist, whimsical, or impersonated
+            characters. Inspired by Mark Lombardi's narrative structures, this
+            interactive data visualization maps his political obsessions, geek
+            culture, and solipsistic visions of a world experienced as a
+            simulation. This immersive installation creates a simulation of his
+            fragmented mind, revealing the project of a digital "Joker"
+            confronting the Internet with its own contradictions.
           </Typography>
 
           <Button
-            variant="contained"
             size="large"
             onClick={() => navigate("/controls")}
-            sx={{
-              mt: 2,
-              px: 4,
-              py: 1.5,
-              borderRadius: 2,
-              fontSize: "1.2rem",
-              fontWeight: "bold",
-              textTransform: "none",
-              boxShadow: "0 4px 20px rgba(0, 0, 0, 0.25)",
-              "&:hover": {
-                transform: "translateY(-2px)",
-                boxShadow: "0 6px 25px rgba(0, 0, 0, 0.3)",
-              },
-              transition: "all 0.2s ease-in-out",
-            }}
+            sx={{ mt: 3 }}
           >
-            Commencer
+            Enter
           </Button>
         </Box>
       </Container>

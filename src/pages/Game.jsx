@@ -134,22 +134,15 @@ const Game = () => {
             }}
           >
             <Button
-              variant="contained"
               onClick={() => navigate("/")}
               sx={{
-                px: 4,
-                py: 1.5,
-                borderRadius: 2,
-                fontSize: "1.2rem",
-                fontWeight: "bold",
-                textTransform: "none",
                 backgroundColor: "rgba(0, 0, 0, 0.6)",
                 "&:hover": {
                   backgroundColor: "rgba(0, 0, 0, 0.8)",
                 },
               }}
             >
-              Retour à l'accueil
+              Return Home
             </Button>
 
             <Button
@@ -162,7 +155,7 @@ const Game = () => {
                 },
               }}
             >
-              Masquer l'interface
+              Hide Interface
             </Button>
           </Box>
         )}
@@ -182,7 +175,7 @@ const Game = () => {
               },
             }}
           >
-            Afficher l'interface
+            Show Interface
           </Button>
         )}
       </Box>

@@ -34,7 +34,7 @@ const Controls = () => {
           }}
         >
           <Typography variant="h2" component="h1" gutterBottom>
-            Contrôles
+            Controls
           </Typography>
 
           <Box sx={{ my: 4 }}>
@@ -42,32 +42,15 @@ const Controls = () => {
           </Box>
 
           <Typography variant="body1" paragraph>
-            Les Variations Goldberg sont une œuvre composée de 30 variations sur
-            un aria. Préparez-vous à explorer l'univers de Bach à travers cette
-            expérience interactive.
+            Navigate through Joshua's mind by exploring the interconnected nodes
+            of his digital consciousness. This visualization maps the patterns
+            and relationships between his online personas and obsessions.
+            Prepare yourself for a journey through a labyrinthine data structure
+            of thought patterns.
           </Typography>
 
-          <Button
-            variant="contained"
-            size="large"
-            onClick={() => navigate("/game")}
-            sx={{
-              mt: 2,
-              px: 4,
-              py: 1.5,
-              borderRadius: 2,
-              fontSize: "1.2rem",
-              fontWeight: "bold",
-              textTransform: "none",
-              boxShadow: "0 4px 20px rgba(0, 0, 0, 0.25)",
-              "&:hover": {
-                transform: "translateY(-2px)",
-                boxShadow: "0 6px 25px rgba(0, 0, 0, 0.3)",
-              },
-              transition: "all 0.2s ease-in-out",
-            }}
-          >
-            Explorer
+          <Button size="large" onClick={() => navigate("/game")} sx={{ mt: 2 }}>
+            Explore
           </Button>
         </Box>
       </Container>
