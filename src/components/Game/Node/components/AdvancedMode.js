@@ -1,9 +1,9 @@
 import * as THREE from "three";
 
 /**
- * IconMode component - Renders node as a SVG icon
+ * AdvancedMode component - Renders node as a SVG icon
  */
-export class IconMode {
+export class AdvancedMode {
   constructor(node) {
     this.node = node;
     this.group = new THREE.Group();

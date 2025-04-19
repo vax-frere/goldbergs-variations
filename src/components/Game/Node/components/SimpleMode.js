@@ -1,9 +1,9 @@
 import * as THREE from "three";
 
 /**
- * StarMode component - Renders node as a simple white sphere
+ * SimpleMode component - Renders node as a simple white sphere
  */
-export class StarMode {
+export class SimpleMode {
   constructor(node) {
     this.node = node;
     this.group = new THREE.Group();

@@ -1,6 +1,6 @@
 import * as THREE from "three";
-import { StarMode } from "./components/StarMode";
-import { IconMode } from "./components/IconMode";
+import { SimpleMode } from "./components/SimpleMode";
+import { AdvancedMode } from "./components/AdvancedMode";
 
 /**
  * Palette de couleurs pour les différents types de nœuds
@@ -19,15 +19,15 @@ export const COLORS = {
  * Modes d'affichage des nœuds
  */
 export const DISPLAY_MODES = {
-  STAR: "star",
-  ICON: "icon",
+  SIMPLE: "simple",
+  ADVANCED: "advanced",
 };
 
 /**
  * Crée un objet THREE.js personnalisé pour représenter un nœud dans le graphe
  */
 export class Node {
-  constructor(node, displayMode = DISPLAY_MODES.STAR) {
+  constructor(node, displayMode = DISPLAY_MODES.SIMPLE) {
     this.node = node;
     this.displayMode = displayMode;
     this.group = new THREE.Group();
@@ -45,10 +45,10 @@ export class Node {
     }
 
     // Créer le nouveau composant de rendu selon le mode choisi
-    if (this.displayMode === DISPLAY_MODES.STAR) {
-      this.renderMode = new StarMode(this.node);
+    if (this.displayMode === DISPLAY_MODES.SIMPLE) {
+      this.renderMode = new SimpleMode(this.node);
     } else {
-      this.renderMode = new IconMode(this.node);
+      this.renderMode = new AdvancedMode(this.node);
     }
 
     // Ajouter le nouveau mesh au groupe
