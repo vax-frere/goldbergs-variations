@@ -134,6 +134,7 @@ export const ForceGraphUI = ({ graphRef, graphData, postsData }) => {
           fictionOrImpersonation: node.fictionOrImpersonation,
           platform: node.platform,
           thematic: node.thematic,
+          thematicGroup: node.thematicGroup,
           career: node.career,
           genre: node.genre,
           polarisation: node.polarisation,

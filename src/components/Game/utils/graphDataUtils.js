@@ -392,6 +392,7 @@ export const buildGraphFromCharacterData = (characterData) => {
       group: character.isJoshua
         ? graphConfig.joshuaGroup
         : graphConfig.characterGroup,
+      thematicGroup: character.thematicGroup,
       isJoshua: character.isJoshua || false,
       // Ajouter le nombre total de posts pour dimensionner le texte
       totalPosts: character.totalPosts || 0,
