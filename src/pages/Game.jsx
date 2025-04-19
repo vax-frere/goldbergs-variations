@@ -12,6 +12,8 @@ import {
 } from "../components/Game/utils/graphDataUtils";
 import ForceGraph from "../components/Game/ForceGraph";
 
+const BASE_LEVEL_SIZE = 750;
+
 const Game = () => {
   const [graphData, setGraphData] = useState({ nodes: [], links: [] });
   const [isLoading, setIsLoading] = useState(true);
@@ -61,10 +63,10 @@ const Game = () => {
         left: 0,
       }}
     >
-      <Canvas style={{ background: "#121212", width: "100%", height: "100%" }}>
+      <Canvas style={{ background: "#000", width: "100%", height: "100%" }}>
         <PerspectiveCamera
           makeDefault
-          position={[0, 0, 500]}
+          position={[0, 0, 1000]}
           near={0.1}
           far={100000}
         />
@@ -93,7 +95,7 @@ const Game = () => {
         <GridReferences
           rotationInterval={20}
           maxRotation={180}
-          circleRadii={[50, 100, 150, 200, 250]}
+          circleRadii={[BASE_LEVEL_SIZE]}
           opacity={0.3}
         />
       </Canvas>
