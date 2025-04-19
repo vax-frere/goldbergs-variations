@@ -69,7 +69,7 @@ const Game = () => {
           enablePan={true}
           enableZoom={true}
           enableRotate={true}
-          autoRotate={true}
+          autoRotate={false}
           autoRotateSpeed={0.5}
         />
 

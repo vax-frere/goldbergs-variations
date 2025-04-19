@@ -6,16 +6,14 @@ import {
   forwardRef,
   useImperativeHandle,
   useCallback,
-  useMemo,
 } from "react";
 import { useThree } from "@react-three/fiber";
 import R3fForceGraph from "r3f-forcegraph";
 import {
-  // createLinkObject,
-  // updateLinkPosition,
+  createNodeObject,
+  createLinkObject,
+  updateLinkPosition,
 } from "./utils/nodeUtils";
-import NodeComponent from "./Node/Node";
-import LinkComponent from "./Link/Link";
 import { Html } from "@react-three/drei";
 import * as d3 from "d3";
 
@@ -469,18 +467,6 @@ const ForceGraphComponent = forwardRef((props, ref) => {
   // Déterminer quelles données afficher (données réelles ou données de secours)
   const displayData = graphError || !graphData ? null : graphData;
 
-  // Créer des copies extensibles des données pour r3f-forcegraph
-  const extensibleDisplayData = useMemo(() => {
-    if (!displayData || !displayData.nodes || !displayData.links) {
-      return { nodes: [], links: [] };
-    }
-    // Créer des copies superficielles des tableaux et des objets à l'intérieur
-    return {
-      nodes: displayData.nodes.map(node => ({ ...node })),
-      links: displayData.links.map(link => ({ ...link }))
-    };
-  }, [displayData]);
-
   // Vérifier si les données sont vraiment disponibles et complètes
   const dataIsReady =
     !isLoadingGraph &&
@@ -575,7 +561,7 @@ const ForceGraphComponent = forwardRef((props, ref) => {
     <ForceGraphContext.Provider value={{}}>
       <R3fForceGraph
         ref={fgRef}
-        graphData={extensibleDisplayData}
+        graphData={displayData}
         nodeLabel="name"
         linkOpacity={0.3}
         showNavInfo={false}
@@ -903,17 +889,38 @@ const ForceGraphComponent = forwardRef((props, ref) => {
             }
           });
         }}
-        nodeThreeObject={(node) => <NodeComponent node={node} />}
+        nodeThreeObject={(node) => createNodeObject(node)}
         linkThreeObject={(link) => {
-          // Find the full source and target node objects
-          const sourceNode = graphData.nodes.find(n => n.id === (typeof link.source === 'object' ? link.source.id : link.source));
-          const targetNode = graphData.nodes.find(n => n.id === (typeof link.target === 'object' ? link.target.id : link.target));
+          // Obtenir les positions réelles des nœuds
+          const sourceNode =
+            graphData.nodes.find((n) => n.id === link.source) || {};
+          const targetNode =
+            graphData.nodes.find((n) => n.id === link.target) || {};
 
-          // If source or target node not found, don't render the link
-          if (!sourceNode || !targetNode) return null;
+          // Créer des positions avec des coordonnées par défaut mais valides
+          const sourcePos = {
+            x: sourceNode.x || 0,
+            y: sourceNode.y || 0,
+            z: sourceNode.z || 0,
+            ...sourceNode, // Conserver les autres propriétés
+          };
 
-          // Pass the link data and the full node objects to the LinkComponent
-          return <LinkComponent link={link} sourceNode={sourceNode} targetNode={targetNode} />;
+          const targetPos = {
+            x: targetNode.x || 0,
+            y: targetNode.y || 0,
+            z: targetNode.z || 0,
+            ...targetNode, // Conserver les autres propriétés
+          };
+
+          // Créer l'objet lien avec les positions des nœuds
+          return createLinkObject(link, sourcePos, targetPos);
+        }}
+        linkPositionUpdate={(linkObj, { start, end }, link) => {
+          // Log pour débogage
+
+          // Mettre à jour la position du lien
+          updateLinkPosition(linkObj, start, end);
+          return true; // Indique que nous avons géré la mise à jour nous-mêmes
         }}
       />
     </ForceGraphContext.Provider>
