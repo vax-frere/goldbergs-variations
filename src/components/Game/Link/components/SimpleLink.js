@@ -1,9 +1,9 @@
 import * as THREE from "three";
 
 /**
- * Classe représentant un lien entre deux nœuds dans le graphe
+ * Classe représentant un lien simple entre deux nœuds dans le graphe
  */
-export class Link {
+export class SimpleLink {
   constructor(link, source, target) {
     this.link = link;
     this.source = source;
