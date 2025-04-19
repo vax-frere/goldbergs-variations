@@ -1,11 +1,13 @@
 /**
  * Utilities for loading and processing graph data
  */
+import { log } from "../../../utils/logger"; // Importer le logger centralisé
 
 /**
  * Configuration globale pour les paramètres du graphe - permet de contrôler les réglages
  */
 export const graphConfig = {
+  // verbose: true, // Supprimé : La verbosité est maintenant gérée par src/utils/logger.js
   // Configuration des clusters
   clusterCount: 20, // Augmenté pour permettre plus de clusters (était 10)
   clusterSpreadFactor: 300, // Facteur pour l'espacement des clusters (était 300)
@@ -51,11 +53,13 @@ const calculateTextSize = (totalPosts) => {
  */
 export const loadGraphData = async (config = {}) => {
   try {
-    console.log("[CHARGEMENT] Début du chargement des données...");
-
     // Fusionner la configuration par défaut avec les paramètres fournis
-    Object.assign(graphConfig, config);
-    console.log("[CONFIG] Configuration actuelle:", graphConfig);
+    // Appliquer toute configuration passée, SAUF 'verbose' qui est global
+    const { verbose, ...restConfig } = config; // Séparer 'verbose' s'il est passé
+    Object.assign(graphConfig, restConfig);
+    log("[CONFIG] Configuration appliquée:", graphConfig); // Utiliser le logger centralisé
+
+    log("[CHARGEMENT] Début du chargement des données..."); // Utiliser le logger centralisé
 
     const response = await fetch("/data/database.data.json");
     if (!response.ok) {
@@ -63,7 +67,7 @@ export const loadGraphData = async (config = {}) => {
     }
 
     const data = await response.json();
-    console.log(
+    log( // Utiliser le logger centralisé
       `[CHARGEMENT] ${data.length} personnages chargés du fichier database.data.json`
     );
 
@@ -86,7 +90,7 @@ export const loadGraphData = async (config = {}) => {
  * @param {Array} links - Tableau des liens du graphe
  */
 export const analyzeGraphClusters = (nodes, links) => {
-  console.log("[ANALYSE CLUSTERS] Début de l'analyse des clusters...");
+  log("[ANALYSE CLUSTERS] Début de l'analyse des clusters..."); // Utiliser le logger centralisé
 
   // Regrouper les nœuds par cluster
   const clusterMap = {};
@@ -173,6 +177,7 @@ export const analyzeGraphClusters = (nodes, links) => {
   });
 
   // Afficher les informations pour chaque cluster
+  log("[ANALYSE CLUSTERS] Détails par cluster:"); // Utiliser le logger centralisé
   Object.values(clusterMap).forEach((cluster) => {
     const originInfo = cluster.origin.isJoshua
       ? `${cluster.origin.name} (Joshua, ${
@@ -180,25 +185,25 @@ export const analyzeGraphClusters = (nodes, links) => {
         } posts)`
       : `${cluster.origin.name} (${cluster.origin.totalPosts || 0} posts)`;
 
-    console.log(`[CLUSTER ${cluster.id}] Origine: ${originInfo}`);
-    console.log(
+    log(`[CLUSTER ${cluster.id}] Origine: ${originInfo}`); // Utiliser le logger centralisé
+    log( // Utiliser le logger centralisé
       `  - Position: (${cluster.offsetX.toFixed(2)}, ${cluster.offsetY.toFixed(
         2
       )}, ${cluster.offsetZ.toFixed(2)})`
     );
-    console.log(
+    log( // Utiliser le logger centralisé
       `  - ${cluster.nodes.length} nœuds (${cluster.characters.length} personnages, ${cluster.platforms.length} plateformes)`
     );
-    console.log(`  - Personnages: ${cluster.characters.join(", ")}`);
-    console.log(`  - Plateformes: ${cluster.platforms.join(", ")}`);
+    log(`  - Personnages: ${cluster.characters.join(", ")}`); // Utiliser le logger centralisé
+    log(`  - Plateformes: ${cluster.platforms.join(", ")}`); // Utiliser le logger centralisé
 
     // Afficher les informations sur les liens
     if (clusterLinks[cluster.id]) {
-      console.log(`  - ${clusterLinks[cluster.id].internal} liens internes`);
+      log(`  - ${clusterLinks[cluster.id].internal} liens internes`); // Utiliser le logger centralisé
 
       const externalLinks = clusterLinks[cluster.id].external;
       if (Object.keys(externalLinks).length > 0) {
-        console.log(
+        log( // Utiliser le logger centralisé
           `  - Liens externes vers: ${Object.entries(externalLinks)
             .map(
               ([targetCluster, count]) => `Cluster ${targetCluster} (${count})`
@@ -206,14 +211,14 @@ export const analyzeGraphClusters = (nodes, links) => {
             .join(", ")}`
         );
       } else {
-        console.log(`  - Aucun lien externe`);
+        log(`  - Aucun lien externe`); // Utiliser le logger centralisé
       }
     }
-    console.log(""); // Ligne vide pour séparer les clusters
+    log(""); // Ligne vide pour séparer les clusters // Utiliser le logger centralisé
   });
 
   // Statistiques globales
-  console.log(
+  log( // Utiliser le logger centralisé
     `[ANALYSE CLUSTERS] ${Object.keys(clusterMap).length} clusters analysés`
   );
 
@@ -222,13 +227,13 @@ export const analyzeGraphClusters = (nodes, links) => {
     (a, b) => b.nodes.length - a.nodes.length
   )[0];
 
-  console.log(
+  log( // Utiliser le logger centralisé
     `[ANALYSE CLUSTERS] Cluster le plus grand: Cluster ${largestCluster.id} (origine: ${largestCluster.origin.name}) avec ${largestCluster.nodes.length} nœuds`
   );
 
   // Créer une visualisation textuelles des clusters
-  console.log("[ANALYSE CLUSTERS] Carte des clusters et leurs origines:");
-  console.log(
+  log("[ANALYSE CLUSTERS] Carte des clusters et leurs origines:"); // Utiliser le logger centralisé
+  log( // Utiliser le logger centralisé
     Object.values(clusterMap)
       .map((cluster) => `  C${cluster.id}: ${cluster.origin.name}`)
       .join("\n")
@@ -243,7 +248,7 @@ export const analyzeGraphClusters = (nodes, links) => {
  * @returns {{nodes: Array, links: Array}} Object containing nodes and links arrays
  */
 export const buildGraphFromCharacterData = (characterData) => {
-  console.log("[CONSTRUCTION] Début de la construction du graphe...");
+  log("[CONSTRUCTION] Début de la construction du graphe..."); // Utiliser le logger centralisé
 
   // Filtrer les personnages qui n'ont ni liens, ni posts, ni sources
   const relevantCharacters = characterData.filter((character) => {
@@ -253,7 +258,7 @@ export const buildGraphFromCharacterData = (characterData) => {
     return hasLinks || hasPosts || hasSources;
   });
 
-  console.log(
+  log( // Utiliser le logger centralisé
     `[FILTRAGE] ${
       characterData.length - relevantCharacters.length
     } personnages ignorés car sans liens, posts ni sources (${
@@ -299,7 +304,7 @@ export const buildGraphFromCharacterData = (characterData) => {
     // Vérifier si le personnage a un slug
     if (!character.slug) {
       stats.charactersWithoutSlug++;
-      console.log(
+      log( // Utiliser le logger centralisé
         `[ATTENTION] Personnage sans slug ignoré: ${
           character.displayName || "Inconnu"
         }`
@@ -321,7 +326,7 @@ export const buildGraphFromCharacterData = (characterData) => {
       if (shouldStartNewCluster) {
         currentClusterIndex++;
         stats.sequentialClusters++;
-        console.log(
+        log( // Utiliser le logger centralisé
           `[CLUSTER] Création du cluster #${currentClusterIndex} pour "${
             character.displayName || character.slug
           }"`
@@ -355,7 +360,7 @@ export const buildGraphFromCharacterData = (characterData) => {
       clusterPositions[clusterIndex] = { x: offsetX, y: offsetY, z: offsetZ };
     }
 
-    console.log(
+    log( // Utiliser le logger centralisé
       `[PERSONNAGE] Traitement de "${
         character.displayName || character.slug
       }" (Cluster ${clusterIndex})`
@@ -370,7 +375,7 @@ export const buildGraphFromCharacterData = (characterData) => {
     // Si c'est l'origine, l'enregistrer
     if (isClusterOrigin) {
       clusterOrigins[clusterIndex] = characterNodeId;
-      console.log(
+      log( // Utiliser le logger centralisé
         `  - [ORIGINE] Ce personnage est l'origine du cluster ${clusterIndex}`
       );
     }
@@ -411,7 +416,7 @@ export const buildGraphFromCharacterData = (characterData) => {
 
     // 1. Ajouter les plateformes du personnage depuis la clé "sources" (au lieu de "platform")
     if (character.sources && Array.isArray(character.sources)) {
-      console.log(`  - Sources: ${character.sources.join(", ") || "aucune"}`);
+      log(`  - Sources: ${character.sources.join(", ") || "aucune"}`); // Utiliser le logger centralisé
 
       character.sources.forEach((platform) => {
         if (!platform) return;
@@ -423,12 +428,14 @@ export const buildGraphFromCharacterData = (characterData) => {
           // Réutiliser l'ID existant
           platformNodeId = platformNodesInCluster[platform];
           stats.platformsReused++;
-          console.log(`    * Plateforme "${platform}" réutilisée`);
+          log( // Utiliser le logger centralisé
+            `    * Plateforme "${platform}" réutilisée`
+          );
         } else {
           // Créer un ID unique pour ce nœud de plateforme
           platformNodeId = `platform_${platform}_${nodeIdCounter++}`;
           stats.platformsCreated++;
-          console.log(
+          log( // Utiliser le logger centralisé
             `    * Plateforme "${platform}" créée (id: ${platformNodeId})`
           );
 
@@ -467,13 +474,15 @@ export const buildGraphFromCharacterData = (characterData) => {
 
     // 2. Ajouter les liens vers d'autres personnages et leurs plateformes
     if (character.links && Array.isArray(character.links)) {
-      console.log(
+      log( // Utiliser le logger centralisé
         `  - ${character.links.length} liens vers d'autres personnages`
       );
 
       character.links.forEach((link, linkIndex) => {
         if (!link.target) {
-          console.log(`    * Lien #${linkIndex + 1} ignoré: cible manquante`);
+          log( // Utiliser le logger centralisé
+            `    * Lien #${linkIndex + 1} ignoré: cible manquante`
+          );
           return;
         }
 
@@ -483,13 +492,13 @@ export const buildGraphFromCharacterData = (characterData) => {
         );
         if (!targetCharacter) {
           stats.targetsNotFound++;
-          console.log(
+          log( // Utiliser le logger centralisé
             `    * Lien #${linkIndex + 1}: CIBLE NON TROUVÉE "${link.target}"`
           );
           return;
         }
 
-        console.log(
+        log( // Utiliser le logger centralisé
           `    * Lien #${linkIndex + 1} vers "${
             targetCharacter.displayName || link.target
           }"`
@@ -525,7 +534,7 @@ export const buildGraphFromCharacterData = (characterData) => {
 
         // Ajouter les plateformes du personnage cible depuis ses sources
         if (targetCharacter.sources && Array.isArray(targetCharacter.sources)) {
-          console.log(
+          log( // Utiliser le logger centralisé
             `      - Sources de la cible: ${
               targetCharacter.sources.join(", ") || "aucune"
             }`
@@ -545,7 +554,7 @@ export const buildGraphFromCharacterData = (characterData) => {
               // Créer un ID unique pour ce nœud de plateforme
               platformNodeId = `platform_${platform}_${nodeIdCounter++}`;
               stats.platformsCreated++;
-              console.log(
+              log( // Utiliser le logger centralisé
                 `        * Plateforme "${platform}" créée pour la cible`
               );
 
@@ -588,7 +597,7 @@ export const buildGraphFromCharacterData = (characterData) => {
           Array.isArray(link.platforms) &&
           link.platforms.length > 0
         ) {
-          console.log(
+          log( // Utiliser le logger centralisé
             `      - Plateformes intermédiaires: ${link.platforms.join(", ")}`
           );
           stats.platformIntermediaryLinks++;
@@ -655,7 +664,9 @@ export const buildGraphFromCharacterData = (characterData) => {
           });
         } else {
           // S'il n'y a pas de plateformes, créer un lien direct entre les personnages
-          console.log(`      - Lien direct (sans plateforme intermédiaire)`);
+          log( // Utiliser le logger centralisé
+            `      - Lien direct (sans plateforme intermédiaire)`
+          );
           stats.directCharacterLinks++;
 
           allLinks.push({
@@ -670,22 +681,24 @@ export const buildGraphFromCharacterData = (characterData) => {
         }
       });
     } else {
-      console.log(`  - Aucun lien vers d'autres personnages`);
+      log( // Utiliser le logger centralisé
+        `  - Aucun lien vers d'autres personnages`
+      );
     }
   });
 
   // Après avoir créé tous les nœuds, s'assurer que chaque cluster utilisé a un nœud d'origine défini
-  console.log(
+  log( // Utiliser le logger centralisé
     `[POST-TRAITEMENT] ${usedClusters.size} clusters réellement utilisés dans le graphe`
   );
-  console.log(
+  log( // Utiliser le logger centralisé
     `[POST-TRAITEMENT] Clusters utilisés: ${Array.from(usedClusters)
       .sort((a, b) => a - b)
       .join(", ")}`
   );
 
   if (graphConfig.clusterStrategy === "sequential") {
-    console.log(
+    log( // Utiliser le logger centralisé
       `[POST-TRAITEMENT] ${stats.sequentialClusters} clusters séquentiels créés`
     );
   }
@@ -695,7 +708,7 @@ export const buildGraphFromCharacterData = (characterData) => {
     // Vérifier si ce cluster a une origine
     if (!clusterOrigins[clusterIndex]) {
       stats.clustersWithNoOrigin++;
-      console.log(
+      log( // Utiliser le logger centralisé
         `[CORRECTIF] Cluster ${clusterIndex} n'a pas de nœud d'origine défini`
       );
 
@@ -715,7 +728,7 @@ export const buildGraphFromCharacterData = (characterData) => {
         designatedOrigin.isClusterOrigin = true;
 
         stats.originsDesignated++;
-        console.log(
+        log( // Utiliser le logger centralisé
           `[CORRECTIF] "${designatedOrigin.name}" (${
             designatedOrigin.totalPosts || 0
           } posts) désigné comme origine du cluster ${clusterIndex}`
@@ -724,7 +737,7 @@ export const buildGraphFromCharacterData = (characterData) => {
         // Mettre à jour le registre des origines
         clusterOrigins[clusterIndex] = designatedOrigin.id;
       } else {
-        console.log(
+        log( // Utiliser le logger centralisé
           `[ATTENTION] Impossible de désigner une origine pour le cluster ${clusterIndex}: aucun personnage trouvé`
         );
       }
@@ -732,7 +745,7 @@ export const buildGraphFromCharacterData = (characterData) => {
   });
 
   // Déduplication des personnages au sein de chaque cluster
-  console.log(
+  log( // Utiliser le logger centralisé
     "[POST-TRAITEMENT] Déduplication des personnages au sein de chaque cluster..."
   );
 
@@ -789,7 +802,7 @@ export const buildGraphFromCharacterData = (characterData) => {
             // Mettre à jour le registre des origines
             clusterOrigins[clusterIndex] = existingNodeId;
 
-            console.log(
+            log( // Utiliser le logger centralisé
               `[DÉDUPLICATION] Transféré le statut d'origine du cluster ${clusterIndex} à "${existingNode.name}"`
             );
           }
@@ -825,42 +838,42 @@ export const buildGraphFromCharacterData = (characterData) => {
     allLinks.push(newLink);
   });
 
-  console.log(
+  log( // Utiliser le logger centralisé
     `[POST-TRAITEMENT] ${stats.duplicateCharactersRemoved} personnages dupliqués supprimés`
   );
 
   // Log des statistiques détaillées
-  console.log("[STATISTIQUES]");
-  console.log(
+  log("[STATISTIQUES]"); // Utiliser le logger centralisé
+  log( // Utiliser le logger centralisé
     `  - Personnages sans slug ignorés: ${stats.charactersWithoutSlug}`
   );
-  console.log(`  - Plateformes créées: ${stats.platformsCreated}`);
-  console.log(`  - Plateformes réutilisées: ${stats.platformsReused}`);
-  console.log(
+  log(`  - Plateformes créées: ${stats.platformsCreated}`); // Utiliser le logger centralisé
+  log(`  - Plateformes réutilisées: ${stats.platformsReused}`); // Utiliser le logger centralisé
+  log( // Utiliser le logger centralisé
     `  - Liens directs entre personnages: ${stats.directCharacterLinks}`
   );
-  console.log(
+  log( // Utiliser le logger centralisé
     `  - Liens via plateformes intermédiaires: ${stats.platformIntermediaryLinks}`
   );
-  console.log(`  - Cibles non trouvées: ${stats.targetsNotFound}`);
-  console.log(
+  log(`  - Cibles non trouvées: ${stats.targetsNotFound}`); // Utiliser le logger centralisé
+  log( // Utiliser le logger centralisé
     `  - Clusters sans origine détectés: ${stats.clustersWithNoOrigin}`
   );
-  console.log(
+  log( // Utiliser le logger centralisé
     `  - Origines désignées automatiquement: ${stats.originsDesignated}`
   );
-  console.log(`  - Clusters réellement utilisés: ${usedClusters.size}`);
-  console.log(
+  log(`  - Clusters réellement utilisés: ${usedClusters.size}`); // Utiliser le logger centralisé
+  log( // Utiliser le logger centralisé
     `  - Doublons de personnages supprimés: ${stats.duplicateCharactersRemoved}`
   );
 
-  console.log(
+  log( // Utiliser le logger centralisé
     `[GRAPHE] ${allNodes.length} nœuds (après déduplication) dont ${
       allNodes.filter((n) => n.type === "platform").length
     } plateformes et ${allLinks.length} liens`
   );
 
-  console.log(`[CLUSTERS] ${usedClusters.size} clusters de mini-graphes créés`);
+  log(`[CLUSTERS] ${usedClusters.size} clusters de mini-graphes créés`); // Utiliser le logger centralisé
 
   return { nodes: allNodes, links: allLinks };
 };
@@ -880,7 +893,7 @@ export const getNodesWithPositions = (graphInstanceRef, graphData) => {
   ) {
     // Récupérer les positions des nœuds depuis l'instance du graphe
     nodesWithPositions = graphInstanceRef.current.getNodesPositions();
-    console.log(
+    log( // Utiliser le logger centralisé
       `[EXPORT] Récupéré ${nodesWithPositions.length} nœuds avec positions`
     );
 
@@ -913,11 +926,13 @@ export const getNodesWithPositions = (graphInstanceRef, graphData) => {
         return posNode;
       });
 
-      console.log(`[EXPORT] Nœuds enrichis avec les informations de cluster`);
+      log( // Utiliser le logger centralisé
+        `[EXPORT] Nœuds enrichis avec les informations de cluster`
+      );
     }
   } else {
     // Si la référence n'est pas disponible, utiliser les données de l'état
-    console.log("[EXPORT] Utilisation des données d'état pour l'export");
+    log("[EXPORT] Utilisation des données d'état pour l'export"); // Utiliser le logger centralisé
     nodesWithPositions = graphData.nodes;
   }
 
@@ -929,7 +944,7 @@ export const getNodesWithPositions = (graphInstanceRef, graphData) => {
     }
   });
 
-  console.log(
+  log( // Utiliser le logger centralisé
     `[EXPORT] ${clusters.size} clusters distincts identifiés dans les données exportées`
   );
   return nodesWithPositions;
@@ -941,12 +956,14 @@ export const getNodesWithPositions = (graphInstanceRef, graphData) => {
  * @returns {Object} - Configuration mise à jour
  */
 export const updateGraphConfig = (newConfig) => {
-  console.log("[CONFIG] Mise à jour de la configuration du graphe");
-  console.log("  - Ancienne config:", { ...graphConfig });
+  // Séparer 'verbose' de la config à appliquer, car il est géré globalement
+  const { verbose, ...restConfig } = newConfig;
+  log("[CONFIG] Mise à jour de la configuration du graphe"); // Utiliser le logger centralisé
+  log("  - Ancienne config:", { ...graphConfig }); // Utiliser le logger centralisé
 
   // Fusionner la nouvelle configuration avec l'existante
-  Object.assign(graphConfig, newConfig);
+  Object.assign(graphConfig, restConfig);
 
-  console.log("  - Nouvelle config:", { ...graphConfig });
+  log("  - Nouvelle config:", { ...graphConfig }); // Utiliser le logger centralisé
   return graphConfig;
 };

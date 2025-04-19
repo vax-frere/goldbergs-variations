@@ -3,6 +3,7 @@ import { Canvas } from "@react-three/fiber";
 import { Stats } from "@react-three/drei";
 import { OrbitControls, PerspectiveCamera } from "@react-three/drei";
 import PageTransition from "../components/PageTransition";
+import { log } from "../utils/logger";
 
 import GridReferences from "../components/Game/GridReferences";
 import { loadGraphData, getNodesWithPositions } from "../components/Game/utils/graphDataUtils";
@@ -20,7 +21,7 @@ const Game = () => {
   // Utiliser useCallback pour stabiliser cette fonction
   const getGraphRef = useCallback((instance) => {
     if (instance) {
-      console.log("Référence du graphe obtenue");
+      log("Référence du graphe obtenue");
       graphInstanceRef.current = instance;
     }
   }, []);
