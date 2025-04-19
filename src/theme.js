@@ -32,7 +32,7 @@ const theme = createTheme({
       },
       styleOverrides: {
         root: {
-          borderRadius: 24,
+          borderRadius: 320,
           padding: "10px 24px",
           fontSize: "1.1rem",
           fontWeight: "medium",

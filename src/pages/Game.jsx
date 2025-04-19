@@ -1,5 +1,4 @@
-import { useState, useRef } from "react";
-import { useNavigate } from "react-router-dom";
+import { useRef } from "react";
 import { Canvas } from "@react-three/fiber";
 import {
   OrbitControls,
@@ -7,12 +6,11 @@ import {
   Text,
   PerspectiveCamera,
 } from "@react-three/drei";
-import { Button, Box } from "@mui/material";
+import { Box } from "@mui/material";
 import PageTransition from "../components/PageTransition";
 
 // Composant pour créer un piano stylisé en 3D
 const Piano = () => {
-  // Piano body
   return (
     <group position={[0, -1, 0]}>
       {/* Piano base (black) */}
@@ -80,9 +78,7 @@ const FloatingNotes = () => {
 };
 
 const Game = () => {
-  const navigate = useNavigate();
   const orbitControlsRef = useRef();
-  const [showUI, setShowUI] = useState(true);
 
   return (
     <PageTransition>
@@ -118,66 +114,6 @@ const Game = () => {
             autoRotateSpeed={0.5}
           />
         </Canvas>
-
-        {showUI && (
-          <Box
-            sx={{
-              position: "absolute",
-              bottom: "2rem",
-              left: "50%",
-              transform: "translateX(-50%)",
-              zIndex: 10,
-              display: "flex",
-              flexDirection: "column",
-              alignItems: "center",
-              gap: 2,
-            }}
-          >
-            <Button
-              onClick={() => navigate("/")}
-              sx={{
-                backgroundColor: "rgba(0, 0, 0, 0.6)",
-                "&:hover": {
-                  backgroundColor: "rgba(0, 0, 0, 0.8)",
-                },
-              }}
-            >
-              Return Home
-            </Button>
-
-            <Button
-              variant="text"
-              onClick={() => setShowUI(false)}
-              sx={{
-                color: "#f5f5f5",
-                "&:hover": {
-                  backgroundColor: "rgba(255, 255, 255, 0.1)",
-                },
-              }}
-            >
-              Hide Interface
-            </Button>
-          </Box>
-        )}
-
-        {!showUI && (
-          <Button
-            variant="text"
-            onClick={() => setShowUI(true)}
-            sx={{
-              position: "absolute",
-              bottom: "1rem",
-              right: "1rem",
-              color: "#f5f5f5",
-              backgroundColor: "rgba(0, 0, 0, 0.3)",
-              "&:hover": {
-                backgroundColor: "rgba(0, 0, 0, 0.5)",
-              },
-            }}
-          >
-            Show Interface
-          </Button>
-        )}
       </Box>
     </PageTransition>
   );

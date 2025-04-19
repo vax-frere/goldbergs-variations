@@ -1,6 +1,10 @@
 import { useNavigate } from "react-router-dom";
-import { Typography, Button, Box, Container } from "@mui/material";
+import { Typography, Button, Box, Container, Grid } from "@mui/material";
 import PageTransition from "../components/PageTransition";
+import StaggerAnimation, {
+  StaggerItem,
+  StaggerItemScale,
+} from "../components/StaggerAnimation";
 
 // SVG des contrôles (représentation simple d'une clé de sol)
 const ControlsSvg = () => (
@@ -21,38 +25,88 @@ const ControlsSvg = () => (
 const Controls = () => {
   const navigate = useNavigate();
 
+  const highlightedText = (text) => {
+    return text.split(" ").map((word, i) => {
+      // Mots à mettre en gras (mots clés importants)
+      const keyWords = [
+        "interconnected",
+        "digital",
+        "visualization",
+        "relationships",
+        "labyrinthine",
+        "patterns",
+      ];
+
+      return keyWords.some((keyword) => word.includes(keyword)) ? (
+        <strong key={i}>{word} </strong>
+      ) : (
+        word + " "
+      );
+    });
+  };
+
   return (
     <PageTransition>
-      <Container maxWidth="md">
-        <Box
-          sx={{
-            display: "flex",
-            flexDirection: "column",
-            alignItems: "center",
-            gap: 4,
-            textAlign: "center",
-          }}
-        >
-          <Typography variant="h2" component="h1" gutterBottom>
-            Controls
-          </Typography>
+      <Container maxWidth="lg">
+        <StaggerAnimation>
+          <Box
+            sx={{
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "center",
+              gap: 2,
+              textAlign: "center",
+            }}
+          >
+            <StaggerItem>
+              <Box sx={{ my: 1, maxWidth: "100%", overflow: "hidden" }}>
+                <img
+                  src="/img/gamepad.svg"
+                  alt="Gamepad Controls"
+                  style={{
+                    maxWidth: "100%",
+                    height: "auto",
+                    maxHeight: "400px",
+                  }}
+                />
+              </Box>
+            </StaggerItem>
 
-          <Box sx={{ my: 4 }}>
-            <ControlsSvg />
+            <StaggerItem>
+              <Typography
+                variant="body1"
+                paragraph
+                sx={{
+                  mt: 3,
+                  maxWidth: "800px",
+                  opacity: 0.85,
+                  fontWeight: 300,
+                  letterSpacing: "0.3px",
+                  lineHeight: 1.7,
+                }}
+              >
+                {highlightedText(
+                  "Navigate through Joshua's mind by exploring the interconnected nodes of his digital consciousness. This visualization maps the patterns and relationships between his online personas and obsessions. Prepare yourself for a journey through a labyrinthine data structure of thought patterns."
+                )}
+              </Typography>
+            </StaggerItem>
+
+            <StaggerItemScale>
+              <Button
+                size="large"
+                onClick={() => navigate("/game")}
+                sx={{
+                  mt: 1,
+                  px: 4,
+                  py: 1.2,
+                  fontWeight: 400,
+                }}
+              >
+                Explore
+              </Button>
+            </StaggerItemScale>
           </Box>
-
-          <Typography variant="body1" paragraph>
-            Navigate through Joshua's mind by exploring the interconnected nodes
-            of his digital consciousness. This visualization maps the patterns
-            and relationships between his online personas and obsessions.
-            Prepare yourself for a journey through a labyrinthine data structure
-            of thought patterns.
-          </Typography>
-
-          <Button size="large" onClick={() => navigate("/game")} sx={{ mt: 2 }}>
-            Explore
-          </Button>
-        </Box>
+        </StaggerAnimation>
       </Container>
     </PageTransition>
   );
