@@ -8,6 +8,8 @@ import Home from "./pages/Home";
 import Controls from "./pages/Controls";
 import Game from "./pages/Game";
 import Navbar from "./components/Navbar";
+import Footer from "./components/Footer";
+import BackgroundCanvas from "./components/BackgroundCanvas";
 
 function App() {
   const location = useLocation();
@@ -15,6 +17,7 @@ function App() {
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />
+      <BackgroundCanvas />
       <Navbar />
       <AnimatePresence mode="wait">
         <Routes location={location} key={location.pathname}>
@@ -23,6 +26,7 @@ function App() {
           <Route path="/game" element={<Game />} />
         </Routes>
       </AnimatePresence>
+      <Footer />
     </ThemeProvider>
   );
 }

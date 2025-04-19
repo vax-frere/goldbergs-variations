@@ -1,10 +1,10 @@
 import { useNavigate } from "react-router-dom";
 import { Typography, Button, Box, Container } from "@mui/material";
-import PageTransition from "../components/PageTransition";
-import StaggerAnimation, {
-  StaggerItem,
-  StaggerItemScale,
-} from "../components/StaggerAnimation";
+import { motion } from "framer-motion";
+import PageTransition, {
+  staggerContainerVariants,
+  pageVariants,
+} from "../components/PageTransition";
 
 const Home = () => {
   const navigate = useNavigate();
@@ -14,8 +14,9 @@ const Home = () => {
       // Mots à mettre en gras (mots clés importants)
       const keyWords = [
         "40,000",
-        "extremist",
-        "simulation",
+        "galaxy of extremist",
+        "whimsical",
+        "impersonated",
         "Joker",
         "Lombardi",
         "obsessions",
@@ -34,7 +35,13 @@ const Home = () => {
   return (
     <PageTransition>
       <Container maxWidth="md">
-        <StaggerAnimation>
+        <motion.div
+          variants={staggerContainerVariants}
+          initial="hidden"
+          animate="visible"
+          exit="exit"
+          className="motion-div"
+        >
           <Box
             sx={{
               display: "flex",
@@ -44,7 +51,7 @@ const Home = () => {
               textAlign: "center",
             }}
           >
-            <StaggerItemScale>
+            <motion.div variants={pageVariants} className="motion-div">
               <Typography
                 variant="h1"
                 component="h1"
@@ -56,12 +63,12 @@ const Home = () => {
               >
                 Goldberg's Variations
               </Typography>
-            </StaggerItemScale>
+            </motion.div>
 
-            <StaggerItem>
+            <motion.div variants={pageVariants} className="motion-div">
               <Typography
                 variant="h5"
-                component="h5"
+                component="h2"
                 sx={{
                   fontWeight: 300,
                   fontStyle: "italic",
@@ -72,9 +79,9 @@ const Home = () => {
               >
                 A journey inside Joshua's Thought Loop
               </Typography>
-            </StaggerItem>
+            </motion.div>
 
-            <StaggerItem>
+            <motion.div variants={pageVariants} className="motion-div">
               <Typography
                 variant="body1"
                 paragraph
@@ -90,9 +97,9 @@ const Home = () => {
                   "From 40,000 posts (2006-2015), this work unfolds a narrative galaxy of extremist, whimsical, or impersonated characters. Inspired by Lombardi, this data visualization maps political obsessions and geek culture. It simulates a fragmented mind experiencing the world as a simulation, unveiling a digital Joker confronting the Internet's contradictions."
                 )}
               </Typography>
-            </StaggerItem>
+            </motion.div>
 
-            <StaggerItemScale>
+            <motion.div variants={pageVariants} className="motion-div">
               <Button
                 size="large"
                 onClick={() => navigate("/controls")}
@@ -105,9 +112,9 @@ const Home = () => {
               >
                 Enter
               </Button>
-            </StaggerItemScale>
+            </motion.div>
           </Box>
-        </StaggerAnimation>
+        </motion.div>
       </Container>
     </PageTransition>
   );

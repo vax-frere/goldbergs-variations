@@ -6,7 +6,10 @@ import PageTransition from "../components/PageTransition";
 import { log } from "../utils/logger";
 
 import GridReferences from "../components/Game/GridReferences";
-import { loadGraphData, getNodesWithPositions } from "../components/Game/utils/graphDataUtils";
+import {
+  loadGraphData,
+  getNodesWithPositions,
+} from "../components/Game/utils/graphDataUtils";
 import ForceGraph from "../components/Game/ForceGraph";
 
 const Game = () => {
@@ -49,9 +52,22 @@ const Game = () => {
   }, []);
 
   return (
-    <PageTransition>
-      <Canvas style={{ background: "#121212" }}>
-        <PerspectiveCamera makeDefault position={[0, 0, 500]} near={0.1} far={100000} />
+    <div
+      style={{
+        width: "100vw",
+        height: "100vh",
+        position: "absolute",
+        top: 0,
+        left: 0,
+      }}
+    >
+      <Canvas style={{ background: "#121212", width: "100%", height: "100%" }}>
+        <PerspectiveCamera
+          makeDefault
+          position={[0, 0, 500]}
+          near={0.1}
+          far={100000}
+        />
         <ambientLight intensity={0.5} />
         <pointLight position={[10, 10, 10]} intensity={1} />
         <spotLight
@@ -81,7 +97,7 @@ const Game = () => {
           opacity={0.3}
         />
       </Canvas>
-    </PageTransition>
+    </div>
   );
 };
 

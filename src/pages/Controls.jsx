@@ -1,10 +1,10 @@
 import { useNavigate } from "react-router-dom";
 import { Typography, Button, Box, Container, Grid } from "@mui/material";
-import PageTransition from "../components/PageTransition";
-import StaggerAnimation, {
-  StaggerItem,
-  StaggerItemScale,
-} from "../components/StaggerAnimation";
+import { motion } from "framer-motion";
+import PageTransition, {
+  staggerContainerVariants,
+  pageVariants,
+} from "../components/PageTransition";
 
 // SVG des contrôles (représentation simple d'une clé de sol)
 const ControlsSvg = () => (
@@ -48,7 +48,13 @@ const Controls = () => {
   return (
     <PageTransition>
       <Container maxWidth="lg">
-        <StaggerAnimation>
+        <motion.div
+          variants={staggerContainerVariants}
+          initial="hidden"
+          animate="visible"
+          exit="exit"
+          className="motion-div"
+        >
           <Box
             sx={{
               display: "flex",
@@ -58,40 +64,62 @@ const Controls = () => {
               textAlign: "center",
             }}
           >
-            <StaggerItem>
-              <Box sx={{ my: 1, maxWidth: "100%", overflow: "hidden" }}>
-                <img
-                  src="/img/gamepad.svg"
-                  alt="Gamepad Controls"
-                  style={{
-                    maxWidth: "100%",
-                    height: "auto",
-                    maxHeight: "400px",
-                  }}
-                />
-              </Box>
-            </StaggerItem>
+            <motion.div variants={pageVariants} className="motion-div">
+              <Typography
+                variant="h2"
+                component="h2"
+                sx={{ mt: 4, mb: 2, fontWeight: 500 }}
+              >
+                Game Controls
+              </Typography>
+            </motion.div>
 
-            <StaggerItem>
+            <motion.div variants={pageVariants} className="motion-div">
               <Typography
                 variant="body1"
                 paragraph
                 sx={{
-                  mt: 3,
+                  lineHeight: 1.7,
                   maxWidth: "800px",
                   opacity: 0.85,
                   fontWeight: 300,
                   letterSpacing: "0.3px",
-                  lineHeight: 1.7,
                 }}
               >
-                {highlightedText(
-                  "Navigate through Joshua's mind by exploring the interconnected nodes of his digital consciousness. This visualization maps the patterns and relationships between his online personas and obsessions. Prepare yourself for a journey through a labyrinthine data structure of thought patterns."
-                )}
+                You will pilot a <strong>spacecraft</strong> through Joshua's{" "}
+                <strong>mind</strong>, exploring the
+                <strong> neural pathways</strong> and{" "}
+                <strong>musical memories</strong> that form his consciousness.
+                Navigate through the <strong>digital footprints</strong> of his
+                online presence, where <strong>40,000 posts</strong> form a vast
+                network of thoughts.
               </Typography>
-            </StaggerItem>
+            </motion.div>
 
-            <StaggerItemScale>
+            <motion.div variants={pageVariants} className="motion-div">
+              <Grid container justifyContent="center" alignItems="center">
+                <Grid
+                  item
+                  xs={12}
+                  md={8}
+                  sx={{ display: "flex", justifyContent: "center" }}
+                >
+                  <Box sx={{ maxWidth: "100%", overflow: "hidden" }}>
+                    <img
+                      src="/img/gamepad.svg"
+                      alt="Gamepad Controls"
+                      style={{
+                        maxWidth: "100%",
+                        height: "auto",
+                        maxHeight: "400px",
+                      }}
+                    />
+                  </Box>
+                </Grid>
+              </Grid>
+            </motion.div>
+
+            <motion.div variants={pageVariants} className="motion-div">
               <Button
                 size="large"
                 onClick={() => navigate("/game")}
@@ -102,11 +130,11 @@ const Controls = () => {
                   fontWeight: 400,
                 }}
               >
-                Explore
+                Let's explore
               </Button>
-            </StaggerItemScale>
+            </motion.div>
           </Box>
-        </StaggerAnimation>
+        </motion.div>
       </Container>
     </PageTransition>
   );

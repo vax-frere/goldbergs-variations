@@ -2,6 +2,13 @@
   margin: 0;
   padding: 0;
   box-sizing: border-box;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+  backface-visibility: hidden;
+  transform-style: preserve-3d;
+  perspective: 1000;
+  will-change: transform, opacity;
 }
 
 body {
@@ -16,4 +23,11 @@ body {
 #root {
   width: 100%;
   height: 100vh;
+}
+
+/* Appliquer les optimisations aux éléments animés */
+.motion-div {
+  will-change: transform, opacity;
+  transform: translateZ(0);
+  backface-visibility: hidden;
 }
