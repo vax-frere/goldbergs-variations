@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { getInputManager } from "../utils/inputManager";
+import { getInputManager } from "./Gamepad/inputManager";
 
 /**
  * Indicateur de connexion de manette
@@ -49,7 +49,7 @@ const GamepadIndicator = () => {
     <div style={containerStyle}>
       <div style={indicatorStyle}></div>
       <span style={{ color: "white", fontSize: "14px" }}>
-        {isConnected ? "Manette connectée" : "Manette déconnectée"}
+        {isConnected ? "Gamepad connected" : "Gamepad disconnected"}
       </span>
     </div>
   );

@@ -2,8 +2,6 @@ import { useRef, useEffect } from "react";
 import { useFrame, useThree } from "@react-three/fiber";
 import * as THREE from "three";
 import { io } from "socket.io-client";
-import { SOCKET_SERVER_URL } from "../../../../../config";
-import { getInputManager } from "../../../utils/inputManager";
 // Importer la référence au nœud actif pour vérifier son état
 import { activeNodeRef } from "../../Node/hooks/useNodeProximitySync";
 
@@ -128,7 +126,7 @@ export const resumePostDetection = () => {
 export const initSocketSync = () => {
   if (!socket) {
     try {
-      socket = io(SOCKET_SERVER_URL);
+      socket = io("localhost:3000");
 
       socket.on("connect", () => {
         // Socket connecté

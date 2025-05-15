@@ -433,7 +433,10 @@ export class InputManager {
     }
 
     // Tenter d'utiliser vibrationActuator (plus largement supporté)
-    if (gamepad.vibrationActuator && typeof gamepad.vibrationActuator.playEffect === 'function') {
+    if (
+      gamepad.vibrationActuator &&
+      typeof gamepad.vibrationActuator.playEffect === "function"
+    ) {
       console.log("Vibration via vibrationActuator");
       return gamepad.vibrationActuator.playEffect("dual-rumble", {
         startDelay: 0,
@@ -441,7 +444,7 @@ export class InputManager {
         weakMagnitude: weakMagnitude,
         strongMagnitude: strongMagnitude,
       });
-    } 
+    }
     // Alternative : utiliser hapticActuators si disponible
     else if (gamepad.hapticActuators && gamepad.hapticActuators.length > 0) {
       console.log("Vibration via hapticActuators");

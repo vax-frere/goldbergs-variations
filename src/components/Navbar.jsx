@@ -3,11 +3,13 @@ import { Box } from "@mui/material";
 import ArrowBackOutlinedIcon from "@mui/icons-material/ArrowBackOutlined";
 import VolumeUpOutlinedIcon from "@mui/icons-material/VolumeUpOutlined";
 import VolumeOffOutlinedIcon from "@mui/icons-material/VolumeOffOutlined";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import useSound from "use-sound";
+import { GlobalAudioController } from "./Game/Audio/SoundPlayer";
 
 // Composant pour un bouton d'icône animé
-const AnimatedIconButton = ({ onClick, ariaLabel, children }) => {
+const AnimatedIconButton = ({ onClick, ariaLabel, children, transition }) => {
   return (
     <motion.button
       onClick={onClick}
@@ -15,11 +17,13 @@ const AnimatedIconButton = ({ onClick, ariaLabel, children }) => {
       initial={{ opacity: 0, scale: 0.8 }}
       animate={{ opacity: 1, scale: 1 }}
       exit={{ opacity: 0, scale: 0.8 }}
-      transition={{
-        type: "spring",
-        stiffness: 300,
-        damping: 20,
-      }}
+      transition={
+        transition || {
+          type: "spring",
+          stiffness: 300,
+          damping: 20,
+        }
+      }
       whileHover={{ scale: 1.05 }}
       style={{
         background: "transparent",
@@ -42,17 +46,39 @@ const AnimatedIconButton = ({ onClick, ariaLabel, children }) => {
 const Navbar = () => {
   const navigate = useNavigate();
   const location = useLocation();
-  const [isMuted, setIsMuted] = useState(false);
+  const [isMuted, setIsMuted] = useState(GlobalAudioController.isMuted);
+  const [playSwitchSound] = useSound("/sounds/switch-on.mp3", { volume: 0.5 });
 
   const isHome = location.pathname === "/";
 
+  // Synchroniser l'état local avec l'état global du son
+  useEffect(() => {
+    const unsubscribe = GlobalAudioController.addMuteListener((muted) => {
+      setIsMuted(muted);
+    });
+
+    return unsubscribe;
+  }, []);
+
   const handleBack = () => {
-    navigate(-1);
+    playSwitchSound();
+    setTimeout(() => {
+      navigate(-1);
+    }, 300); // Ajoute un court délai pour que le son puisse jouer avant la navigation
   };
 
   const toggleMute = () => {
-    setIsMuted(!isMuted);
-    // La fonctionnalité réelle de contrôle du son sera implémentée plus tard
+    playSwitchSound();
+    GlobalAudioController.toggleMute();
+    // Pas besoin de mettre à jour l'état local ici car le listener le fera
+  };
+
+  // Animation rapide pour les icônes de son
+  const soundIconTransition = {
+    type: "spring",
+    stiffness: 500, // Augmentation de la raideur
+    damping: 25, // Légère augmentation de l'amortissement
+    duration: 0.15, // Durée plus courte
   };
 
   return (
@@ -90,6 +116,7 @@ const Navbar = () => {
           key={isMuted ? "muted" : "unmuted"}
           onClick={toggleMute}
           ariaLabel={isMuted ? "Unmute" : "Mute"}
+          transition={soundIconTransition}
         >
           {isMuted ? (
             <VolumeOffOutlinedIcon fontSize="large" />

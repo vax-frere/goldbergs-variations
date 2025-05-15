@@ -13,7 +13,7 @@ export class SimpleMode {
 
   createMesh() {
     // Taille de base pour la sphère
-    let size = 2;
+    let size = 1;
 
     // Légère variation de taille selon le type de nœud
     if (this.node.id === "central_joshua") {
@@ -25,20 +25,20 @@ export class SimpleMode {
     // Déterminer la couleur du nœud en fonction de son type et de son groupe thématique
     let nodeColor = "white";
 
-    if (this.node.id === "central_joshua") {
-      nodeColor = COLORS.centralJoshua;
-    } else if (this.node.isJoshua) {
-      nodeColor = COLORS.joshua;
-    } else if (this.node.type === "source" || this.node.type === "platform") {
-      nodeColor = COLORS.source;
-    } else if (this.node.type === "character" && this.node.thematicGroup) {
-      // Utiliser la couleur du groupe thématique si disponible
-      nodeColor =
-        COLORS.thematicGroups[this.node.thematicGroup] ||
-        COLORS.thematicGroups.default;
-    } else if (this.node.type === "character") {
-      nodeColor = COLORS.character;
-    }
+    // if (this.node.id === "central_joshua") {
+    //   nodeColor = COLORS.centralJoshua;
+    // } else if (this.node.isJoshua) {
+    //   nodeColor = COLORS.joshua;
+    // } else if (this.node.type === "source" || this.node.type === "platform") {
+    //   nodeColor = COLORS.source;
+    // } else if (this.node.type === "character" && this.node.thematicGroup) {
+    //   // Utiliser la couleur du groupe thématique si disponible
+    //   nodeColor =
+    //     COLORS.thematicGroups[this.node.thematicGroup] ||
+    //     COLORS.thematicGroups.default;
+    // } else if (this.node.type === "character") {
+    //   nodeColor = COLORS.character;
+    // }
 
     // Création d'une sphère avec la couleur appropriée
     const geometry = new THREE.SphereGeometry(size, 16, 16);

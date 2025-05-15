@@ -4,6 +4,35 @@ import { IconButton, Tooltip } from "@mui/material";
 import VolumeUpIcon from "@mui/icons-material/VolumeUp";
 import VolumeOffIcon from "@mui/icons-material/VolumeOff";
 
+// Singleton pour gérer l'état global du son
+export const GlobalAudioController = {
+  isMuted: false,
+  listeners: [],
+
+  // Ajouter un listener qui sera notifié quand l'état global change
+  addMuteListener: (callback) => {
+    GlobalAudioController.listeners.push(callback);
+    // Retourner une fonction pour supprimer le listener
+    return () => {
+      GlobalAudioController.listeners = GlobalAudioController.listeners.filter(
+        (cb) => cb !== callback
+      );
+    };
+  },
+
+  // Définir l'état mute global et notifier tous les listeners
+  setMuted: (muted) => {
+    GlobalAudioController.isMuted = muted;
+    GlobalAudioController.listeners.forEach((callback) => callback(muted));
+  },
+
+  // Toggle l'état mute
+  toggleMute: () => {
+    GlobalAudioController.setMuted(!GlobalAudioController.isMuted);
+    return GlobalAudioController.isMuted;
+  },
+};
+
 // Component dedicated to sound management
 const SoundPlayer = ({
   soundPath, // Path to the sound file
@@ -16,7 +45,7 @@ const SoundPlayer = ({
 }) => {
   // State to track if sound is playing
   const [isPlaying, setIsPlaying] = useState(false);
-  const [isMuted, setIsMuted] = useState(false);
+  const [isMuted, setIsMuted] = useState(GlobalAudioController.isMuted);
   // Track whether user has interacted with the page
   const [hasInteracted, setHasInteracted] = useState(false);
   // Track loading status
@@ -26,6 +55,16 @@ const SoundPlayer = ({
 
   // Prevent exhausted audio pool issues
   const [key, setKey] = useState(Date.now());
+
+  // S'abonner aux changements globaux de mute
+  useEffect(() => {
+    const unsubscribe = GlobalAudioController.addMuteListener((muted) => {
+      setIsMuted(muted);
+    });
+
+    // Cleanup lors du démontage
+    return unsubscribe;
+  }, []);
 
   // Function to clean up previous audio instance
   const cleanupAudio = () => {
@@ -103,15 +142,21 @@ const SoundPlayer = ({
     if (hasInteracted && !isPlaying && sound && autoPlay) {
       setIsLoading(true);
       try {
+        // Commencer avec un volume à 0 pour éviter le son fort initial
+        sound.volume(0);
         // Play without specifying sprite ID to use native looping
         play();
+        // Faire un fondu d'entrée progressif vers le volume normal
+        if (sound && sound.fade) {
+          sound.fade(0, isMuted ? 0 : defaultVolume, 1000); // Fondu sur 1 seconde
+        }
         setIsPlaying(true);
       } catch (error) {
         console.error("Error playing audio:", error);
         setIsLoading(false);
       }
     }
-  }, [hasInteracted, isPlaying, play, sound, autoPlay]);
+  }, [hasInteracted, isPlaying, play, sound, autoPlay, defaultVolume, isMuted]);
 
   // Make sure sound stops when component unmounts
   useEffect(() => {
@@ -123,9 +168,11 @@ const SoundPlayer = ({
     };
   }, [isPlaying, stop]);
 
-  // Handle mute/unmute toggle
+  // Handle mute/unmute toggle - maintenant synchronisé avec le contrôleur global
   const toggleMute = () => {
-    setIsMuted((prev) => !prev);
+    // Utiliser le contrôleur global pour faire le toggle
+    const newMutedState = GlobalAudioController.toggleMute();
+    setIsMuted(newMutedState);
   };
 
   // Listen for first click on the page

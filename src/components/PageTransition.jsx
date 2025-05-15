@@ -9,7 +9,7 @@ const PageTransition = ({ children }) => {
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
       transition={{
-        duration: 0.3,
+        duration: 0.2,
         ease: [0.25, 0.1, 0.25, 1.0], // cubic-bezier easing
       }}
       className="motion-div"

@@ -1,6 +1,7 @@
 import { useNavigate } from "react-router-dom";
 import { Typography, Button, Box, Container } from "@mui/material";
 import { motion } from "framer-motion";
+import useSound from "use-sound";
 import PageTransition, {
   staggerContainerVariants,
   pageVariants,
@@ -8,6 +9,14 @@ import PageTransition, {
 
 const Home = () => {
   const navigate = useNavigate();
+  const [playSwitchSound] = useSound("/sounds/switch-on.mp3", { volume: 0.5 });
+
+  const handleEnterClick = () => {
+    playSwitchSound();
+    setTimeout(() => {
+      navigate("/controls");
+    }, 300); // Ajoute un court délai pour que le son puisse jouer avant la navigation
+  };
 
   const highlightedText = (text) => {
     return text.split(" ").map((word, i) => {
@@ -77,7 +86,7 @@ const Home = () => {
                   letterSpacing: "0.5px",
                 }}
               >
-                A journey inside Joshua's Thought Loop
+                A journey inside Joshua Ryne Goldberg's Thought
               </Typography>
             </motion.div>
 
@@ -102,7 +111,7 @@ const Home = () => {
             <motion.div variants={pageVariants} className="motion-div">
               <Button
                 size="large"
-                onClick={() => navigate("/controls")}
+                onClick={handleEnterClick}
                 sx={{
                   mt: 2,
                   px: 4,

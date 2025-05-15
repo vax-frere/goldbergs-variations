@@ -10,7 +10,7 @@ export class SimpleLink {
     this.target = target;
     this.group = new THREE.Group();
     this.offsetDistance = 7.5; // Distance d'offset depuis les nœuds
-    this.linkRadius = 0.1; // Rayon du tube représentant le lien
+    this.linkRadius = 0.2; // Rayon du tube représentant le lien
     this.createMesh();
   }
 
@@ -37,7 +37,7 @@ export class SimpleLink {
     const tubeMaterial = new THREE.MeshBasicMaterial({
       color: 0xaaaaaa,
       transparent: true,
-      opacity: 0.8,
+      opacity: 1,
       depthTest: true,
     });
 

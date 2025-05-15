@@ -1,35 +1,102 @@
 import { useState, useEffect } from "react";
-// Nous ne pouvons pas utiliser useThree ici car NavigationUI est en dehors du Canvas
+// We can't use useThree here as NavigationUI is outside the Canvas
 // import { useThree } from "@react-three/fiber";
 import { Vector3 } from "three";
+import {
+  BOUNDING_SPHERE_RADIUS,
+  ACCELERATION_DISTANCE_THRESHOLD,
+  AUTO_ROTATE_DELAY,
+  AUTO_ORBIT_DELAY,
+} from "./Scene/navigationConstants";
 
-// Composant UI simplifié pour le mode vol uniquement
+// Utility function to export JSON data as downloadable file
+const exportJsonFile = (data, filename) => {
+  // Convert data to formatted JSON string
+  const jsonString = JSON.stringify(data, null, 2);
+
+  // Create a blob with JSON content
+  const blob = new Blob([jsonString], { type: "application/json" });
+
+  // Create URL for the blob
+  const url = URL.createObjectURL(blob);
+
+  // Create a <a> element for download
+  const link = document.createElement("a");
+  link.href = url;
+  link.download = filename;
+
+  // Add element to DOM, click it, then remove it
+  document.body.appendChild(link);
+  link.click();
+  document.body.removeChild(link);
+
+  // Release the URL
+  URL.revokeObjectURL(url);
+};
+
+// Simplified UI component for flight mode only
 export const NavigationUI = ({ graphRef }) => {
-  // const { camera } = useThree(); // Ce hook n'est pas utilisable ici
-  // Accéder à l'état global pour connaître l'état d'animation
+  // const { camera } = useThree(); // This hook can't be used here
+  // Access global state to know animation status
   const [isTransitioning, setIsTransitioning] = useState(false);
   const [showExportButton, setShowExportButton] = useState(false);
   const [cameraMode, setCameraMode] = useState("Normal");
   const [cameraPosition, setCameraPosition] = useState({ x: 0, y: 0, z: 0 });
   const [cameraTarget, setCameraTarget] = useState({ x: 0, y: 0, z: 0 });
   const [distanceToCenter, setDistanceToCenter] = useState(0);
+  const [timeBeforeAutoRotate, setTimeBeforeAutoRotate] = useState(null);
   const [timeBeforeAutoOrbit, setTimeBeforeAutoOrbit] = useState(null);
   const [accelerationFactor, setAccelerationFactor] = useState(1);
+  const [cameraSpeed, setCameraSpeed] = useState(0);
 
-  // Écouter l'état d'animation exposé par le contrôleur de caméra et mettre à jour les positions
+  // Function to export spatialized data
+  const handleExportData = () => {
+    // 1. Export nodes and links with most recent positions
+    if (graphRef && graphRef.current && graphRef.current.getNodesPositions) {
+      // Use getNodesPositions method from graph to get most recent positions
+      const spatializedNodes = graphRef.current.getNodesPositions();
+
+      const spatializedNodesAndLinks = {
+        nodes: spatializedNodes,
+        links:
+          graphRef.current.graphData?.links?.map((link) => ({
+            source:
+              typeof link.source === "object" ? link.source.id : link.source,
+            target:
+              typeof link.target === "object" ? link.target.id : link.target,
+            value: link.value || 1,
+          })) || [],
+      };
+
+      console.log(
+        "Exporting spatialized_nodes_and_links.json with",
+        spatializedNodesAndLinks.nodes.length,
+        "nodes"
+      );
+      exportJsonFile(
+        spatializedNodesAndLinks,
+        "spatialized_nodes_and_links.json"
+      );
+    }
+
+    // Show confirmation message
+    alert("Data export complete!");
+  };
+
+  // Listen to animation state exposed by camera controller and update positions
   useEffect(() => {
-    // Créer une fonction pour écouter l'état d'animation et la position
+    // Create a function to listen to animation state and position
     const updateCameraInfo = () => {
-      // Mise à jour de l'état de transition
+      // Update transition state
       if (window.__cameraAnimating !== undefined) {
         setIsTransitioning(window.__cameraAnimating);
       }
 
-      // Mise à jour du mode caméra
+      // Update camera mode
       if (window.__orbitModeActive !== undefined) {
         setCameraMode(
           window.__orbitModeActive
-            ? "Orbite automatique"
+            ? "Auto Orbit"
             : window.__cameraAnimating
             ? "Transition"
             : "Normal"
@@ -38,12 +105,19 @@ export const NavigationUI = ({ graphRef }) => {
         setCameraMode(window.__cameraAnimating ? "Transition" : "Normal");
       }
 
-      // Mise à jour du temps restant avant l'auto-orbite
+      // Update time remaining before auto-orbit
       if (window.__timeBeforeAutoOrbit !== undefined) {
         setTimeBeforeAutoOrbit(window.__timeBeforeAutoOrbit);
       }
 
-      // Mise à jour de la position de la caméra si disponible
+      // Use the remaining time to calculate time before auto-rotate
+      if (window.__lastInteractionTime !== undefined) {
+        const elapsedTime = Date.now() - window.__lastInteractionTime;
+        const timeBeforeRotate = Math.max(0, AUTO_ROTATE_DELAY - elapsedTime);
+        setTimeBeforeAutoRotate(timeBeforeRotate);
+      }
+
+      // Update camera position if available
       if (window.__cameraPosition) {
         setCameraPosition({
           x: parseFloat(window.__cameraPosition.x.toFixed(2)),
@@ -51,7 +125,7 @@ export const NavigationUI = ({ graphRef }) => {
           z: parseFloat(window.__cameraPosition.z.toFixed(2)),
         });
 
-        // Calculer la distance au centre (0,0,0)
+        // Calculate distance to center (0,0,0)
         const position = new Vector3(
           window.__cameraPosition.x,
           window.__cameraPosition.y,
@@ -61,7 +135,7 @@ export const NavigationUI = ({ graphRef }) => {
         setDistanceToCenter(parseFloat(distance.toFixed(2)));
       }
 
-      // Mise à jour de la cible de la caméra si disponible
+      // Update camera target if available
       if (window.__cameraTarget) {
         setCameraTarget({
           x: parseFloat(window.__cameraTarget.x.toFixed(2)),
@@ -70,30 +144,46 @@ export const NavigationUI = ({ graphRef }) => {
         });
       }
 
-      // Mise à jour du facteur d'accélération si disponible
+      // Update acceleration factor if available
       if (window.__accelerationFactor) {
         setAccelerationFactor(window.__accelerationFactor);
       }
+
+      // Update camera speed if available
+      if (window.__cameraSpeed) {
+        setCameraSpeed(parseFloat(window.__cameraSpeed.toFixed(2)));
+      }
+
+      // Show export button once data is loaded
+      if (
+        graphRef &&
+        graphRef.current &&
+        graphRef.current.graphData &&
+        graphRef.current.graphData.nodes &&
+        graphRef.current.graphData.nodes.length > 0
+      ) {
+        setShowExportButton(true);
+      }
     };
 
-    // Vérifier régulièrement l'état d'animation et la position
+    // Regularly check animation state and position
     const intervalId = setInterval(updateCameraInfo, 100);
     return () => clearInterval(intervalId);
-  }, []);
+  }, [graphRef]);
 
-  // Déterminer la couleur du mode en fonction de l'état
+  // Determine mode color based on state
   const getModeColor = () => {
-    if (cameraMode === "Orbite automatique") return "#00aaff";
+    if (cameraMode === "Auto Orbit") return "#00aaff";
     if (cameraMode === "Transition") return "#ffcc00";
-    return "#4CAF50"; // Mode normal
+    return "#4CAF50"; // Normal mode
   };
 
   return (
     <div
       style={{
         position: "absolute",
-        bottom: "20px",
-        left: "20px",
+        bottom: "60px",
+        left: "25px",
         color: "white",
         padding: "10px",
         background: "rgba(0,0,0,0.7)",
@@ -111,7 +201,7 @@ export const NavigationUI = ({ graphRef }) => {
           alignItems: "center",
         }}
       >
-        <strong>Mode Vol Libre</strong>
+        <strong>Free Flight Mode</strong>
         <span
           style={{
             backgroundColor: getModeColor(),
@@ -125,7 +215,7 @@ export const NavigationUI = ({ graphRef }) => {
         </span>
       </div>
 
-      {/* Affichage des informations de la caméra */}
+      {/* Camera information display */}
       <div
         style={{
           fontSize: "12px",
@@ -136,25 +226,28 @@ export const NavigationUI = ({ graphRef }) => {
         }}
       >
         <div style={{ marginBottom: "5px" }}>
-          <strong>Position caméra:</strong>
+          <strong>Camera position:</strong>
           X: {cameraPosition.x}, Y: {cameraPosition.y}, Z: {cameraPosition.z}
         </div>
         <div style={{ marginBottom: "5px" }}>
-          <strong>Distance au centre:</strong>
+          <strong>Distance to center:</strong>
           <span
             style={{
               color:
-                distanceToCenter > 750
+                distanceToCenter > BOUNDING_SPHERE_RADIUS * 0.8
                   ? "#ff6b6b"
-                  : distanceToCenter > 600
+                  : distanceToCenter > BOUNDING_SPHERE_RADIUS * 0.7
                   ? "#ffcc00"
                   : "#4CAF50",
             }}
           >
             {distanceToCenter}
           </span>
-          {distanceToCenter > 750 && (
-            <span style={{ color: "#ff6b6b" }}> (Limite: 800)</span>
+          {distanceToCenter > BOUNDING_SPHERE_RADIUS * 0.8 && (
+            <span style={{ color: "#ff6b6b" }}>
+              {" "}
+              (Limit: {BOUNDING_SPHERE_RADIUS})
+            </span>
           )}
         </div>
         <div style={{ marginBottom: "5px" }}>
@@ -162,7 +255,52 @@ export const NavigationUI = ({ graphRef }) => {
           X: {cameraTarget.x}, Y: {cameraTarget.y}, Z: {cameraTarget.z}
         </div>
         <div style={{ marginBottom: "5px" }}>
-          <strong>Facteur d'accélération:</strong>
+          <strong>Speed:</strong>
+          <span
+            style={{
+              color:
+                cameraSpeed > 200
+                  ? "#ff6b6b"
+                  : cameraSpeed > 100
+                  ? "#ffcc00"
+                  : "#4CAF50",
+              fontWeight: cameraSpeed > 100 ? "bold" : "normal",
+            }}
+          >
+            {cameraSpeed} units/s
+          </span>
+          {/* Speed progress bar */}
+          <div
+            style={{
+              width: "100%",
+              height: "4px",
+              backgroundColor: "rgba(255,255,255,0.2)",
+              borderRadius: "2px",
+              marginTop: "3px",
+              position: "relative",
+            }}
+          >
+            <div
+              style={{
+                position: "absolute",
+                left: 0,
+                top: 0,
+                height: "100%",
+                width: `${Math.min(100, (cameraSpeed / 300) * 100)}%`,
+                backgroundColor:
+                  cameraSpeed > 200
+                    ? "rgba(255, 107, 107, 0.8)"
+                    : cameraSpeed > 100
+                    ? "rgba(255, 204, 0, 0.8)"
+                    : "rgba(76, 175, 80, 0.8)",
+                borderRadius: "2px",
+                transition: "width 0.3s ease-out",
+              }}
+            />
+          </div>
+        </div>
+        <div style={{ marginBottom: "5px" }}>
+          <strong>Acceleration factor:</strong>
           <span
             style={{
               color:
@@ -176,12 +314,12 @@ export const NavigationUI = ({ graphRef }) => {
             }}
           >
             {accelerationFactor.toFixed(2)}x
-            {accelerationFactor > 2.5 && " (Mode Rapide)"}
+            {accelerationFactor > 2.5 && " (Fast Mode)"}
             {accelerationFactor > 1 &&
               accelerationFactor <= 2.5 &&
-              " (Accélération)"}
+              " (Acceleration)"}
           </span>
-          {/* Barre de progression d'accélération */}
+          {/* Acceleration progress bar */}
           <div
             style={{
               width: "100%",
@@ -209,55 +347,91 @@ export const NavigationUI = ({ graphRef }) => {
       </div>
 
       {isTransitioning ? (
-        <div style={{ color: "#ffcc00" }}>Transition en cours...</div>
+        <div style={{ color: "#ffcc00" }}>Transition in progress...</div>
       ) : (
         <div style={{ fontSize: "12px", opacity: 0.8 }}>
           <p>
-            <strong>Commandes de vol:</strong>
+            <strong>Flight controls:</strong>
             <br />
-            ZQSD/Flèches: Mouvement
+            WASD/Arrows: Movement
             <br />
-            E/Espace: Monter | C/Shift: Descendre
+            E/Space: Up | C/Shift: Down
             <br />
-            Q/E: Rotation | Z/X: Tangage | R/F: Roulis
+            Q/E: Rotation | Z/X: Pitch | R/F: Roll
           </p>
-          <p>Utilisez ESPACE pour naviguer entre les positions prédéfinies</p>
+          <p>Use SPACE to navigate between predefined positions</p>
 
-          {/* Timer avant orbite automatique */}
-          {cameraMode === "Normal" && timeBeforeAutoOrbit !== null ? (
-            <div
-              style={{
-                display: "flex",
-                alignItems: "center",
-                marginTop: "8px",
-                color: "#00aaff",
-              }}
-            >
-              <strong style={{ marginRight: "8px" }}>
-                Orbite automatique dans:
-              </strong>
-              <div
-                style={{
-                  backgroundColor: "rgba(0, 170, 255, 0.2)",
-                  padding: "2px 6px",
-                  borderRadius: "4px",
-                  fontWeight: "bold",
-                  minWidth: "50px",
-                  textAlign: "center",
-                }}
-              >
-                {Math.ceil(timeBeforeAutoOrbit / 1000)}s
-              </div>
-            </div>
-          ) : (
-            <p style={{ color: "#00aaff" }}>
-              Après 10s d'inactivité: orbite automatique
-            </p>
+          {/* Auto-rotation and auto-orbit timers */}
+          {cameraMode === "Normal" && (
+            <>
+              {/* Auto-rotation timer */}
+              {timeBeforeAutoRotate !== null && timeBeforeAutoRotate > 0 ? (
+                <div
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                    marginTop: "8px",
+                    color: "#ffcc00",
+                  }}
+                >
+                  <strong style={{ marginRight: "8px" }}>
+                    Auto-rotation in:
+                  </strong>
+                  <div
+                    style={{
+                      backgroundColor: "rgba(255, 204, 0, 0.2)",
+                      padding: "2px 6px",
+                      borderRadius: "4px",
+                      fontWeight: "bold",
+                      minWidth: "50px",
+                      textAlign: "center",
+                    }}
+                  >
+                    {Math.ceil(timeBeforeAutoRotate / 1000)}s
+                  </div>
+                </div>
+              ) : (
+                <p style={{ color: "#ffcc00" }}>
+                  Auto-rotation active after {AUTO_ROTATE_DELAY / 1000}s of
+                  inactivity
+                </p>
+              )}
+
+              {/* Auto-orbit timer */}
+              {timeBeforeAutoOrbit !== null && timeBeforeAutoOrbit > 0 ? (
+                <div
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                    marginTop: "8px",
+                    color: "#00aaff",
+                  }}
+                >
+                  <strong style={{ marginRight: "8px" }}>Auto-orbit in:</strong>
+                  <div
+                    style={{
+                      backgroundColor: "rgba(0, 170, 255, 0.2)",
+                      padding: "2px 6px",
+                      borderRadius: "4px",
+                      fontWeight: "bold",
+                      minWidth: "50px",
+                      textAlign: "center",
+                    }}
+                  >
+                    {Math.ceil(timeBeforeAutoOrbit / 1000)}s
+                  </div>
+                </div>
+              ) : (
+                <p style={{ color: "#00aaff" }}>
+                  Full orbit mode after {AUTO_ORBIT_DELAY / 1000}s of inactivity
+                </p>
+              )}
+            </>
           )}
         </div>
       )}
 
-      {/* Bouton d'exportation des données spatiales */}
+      {/* Spatial data export button */}
       {showExportButton && (
         <button
           onClick={handleExportData}
@@ -276,7 +450,7 @@ export const NavigationUI = ({ graphRef }) => {
             width: "100%",
           }}
         >
-          Exporter données spatialisées
+          Export Spatialized Data
         </button>
       )}
     </div>

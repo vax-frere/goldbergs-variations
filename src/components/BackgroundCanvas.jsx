@@ -79,7 +79,7 @@ const BackgroundCanvas = () => {
 
     // Créer des étoiles (avec mouvement très lent)
     const stars = [];
-    const starCount = 100;
+    const starCount = 200;
 
     class Star {
       constructor() {
@@ -339,7 +339,7 @@ const BackgroundCanvas = () => {
     // Animation loop
     const animate = () => {
       // Clear canvas with more fade for smoother transitions
-      ctx.fillStyle = "rgba(0, 0, 0, 0.03)"; // Fondu plus lent
+      ctx.fillStyle = "rgba(0, 0, 0, 0.2)"; // Augmenté de 0.03 à 0.08 pour réduire les traces
       ctx.fillRect(0, 0, canvas.width, canvas.height);
 
       // Update and draw stars (fixed points)

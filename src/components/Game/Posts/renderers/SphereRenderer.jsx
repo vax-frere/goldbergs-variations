@@ -44,7 +44,7 @@ export function SphereRenderer({
       frustumCulled={false}
       renderOrder={10}
     >
-      <sphereGeometry args={[0.05, SPHERE_SEGMENTS, SPHERE_SEGMENTS]} />
+      <sphereGeometry args={[0.2, SPHERE_SEGMENTS, SPHERE_SEGMENTS]} />
       <meshLambertMaterial
         transparent={true}
         opacity={1}

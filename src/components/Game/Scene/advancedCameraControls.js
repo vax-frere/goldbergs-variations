@@ -1,28 +1,20 @@
 import { Vector3, Euler, Quaternion } from "three";
+import {
+  CAMERA_POSITIONS,
+  DEFAULT_FLIGHT_CONFIG,
+  CAMERA_MODES,
+  BOUNDING_SPHERE_RADIUS,
+  ACCELERATION_DISTANCE_THRESHOLD,
+  ACCELERATION_FACTORS,
+  DEFAULT_POSITION,
+  DEFAULT_TARGET,
+  RETURN_VELOCITY,
+  RETURN_ROTATION_SPEED,
+  RETURN_DURATION,
+} from "./navigationConstants";
 
-// Positions fixes pour l'oscillation de la caméra
-export const CAMERA_POSITIONS = [
-  { position: new Vector3(0, 0, 600), target: new Vector3(0, 0, 0) }, // Position vue globale à 600 unités
-  // { position: new Vector3(200, 100, 300), target: new Vector3(0, 0, 0) },
-  // { position: new Vector3(-200, 50, 150), target: new Vector3(50, 0, 0) },
-  // { position: new Vector3(0, 200, 100), target: new Vector3(0, 0, 0) },
-  // { position: new Vector3(150, -100, 200), target: new Vector3(0, 50, 0) },
-];
-
-// Configuration par défaut pour le mode vol
-export const DEFAULT_FLIGHT_CONFIG = {
-  maxSpeed: 35,
-  acceleration: 300,
-  deceleration: 0.8,
-  rotationSpeed: 0.15, // Valeur plus élevée pour une réponse directe sans accélération
-  deadzone: 0.1,
-};
-
-// Modes de contrôle de caméra disponibles
-export const CAMERA_MODES = {
-  ORBIT: "orbit",
-  FLIGHT: "flight",
-};
+// Re-export des constantes importantes
+export { CAMERA_POSITIONS, DEFAULT_FLIGHT_CONFIG, CAMERA_MODES };
 
 // Hook rbit gérer les entrées clavier pour le vol
 export function useKeyboardFlightControls(onInput) {
@@ -143,15 +135,15 @@ export class FlightController {
     this.direction = new Vector3();
 
     // Paramètres pour la sphère limite
-    this.boundingSphereRadius = 800; // Rayon de la sphère limite
-    this.defaultPosition = new Vector3(0, 0, 600);
-    this.defaultTarget = new Vector3(0, 0, 0);
+    this.boundingSphereRadius = BOUNDING_SPHERE_RADIUS;
+    this.defaultPosition = DEFAULT_POSITION;
+    this.defaultTarget = DEFAULT_TARGET;
     this.isReturningToDefault = false;
 
     // Facteurs d'accélération pour la transition
-    this.currentAccelerationFactor = 3; // Facteur actuel (interpolé)
-    this.targetAccelerationFactor = 1; // Facteur cible
-    this.accelerationTransitionSpeed = 0.05; // Vitesse de transition (3 fois plus lente qu'avant)
+    this.currentAccelerationFactor = ACCELERATION_FACTORS.DEFAULT;
+    this.targetAccelerationFactor = ACCELERATION_FACTORS.DEFAULT;
+    this.accelerationTransitionSpeed = ACCELERATION_FACTORS.TRANSITION_SPEED;
 
     // Entrées actuelles
     this.input = {
@@ -182,17 +174,17 @@ export class FlightController {
     this.transitionStart = null;
     this.transitionEnd = null;
     this.transitionProgress = 0;
-    this.transitionDuration = 2000;
+    this.transitionDuration = RETURN_DURATION;
     this.isTransitioning = false;
     this.orbitControlsAfterTransition = false;
 
     // Limiter l'espace de jeu
-    this.returnVelocity = 10;
-    this.returnRotationSpeed = 0.1;
+    this.returnVelocity = RETURN_VELOCITY;
+    this.returnRotationSpeed = RETURN_ROTATION_SPEED;
     this.returnStartPos = null;
     this.returnStartRot = null;
     this.returnProgress = 0;
-    this.returnDuration = 2000;
+    this.returnDuration = RETURN_DURATION;
 
     // Stockage des positions
     this.predefinedPositions = [];
@@ -228,7 +220,10 @@ export class FlightController {
 
     // Calculer la distance par rapport au centre pour déterminer le facteur d'accélération cible
     const distanceFromCenter = this.camera.position.length();
-    this.targetAccelerationFactor = distanceFromCenter > 400 ? 3 : 1;
+    this.targetAccelerationFactor =
+      distanceFromCenter > ACCELERATION_DISTANCE_THRESHOLD
+        ? ACCELERATION_FACTORS.DISTANT
+        : ACCELERATION_FACTORS.DEFAULT;
 
     // Interpolation linéaire vers le facteur d'accélération cible
     if (
@@ -309,6 +304,8 @@ export class FlightController {
     const adjustedMaxSpeed = config.maxSpeed * accelerationFactor;
     // Exposer la vitesse maximale ajustée pour le NavigationUI
     window.__adjustedMaxSpeed = adjustedMaxSpeed;
+    // Exposer la vitesse actuelle de la caméra pour le NavigationUI
+    window.__cameraSpeed = currentSpeed;
 
     if (currentSpeed > adjustedMaxSpeed) {
       this.velocity.multiplyScalar(adjustedMaxSpeed / currentSpeed);
@@ -369,7 +366,7 @@ export class FlightController {
     if (this.isReturningToDefault) return;
 
     console.log(
-      "Limite de 800 dépassée - Simulation d'une action utilisateur pour transition fluide"
+      `Limite de ${this.boundingSphereRadius} dépassée - Simulation d'une action utilisateur pour transition fluide`
     );
     this.isReturningToDefault = true;
 
@@ -387,7 +384,7 @@ export class FlightController {
         // Réactiver les contrôles après la transition (après le délai d'animation)
         setTimeout(() => {
           this.isReturningToDefault = false;
-        }, 2500);
+        }, this.returnDuration + 500);
         return;
       }
     }
@@ -400,7 +397,7 @@ export class FlightController {
 
       setTimeout(() => {
         this.isReturningToDefault = false;
-      }, 2500);
+      }, this.returnDuration + 500);
     } else {
       // Solution de dernier recours - téléportation directe
       this.camera.position.copy(this.defaultPosition);
