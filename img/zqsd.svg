@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   width="200"
+   height="200"
+   viewBox="0 0 200 200"
+   font-family="Arial, sans-serif"
+   version="1.1"
+   id="svg4"
+   sodipodi:docname="zqsd.svg"
+   inkscape:version="1.4 (86a8ad7, 2024-10-11)"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <defs
+     id="defs4" />
+  <sodipodi:namedview
+     id="namedview4"
+     pagecolor="#505050"
+     bordercolor="#ffffff"
+     borderopacity="1"
+     inkscape:showpageshadow="0"
+     inkscape:pageopacity="0"
+     inkscape:pagecheckerboard="1"
+     inkscape:deskcolor="#505050"
+     inkscape:zoom="3.865"
+     inkscape:cx="100.12937"
+     inkscape:cy="100"
+     inkscape:window-width="1920"
+     inkscape:window-height="991"
+     inkscape:window-x="-9"
+     inkscape:window-y="-9"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="svg4" />
+  <!-- Haut -->
+  <rect
+     x="75"
+     y="20"
+     width="50"
+     height="50"
+     rx="6"
+     fill="none"
+     stroke="#000"
+     stroke-width="2"
+     id="rect1" />
+  <text
+     x="100"
+     y="52"
+     text-anchor="middle"
+     font-size="24px"
+     fill="#000000"
+     id="text1">Z</text>
+  <!-- Gauche -->
+  <rect
+     x="20"
+     y="80"
+     width="50"
+     height="50"
+     rx="6"
+     fill="none"
+     stroke="#000"
+     stroke-width="2"
+     id="rect2" />
+  <text
+     x="45"
+     y="112"
+     text-anchor="middle"
+     font-size="24px"
+     fill="#000000"
+     id="text2">Q</text>
+  <!-- Bas -->
+  <rect
+     x="75"
+     y="80"
+     width="50"
+     height="50"
+     rx="6"
+     fill="none"
+     stroke="#000"
+     stroke-width="2"
+     id="rect3" />
+  <text
+     x="100"
+     y="112"
+     text-anchor="middle"
+     font-size="24px"
+     fill="#000000"
+     id="text3">S</text>
+  <!-- Droite -->
+  <rect
+     x="130"
+     y="80"
+     width="50"
+     height="50"
+     rx="6"
+     fill="none"
+     stroke="#000"
+     stroke-width="2"
+     id="rect4" />
+  <text
+     x="155"
+     y="112"
+     text-anchor="middle"
+     font-size="24px"
+     fill="#000000"
+     id="text4">D</text>
+</svg>
