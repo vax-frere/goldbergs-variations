@@ -7,7 +7,7 @@ import {
   ACCELERATION_DISTANCE_THRESHOLD,
   AUTO_ROTATE_DELAY,
   AUTO_ORBIT_DELAY,
-} from "./Scene/navigationConstants";
+} from "./AdvancedCameraController/navigationConstants";
 
 // Utility function to export JSON data as downloadable file
 const exportJsonFile = (data, filename) => {

@@ -6,7 +6,7 @@ import VolumeOffOutlinedIcon from "@mui/icons-material/VolumeOffOutlined";
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import useSound from "use-sound";
-import { GlobalAudioController } from "./Game/Audio/SoundPlayer";
+import { GlobalAudioController } from "./Game/SoundPlayer/SoundPlayer";
 
 // Composant pour un bouton d'icône animé
 const AnimatedIconButton = ({ onClick, ariaLabel, children, transition }) => {
@@ -47,7 +47,10 @@ const Navbar = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const [isMuted, setIsMuted] = useState(GlobalAudioController.isMuted);
-  const [playSwitchSound] = useSound("/sounds/switch-on.mp3", { volume: 0.5 });
+  const [playSwitchSound] = useSound(
+    `${import.meta.env.BASE_URL}sounds/switch-on.mp3`,
+    { volume: 0.5 }
+  );
 
   const isHome = location.pathname === "/";
 

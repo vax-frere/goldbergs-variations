@@ -3,7 +3,7 @@ import { useFrame, useThree } from "@react-three/fiber";
 import * as THREE from "three";
 import { io } from "socket.io-client";
 // Importer la référence au nœud actif pour vérifier son état
-import { activeNodeRef } from "../../Node/hooks/useNodeProximitySync";
+import { activeNodeRef } from "../../Graph/Node/hooks/useNodeProximitySync";
 
 // Référence partagée pour le post actif
 export const activePostRef = { current: null };
@@ -415,13 +415,13 @@ const useNearestPostDetection = (posts) => {
     };
 
     // Importer et utiliser addEventListener du module useNodeProximitySync
-    import("../../Node/hooks/useNodeProximitySync").then((module) => {
+    import("../../Graph/Node/hooks/useNodeProximitySync").then((module) => {
       module.addEventListener("activeNodeChanged", handleNodeChange);
     });
 
     return () => {
       // Nettoyer l'écouteur
-      import("../../Node/hooks/useNodeProximitySync").then((module) => {
+      import("../../Graph/Node/hooks/useNodeProximitySync").then((module) => {
         module.removeEventListener("activeNodeChanged", handleNodeChange);
       });
     };

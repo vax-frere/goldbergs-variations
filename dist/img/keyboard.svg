@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="2666" height="1908" viewBox="0 0 2666 1908"><g fill="none" fill-rule="evenodd"><line x1="956.22" x2="677.006" y1="692.772" y2="806.386" stroke="#FFF" stroke-linecap="round" stroke-linejoin="round" stroke-width="6" transform="scale(1 -1) rotate(-30 -1981.696 0)"/><line x1="1951.727" x2="1756.665" y1="884.704" y2="655.351" stroke="#FFF" stroke-linecap="round" stroke-linejoin="round" stroke-width="6" transform="rotate(-105 1854.665 770.351)"/><line x1="1232.017" x2="1420.38" y1="1281.991" y2="1231.549" stroke="#FFF" stroke-linecap="round" stroke-linejoin="round" stroke-width="6" transform="rotate(105 1326.21 1256.564)"/><text fill="#FFF" font-family="Helvetica-Bold, Helvetica" font-size="70" font-weight="bold" letter-spacing="6.045">
+            <tspan x="382.772" y="615">Forward</tspan>
+        </text><text fill="#FFF" font-family="Helvetica-Bold, Helvetica" font-size="70" font-weight="bold" letter-spacing="6.045">
+            <tspan x="1973.078" y="631">Orientation</tspan>
+        </text><text fill="#FFF" font-family="Helvetica-Bold, Helvetica" font-size="70" font-weight="bold" letter-spacing="6.045">
+            <tspan x="1233.237" y="1447">Back</tspan>
+        </text><g transform="translate(854.09 789)"><rect width="126.818" height="126.818" x="139.5" stroke="#FFF" stroke-width="2" rx="24"/><text fill="#FFF" fill-rule="nonzero" font-family="ArialMT, Arial" font-size="56">
+                    <tspan x="176.481" y="82.364">W</tspan>
+                </text><rect width="126.818" height="126.818" y="152.182" stroke="#FFF" stroke-width="2" rx="24"/><text fill="#FFF" fill-rule="nonzero" font-family="ArialMT, Arial" font-size="56">
+                    <tspan x="44.733" y="234.545">A</tspan>
+                </text><rect width="126.818" height="126.818" x="139.5" y="152.182" stroke="#FFF" stroke-width="2" rx="24"/><text fill="#FFF" fill-rule="nonzero" font-family="ArialMT, Arial" font-size="56">
+                    <tspan x="184.233" y="234.545">S</tspan>
+                </text><rect width="126.818" height="126.818" x="279" y="152.182" stroke="#FFF" stroke-width="2" rx="24"/><text fill="#FFF" fill-rule="nonzero" font-family="ArialMT, Arial" font-size="56">
+                    <tspan x="322.188" y="234.545">D</tspan>
+                </text></g><g transform="translate(1435.09 789)"><rect width="126.818" height="126.818" x="139.5" stroke="#FFF" stroke-width="2" rx="24"/><text fill="#FFF" fill-rule="nonzero" font-family="ArialMT, Arial" font-size="56">
+                <tspan x="188.909" y="73.364">↑</tspan>
+            </text><rect width="126.818" height="126.818" y="152.182" stroke="#FFF" stroke-width="2" rx="24"/><text fill="#FFF" fill-rule="nonzero" font-family="ArialMT, Arial" font-size="56">
+                <tspan x="37.85" y="231.545">←</tspan>
+            </text><rect width="126.818" height="126.818" x="139.5" y="152.182" stroke="#FFF" stroke-width="2" rx="24"/><text fill="#FFF" fill-rule="nonzero" font-family="ArialMT, Arial" font-size="56">
+                <tspan x="188.909" y="227.545">↓</tspan>
+            </text><rect width="126.818" height="126.818" x="279" y="152.182" stroke="#FFF" stroke-width="2" rx="24"/><text fill="#FFF" fill-rule="nonzero" font-family="ArialMT, Arial" font-size="56">
+                <tspan x="316.582" y="231.545">→</tspan>
+            </text></g><rect width="994" height="126.818" x="847" y="1093.182" stroke="#FFF" stroke-width="2" rx="24"/></g></svg>

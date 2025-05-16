@@ -5,52 +5,52 @@ import { log } from "../utils/logger";
 import {
   CAMERA_FOV,
   BASE_CAMERA_DISTANCE,
-} from "../components/Game/Scene/navigationConstants";
+} from "../components/Game/AdvancedCameraController/navigationConstants";
 
 import GridReferences from "../components/Game/GridReferences";
 import {
   loadGraphData,
   getNodesWithPositions,
-} from "../components/Game/utils/graphDataUtils";
-import ForceGraph from "../components/Game/ForceGraph";
+} from "../components/Game/Graph/utils/graphDataUtils";
+import ForceGraph from "../components/Game/Graph/ForceGraph";
 import AdvancedCameraController, {
   GamepadIndicator,
   CrosshairIndicator,
-} from "../components/Game/AdvancedCameraController";
+} from "../components/Game/AdvancedCameraController/AdvancedCameraController";
 import NavigationUI from "../components/Game/NavigationUI";
-import SoundPlayer from "../components/Game/Audio/SoundPlayer";
+import SoundPlayer from "../components/Game/SoundPlayer/SoundPlayer";
 import {
   EffectComposer,
   Bloom,
   ToneMapping,
 } from "@react-three/postprocessing";
 import Posts from "../components/Game/Posts/Posts";
-import SvgSprite from "../components/Game/SvgSprite";
+import SvgSprite from "../components/Game/common/SvgSprite";
 import Text3D from "../components/Game/Text3D";
 
 const DEBUG = false;
 
 // Liste des catégories à afficher dans l'espace 3D
 const CATEGORIES = [
-  { text: "Libertarians and Liberals", position: [500, 200, -300] },
+  { text: "Libertarians", position: [500, 200, -300] },
   {
-    text: "Anti-system and Provocateurs",
+    text: "Antisystem",
     position: [-400, 300, 200],
   },
   {
-    text: "Conservatives and Traditionalists",
+    text: "Conservatives",
     position: [300, -200, 400],
   },
   {
-    text: "Far-right and Nationalism",
+    text: "Nationalists",
     position: [-500, -150, -250],
   },
   {
-    text: "Religious and Identity Radicalisms",
+    text: "Religious",
     position: [200, 400, 300],
   },
   { text: "Culture", position: [-300, 100, 500] },
-  { text: "Left and Social Justice", position: [-200, -300, 100] },
+  { text: "Social justice", position: [-200, -300, 100] },
 ];
 
 const Game = () => {
@@ -113,7 +113,7 @@ const Game = () => {
       {audioStarted && (
         <>
           <SoundPlayer
-            soundPath="/sounds/ambiant.mp3"
+            soundPath={`${import.meta.env.BASE_URL}sounds/ambiant.mp3`}
             defaultVolume={0.1}
             loop={true}
             autoPlay={true}
@@ -122,7 +122,7 @@ const Game = () => {
             tooltipLabels={{ mute: "Couper le son", unmute: "Activer le son" }}
           />
           <SoundPlayer
-            soundPath="/sounds/interview.m4a"
+            soundPath={`${import.meta.env.BASE_URL}sounds/interview.m4a`}
             defaultVolume={0.7}
             loop={true}
             autoPlay={true}
@@ -153,7 +153,7 @@ const Game = () => {
         {gameStarted && (
           <>
             <SvgSprite
-              svgPath="/img/joshua-goldberg.svg"
+              svgPath={`${import.meta.env.BASE_URL}img/joshua-goldberg.svg`}
               size={300}
               position={[0, 0, 0]}
               isBillboard={false}

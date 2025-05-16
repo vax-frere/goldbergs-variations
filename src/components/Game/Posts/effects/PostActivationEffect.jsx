@@ -140,7 +140,7 @@ export function PostActivationEffect({
     <group position={[position[0], position[1], position[2]]}>
       <PositionalAudio
         ref={sound}
-        url="/sounds/touch.mp3"
+        url={`${import.meta.env.BASE_URL}sounds/touch.mp3`}
         distance={20}
         intensity={1}
         loop={false}

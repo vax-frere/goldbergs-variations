@@ -9,7 +9,10 @@ import PageTransition, {
 
 const Controls = () => {
   const navigate = useNavigate();
-  const [playSwitchSound] = useSound("/sounds/switch-on.mp3", { volume: 0.5 });
+  const [playSwitchSound] = useSound(
+    `${import.meta.env.BASE_URL}sounds/switch-on.mp3`,
+    { volume: 0.5 }
+  );
 
   const handleExploreClick = () => {
     playSwitchSound();
@@ -99,7 +102,7 @@ const Controls = () => {
                 >
                   <Box sx={{ maxWidth: "100%", overflow: "hidden" }}>
                     <img
-                      src="/img/gamepad.svg"
+                      src={`${import.meta.env.BASE_URL}img/gamepad.svg`}
                       alt="Gamepad Controls"
                       style={{
                         maxWidth: "100%",

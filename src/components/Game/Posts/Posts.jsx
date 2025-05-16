@@ -80,7 +80,7 @@ const COORDINATES_SCALE_FACTOR = 3.75;
 export function Posts({
   data: externalData,
   renderer = "billboard",
-  dataUrl = "/data/spatialized_posts.data.json",
+  dataUrl = `${import.meta.env.BASE_URL}data/spatialized_posts.data.json`,
   explosionDuration = 5,
   explosionStagger = EXPLOSION_STAGGER,
   explosionPathVariation = EXPLOSION_PATH_VARIATION,

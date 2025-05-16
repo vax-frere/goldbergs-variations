@@ -9,7 +9,10 @@ import PageTransition, {
 
 const Home = () => {
   const navigate = useNavigate();
-  const [playSwitchSound] = useSound("/sounds/switch-on.mp3", { volume: 0.5 });
+  const [playSwitchSound] = useSound(
+    `${import.meta.env.BASE_URL}sounds/switch-on.mp3`,
+    { volume: 0.5 }
+  );
 
   const handleEnterClick = () => {
     playSwitchSound();
