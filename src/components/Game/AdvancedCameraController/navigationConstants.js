@@ -6,7 +6,7 @@ import { Vector3 } from "three";
 
 // Paramètres des positions de caméra
 export const CAMERA_POSITIONS = [
-  { position: new Vector3(0, 0, 2000), target: new Vector3(0, 0, 0) }, // Position vue globale à 600 unités
+  { position: new Vector3(0, 0, 2000), target: new Vector3(0, 0, 0) }, // Position vue globale à 2000 unités
   // { position: new Vector3(200, 100, 300), target: new Vector3(0, 0, 0) },
   // { position: new Vector3(-200, 50, 150), target: new Vector3(50, 0, 0) },
   // { position: new Vector3(0, 200, 100), target: new Vector3(0, 0, 0) },
@@ -20,13 +20,14 @@ export const CAMERA_FOV = 50;
 export const BASE_CAMERA_DISTANCE = 2000;
 export const BOUNDING_SPHERE_RADIUS = 2400; // Rayon de la sphère limite au-delà de laquelle on revient à la position par défaut
 export const ACCELERATION_DISTANCE_THRESHOLD = 10; // Distance à partir de laquelle on applique l'accélération
+export const ORBIT_DISTANCE = 2000; // Distance fixe pour le mode d'orbite automatique
 
 // Configuration du mode vol
 export const DEFAULT_FLIGHT_CONFIG = {
   maxSpeed: 300, // Maintenu pour la vitesse maximale
   acceleration: 400, // Réduit pour une accélération plus progressive (était 800)
   deceleration: 0.92, // Augmenté pour une décélération plus longue (était 0.85)
-  rotationSpeed: 0.3, // Maintenu pour la rotation
+  rotationSpeed: 0.5, // Maintenu pour la rotation
   deadzone: 0.08, // Maintenu pour la sensibilité
 };
 

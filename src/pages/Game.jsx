@@ -5,6 +5,7 @@ import { log } from "../utils/logger";
 import {
   CAMERA_FOV,
   BASE_CAMERA_DISTANCE,
+  BOUNDING_SPHERE_RADIUS,
 } from "../components/Game/AdvancedCameraController/navigationConstants";
 
 import GridReferences from "../components/Game/GridReferences";
@@ -27,8 +28,10 @@ import {
 import Posts from "../components/Game/Posts/Posts";
 import SvgSprite from "../components/Game/common/SvgSprite";
 import Text3D from "../components/Game/Text3D";
+import { BlackHoleEffect } from "../components/Game/common/BlackHoleEffect";
+import ShootingStars from "../components/Game/common/ShootingStar";
 
-const DEBUG = false;
+const DEBUG = true;
 
 // Liste des catégories à afficher dans l'espace 3D
 const CATEGORIES = [
@@ -53,12 +56,23 @@ const CATEGORIES = [
   { text: "Social justice", position: [-200, -300, 100] },
 ];
 
+// Liste des trous noirs à ajouter dans l'espace 3D
+const BLACK_HOLE = {
+  position: [450, 0, 100],
+  size: 12,
+  particles: 35000,
+  rotationSpeed: 0.3,
+  spiralTightness: 3.0,
+  rotation: [Math.PI / 4, 0, Math.PI / 6], // Rotation sur X et Z
+};
+
 const Game = () => {
   const [graphData, setGraphData] = useState({ nodes: [], links: [] });
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
   const [gameStarted, setGameStarted] = useState(true);
   const [audioStarted, setAudioStarted] = useState(true);
+  const [explosionCompleted, setExplosionCompleted] = useState(false);
 
   // Utiliser useRef au lieu de useState pour éviter les re-rendus
   const graphInstanceRef = useRef(null);
@@ -98,6 +112,18 @@ const Game = () => {
 
     fetchData();
   }, []);
+
+  // Effet pour gérer le délai de l'explosion
+  useEffect(() => {
+    if (gameStarted) {
+      const timer = setTimeout(() => {
+        setExplosionCompleted(true);
+        console.log("Explosion terminée, étoiles filantes activées");
+      }, 5000);
+
+      return () => clearTimeout(timer);
+    }
+  }, [gameStarted]);
 
   return (
     <div
@@ -177,6 +203,29 @@ const Game = () => {
 
         {/* Ajouter le composant Posts qui chargera ses propres données */}
         {gameStarted && <Posts renderer="sphere" />}
+
+        {/* Ajouter le trou noir */}
+        {gameStarted && (
+          <BlackHoleEffect
+            position={BLACK_HOLE.position}
+            size={BLACK_HOLE.size}
+            particles={BLACK_HOLE.particles}
+            rotationSpeed={BLACK_HOLE.rotationSpeed}
+            spiralTightness={BLACK_HOLE.spiralTightness}
+            rotation={BLACK_HOLE.rotation}
+          />
+        )}
+
+        {/* Ajouter les étoiles filantes seulement après l'explosion */}
+        {gameStarted && explosionCompleted && (
+          <ShootingStars
+            count={5}
+            sphereRadius={BOUNDING_SPHERE_RADIUS}
+            innerRadius={400}
+            targetRadius={150}
+            spawnInterval={{ min: 2.5, max: 6.0 }}
+          />
+        )}
 
         {/* Remplacer OrbitControls par AdvancedCameraController */}
         {gameStarted && <AdvancedCameraController />}

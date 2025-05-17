@@ -16,6 +16,7 @@ import {
   TRANSITION_DURATION,
   ORBIT_SETTINGS,
   AUDIO_SETTINGS,
+  ORBIT_DISTANCE,
 } from "./navigationConstants";
 import { getInputManager, useInputs } from "./inputManager";
 import {
@@ -281,7 +282,7 @@ export function AdvancedCameraController({ config = DEFAULT_FLIGHT_CONFIG }) {
     };
   }, [config]);
 
-  // Initialiser la caméra à la position 0 (vue globale à 600 unités)
+  // Initialiser la caméra à la position 0 (vue globale à 2000 unités)
   useEffect(() => {
     if (camera) {
       // Définir la position initiale de la caméra avec un délai pour permettre
@@ -764,9 +765,9 @@ export function AdvancedCameraController({ config = DEFAULT_FLIGHT_CONFIG }) {
       const distance = position.length();
 
       // Maintenir la distance avec le centre (0,0,0)
-      if (Math.abs(distance - 600) > 10) {
+      if (Math.abs(distance - ORBIT_DISTANCE) > 10) {
         const direction = position.clone().normalize();
-        const targetPos = direction.multiplyScalar(600);
+        const targetPos = direction.multiplyScalar(ORBIT_DISTANCE);
         camera.position.lerp(targetPos, 0.05);
       }
 
