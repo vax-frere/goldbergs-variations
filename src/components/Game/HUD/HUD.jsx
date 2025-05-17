@@ -5,57 +5,15 @@ import VisibilityIcon from '@mui/icons-material/Visibility';
 import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
 import HudSvg from './HudSvg';
 
-// Styled components pour le HUD
-const HUDContainer = styled(Box)(({ theme }) => ({
-  position: "absolute",
-  top: "20px",
-  left: "50%",
-  transform: "translateX(-50%)",
-  zIndex: 1000,
-  display: "flex",
-  flexDirection: "column",
-  alignItems: "center",
-}));
-
-const HUDPanel = styled(Paper)(({ theme }) => ({
-  backgroundColor: "rgba(0, 0, 0, 0.7)",
-  color: "white",
-  padding: "10px 20px",
-  borderRadius: "5px",
-  display: "flex",
-  alignItems: "center",
-  gap: "20px",
-  backdropFilter: "blur(5px)",
-  boxShadow: "0 4px 6px rgba(0, 0, 0, 0.3)",
-  border: "1px solid rgba(255, 255, 255, 0.1)",
-  pointerEvents: "none", // Pour permettre les clics à travers le HUD
-}));
-
-const HUDItem = styled(Box)(({ theme }) => ({
-  display: "flex",
-  flexDirection: "column",
-  alignItems: "center",
-  justifyContent: "center",
-}));
-
-const HUDLabel = styled(Typography)(({ theme }) => ({
-  fontSize: "0.7rem",
-  opacity: 0.7,
-  textTransform: "uppercase",
-  letterSpacing: "1px",
-}));
-
-const HUDValue = styled(Typography)(({ theme }) => ({
-  fontSize: "1.2rem",
-  fontWeight: "bold",
-}));
-
 const ToggleButton = styled(IconButton)(({ theme }) => ({
   position: "absolute",
-  top: "10px",
-  right: "10px",
+  bottom: "80px",
+  right: "20px",
   backgroundColor: "rgba(0, 0, 0, 0.5)",
   color: "white",
+  padding: "15px", // Augmenter le padding pour agrandir le bouton
+  width: "60px", // Définir une largeur fixe plus grande
+  height: "60px", // Définir une hauteur fixe plus grande
   "&:hover": {
     backgroundColor: "rgba(0, 0, 0, 0.7)",
   },
@@ -182,54 +140,9 @@ const HUD = ({ defaultVisible = true }) => {
   return (
     <>
       {/* Bouton pour basculer la visibilité du HUD */}
-      <ToggleButton onClick={toggleVisibility} size="small">
-        {isVisible ? <VisibilityOffIcon /> : <VisibilityIcon />}
+      <ToggleButton onClick={toggleVisibility} size="large">
+        {isVisible ? <VisibilityOffIcon fontSize="large" /> : <VisibilityIcon fontSize="large" />}
       </ToggleButton>
-
-      {/* Panneau principal du HUD */}
-      {isVisible && (
-        <HUDContainer>
-          <HUDPanel>
-            <HUDItem>
-              <HUDLabel>Temps</HUDLabel>
-              <HUDValue>{formatTime(currentTime)}</HUDValue>
-            </HUDItem>
-
-            <HUDItem>
-              <HUDLabel>Position</HUDLabel>
-              <HUDValue>
-                {currentPosition.x.toFixed(0)}, {currentPosition.y.toFixed(0)}, {currentPosition.z.toFixed(0)}
-              </HUDValue>
-            </HUDItem>
-
-            <HUDItem>
-              <HUDLabel>Vitesse</HUDLabel>
-              <HUDValue sx={{
-                color: currentSpeed > 200
-                  ? "#ff6b6b"
-                  : currentSpeed > 100
-                    ? "#ffcc00"
-                    : "#4CAF50"
-              }}>
-                {currentSpeed.toFixed(0)} u/s
-              </HUDValue>
-            </HUDItem>
-
-            <HUDItem>
-              <HUDLabel>Distance</HUDLabel>
-              <HUDValue sx={{
-                color: distanceToCenter > 2000
-                  ? "#ff6b6b"
-                  : distanceToCenter > 1500
-                    ? "#ffcc00"
-                    : "#4CAF50"
-              }}>
-                {distanceToCenter.toFixed(0)}
-              </HUDValue>
-            </HUDItem>
-          </HUDPanel>
-        </HUDContainer>
-      )}
 
       {/* Overlay SVG du HUD */}
       {isVisible && (
