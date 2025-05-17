@@ -234,6 +234,11 @@ export function AdvancedCameraController({ config = DEFAULT_FLIGHT_CONFIG }) {
           2
         )}, ${camera.position.y.toFixed(2)}, ${camera.position.z.toFixed(2)}]`
       );
+
+      // Afficher un message dans le HUD
+      if (window.__showHUDMessage) {
+        window.__showHUDMessage("Mode orbite automatique activé", 3000);
+      }
     }
 
     // Si on vient de désactiver le mode orbite, réinitialiser le FlightController
@@ -256,6 +261,11 @@ export function AdvancedCameraController({ config = DEFAULT_FLIGHT_CONFIG }) {
         );
         // Redémarrer le compteur de posts
         sendStartCountingSignal();
+
+        // Afficher un message dans le HUD
+        if (window.__showHUDMessage) {
+          window.__showHUDMessage("Mode vol libre activé", 3000);
+        }
       }
     }
 
@@ -905,6 +915,11 @@ export function AdvancedCameraController({ config = DEFAULT_FLIGHT_CONFIG }) {
     setPositionIndex(index);
     setIsTransitioning(true);
     window.__cameraAnimating = true;
+
+    // Afficher un message dans le HUD
+    if (window.__showHUDMessage) {
+      window.__showHUDMessage(`Transition vers position ${index + 1}`, 2000);
+    }
 
     // Si on doit activer l'orbite après la transition, programmer un délai
     if (activateOrbitAfter) {

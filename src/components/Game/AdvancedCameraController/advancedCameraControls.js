@@ -316,6 +316,11 @@ export class FlightController {
 
     // Vérifier si le joueur est en dehors de la sphère limite
     if (distanceFromCenter > this.boundingSphereRadius) {
+      // Afficher un message dans le HUD
+      if (window.__showHUDMessage) {
+        window.__showHUDMessage("Limite de navigation atteinte - Retour à la position initiale", 5000);
+      }
+
       this.returnToDefaultPosition();
       return;
     }

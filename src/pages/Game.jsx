@@ -30,6 +30,7 @@ import SvgSprite from "../components/Game/common/SvgSprite";
 import Text3D from "../components/Game/Text3D";
 import { BlackHoleEffect } from "../components/Game/common/BlackHoleEffect";
 import ShootingStars from "../components/Game/common/ShootingStar";
+import HUD from "../components/Game/HUD/HUD";
 
 const DEBUG = true;
 
@@ -259,6 +260,9 @@ const Game = () => {
 
       {/* Viseur pour le mode vol */}
       {gameStarted && <CrosshairIndicator />}
+
+      {/* HUD fixe */}
+      {gameStarted && <HUD defaultVisible={true} />}
     </div>
   );
 };
