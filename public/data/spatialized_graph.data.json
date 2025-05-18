@@ -1,0 +1,4393 @@
+{
+  "nodes": [
+    {
+      "id": "24-129-100-84_0",
+      "name": "24-129-100-84",
+      "type": "character",
+      "cluster": 1,
+      "x": 18.790408514075,
+      "y": -402.6969630305019,
+      "z": 25.699216436232142,
+      "value": 10,
+      "slug": "24-129-100-84"
+    },
+    {
+      "id": "platform_wikipedia_1",
+      "name": "wikipedia",
+      "type": "platform",
+      "cluster": 1,
+      "x": -10.917111185588734,
+      "y": -418.9303096361528,
+      "z": 29.094539411447673,
+      "value": 15
+    },
+    {
+      "id": "4krapsucks_2",
+      "name": "4KrapSucks",
+      "type": "character",
+      "cluster": 2,
+      "x": -23.405901997530083,
+      "y": 118.3218903100789,
+      "z": 417.8375328674792,
+      "value": 10,
+      "slug": "4krapsucks"
+    },
+    {
+      "id": "platform_anime-news-network_3",
+      "name": "anime-news-network",
+      "type": "platform",
+      "cluster": 2,
+      "x": 7.071823558681731,
+      "y": 130.06151606147725,
+      "z": 426.73121365345173,
+      "value": 15
+    },
+    {
+      "id": "66-177-73-91_4",
+      "name": "66-177-73-91",
+      "type": "character",
+      "cluster": 3,
+      "x": -139.37836492678832,
+      "y": -335.1681451165206,
+      "z": -61.84586612341756,
+      "value": 10,
+      "slug": "66-177-73-91"
+    },
+    {
+      "id": "platform_wikipedia_5",
+      "name": "wikipedia",
+      "type": "platform",
+      "cluster": 3,
+      "x": -166.97114492990306,
+      "y": -318.79415642711814,
+      "z": -51.755622321966236,
+      "value": 15
+    },
+    {
+      "id": "76-106-245-93_6",
+      "name": "76-106-245-93",
+      "type": "character",
+      "cluster": 4,
+      "x": -533.6772706164114,
+      "y": -278.28880712049045,
+      "z": 30.554156293076048,
+      "value": 10,
+      "slug": "76-106-245-93"
+    },
+    {
+      "id": "platform_wikipedia_7",
+      "name": "wikipedia",
+      "type": "platform",
+      "cluster": 4,
+      "x": -525.1082234008926,
+      "y": -300.53431037470614,
+      "z": 54.49063320388788,
+      "value": 15
+    },
+    {
+      "id": "amina-blackberry_8",
+      "name": "Amina Blackberry",
+      "type": "character",
+      "cluster": 5,
+      "x": -144.6294814736183,
+      "y": 85.13912346102296,
+      "z": -439.6941504130357,
+      "value": 10,
+      "slug": "amina-blackberry"
+    },
+    {
+      "id": "platform_reddit_9",
+      "name": "reddit",
+      "type": "platform",
+      "cluster": 5,
+      "x": -185.9798123844153,
+      "y": 84.41832545171565,
+      "z": -437.31175168574407,
+      "value": 15
+    },
+    {
+      "id": "platform_twitter_10",
+      "name": "twitter",
+      "type": "platform",
+      "cluster": 5,
+      "x": -132.0537859800587,
+      "y": 57.58686165393067,
+      "z": -462.0686562411686,
+      "value": 15
+    },
+    {
+      "id": "michael-slay_11",
+      "name": "Michael Slay",
+      "type": "character",
+      "cluster": 5,
+      "x": -192.3145255847943,
+      "y": 55.56268571146528,
+      "z": -466.191100048645,
+      "value": 10,
+      "slug": "michael-slay"
+    },
+    {
+      "id": "platform_medium_12",
+      "name": "medium",
+      "type": "platform",
+      "cluster": 5,
+      "x": -223.09705117628926,
+      "y": 34.00865893905378,
+      "z": -474.85455526670023,
+      "value": 15
+    },
+    {
+      "id": "platform_dailystormer_13",
+      "name": "dailystormer",
+      "type": "platform",
+      "cluster": 5,
+      "x": -229.26429834101054,
+      "y": 66.53063019032093,
+      "z": -467.7974236491397,
+      "value": 15
+    },
+    {
+      "id": "josh-bornstein_14",
+      "name": "Josh Bornstein",
+      "type": "character",
+      "cluster": 5,
+      "x": -140.47044038869657,
+      "y": 35.46025843319667,
+      "z": -489.0154416229406,
+      "value": 5,
+      "slug": "josh-bornstein"
+    },
+    {
+      "id": "australi-witness_15",
+      "name": "Australi Witness",
+      "type": "character",
+      "cluster": 5,
+      "x": -86.6183997176462,
+      "y": 37.09475234373106,
+      "z": -476.08573359138984,
+      "value": 10,
+      "slug": "australi-witness"
+    },
+    {
+      "id": "platform_surespot_16",
+      "name": "surespot",
+      "type": "platform",
+      "cluster": 5,
+      "x": -69.9746086972667,
+      "y": 38.07834109947548,
+      "z": -510.51856762733394,
+      "value": 15
+    },
+    {
+      "id": "platform_JustPaste.it_17",
+      "name": "JustPaste.it",
+      "type": "platform",
+      "cluster": 5,
+      "x": -76.87370141373674,
+      "y": 0.27368934746766116,
+      "z": -479.62222331580045,
+      "value": 15
+    },
+    {
+      "id": "platform_facebook_18",
+      "name": "facebook",
+      "type": "platform",
+      "cluster": 5,
+      "x": -51.17873850338006,
+      "y": 47.302451862614305,
+      "z": -468.3076455158848,
+      "value": 15
+    },
+    {
+      "id": "platform_8chan_19",
+      "name": "8chan",
+      "type": "platform",
+      "cluster": 5,
+      "x": -52.44578974872129,
+      "y": 18.937865553377573,
+      "z": -484.9051836475518,
+      "value": 15
+    },
+    {
+      "id": "aryan-heights_20",
+      "name": "Aryan Heights",
+      "type": "character",
+      "cluster": 6,
+      "x": 317.12547001770434,
+      "y": -111.38751227577733,
+      "z": -369.1741023057375,
+      "value": 10,
+      "slug": "aryan-heights"
+    },
+    {
+      "id": "platform_stormfront_21",
+      "name": "stormfront",
+      "type": "platform",
+      "cluster": 6,
+      "x": 321.46158930601064,
+      "y": -78.43679505953294,
+      "z": -363.12674531692835,
+      "value": 15
+    },
+    {
+      "id": "australi-witness_22",
+      "name": "Australi Witness",
+      "type": "character",
+      "cluster": 7,
+      "x": 140.87757744925563,
+      "y": -351.44840384366387,
+      "z": 283.53569597327254,
+      "value": 10,
+      "slug": "australi-witness"
+    },
+    {
+      "id": "platform_surespot_23",
+      "name": "surespot",
+      "type": "platform",
+      "cluster": 7,
+      "x": 162.90545134360084,
+      "y": -339.65214985311354,
+      "z": 321.4430296618836,
+      "value": 15
+    },
+    {
+      "id": "platform_JustPaste.it_24",
+      "name": "JustPaste.it",
+      "type": "platform",
+      "cluster": 7,
+      "x": 128.60536327876792,
+      "y": -374.49658601890155,
+      "z": 315.0643131191029,
+      "value": 15
+    },
+    {
+      "id": "platform_facebook_25",
+      "name": "facebook",
+      "type": "platform",
+      "cluster": 7,
+      "x": 142.10469674976704,
+      "y": -389.64563371791206,
+      "z": 293.01170735723775,
+      "value": 15
+    },
+    {
+      "id": "platform_8chan_26",
+      "name": "8chan",
+      "type": "platform",
+      "cluster": 7,
+      "x": 122.12098183336585,
+      "y": -343.70511763414817,
+      "z": 318.5298165191588,
+      "value": 15
+    },
+    {
+      "id": "platform_twitter_27",
+      "name": "twitter",
+      "type": "platform",
+      "cluster": 7,
+      "x": 107.40436939225489,
+      "y": -348.9093564304694,
+      "z": 251.52986502234359,
+      "value": 15
+    },
+    {
+      "id": "elton-simpson_28",
+      "name": "Elton Simpson",
+      "type": "character",
+      "cluster": 7,
+      "x": 81.60282625449987,
+      "y": -361.3703164103251,
+      "z": 283.359822587708,
+      "value": 5,
+      "slug": "elton-simpson"
+    },
+    {
+      "id": "nadir-soofi_29",
+      "name": "Nadir Soofi",
+      "type": "character",
+      "cluster": 7,
+      "x": 94.27504646842176,
+      "y": -318.65431855237387,
+      "z": 275.8826771037947,
+      "value": 5,
+      "slug": "nadir-soofi"
+    },
+    {
+      "id": "pamela-geller_30",
+      "name": "Pamela Geller",
+      "type": "character",
+      "cluster": 7,
+      "x": 100.87748809029337,
+      "y": -386.6921334500246,
+      "z": 237.47443580157528,
+      "value": 5,
+      "slug": "pamela-geller"
+    },
+    {
+      "id": "elise-potaka_31",
+      "name": "Elise Potaka",
+      "type": "character",
+      "cluster": 7,
+      "x": 66.39720136756789,
+      "y": -363.5076164248329,
+      "z": 249.46312838259107,
+      "value": 5,
+      "slug": "elise-potaka"
+    },
+    {
+      "id": "jim-berry-fbi_32",
+      "name": "Jim Berry (FBI)",
+      "type": "character",
+      "cluster": 7,
+      "x": 69.23468896829085,
+      "y": -341.13595852704617,
+      "z": 272.6367965405165,
+      "value": 5,
+      "slug": "jim-berry-fbi"
+    },
+    {
+      "id": "bindi-cole_33",
+      "name": "Bindi Cole",
+      "type": "character",
+      "cluster": 7,
+      "x": 84.10832773450846,
+      "y": -384.1531747720147,
+      "z": 262.1692659255967,
+      "value": 5,
+      "slug": "bindi-cole"
+    },
+    {
+      "id": "bill-leak_34",
+      "name": "Bill Leak",
+      "type": "character",
+      "cluster": 7,
+      "x": 98.69627640791029,
+      "y": -310.87340230102006,
+      "z": 245.86215071202236,
+      "value": 5,
+      "slug": "bill-leak"
+    },
+    {
+      "id": "larry-pickering_35",
+      "name": "Larry Pickering",
+      "type": "character",
+      "cluster": 7,
+      "x": 87.05742712525674,
+      "y": -364.4769686747647,
+      "z": 220.92315292643502,
+      "value": 5,
+      "slug": "larry-pickering"
+    },
+    {
+      "id": "rita-katz_36",
+      "name": "Rita Katz",
+      "type": "character",
+      "cluster": 7,
+      "x": 71.90918116355299,
+      "y": -330.8884009143367,
+      "z": 243.61202350516135,
+      "value": 5,
+      "slug": "rita-katz"
+    },
+    {
+      "id": "afp-federal-agent-as-mohamadmo7_37",
+      "name": "AFP Federal Agent as mohamadmo7",
+      "type": "character",
+      "cluster": 7,
+      "x": 159.7990355706112,
+      "y": -323.03387982316616,
+      "z": 356.29928689397394,
+      "value": 5,
+      "slug": "afp-federal-agent-as-mohamadmo7"
+    },
+    {
+      "id": "fbi-as-wilayaks_38",
+      "name": "FBI as wilayahks",
+      "type": "character",
+      "cluster": 7,
+      "x": 192.29121146680967,
+      "y": -335.8773083660975,
+      "z": 342.43436151773267,
+      "value": 5,
+      "slug": "fbi-as-wilayaks"
+    },
+    {
+      "id": "michael-slay_39",
+      "name": "Michael Slay",
+      "type": "character",
+      "cluster": 7,
+      "x": 34.47996209992331,
+      "y": -325.84685689160193,
+      "z": 213.54192757789866,
+      "value": 10,
+      "slug": "michael-slay"
+    },
+    {
+      "id": "platform_medium_40",
+      "name": "medium",
+      "type": "platform",
+      "cluster": 7,
+      "x": 25.29993263491835,
+      "y": -302.67291682378016,
+      "z": 182.95303185820097,
+      "value": 15
+    },
+    {
+      "id": "platform_reddit_41",
+      "name": "reddit",
+      "type": "platform",
+      "cluster": 7,
+      "x": -1.4345892478311486,
+      "y": -334.0288769436353,
+      "z": 194.05691722704185,
+      "value": 15
+    },
+    {
+      "id": "platform_dailystormer_42",
+      "name": "dailystormer",
+      "type": "platform",
+      "cluster": 7,
+      "x": -2.061129536475874,
+      "y": -304.37741738614096,
+      "z": 208.59805385872767,
+      "value": 15
+    },
+    {
+      "id": "blaze-it-flaggot_44",
+      "name": "Blaze It Flaggot",
+      "type": "character",
+      "cluster": 8,
+      "x": 631.0722707046539,
+      "y": -146.56481426073915,
+      "z": -56.002092201886704,
+      "value": 10,
+      "slug": "blaze-it-flaggot"
+    },
+    {
+      "id": "platform_reddit_45",
+      "name": "reddit",
+      "type": "platform",
+      "cluster": 8,
+      "x": 637.5616014600537,
+      "y": -124.18082070192763,
+      "z": -80.52713652745027,
+      "value": 15
+    },
+    {
+      "id": "bw-anime-fan_46",
+      "name": "Bw Anime Fan",
+      "type": "character",
+      "cluster": 9,
+      "x": 220.05825917951836,
+      "y": -233.25659397021158,
+      "z": -590.1556191399848,
+      "value": 10,
+      "slug": "bw-anime-fan"
+    },
+    {
+      "id": "platform_wikipedia_47",
+      "name": "wikipedia",
+      "type": "platform",
+      "cluster": 9,
+      "x": 206.19624965023564,
+      "y": -263.07674683385926,
+      "z": -582.6990182704847,
+      "value": 15
+    },
+    {
+      "id": "chuck-e-jesus_48",
+      "name": "Chuck E Jesus",
+      "type": "character",
+      "cluster": 10,
+      "x": 381.9964528517395,
+      "y": 123.7299216804176,
+      "z": 449.90183582574116,
+      "value": 10,
+      "slug": "chuck-e-jesus"
+    },
+    {
+      "id": "platform_reddit_49",
+      "name": "reddit",
+      "type": "platform",
+      "cluster": 10,
+      "x": 393.15757536751806,
+      "y": 92.04726893920322,
+      "z": 452.5109478889678,
+      "value": 15
+    },
+    {
+      "id": "death-to-sjws_50",
+      "name": "Death to SJWs",
+      "type": "character",
+      "cluster": 11,
+      "x": 645.5892855014233,
+      "y": 82.11786673583119,
+      "z": -11.872686890873494,
+      "value": 10,
+      "slug": "death-to-sjws"
+    },
+    {
+      "id": "platform_reddit_51",
+      "name": "reddit",
+      "type": "platform",
+      "cluster": 11,
+      "x": 641.4528601939646,
+      "y": 105.1191444155187,
+      "z": -36.31340500273692,
+      "value": 15
+    },
+    {
+      "id": "dinah-silverstein_52",
+      "name": "Dinah Silverstein",
+      "type": "character",
+      "cluster": 12,
+      "x": -158.45473695251792,
+      "y": -100.3401617683556,
+      "z": 459.39656047065995,
+      "value": 10,
+      "slug": "dinah-silverstein"
+    },
+    {
+      "id": "michael-slay_53",
+      "name": "Michael Slay",
+      "type": "character",
+      "cluster": 12,
+      "x": -120.49535522009263,
+      "y": -38.394738135072465,
+      "z": 484.27574680659075,
+      "value": 10,
+      "slug": "michael-slay"
+    },
+    {
+      "id": "platform_medium_54",
+      "name": "medium",
+      "type": "platform",
+      "cluster": 12,
+      "x": -121.42057605552803,
+      "y": -19.995527328668928,
+      "z": 515.5572467560993,
+      "value": 15
+    },
+    {
+      "id": "platform_reddit_55",
+      "name": "reddit",
+      "type": "platform",
+      "cluster": 12,
+      "x": -84.99167999971667,
+      "y": -38.967879388378776,
+      "z": 490.9734809756325,
+      "value": 15
+    },
+    {
+      "id": "platform_dailystormer_56",
+      "name": "dailystormer",
+      "type": "platform",
+      "cluster": 12,
+      "x": -119.783187736096,
+      "y": -3.5103074114057304,
+      "z": 474.01393511052527,
+      "value": 15
+    },
+    {
+      "id": "platform_times-of-israel_57",
+      "name": "times-of-israel",
+      "type": "platform",
+      "cluster": 12,
+      "x": -140.11718080345292,
+      "y": -71.57613164576355,
+      "z": 470.76634361093573,
+      "value": 15
+    },
+    {
+      "id": "dr-shlomo-goldstein_58",
+      "name": "Dr Shlomo Goldstein",
+      "type": "character",
+      "cluster": 13,
+      "x": -325.4844346578307,
+      "y": 208.19249977380093,
+      "z": 587.5115073301941,
+      "value": 10,
+      "slug": "dr-shlomo-goldstein"
+    },
+    {
+      "id": "platform_reddit_59",
+      "name": "reddit",
+      "type": "platform",
+      "cluster": 13,
+      "x": -298.407348935721,
+      "y": 227.65497386625051,
+      "z": 581.7285148071473,
+      "value": 15
+    },
+    {
+      "id": "ryoko-tamada_60",
+      "name": "Ryoko Tamada",
+      "type": "character",
+      "cluster": 14,
+      "x": -184.2999312588803,
+      "y": -361.52020112122045,
+      "z": -289.1308007448941,
+      "value": 10,
+      "slug": "ryoko-tamada"
+    },
+    {
+      "id": "platform_twitter_61",
+      "name": "twitter",
+      "type": "platform",
+      "cluster": 14,
+      "x": -162.94283022717153,
+      "y": -333.34430524891866,
+      "z": -316.1119976753949,
+      "value": 15
+    },
+    {
+      "id": "jilian-c-york_62",
+      "name": "Jilian C. York",
+      "type": "character",
+      "cluster": 14,
+      "x": -204.11954820358565,
+      "y": -336.48456689155375,
+      "z": -292.97489800018457,
+      "value": 5,
+      "slug": "jilian-c-york"
+    },
+    {
+      "id": "platform_e-mail_63",
+      "name": "e-mail",
+      "type": "platform",
+      "cluster": 14,
+      "x": -226.0746182358125,
+      "y": -363.210952043514,
+      "z": -271.34451918502646,
+      "value": 15
+    },
+    {
+      "id": "peter-wallace_64",
+      "name": "Peter Wallace",
+      "type": "character",
+      "cluster": 14,
+      "x": -260.01092421737036,
+      "y": -364.7565321345439,
+      "z": -255.8136138376198,
+      "value": 5,
+      "slug": "peter-wallace"
+    },
+    {
+      "id": "mariam-veiszadeh_65",
+      "name": "Mariam Veiszadeh",
+      "type": "character",
+      "cluster": 14,
+      "x": -191.52069393074086,
+      "y": -336.5384800445424,
+      "z": -338.90065065585014,
+      "value": 5,
+      "slug": "mariam-veiszadeh"
+    },
+    {
+      "id": "tanya-cohen_66",
+      "name": "Tanya Cohen",
+      "type": "character",
+      "cluster": 14,
+      "x": -165.404065089542,
+      "y": -295.5905232037561,
+      "z": -358.10512917216136,
+      "value": 10,
+      "slug": "tanya-cohen"
+    },
+    {
+      "id": "platform_dailykos_67",
+      "name": "dailykos",
+      "type": "platform",
+      "cluster": 14,
+      "x": -185.0847327569847,
+      "y": -273.9555010421135,
+      "z": -385.4089523955185,
+      "value": 15
+    },
+    {
+      "id": "platform_reddit_68",
+      "name": "reddit",
+      "type": "platform",
+      "cluster": 14,
+      "x": -124.05000711213734,
+      "y": -297.35501637938086,
+      "z": -368.09685522840095,
+      "value": 15
+    },
+    {
+      "id": "platform_thoughtcatalog_69",
+      "name": "thoughtcatalog",
+      "type": "platform",
+      "cluster": 14,
+      "x": -157.0353145818352,
+      "y": -269.24650487485707,
+      "z": -388.5344002831602,
+      "value": 15
+    },
+    {
+      "id": "moon-metropolis_70",
+      "name": "Moon Metropolis",
+      "type": "character",
+      "cluster": 14,
+      "x": -108.30120592794819,
+      "y": -327.35652844421804,
+      "z": -338.0421077255718,
+      "value": 10,
+      "slug": "moon-metropolis"
+    },
+    {
+      "id": "platform_medium_71",
+      "name": "medium",
+      "type": "platform",
+      "cluster": 14,
+      "x": -91.01014888087632,
+      "y": -339.6144720828862,
+      "z": -372.19919334592447,
+      "value": 15
+    },
+    {
+      "id": "platform_wrong-planet_72",
+      "name": "wrong-planet",
+      "type": "platform",
+      "cluster": 14,
+      "x": -79.8627148095221,
+      "y": -303.1188471360419,
+      "z": -354.2388107461503,
+      "value": 15
+    },
+    {
+      "id": "platform_lastfm_73",
+      "name": "lastfm",
+      "type": "platform",
+      "cluster": 14,
+      "x": -86.33713932962297,
+      "y": -358.8288260120395,
+      "z": -332.86120571161644,
+      "value": 15
+    },
+    {
+      "id": "platform_wordpress_74",
+      "name": "wordpress",
+      "type": "platform",
+      "cluster": 14,
+      "x": -76.50706059399585,
+      "y": -315.27213311459474,
+      "z": -318.44544317497423,
+      "value": 15
+    },
+    {
+      "id": "platform_disqus_75",
+      "name": "disqus",
+      "type": "platform",
+      "cluster": 14,
+      "x": -68.21737330679149,
+      "y": -332.319985031486,
+      "z": -347.2403941021326,
+      "value": 15
+    },
+    {
+      "id": "emily-americana_76",
+      "name": "Emily Americana",
+      "type": "character",
+      "cluster": 15,
+      "x": 112.41593686409287,
+      "y": 337.3767730538204,
+      "z": 165.22288949832003,
+      "value": 10,
+      "slug": "emily-americana"
+    },
+    {
+      "id": "platform_reddit_77",
+      "name": "reddit",
+      "type": "platform",
+      "cluster": 15,
+      "x": 90.84156683940402,
+      "y": 360.02892536114297,
+      "z": 186.84619573000245,
+      "value": 15
+    },
+    {
+      "id": "michael-slay_78",
+      "name": "Michael Slay",
+      "type": "character",
+      "cluster": 15,
+      "x": 102.20644088916595,
+      "y": 351.93536623627006,
+      "z": 231.41067259378661,
+      "value": 10,
+      "slug": "michael-slay"
+    },
+    {
+      "id": "platform_medium_79",
+      "name": "medium",
+      "type": "platform",
+      "cluster": 15,
+      "x": 66.1806425153883,
+      "y": 373.1706505828252,
+      "z": 235.22117765435283,
+      "value": 15
+    },
+    {
+      "id": "platform_dailystormer_80",
+      "name": "dailystormer",
+      "type": "platform",
+      "cluster": 15,
+      "x": 122.02115135794305,
+      "y": 335.743593594766,
+      "z": 258.9785717489766,
+      "value": 15
+    },
+    {
+      "id": "european-88_81",
+      "name": "European 88",
+      "type": "character",
+      "cluster": 15,
+      "x": 126.91580908868434,
+      "y": 354.93115726530476,
+      "z": 194.3132438809329,
+      "value": 10,
+      "slug": "european-88"
+    },
+    {
+      "id": "moon-metropolis_82",
+      "name": "Moon Metropolis",
+      "type": "character",
+      "cluster": 15,
+      "x": 43.79158371647817,
+      "y": 386.86656855431596,
+      "z": 198.7250358071611,
+      "value": 10,
+      "slug": "moon-metropolis"
+    },
+    {
+      "id": "platform_wrong-planet_83",
+      "name": "wrong-planet",
+      "type": "platform",
+      "cluster": 15,
+      "x": 8.484232195924156,
+      "y": 404.8818546098966,
+      "z": 203.94287808460552,
+      "value": 15
+    },
+    {
+      "id": "platform_lastfm_84",
+      "name": "lastfm",
+      "type": "platform",
+      "cluster": 15,
+      "x": 19.56418596328701,
+      "y": 383.4619166233104,
+      "z": 228.82591514567454,
+      "value": 15
+    },
+    {
+      "id": "platform_wordpress_85",
+      "name": "wordpress",
+      "type": "platform",
+      "cluster": 15,
+      "x": 38.10863471926827,
+      "y": 424.7815579086434,
+      "z": 208.69502843531484,
+      "value": 15
+    },
+    {
+      "id": "platform_disqus_86",
+      "name": "disqus",
+      "type": "platform",
+      "cluster": 15,
+      "x": 8.343017257927926,
+      "y": 371.86428513387096,
+      "z": 188.903644332925,
+      "value": 15
+    },
+    {
+      "id": "platform_twitter_87",
+      "name": "twitter",
+      "type": "platform",
+      "cluster": 15,
+      "x": 22.53139149553759,
+      "y": 408.500671080737,
+      "z": 172.5917275802322,
+      "value": 15
+    },
+    {
+      "id": "death-to-sjws_88",
+      "name": "Death to SJWs",
+      "type": "character",
+      "cluster": 15,
+      "x": 85.9364305294674,
+      "y": 374.07197554380514,
+      "z": 152.90476772004365,
+      "value": 10,
+      "slug": "death-to-sjws"
+    },
+    {
+      "id": "emily-goldstein_89",
+      "name": "Emily Goldstein",
+      "type": "character",
+      "cluster": 16,
+      "x": -397.1454817336875,
+      "y": -60.697100572656346,
+      "z": -195.16518303371328,
+      "value": 10,
+      "slug": "emily-goldstein"
+    },
+    {
+      "id": "platform_thoughtcatalog_90",
+      "name": "thoughtcatalog",
+      "type": "platform",
+      "cluster": 16,
+      "x": -367.76078517502987,
+      "y": -69.76331894997094,
+      "z": -220.4662772315715,
+      "value": 15
+    },
+    {
+      "id": "elon-musk_91",
+      "name": "Elon Musk",
+      "type": "character",
+      "cluster": 16,
+      "x": -426.9992070392744,
+      "y": -129.58717350483064,
+      "z": -185.16304134304002,
+      "value": 5,
+      "slug": "elon-musk"
+    },
+    {
+      "id": "platform_twitter_92",
+      "name": "twitter",
+      "type": "platform",
+      "cluster": 16,
+      "x": -399.77814596744986,
+      "y": -105.62965403828494,
+      "z": -186.93821848905424,
+      "value": 15
+    },
+    {
+      "id": "hadiyo-elmi_93",
+      "name": "Hadiyo Elmi",
+      "type": "character",
+      "cluster": 16,
+      "x": -378.1851927127857,
+      "y": -33.870346736326645,
+      "z": -225.350795403655,
+      "value": 10,
+      "slug": "hadiyo-elmi"
+    },
+    {
+      "id": "tanya-cohen_94",
+      "name": "Tanya Cohen",
+      "type": "character",
+      "cluster": 16,
+      "x": -356.192331546017,
+      "y": -112.92204426682244,
+      "z": -208.32721783424017,
+      "value": 10,
+      "slug": "tanya-cohen"
+    },
+    {
+      "id": "platform_dailykos_95",
+      "name": "dailykos",
+      "type": "platform",
+      "cluster": 16,
+      "x": -340.3334427293327,
+      "y": -143.39021797542387,
+      "z": -191.14390899580616,
+      "value": 15
+    },
+    {
+      "id": "platform_reddit_96",
+      "name": "reddit",
+      "type": "platform",
+      "cluster": 16,
+      "x": -317.77060602326947,
+      "y": -119.11256099485085,
+      "z": -233.50778530557486,
+      "value": 15
+    },
+    {
+      "id": "michael-slay_97",
+      "name": "Michael Slay",
+      "type": "character",
+      "cluster": 16,
+      "x": -314.80231081671707,
+      "y": -83.59891732203474,
+      "z": -256.31118620723504,
+      "value": 10,
+      "slug": "michael-slay"
+    },
+    {
+      "id": "platform_medium_98",
+      "name": "medium",
+      "type": "platform",
+      "cluster": 16,
+      "x": -295.59407018397764,
+      "y": -79.97328716543144,
+      "z": -290.6506894197747,
+      "value": 15
+    },
+    {
+      "id": "platform_dailystormer_99",
+      "name": "dailystormer",
+      "type": "platform",
+      "cluster": 16,
+      "x": -277.0610572199414,
+      "y": -91.68383888597477,
+      "z": -267.93615076508684,
+      "value": 15
+    },
+    {
+      "id": "european-88_100",
+      "name": "European 88",
+      "type": "character",
+      "cluster": 16,
+      "x": -345.1163771806477,
+      "y": -46.14823972499201,
+      "z": -201.17726623914638,
+      "value": 10,
+      "slug": "european-88"
+    },
+    {
+      "id": "mariam-veiszadeh_101",
+      "name": "Mariam Veiszadeh",
+      "type": "character",
+      "cluster": 16,
+      "x": -352.4813512798735,
+      "y": -41.37073104000556,
+      "z": -240.06527501600107,
+      "value": 5,
+      "slug": "mariam-veiszadeh"
+    },
+    {
+      "id": "europe-hates-niggers_102",
+      "name": "Europe Hates Niggers",
+      "type": "character",
+      "cluster": 17,
+      "x": 244.21667751412792,
+      "y": -185.3856694580192,
+      "z": -17.761814878591608,
+      "value": 10,
+      "slug": "europe-hates-niggers"
+    },
+    {
+      "id": "platform_reddit_103",
+      "name": "reddit",
+      "type": "platform",
+      "cluster": 17,
+      "x": 264.1523031901919,
+      "y": -159.9604210786428,
+      "z": -5.79786628135815,
+      "value": 15
+    },
+    {
+      "id": "flappy-brd_104",
+      "name": "Flappy BRD",
+      "type": "character",
+      "cluster": 18,
+      "x": 523.0752246381074,
+      "y": -253.4503651681906,
+      "z": 428.50342187697976,
+      "value": 10,
+      "slug": "flappy-brd"
+    },
+    {
+      "id": "platform_reddit_105",
+      "name": "reddit",
+      "type": "platform",
+      "cluster": 18,
+      "x": 537.3043208921791,
+      "y": -231.0141237819666,
+      "z": 407.4900953321396,
+      "value": 15
+    },
+    {
+      "id": "gas-the-kikes_106",
+      "name": "Gas the Kikes",
+      "type": "character",
+      "cluster": 19,
+      "x": 396.6425033366306,
+      "y": -294.96400266559044,
+      "z": 151.52555105355466,
+      "value": 10,
+      "slug": "gas-the-kikes"
+    },
+    {
+      "id": "platform_reddit_107",
+      "name": "reddit",
+      "type": "platform",
+      "cluster": 19,
+      "x": 383.24365066686994,
+      "y": -326.2514256549012,
+      "z": 149.50379291050976,
+      "value": 15
+    },
+    {
+      "id": "hadiyo-elmi_108",
+      "name": "Hadiyo Elmi",
+      "type": "character",
+      "cluster": 20,
+      "x": -359.5808612196946,
+      "y": 97.07878687029918,
+      "z": 490.75549067699177,
+      "value": 10,
+      "slug": "hadiyo-elmi"
+    },
+    {
+      "id": "michael-slay_109",
+      "name": "Michael Slay",
+      "type": "character",
+      "cluster": 20,
+      "x": -344.87121357765193,
+      "y": 18.552804007819645,
+      "z": 534.5138795549344,
+      "value": 10,
+      "slug": "michael-slay"
+    },
+    {
+      "id": "platform_medium_110",
+      "name": "medium",
+      "type": "platform",
+      "cluster": 20,
+      "x": -330.9346039590587,
+      "y": -9.195091178129417,
+      "z": 555.6555372613612,
+      "value": 15
+    },
+    {
+      "id": "platform_reddit_111",
+      "name": "reddit",
+      "type": "platform",
+      "cluster": 20,
+      "x": -318.1403824813307,
+      "y": 23.094631880701993,
+      "z": 558.9264420360408,
+      "value": 15
+    },
+    {
+      "id": "platform_dailystormer_112",
+      "name": "dailystormer",
+      "type": "platform",
+      "cluster": 20,
+      "x": -352.69366398993475,
+      "y": -18.202786044004217,
+      "z": 532.4575466684169,
+      "value": 15
+    },
+    {
+      "id": "platform_twitter_113",
+      "name": "twitter",
+      "type": "platform",
+      "cluster": 20,
+      "x": -357.0584789488662,
+      "y": 65.07751653272331,
+      "z": 508.6775887626797,
+      "value": 15
+    },
+    {
+      "id": "european-88_114",
+      "name": "European 88",
+      "type": "character",
+      "cluster": 20,
+      "x": -389.1592116772568,
+      "y": 77.9484986323875,
+      "z": 518.7811946454782,
+      "value": 10,
+      "slug": "european-88"
+    },
+    {
+      "id": "mariam-veiszadeh_115",
+      "name": "Mariam Veiszadeh",
+      "type": "character",
+      "cluster": 20,
+      "x": -384.23232795883155,
+      "y": 45.9912986193167,
+      "z": 493.36682590212246,
+      "value": 5,
+      "slug": "mariam-veiszadeh"
+    },
+    {
+      "id": "id-c9uafs7u_116",
+      "name": "ID:C9Uafs7U",
+      "type": "character",
+      "cluster": 21,
+      "x": -446.25234439159186,
+      "y": 142.29675601131427,
+      "z": -495.7396240717315,
+      "value": 10,
+      "slug": "id-c9uafs7u"
+    },
+    {
+      "id": "platform_4plebs_117",
+      "name": "4plebs",
+      "type": "platform",
+      "cluster": 21,
+      "x": -458.6628535072416,
+      "y": 110.84378909027342,
+      "z": -493.4024178516166,
+      "value": 15
+    },
+    {
+      "id": "island-angel_118",
+      "name": "Island Angel",
+      "type": "character",
+      "cluster": 22,
+      "x": -676.9409050691806,
+      "y": 124.26733568161067,
+      "z": 24.695877655885493,
+      "value": 10,
+      "slug": "island-angel"
+    },
+    {
+      "id": "platform_reddit_119",
+      "name": "reddit",
+      "type": "platform",
+      "cluster": 22,
+      "x": -672.9324821542998,
+      "y": 157.1240689225455,
+      "z": 32.60151599009079,
+      "value": 15
+    },
+    {
+      "id": "real-joshua-goldberg_120",
+      "name": "Joshua Goldberg (Real)",
+      "type": "character",
+      "cluster": 23,
+      "x": 361.94901310134475,
+      "y": -281.20944227838424,
+      "z": -142.3447275812689,
+      "value": 10,
+      "slug": "real-joshua-goldberg"
+    },
+    {
+      "id": "josh-bornstein_121",
+      "name": "Josh Bornstein",
+      "type": "character",
+      "cluster": 23,
+      "x": 307.4277719710913,
+      "y": -311.54201850468576,
+      "z": -207.39552331165615,
+      "value": 5,
+      "slug": "josh-bornstein"
+    },
+    {
+      "id": "platform_times-of-israel_122",
+      "name": "times-of-israel",
+      "type": "platform",
+      "cluster": 23,
+      "x": 327.88125262777004,
+      "y": -296.07521706778795,
+      "z": -177.02120028220725,
+      "value": 15
+    },
+    {
+      "id": "lindsay-campbell-fbi_123",
+      "name": "Lindsay Campbell (FBI)",
+      "type": "character",
+      "cluster": 23,
+      "x": 367.28867821030343,
+      "y": -203.90468467646622,
+      "z": -150.80051340941847,
+      "value": 5,
+      "slug": "lindsay-campbell-fbi"
+    },
+    {
+      "id": "platform_twitter_124",
+      "name": "twitter",
+      "type": "platform",
+      "cluster": 23,
+      "x": 380.99055576191773,
+      "y": -240.90240531982283,
+      "z": -143.7901551439423,
+      "value": 15
+    },
+    {
+      "id": "elise-potaka_125",
+      "name": "Elise Potaka",
+      "type": "character",
+      "cluster": 23,
+      "x": 415.9189176497175,
+      "y": -266.47966213602155,
+      "z": -167.67182340448653,
+      "value": 5,
+      "slug": "elise-potaka"
+    },
+    {
+      "id": "platform_facebook_126",
+      "name": "facebook",
+      "type": "platform",
+      "cluster": 23,
+      "x": 385.106493909472,
+      "y": -281.8940501296968,
+      "z": -187.37490552922142,
+      "value": 15
+    },
+    {
+      "id": "luke-mcmahon_127",
+      "name": "Luke McMahon",
+      "type": "character",
+      "cluster": 23,
+      "x": 391.0093147803697,
+      "y": -212.71017442892887,
+      "z": -170.41283990858477,
+      "value": 5,
+      "slug": "luke-mcmahon"
+    },
+    {
+      "id": "platform_e-mail_129",
+      "name": "e-mail",
+      "type": "platform",
+      "cluster": 23,
+      "x": 385.1306214272095,
+      "y": -318.4682788238802,
+      "z": -157.46812389526121,
+      "value": 15
+    },
+    {
+      "id": "junaid-thorne_130",
+      "name": "Junaid Thorne",
+      "type": "character",
+      "cluster": 23,
+      "x": 404.6095501093771,
+      "y": -285.8559868396615,
+      "z": -220.35300275425138,
+      "value": 5,
+      "slug": "junaid-thorne"
+    },
+    {
+      "id": "ben-garrison_131",
+      "name": "Ben Garrison",
+      "type": "character",
+      "cluster": 23,
+      "x": 443.34874652623677,
+      "y": -315.80656504057,
+      "z": -111.46542276493109,
+      "value": 5,
+      "slug": "ben-garrison"
+    },
+    {
+      "id": "platform_reddit_132",
+      "name": "reddit",
+      "type": "platform",
+      "cluster": 23,
+      "x": 408.0925847001607,
+      "y": -297.90807244474473,
+      "z": -121.1250844119097,
+      "value": 15
+    },
+    {
+      "id": "caitlin-roper_133",
+      "name": "Caitlin Roper",
+      "type": "character",
+      "cluster": 23,
+      "x": 412.27997570748227,
+      "y": -216.08960514289484,
+      "z": -141.10032703840344,
+      "value": 5,
+      "slug": "caitlin-roper"
+    },
+    {
+      "id": "dean-saxton_134",
+      "name": "dean-saxton",
+      "type": "character",
+      "cluster": 23,
+      "x": 313.29349768374084,
+      "y": -317.4064006945107,
+      "z": -75.17912817089804,
+      "value": 5,
+      "slug": "dean-saxton"
+    },
+    {
+      "id": "platform_sluthate_135",
+      "name": "sluthate",
+      "type": "platform",
+      "cluster": 23,
+      "x": 331.07732682512994,
+      "y": -296.24134233522045,
+      "z": -103.9604885143868,
+      "value": 15
+    },
+    {
+      "id": "nathan-sykes_136",
+      "name": "Nathan Sykes",
+      "type": "character",
+      "cluster": 23,
+      "x": 377.44772133678345,
+      "y": -362.34200692853824,
+      "z": -141.0766574103523,
+      "value": 5,
+      "slug": "nathan-sykes"
+    },
+    {
+      "id": "platform_stormfront_137",
+      "name": "stormfront",
+      "type": "platform",
+      "cluster": 23,
+      "x": 361.7354125250108,
+      "y": -326.6345964438899,
+      "z": -126.47006796929563,
+      "value": 15
+    },
+    {
+      "id": "nancy-goldstein_138",
+      "name": "Nancy Goldstein",
+      "type": "character",
+      "cluster": 23,
+      "x": 386.6599236862951,
+      "y": -209.1962397868784,
+      "z": -120.7513244836891,
+      "value": 5,
+      "slug": "nancy-goldstein"
+    },
+    {
+      "id": "fake-joshua-goldberg_140",
+      "name": "Joshua Goldberg (Fake)",
+      "type": "character",
+      "cluster": 24,
+      "x": -414.44357404591847,
+      "y": -337.0715813417438,
+      "z": 453.96241622194424,
+      "value": 10,
+      "slug": "fake-joshua-goldberg"
+    },
+    {
+      "id": "platform_thoughtcatalog_141",
+      "name": "thoughtcatalog",
+      "type": "platform",
+      "cluster": 24,
+      "x": -396.93992291018856,
+      "y": -325.81436273816615,
+      "z": 480.5755541881236,
+      "value": 15
+    },
+    {
+      "id": "kill-all-pakis_142",
+      "name": "Kill All Pakis",
+      "type": "character",
+      "cluster": 25,
+      "x": -219.4240807959886,
+      "y": -444.35995813509453,
+      "z": 127.31183025535512,
+      "value": 10,
+      "slug": "kill-all-pakis"
+    },
+    {
+      "id": "platform_reddit_143",
+      "name": "reddit",
+      "type": "platform",
+      "cluster": 25,
+      "x": -205.229493996089,
+      "y": -470.71929684808606,
+      "z": 111.27227941149587,
+      "value": 15
+    },
+    {
+      "id": "kill-all-sjws_144",
+      "name": "Kill All SJWs",
+      "type": "character",
+      "cluster": 26,
+      "x": -629.3768696553151,
+      "y": 223.31328888823302,
+      "z": -180.4539515210505,
+      "value": 10,
+      "slug": "kill-all-sjws"
+    },
+    {
+      "id": "platform_reddit_145",
+      "name": "reddit",
+      "type": "platform",
+      "cluster": 26,
+      "x": -643.5716112996731,
+      "y": 194.71379865033782,
+      "z": -169.23246668093708,
+      "value": 15
+    },
+    {
+      "id": "le-cancer-kin_146",
+      "name": "Le Cancer Kin",
+      "type": "character",
+      "cluster": 27,
+      "x": -621.2955408759638,
+      "y": 94.93830963081778,
+      "z": 187.5424122793441,
+      "value": 10,
+      "slug": "le-cancer-kin"
+    },
+    {
+      "id": "platform_reddit_147",
+      "name": "reddit",
+      "type": "platform",
+      "cluster": 27,
+      "x": -622.9867739462736,
+      "y": 129.2062565790657,
+      "z": 187.85262265036567,
+      "value": 15
+    },
+    {
+      "id": "madotsuki-the-dreamer_148",
+      "name": "Madotsuki The Dreamer",
+      "type": "character",
+      "cluster": 28,
+      "x": -213.68876540973415,
+      "y": -466.55757317728234,
+      "z": -484.693940335811,
+      "value": 10,
+      "slug": "madotsuki-the-dreamer"
+    },
+    {
+      "id": "platform_wikipedia_149",
+      "name": "wikipedia",
+      "type": "platform",
+      "cluster": 28,
+      "x": -192.2921157939529,
+      "y": -455.8851503903387,
+      "z": -510.6558974125287,
+      "value": 15
+    },
+    {
+      "id": "platform_imdb_150",
+      "name": "imdb",
+      "type": "platform",
+      "cluster": 28,
+      "x": -239.58787408074934,
+      "y": -443.5102419003129,
+      "z": -491.7768960532527,
+      "value": 15
+    },
+    {
+      "id": "platform_filmboards_151",
+      "name": "filmboards",
+      "type": "platform",
+      "cluster": 28,
+      "x": -213.64325534117333,
+      "y": -488.94963952815925,
+      "z": -457.9137695631656,
+      "value": 15
+    },
+    {
+      "id": "may-may-poster_152",
+      "name": "May May Poster",
+      "type": "character",
+      "cluster": 29,
+      "x": 433.3083610324679,
+      "y": 180.99072386844543,
+      "z": -463.2289058728476,
+      "value": 10,
+      "slug": "may-may-poster"
+    },
+    {
+      "id": "platform_reddit_153",
+      "name": "reddit",
+      "type": "platform",
+      "cluster": 29,
+      "x": 462.7634207032361,
+      "y": 168.26746273488527,
+      "z": -450.7342004498441,
+      "value": 15
+    },
+    {
+      "id": "platform_Adult Swim_154",
+      "name": "Adult Swim",
+      "type": "platform",
+      "cluster": 29,
+      "x": 412.6446038307552,
+      "y": 161.48119693633885,
+      "z": -482.6035234287558,
+      "value": 15
+    },
+    {
+      "id": "metacanadian-420_155",
+      "name": "Metacanadian 420",
+      "type": "character",
+      "cluster": 30,
+      "x": 176.17096395120083,
+      "y": -87.42388960837017,
+      "z": -50.38136708163452,
+      "value": 10,
+      "slug": "metacanadian-420"
+    },
+    {
+      "id": "platform_reddit_156",
+      "name": "reddit",
+      "type": "platform",
+      "cluster": 30,
+      "x": 164.46785523084057,
+      "y": -116.1540791047616,
+      "z": -36.21780760494618,
+      "value": 15
+    },
+    {
+      "id": "metropolis-forever_157",
+      "name": "Metropolis Forever",
+      "type": "character",
+      "cluster": 31,
+      "x": -167.45117015439357,
+      "y": -6.981593339394064,
+      "z": 68.70815594122993,
+      "value": 10,
+      "slug": "metropolis-forever"
+    },
+    {
+      "id": "platform_criterion_158",
+      "name": "criterion",
+      "type": "platform",
+      "cluster": 31,
+      "x": -147.3868551563455,
+      "y": -1.961557544496102,
+      "z": 30.723788943704854,
+      "value": 15
+    },
+    {
+      "id": "platform_digitpress_159",
+      "name": "digitpress",
+      "type": "platform",
+      "cluster": 31,
+      "x": -156.1855675302793,
+      "y": -31.338837297417292,
+      "z": 35.88540770597995,
+      "value": 15
+    },
+    {
+      "id": "platform_bluwiki_160",
+      "name": "bluwiki",
+      "type": "platform",
+      "cluster": 31,
+      "x": -149.85701475976649,
+      "y": 26.85078179664246,
+      "z": 49.29009196317618,
+      "value": 15
+    },
+    {
+      "id": "platform_deviantart_161",
+      "name": "deviantart",
+      "type": "platform",
+      "cluster": 31,
+      "x": -149.05978174343227,
+      "y": -24.42203307546301,
+      "z": 97.83458574527548,
+      "value": 15
+    },
+    {
+      "id": "platform_animesuki_162",
+      "name": "animesuki",
+      "type": "platform",
+      "cluster": 31,
+      "x": -124.95019996047789,
+      "y": -11.416637349248687,
+      "z": 50.42870866457495,
+      "value": 15
+    },
+    {
+      "id": "platform_badmovies_163",
+      "name": "badmovies",
+      "type": "platform",
+      "cluster": 31,
+      "x": -127.94751807273995,
+      "y": 15.468990781872,
+      "z": 59.664300798078116,
+      "value": 15
+    },
+    {
+      "id": "platform_ytmnd_164",
+      "name": "ytmnd",
+      "type": "platform",
+      "cluster": 31,
+      "x": -139.79265386839714,
+      "y": -38.6436094058375,
+      "z": 55.91448188720626,
+      "value": 15
+    },
+    {
+      "id": "platform_Mail_165",
+      "name": "Mail",
+      "type": "platform",
+      "cluster": 31,
+      "x": -158.09324189367197,
+      "y": 29.8647532930752,
+      "z": 85.38639996203715,
+      "value": 15
+    },
+    {
+      "id": "platform_tezukainenglish_166",
+      "name": "tezukainenglish",
+      "type": "platform",
+      "cluster": 31,
+      "x": -135.92930845578383,
+      "y": 14.264192858737069,
+      "z": 92.07017768708059,
+      "value": 15
+    },
+    {
+      "id": "platform_bluelight_167",
+      "name": "bluelight",
+      "type": "platform",
+      "cluster": 31,
+      "x": -122.77360864085313,
+      "y": -7.566942472724639,
+      "z": 79.69699644379301,
+      "value": 15
+    },
+    {
+      "id": "cyndi-lavrenci_168",
+      "name": "Cyndi Lavrenci",
+      "type": "character",
+      "cluster": 31,
+      "x": -121.18513854361768,
+      "y": -69.50835579586422,
+      "z": 129.91212392578748,
+      "value": 5,
+      "slug": "cyndi-lavrenci"
+    },
+    {
+      "id": "platform_e-mail_169",
+      "name": "e-mail",
+      "type": "platform",
+      "cluster": 31,
+      "x": -148.71892200349842,
+      "y": -50.75947617851366,
+      "z": 103.8084403843907,
+      "value": 15
+    },
+    {
+      "id": "grant-taylor_170",
+      "name": "Grant Taylor",
+      "type": "character",
+      "cluster": 31,
+      "x": -188.37777029701397,
+      "y": -3.2560189575839917,
+      "z": 113.60317168768651,
+      "value": 5,
+      "slug": "grant-taylor"
+    },
+    {
+      "id": "platform_twitter_171",
+      "name": "twitter",
+      "type": "platform",
+      "cluster": 31,
+      "x": -195.31393689324273,
+      "y": 44.85368286281027,
+      "z": 68.48577911496648,
+      "value": 15
+    },
+    {
+      "id": "platform_the-west-australian_172",
+      "name": "the-west-australian",
+      "type": "platform",
+      "cluster": 31,
+      "x": -155.8698222120766,
+      "y": 4.07793908318667,
+      "z": 121.55959438770371,
+      "value": 15
+    },
+    {
+      "id": "tom-minear_173",
+      "name": "Tom Minear",
+      "type": "character",
+      "cluster": 31,
+      "x": -116.33243752466745,
+      "y": -77.23154310594576,
+      "z": 103.93630369502252,
+      "value": 5,
+      "slug": "tom-minear"
+    },
+    {
+      "id": "emily-americana_174",
+      "name": "Emily Americana",
+      "type": "character",
+      "cluster": 31,
+      "x": -228.848812341769,
+      "y": -2.8906222579949974,
+      "z": -13.04980779812134,
+      "value": 10,
+      "slug": "emily-americana"
+    },
+    {
+      "id": "platform_reddit_175",
+      "name": "reddit",
+      "type": "platform",
+      "cluster": 31,
+      "x": -209.3817697484224,
+      "y": 7.525012638905279,
+      "z": 19.49658099881225,
+      "value": 15
+    },
+    {
+      "id": "tanya-cohen_176",
+      "name": "Tanya Cohen",
+      "type": "character",
+      "cluster": 31,
+      "x": -214.13744927821278,
+      "y": 80.05181863328099,
+      "z": 31.412565089592974,
+      "value": 10,
+      "slug": "tanya-cohen"
+    },
+    {
+      "id": "platform_dailykos_177",
+      "name": "dailykos",
+      "type": "platform",
+      "cluster": 31,
+      "x": -238.99029558862517,
+      "y": 110.95829177571574,
+      "z": 26.182058116563088,
+      "value": 15
+    },
+    {
+      "id": "platform_thoughtcatalog_178",
+      "name": "thoughtcatalog",
+      "type": "platform",
+      "cluster": 31,
+      "x": -216.11180485578848,
+      "y": 111.56764155710171,
+      "z": 6.46394834853807,
+      "value": 15
+    },
+    {
+      "id": "amina-blackberry_179",
+      "name": "Amina Blackberry",
+      "type": "character",
+      "cluster": 31,
+      "x": -216.86367370077542,
+      "y": 47.471656062356274,
+      "z": 33.80008886998638,
+      "value": 10,
+      "slug": "amina-blackberry"
+    },
+    {
+      "id": "death-to-sjws_180",
+      "name": "Death to SJWs",
+      "type": "character",
+      "cluster": 31,
+      "x": -228.94024699243306,
+      "y": -25.86445602007472,
+      "z": 14.000742303517907,
+      "value": 10,
+      "slug": "death-to-sjws"
+    },
+    {
+      "id": "michael-slay_181",
+      "name": "Michael Slay",
+      "type": "character",
+      "cluster": 32,
+      "x": 263.43703526320945,
+      "y": 389.90148229987705,
+      "z": -11.875947950353874,
+      "value": 10,
+      "slug": "michael-slay"
+    },
+    {
+      "id": "platform_medium_182",
+      "name": "medium",
+      "type": "platform",
+      "cluster": 32,
+      "x": 286.9005684714952,
+      "y": 416.6346461646145,
+      "z": -27.08925867850511,
+      "value": 15
+    },
+    {
+      "id": "platform_reddit_183",
+      "name": "reddit",
+      "type": "platform",
+      "cluster": 32,
+      "x": 303.30989292352814,
+      "y": 354.949837797585,
+      "z": 7.953850682681434,
+      "value": 15
+    },
+    {
+      "id": "platform_dailystormer_184",
+      "name": "dailystormer",
+      "type": "platform",
+      "cluster": 32,
+      "x": 232.095316991506,
+      "y": 356.21531619465014,
+      "z": -15.800190648146947,
+      "value": 15
+    },
+    {
+      "id": "mariam-veiszadeh_185",
+      "name": "Mariam Veiszadeh",
+      "type": "character",
+      "cluster": 32,
+      "x": 229.30057975251506,
+      "y": 348.0078457516761,
+      "z": -53.59726358535535,
+      "value": 5,
+      "slug": "mariam-veiszadeh"
+    },
+    {
+      "id": "andrew-anglin_186",
+      "name": "Andrew Anglin",
+      "type": "character",
+      "cluster": 32,
+      "x": 219.81870871688852,
+      "y": 383.6482661711826,
+      "z": -38.88831928020912,
+      "value": 5,
+      "slug": "andrew-anglin"
+    },
+    {
+      "id": "hadiyo-elmi_187",
+      "name": "Hadiyo Elmi",
+      "type": "character",
+      "cluster": 32,
+      "x": 252.28737573916627,
+      "y": 321.75536733208776,
+      "z": -34.59930861713595,
+      "value": 10,
+      "slug": "hadiyo-elmi"
+    },
+    {
+      "id": "platform_stormfront_188",
+      "name": "stormfront",
+      "type": "platform",
+      "cluster": 32,
+      "x": 258.9371936864551,
+      "y": 346.98981863798673,
+      "z": -2.9190177576248044,
+      "value": 15
+    },
+    {
+      "id": "tanya-cohen_189",
+      "name": "Tanya Cohen",
+      "type": "character",
+      "cluster": 32,
+      "x": 255.2727087439806,
+      "y": 317.67041794545594,
+      "z": 29.11609787831617,
+      "value": 10,
+      "slug": "tanya-cohen"
+    },
+    {
+      "id": "platform_dailykos_190",
+      "name": "dailykos",
+      "type": "platform",
+      "cluster": 32,
+      "x": 266.02317288791977,
+      "y": 297.5160639709004,
+      "z": 61.20108541370818,
+      "value": 15
+    },
+    {
+      "id": "platform_thoughtcatalog_191",
+      "name": "thoughtcatalog",
+      "type": "platform",
+      "cluster": 32,
+      "x": 263.07251280874056,
+      "y": 334.157158217511,
+      "z": 62.825526094220045,
+      "value": 15
+    },
+    {
+      "id": "platform_twitter_192",
+      "name": "twitter",
+      "type": "platform",
+      "cluster": 32,
+      "x": 207.34211047371883,
+      "y": 288.1316168420413,
+      "z": 26.89889789743902,
+      "value": 15
+    },
+    {
+      "id": "emily-americana_193",
+      "name": "Emily Americana",
+      "type": "character",
+      "cluster": 32,
+      "x": 286.6897455576843,
+      "y": 327.96325477605535,
+      "z": -19.295755663418976,
+      "value": 10,
+      "slug": "emily-americana"
+    },
+    {
+      "id": "nuke-europe_194",
+      "name": "Nuke Europe",
+      "type": "character",
+      "cluster": 32,
+      "x": 285.0126212591344,
+      "y": 357.83982276632804,
+      "z": -31.467915024422165,
+      "value": 10,
+      "slug": "nuke-europe"
+    },
+    {
+      "id": "australi-witness_195",
+      "name": "Australi Witness",
+      "type": "character",
+      "cluster": 32,
+      "x": 176.90373308346577,
+      "y": 299.9719666526555,
+      "z": 2.281948864781517,
+      "value": 10,
+      "slug": "australi-witness"
+    },
+    {
+      "id": "platform_surespot_196",
+      "name": "surespot",
+      "type": "platform",
+      "cluster": 32,
+      "x": 159.13776810166078,
+      "y": 269.6775545376173,
+      "z": 25.117680543924163,
+      "value": 15
+    },
+    {
+      "id": "platform_JustPaste.it_197",
+      "name": "JustPaste.it",
+      "type": "platform",
+      "cluster": 32,
+      "x": 141.91949945526443,
+      "y": 299.3272423492778,
+      "z": 23.515191597902337,
+      "value": 15
+    },
+    {
+      "id": "platform_facebook_198",
+      "name": "facebook",
+      "type": "platform",
+      "cluster": 32,
+      "x": 157.3214409879589,
+      "y": 263.0830645950645,
+      "z": -3.3740360843873805,
+      "value": 15
+    },
+    {
+      "id": "platform_8chan_199",
+      "name": "8chan",
+      "type": "platform",
+      "cluster": 32,
+      "x": 137.62373339092125,
+      "y": 291.1083767867797,
+      "z": -4.589233542456877,
+      "value": 15
+    },
+    {
+      "id": "micronesia-gal_201",
+      "name": "Micronesia Gal",
+      "type": "character",
+      "cluster": 33,
+      "x": -630.862448897742,
+      "y": -305.852332306395,
+      "z": -74.20835765200324,
+      "value": 10,
+      "slug": "micronesia-gal"
+    },
+    {
+      "id": "platform_reddit_202",
+      "name": "reddit",
+      "type": "platform",
+      "cluster": 33,
+      "x": -619.0670810606731,
+      "y": -334.03203718455603,
+      "z": -59.51081915489429,
+      "value": 15
+    },
+    {
+      "id": "moon-metropolis_203",
+      "name": "Moon Metropolis",
+      "type": "character",
+      "cluster": 34,
+      "x": 36.548663071510425,
+      "y": 325.47285102159884,
+      "z": -223.46551492683182,
+      "value": 10,
+      "slug": "moon-metropolis"
+    },
+    {
+      "id": "platform_medium_204",
+      "name": "medium",
+      "type": "platform",
+      "cluster": 34,
+      "x": 22.185792975432875,
+      "y": 353.18981613908,
+      "z": -252.34779919132507,
+      "value": 15
+    },
+    {
+      "id": "platform_wrong-planet_205",
+      "name": "wrong-planet",
+      "type": "platform",
+      "cluster": 34,
+      "x": 4.688341832346539,
+      "y": 329.01451737717684,
+      "z": -248.65918047258074,
+      "value": 15
+    },
+    {
+      "id": "platform_lastfm_206",
+      "name": "lastfm",
+      "type": "platform",
+      "cluster": 34,
+      "x": 2.3620962311514244,
+      "y": 350.8869135868982,
+      "z": -218.85873310722258,
+      "value": 15
+    },
+    {
+      "id": "platform_wordpress_207",
+      "name": "wordpress",
+      "type": "platform",
+      "cluster": 34,
+      "x": 4.500305389827602,
+      "y": 326.7877568662664,
+      "z": -197.01302095085862,
+      "value": 15
+    },
+    {
+      "id": "platform_disqus_208",
+      "name": "disqus",
+      "type": "platform",
+      "cluster": 34,
+      "x": 29.497448388444983,
+      "y": 365.6598665107601,
+      "z": -228.86958842807093,
+      "value": 15
+    },
+    {
+      "id": "platform_reddit_209",
+      "name": "reddit",
+      "type": "platform",
+      "cluster": 34,
+      "x": 58.7175453871652,
+      "y": 270.3645127323755,
+      "z": -222.80368877914535,
+      "value": 15
+    },
+    {
+      "id": "platform_twitter_210",
+      "name": "twitter",
+      "type": "platform",
+      "cluster": 34,
+      "x": 61.01432188585406,
+      "y": 323.917675209887,
+      "z": -267.878856950242,
+      "value": 15
+    },
+    {
+      "id": "milo-yiannopoulos_211",
+      "name": "Milo Yiannopoulos",
+      "type": "character",
+      "cluster": 34,
+      "x": 62.084152455210216,
+      "y": 352.39311811654494,
+      "z": -304.2221623212346,
+      "value": 5,
+      "slug": "milo-yiannopoulos"
+    },
+    {
+      "id": "shaun-king_212",
+      "name": "Shaun King",
+      "type": "character",
+      "cluster": 34,
+      "x": 78.25093923439526,
+      "y": 318.50279369956746,
+      "z": -309.6212902577453,
+      "value": 5,
+      "slug": "shaun-king"
+    },
+    {
+      "id": "luke-mcmahon_213",
+      "name": "Luke McMahon",
+      "type": "character",
+      "cluster": 34,
+      "x": 99.64057365959475,
+      "y": 342.44211490690077,
+      "z": -277.4309566006271,
+      "value": 5,
+      "slug": "luke-mcmahon"
+    },
+    {
+      "id": "elise-potaka_214",
+      "name": "Elise Potaka",
+      "type": "character",
+      "cluster": 34,
+      "x": 85.23602590724118,
+      "y": 350.0638047843826,
+      "z": -297.25272575207356,
+      "value": 5,
+      "slug": "elise-potaka"
+    },
+    {
+      "id": "mike-wendling_215",
+      "name": "Mike Wendling",
+      "type": "character",
+      "cluster": 34,
+      "x": 54.75799792159803,
+      "y": 402.5609813293855,
+      "z": -167.78607984889152,
+      "value": 5,
+      "slug": "mike-wendling"
+    },
+    {
+      "id": "platform_e-mail_216",
+      "name": "e-mail",
+      "type": "platform",
+      "cluster": 34,
+      "x": 43.17469720648946,
+      "y": 374.5443231728093,
+      "z": -196.85523793351436,
+      "value": 15
+    },
+    {
+      "id": "weev-andrew-auernheimer_217",
+      "name": "Weev (Andrew Auernheimer)",
+      "type": "character",
+      "cluster": 34,
+      "x": 98.39874154704998,
+      "y": 314.44110865607786,
+      "z": -288.0698828600018,
+      "value": 5,
+      "slug": "weev-andrew-auernheimer"
+    },
+    {
+      "id": "chiara-zaffino_218",
+      "name": "Chiara Zaffino",
+      "type": "character",
+      "cluster": 34,
+      "x": 22.49019937362613,
+      "y": 391.8736268727873,
+      "z": -163.26169093474329,
+      "value": 5,
+      "slug": "chiara-zaffino"
+    },
+    {
+      "id": "alice-pooley_219",
+      "name": "Alice Pooley",
+      "type": "character",
+      "cluster": 34,
+      "x": 45.48453665619611,
+      "y": 418.3372247266047,
+      "z": -193.69059479073164,
+      "value": 5,
+      "slug": "alice-pooley"
+    },
+    {
+      "id": "peter-wallace_220",
+      "name": "Peter Wallace",
+      "type": "character",
+      "cluster": 34,
+      "x": 67.72796084273095,
+      "y": 374.29708753182626,
+      "z": -242.9291611415906,
+      "value": 5,
+      "slug": "peter-wallace"
+    },
+    {
+      "id": "rita-panahi_221",
+      "name": "Rita Panahi",
+      "type": "character",
+      "cluster": 34,
+      "x": 17.85464170955651,
+      "y": 409.3310303602767,
+      "z": -187.24034813026998,
+      "value": 5,
+      "slug": "rita-panahi"
+    },
+    {
+      "id": "nikki_222",
+      "name": "Nikki",
+      "type": "character",
+      "cluster": 34,
+      "x": 73.84787664660847,
+      "y": 355.3381720351934,
+      "z": -229.0309188137804,
+      "value": 5,
+      "slug": "nikki"
+    },
+    {
+      "id": "emily-americana_223",
+      "name": "Emily Americana",
+      "type": "character",
+      "cluster": 34,
+      "x": 87.52176260504494,
+      "y": 244.74701714140045,
+      "z": -211.56101155750375,
+      "value": 10,
+      "slug": "emily-americana"
+    },
+    {
+      "id": "tanya-cohen_224",
+      "name": "Tanya Cohen",
+      "type": "character",
+      "cluster": 34,
+      "x": 24.34930936276408,
+      "y": 282.3655670138464,
+      "z": -265.509806243739,
+      "value": 10,
+      "slug": "tanya-cohen"
+    },
+    {
+      "id": "platform_dailykos_225",
+      "name": "dailykos",
+      "type": "platform",
+      "cluster": 34,
+      "x": 2.058210914163081,
+      "y": 250.70368166864117,
+      "z": -255.42721661185374,
+      "value": 15
+    },
+    {
+      "id": "platform_thoughtcatalog_226",
+      "name": "thoughtcatalog",
+      "type": "platform",
+      "cluster": 34,
+      "x": -23.057688504539357,
+      "y": 300.6086648316576,
+      "z": -233.7962596814896,
+      "value": 15
+    },
+    {
+      "id": "amina-blackberry_227",
+      "name": "Amina Blackberry",
+      "type": "character",
+      "cluster": 34,
+      "x": 82.45533657730081,
+      "y": 284.4035054072248,
+      "z": -264.08467275959856,
+      "value": 10,
+      "slug": "amina-blackberry"
+    },
+    {
+      "id": "death-to-sjws_228",
+      "name": "Death to SJWs",
+      "type": "character",
+      "cluster": 34,
+      "x": 65.14979263870299,
+      "y": 230.79409250560673,
+      "z": -225.806168516034,
+      "value": 10,
+      "slug": "death-to-sjws"
+    },
+    {
+      "id": "chris-lavergne_229",
+      "name": "Chris Lavergne (Thought Catalog)",
+      "type": "character",
+      "cluster": 34,
+      "x": -65.8294420373817,
+      "y": 307.7807855915639,
+      "z": -227.11666896241434,
+      "value": 5,
+      "slug": "chris-lavergne"
+    },
+    {
+      "id": "mariam-veiszadeh_230",
+      "name": "Mariam Veiszadeh",
+      "type": "character",
+      "cluster": 34,
+      "x": 44.846766779814,
+      "y": 333.060468212098,
+      "z": -308.5360739039591,
+      "value": 5,
+      "slug": "mariam-veiszadeh"
+    },
+    {
+      "id": "steve-bannon_231",
+      "name": "Steve Bannon",
+      "type": "character",
+      "cluster": 34,
+      "x": -61.59894904486319,
+      "y": 374.5827763410567,
+      "z": -276.9405696873727,
+      "value": 5,
+      "slug": "steve-bannon"
+    },
+    {
+      "id": "platform_breitbart_232",
+      "name": "breitbart",
+      "type": "platform",
+      "cluster": 34,
+      "x": -24.39857519006796,
+      "y": 355.9613567146336,
+      "z": -255.72658253131695,
+      "value": 15
+    },
+    {
+      "id": "adam-baldwin_233",
+      "name": "Adam Baldwin",
+      "type": "character",
+      "cluster": 34,
+      "x": 54.38428954315938,
+      "y": 303.53523234112555,
+      "z": -304.8118038729024,
+      "value": 5,
+      "slug": "adam-baldwin"
+    },
+    {
+      "id": "mouthful-of-grandpa_234",
+      "name": "Mouthful of Grandpa",
+      "type": "character",
+      "cluster": 35,
+      "x": 298.7191895477675,
+      "y": 212.21842540930422,
+      "z": -605.3489166674875,
+      "value": 10,
+      "slug": "mouthful-of-grandpa"
+    },
+    {
+      "id": "platform_reddit_235",
+      "name": "reddit",
+      "type": "platform",
+      "cluster": 35,
+      "x": 286.7109037701992,
+      "y": 183.90796482662932,
+      "z": -619.5539369940404,
+      "value": 15
+    },
+    {
+      "id": "naruto-2-0_236",
+      "name": "Naruto 2 0",
+      "type": "character",
+      "cluster": 36,
+      "x": -128.36557266099317,
+      "y": 278.68579320336863,
+      "z": -566.8884883197086,
+      "value": 10,
+      "slug": "naruto-2-0"
+    },
+    {
+      "id": "platform_wikipedia_237",
+      "name": "wikipedia",
+      "type": "platform",
+      "cluster": 36,
+      "x": -115.83929299431259,
+      "y": 308.1255695526909,
+      "z": -556.2461336168668,
+      "value": 15
+    },
+    {
+      "id": "nuke-europe_238",
+      "name": "Nuke Europe",
+      "type": "character",
+      "cluster": 37,
+      "x": 640.8441802991857,
+      "y": -312.684149596586,
+      "z": 57.08824951385222,
+      "value": 10,
+      "slug": "nuke-europe"
+    },
+    {
+      "id": "platform_reddit_239",
+      "name": "reddit",
+      "type": "platform",
+      "cluster": 37,
+      "x": 656.1091698064305,
+      "y": -286.5558494148703,
+      "z": 42.03858920715114,
+      "value": 15
+    },
+    {
+      "id": "pineapple-10_240",
+      "name": "Pineapple 10",
+      "type": "character",
+      "cluster": 38,
+      "x": 407.5739715478119,
+      "y": -314.3182626449889,
+      "z": -464.35984001546603,
+      "value": 10,
+      "slug": "pineapple-10"
+    },
+    {
+      "id": "platform_youtube_241",
+      "name": "youtube",
+      "type": "platform",
+      "cluster": 38,
+      "x": 392.0484151978608,
+      "y": -343.85052485277305,
+      "z": -458.2694259134307,
+      "value": 15
+    },
+    {
+      "id": "the-old-jacobite-2_242",
+      "name": "The Old Jacobite 2",
+      "type": "character",
+      "cluster": 39,
+      "x": 271.69876556388084,
+      "y": 248.9847466935767,
+      "z": 567.7478479182007,
+      "value": 10,
+      "slug": "the-old-jacobite-2"
+    },
+    {
+      "id": "platform_wikipedia_243",
+      "name": "wikipedia",
+      "type": "platform",
+      "cluster": 39,
+      "x": 285.8193432116569,
+      "y": 219.18666491005908,
+      "z": 575.372357392394,
+      "value": 15
+    },
+    {
+      "id": "wake-up-white-man_244",
+      "name": "Wake Up White Man",
+      "type": "character",
+      "cluster": 40,
+      "x": 390.92559769400737,
+      "y": -261.4245046561824,
+      "z": 381.9318946061513,
+      "value": 10,
+      "slug": "wake-up-white-man"
+    },
+    {
+      "id": "platform_stormfront_245",
+      "name": "stormfront",
+      "type": "platform",
+      "cluster": 40,
+      "x": 407.31274372017634,
+      "y": -235.601019188689,
+      "z": 364.5045181393322,
+      "value": 15
+    },
+    {
+      "id": "platform_vnn_246",
+      "name": "vnn",
+      "type": "platform",
+      "cluster": 40,
+      "x": 391.2309146021123,
+      "y": -294.81979310972775,
+      "z": 371.4705180817517,
+      "value": 15
+    },
+    {
+      "id": "platform_reddit_247",
+      "name": "reddit",
+      "type": "platform",
+      "cluster": 40,
+      "x": 377.6829765609469,
+      "y": -246.28292078363802,
+      "z": 410.4527647220266,
+      "value": 15
+    }
+  ],
+  "links": [
+    {
+      "source": "24-129-100-84_0",
+      "target": "platform_wikipedia_1",
+      "value": 1.5
+    },
+    {
+      "source": "4krapsucks_2",
+      "target": "platform_anime-news-network_3",
+      "value": 1.5
+    },
+    {
+      "source": "66-177-73-91_4",
+      "target": "platform_wikipedia_5",
+      "value": 1.5
+    },
+    {
+      "source": "76-106-245-93_6",
+      "target": "platform_wikipedia_7",
+      "value": 1.5
+    },
+    {
+      "source": "amina-blackberry_8",
+      "target": "platform_reddit_9",
+      "value": 1.5
+    },
+    {
+      "source": "amina-blackberry_8",
+      "target": "platform_twitter_10",
+      "value": 1.5
+    },
+    {
+      "source": "michael-slay_11",
+      "target": "platform_medium_12",
+      "value": 1.5
+    },
+    {
+      "source": "michael-slay_11",
+      "target": "platform_reddit_9",
+      "value": 1.5
+    },
+    {
+      "source": "michael-slay_11",
+      "target": "platform_dailystormer_13",
+      "value": 1.5
+    },
+    {
+      "source": "amina-blackberry_8",
+      "target": "platform_twitter_10",
+      "value": 1
+    },
+    {
+      "source": "platform_twitter_10",
+      "target": "michael-slay_11",
+      "value": 1
+    },
+    {
+      "source": "amina-blackberry_8",
+      "target": "platform_twitter_10",
+      "value": 1
+    },
+    {
+      "source": "platform_twitter_10",
+      "target": "josh-bornstein_14",
+      "value": 1
+    },
+    {
+      "source": "australi-witness_15",
+      "target": "platform_surespot_16",
+      "value": 1.5
+    },
+    {
+      "source": "australi-witness_15",
+      "target": "platform_JustPaste.it_17",
+      "value": 1.5
+    },
+    {
+      "source": "australi-witness_15",
+      "target": "platform_facebook_18",
+      "value": 1.5
+    },
+    {
+      "source": "australi-witness_15",
+      "target": "platform_8chan_19",
+      "value": 1.5
+    },
+    {
+      "source": "australi-witness_15",
+      "target": "platform_twitter_10",
+      "value": 1.5
+    },
+    {
+      "source": "amina-blackberry_8",
+      "target": "platform_twitter_10",
+      "value": 1
+    },
+    {
+      "source": "platform_twitter_10",
+      "target": "australi-witness_15",
+      "value": 1
+    },
+    {
+      "source": "aryan-heights_20",
+      "target": "platform_stormfront_21",
+      "value": 1.5
+    },
+    {
+      "source": "australi-witness_22",
+      "target": "platform_surespot_23",
+      "value": 1.5
+    },
+    {
+      "source": "australi-witness_22",
+      "target": "platform_JustPaste.it_24",
+      "value": 1.5
+    },
+    {
+      "source": "australi-witness_22",
+      "target": "platform_facebook_25",
+      "value": 1.5
+    },
+    {
+      "source": "australi-witness_22",
+      "target": "platform_8chan_26",
+      "value": 1.5
+    },
+    {
+      "source": "australi-witness_22",
+      "target": "platform_twitter_27",
+      "value": 1.5
+    },
+    {
+      "source": "australi-witness_22",
+      "target": "platform_twitter_27",
+      "value": 1
+    },
+    {
+      "source": "platform_twitter_27",
+      "target": "elton-simpson_28",
+      "value": 1
+    },
+    {
+      "source": "australi-witness_22",
+      "target": "platform_twitter_27",
+      "value": 1
+    },
+    {
+      "source": "platform_twitter_27",
+      "target": "nadir-soofi_29",
+      "value": 1
+    },
+    {
+      "source": "australi-witness_22",
+      "target": "platform_twitter_27",
+      "value": 1
+    },
+    {
+      "source": "platform_twitter_27",
+      "target": "pamela-geller_30",
+      "value": 1
+    },
+    {
+      "source": "australi-witness_22",
+      "target": "platform_twitter_27",
+      "value": 1
+    },
+    {
+      "source": "platform_twitter_27",
+      "target": "elise-potaka_31",
+      "value": 1
+    },
+    {
+      "source": "australi-witness_22",
+      "target": "platform_twitter_27",
+      "value": 1
+    },
+    {
+      "source": "platform_twitter_27",
+      "target": "jim-berry-fbi_32",
+      "value": 1
+    },
+    {
+      "source": "australi-witness_22",
+      "target": "platform_twitter_27",
+      "value": 1
+    },
+    {
+      "source": "platform_twitter_27",
+      "target": "bindi-cole_33",
+      "value": 1
+    },
+    {
+      "source": "australi-witness_22",
+      "target": "platform_twitter_27",
+      "value": 1
+    },
+    {
+      "source": "platform_twitter_27",
+      "target": "bill-leak_34",
+      "value": 1
+    },
+    {
+      "source": "australi-witness_22",
+      "target": "platform_twitter_27",
+      "value": 1
+    },
+    {
+      "source": "platform_twitter_27",
+      "target": "larry-pickering_35",
+      "value": 1
+    },
+    {
+      "source": "australi-witness_22",
+      "target": "platform_twitter_27",
+      "value": 1
+    },
+    {
+      "source": "platform_twitter_27",
+      "target": "rita-katz_36",
+      "value": 1
+    },
+    {
+      "source": "australi-witness_22",
+      "target": "platform_surespot_23",
+      "value": 1
+    },
+    {
+      "source": "platform_surespot_23",
+      "target": "afp-federal-agent-as-mohamadmo7_37",
+      "value": 1
+    },
+    {
+      "source": "australi-witness_22",
+      "target": "platform_surespot_23",
+      "value": 1
+    },
+    {
+      "source": "platform_surespot_23",
+      "target": "fbi-as-wilayaks_38",
+      "value": 1
+    },
+    {
+      "source": "michael-slay_39",
+      "target": "platform_medium_40",
+      "value": 1.5
+    },
+    {
+      "source": "michael-slay_39",
+      "target": "platform_reddit_41",
+      "value": 1.5
+    },
+    {
+      "source": "michael-slay_39",
+      "target": "platform_dailystormer_42",
+      "value": 1.5
+    },
+    {
+      "source": "australi-witness_22",
+      "target": "platform_twitter_27",
+      "value": 1
+    },
+    {
+      "source": "platform_twitter_27",
+      "target": "michael-slay_39",
+      "value": 1
+    },
+    {
+      "source": "australi-witness_22",
+      "target": "platform_surespot_23",
+      "value": 1
+    },
+    {
+      "source": "platform_surespot_23",
+      "target": "fbi-as-wilayaks_38",
+      "value": 1
+    },
+    {
+      "source": "blaze-it-flaggot_44",
+      "target": "platform_reddit_45",
+      "value": 1.5
+    },
+    {
+      "source": "bw-anime-fan_46",
+      "target": "platform_wikipedia_47",
+      "value": 1.5
+    },
+    {
+      "source": "chuck-e-jesus_48",
+      "target": "platform_reddit_49",
+      "value": 1.5
+    },
+    {
+      "source": "death-to-sjws_50",
+      "target": "platform_reddit_51",
+      "value": 1.5
+    },
+    {
+      "source": "michael-slay_53",
+      "target": "platform_medium_54",
+      "value": 1.5
+    },
+    {
+      "source": "michael-slay_53",
+      "target": "platform_reddit_55",
+      "value": 1.5
+    },
+    {
+      "source": "michael-slay_53",
+      "target": "platform_dailystormer_56",
+      "value": 1.5
+    },
+    {
+      "source": "dinah-silverstein_52",
+      "target": "platform_times-of-israel_57",
+      "value": 1
+    },
+    {
+      "source": "platform_times-of-israel_57",
+      "target": "michael-slay_53",
+      "value": 1
+    },
+    {
+      "source": "dr-shlomo-goldstein_58",
+      "target": "platform_reddit_59",
+      "value": 1.5
+    },
+    {
+      "source": "ryoko-tamada_60",
+      "target": "platform_twitter_61",
+      "value": 1.5
+    },
+    {
+      "source": "ryoko-tamada_60",
+      "target": "platform_twitter_61",
+      "value": 1
+    },
+    {
+      "source": "platform_twitter_61",
+      "target": "jilian-c-york_62",
+      "value": 1
+    },
+    {
+      "source": "ryoko-tamada_60",
+      "target": "platform_e-mail_63",
+      "value": 1
+    },
+    {
+      "source": "platform_e-mail_63",
+      "target": "jilian-c-york_62",
+      "value": 1
+    },
+    {
+      "source": "ryoko-tamada_60",
+      "target": "platform_e-mail_63",
+      "value": 1
+    },
+    {
+      "source": "platform_e-mail_63",
+      "target": "peter-wallace_64",
+      "value": 1
+    },
+    {
+      "source": "ryoko-tamada_60",
+      "target": "platform_twitter_61",
+      "value": 1
+    },
+    {
+      "source": "platform_twitter_61",
+      "target": "mariam-veiszadeh_65",
+      "value": 1
+    },
+    {
+      "source": "tanya-cohen_66",
+      "target": "platform_dailykos_67",
+      "value": 1.5
+    },
+    {
+      "source": "tanya-cohen_66",
+      "target": "platform_reddit_68",
+      "value": 1.5
+    },
+    {
+      "source": "tanya-cohen_66",
+      "target": "platform_thoughtcatalog_69",
+      "value": 1.5
+    },
+    {
+      "source": "tanya-cohen_66",
+      "target": "platform_twitter_61",
+      "value": 1.5
+    },
+    {
+      "source": "ryoko-tamada_60",
+      "target": "platform_twitter_61",
+      "value": 1
+    },
+    {
+      "source": "platform_twitter_61",
+      "target": "tanya-cohen_66",
+      "value": 1
+    },
+    {
+      "source": "moon-metropolis_70",
+      "target": "platform_medium_71",
+      "value": 1.5
+    },
+    {
+      "source": "moon-metropolis_70",
+      "target": "platform_wrong-planet_72",
+      "value": 1.5
+    },
+    {
+      "source": "moon-metropolis_70",
+      "target": "platform_lastfm_73",
+      "value": 1.5
+    },
+    {
+      "source": "moon-metropolis_70",
+      "target": "platform_wordpress_74",
+      "value": 1.5
+    },
+    {
+      "source": "moon-metropolis_70",
+      "target": "platform_disqus_75",
+      "value": 1.5
+    },
+    {
+      "source": "moon-metropolis_70",
+      "target": "platform_reddit_68",
+      "value": 1.5
+    },
+    {
+      "source": "moon-metropolis_70",
+      "target": "platform_twitter_61",
+      "value": 1.5
+    },
+    {
+      "source": "ryoko-tamada_60",
+      "target": "platform_twitter_61",
+      "value": 1
+    },
+    {
+      "source": "platform_twitter_61",
+      "target": "moon-metropolis_70",
+      "value": 1
+    },
+    {
+      "source": "emily-americana_76",
+      "target": "platform_reddit_77",
+      "value": 1.5
+    },
+    {
+      "source": "michael-slay_78",
+      "target": "platform_medium_79",
+      "value": 1.5
+    },
+    {
+      "source": "michael-slay_78",
+      "target": "platform_reddit_77",
+      "value": 1.5
+    },
+    {
+      "source": "michael-slay_78",
+      "target": "platform_dailystormer_80",
+      "value": 1.5
+    },
+    {
+      "source": "emily-americana_76",
+      "target": "platform_reddit_77",
+      "value": 1
+    },
+    {
+      "source": "platform_reddit_77",
+      "target": "michael-slay_78",
+      "value": 1
+    },
+    {
+      "source": "emily-americana_76",
+      "target": "platform_reddit_77",
+      "value": 1
+    },
+    {
+      "source": "platform_reddit_77",
+      "target": "european-88_81",
+      "value": 1
+    },
+    {
+      "source": "moon-metropolis_82",
+      "target": "platform_medium_79",
+      "value": 1.5
+    },
+    {
+      "source": "moon-metropolis_82",
+      "target": "platform_wrong-planet_83",
+      "value": 1.5
+    },
+    {
+      "source": "moon-metropolis_82",
+      "target": "platform_lastfm_84",
+      "value": 1.5
+    },
+    {
+      "source": "moon-metropolis_82",
+      "target": "platform_wordpress_85",
+      "value": 1.5
+    },
+    {
+      "source": "moon-metropolis_82",
+      "target": "platform_disqus_86",
+      "value": 1.5
+    },
+    {
+      "source": "moon-metropolis_82",
+      "target": "platform_reddit_77",
+      "value": 1.5
+    },
+    {
+      "source": "moon-metropolis_82",
+      "target": "platform_twitter_87",
+      "value": 1.5
+    },
+    {
+      "source": "emily-americana_76",
+      "target": "platform_reddit_77",
+      "value": 1
+    },
+    {
+      "source": "platform_reddit_77",
+      "target": "moon-metropolis_82",
+      "value": 1
+    },
+    {
+      "source": "death-to-sjws_88",
+      "target": "platform_reddit_77",
+      "value": 1.5
+    },
+    {
+      "source": "emily-americana_76",
+      "target": "platform_reddit_77",
+      "value": 1
+    },
+    {
+      "source": "platform_reddit_77",
+      "target": "death-to-sjws_88",
+      "value": 1
+    },
+    {
+      "source": "emily-goldstein_89",
+      "target": "platform_thoughtcatalog_90",
+      "value": 1.5
+    },
+    {
+      "source": "emily-goldstein_89",
+      "target": "platform_twitter_92",
+      "value": 1
+    },
+    {
+      "source": "platform_twitter_92",
+      "target": "elon-musk_91",
+      "value": 1
+    },
+    {
+      "source": "emily-goldstein_89",
+      "target": "platform_thoughtcatalog_90",
+      "value": 1
+    },
+    {
+      "source": "platform_thoughtcatalog_90",
+      "target": "hadiyo-elmi_93",
+      "value": 1
+    },
+    {
+      "source": "tanya-cohen_94",
+      "target": "platform_dailykos_95",
+      "value": 1.5
+    },
+    {
+      "source": "tanya-cohen_94",
+      "target": "platform_reddit_96",
+      "value": 1.5
+    },
+    {
+      "source": "tanya-cohen_94",
+      "target": "platform_thoughtcatalog_90",
+      "value": 1.5
+    },
+    {
+      "source": "tanya-cohen_94",
+      "target": "platform_twitter_92",
+      "value": 1.5
+    },
+    {
+      "source": "emily-goldstein_89",
+      "target": "platform_thoughtcatalog_90",
+      "value": 1
+    },
+    {
+      "source": "platform_thoughtcatalog_90",
+      "target": "tanya-cohen_94",
+      "value": 1
+    },
+    {
+      "source": "michael-slay_97",
+      "target": "platform_medium_98",
+      "value": 1.5
+    },
+    {
+      "source": "michael-slay_97",
+      "target": "platform_reddit_96",
+      "value": 1.5
+    },
+    {
+      "source": "michael-slay_97",
+      "target": "platform_dailystormer_99",
+      "value": 1.5
+    },
+    {
+      "source": "emily-goldstein_89",
+      "target": "platform_thoughtcatalog_90",
+      "value": 1
+    },
+    {
+      "source": "platform_thoughtcatalog_90",
+      "target": "michael-slay_97",
+      "value": 1
+    },
+    {
+      "source": "emily-goldstein_89",
+      "target": "platform_thoughtcatalog_90",
+      "value": 1
+    },
+    {
+      "source": "platform_thoughtcatalog_90",
+      "target": "european-88_100",
+      "value": 1
+    },
+    {
+      "source": "emily-goldstein_89",
+      "target": "platform_thoughtcatalog_90",
+      "value": 1
+    },
+    {
+      "source": "platform_thoughtcatalog_90",
+      "target": "mariam-veiszadeh_101",
+      "value": 1
+    },
+    {
+      "source": "europe-hates-niggers_102",
+      "target": "platform_reddit_103",
+      "value": 1.5
+    },
+    {
+      "source": "flappy-brd_104",
+      "target": "platform_reddit_105",
+      "value": 1.5
+    },
+    {
+      "source": "gas-the-kikes_106",
+      "target": "platform_reddit_107",
+      "value": 1.5
+    },
+    {
+      "source": "michael-slay_109",
+      "target": "platform_medium_110",
+      "value": 1.5
+    },
+    {
+      "source": "michael-slay_109",
+      "target": "platform_reddit_111",
+      "value": 1.5
+    },
+    {
+      "source": "michael-slay_109",
+      "target": "platform_dailystormer_112",
+      "value": 1.5
+    },
+    {
+      "source": "hadiyo-elmi_108",
+      "target": "platform_twitter_113",
+      "value": 1
+    },
+    {
+      "source": "platform_twitter_113",
+      "target": "michael-slay_109",
+      "value": 1
+    },
+    {
+      "source": "hadiyo-elmi_108",
+      "target": "platform_twitter_113",
+      "value": 1
+    },
+    {
+      "source": "platform_twitter_113",
+      "target": "european-88_114",
+      "value": 1
+    },
+    {
+      "source": "hadiyo-elmi_108",
+      "target": "platform_twitter_113",
+      "value": 1
+    },
+    {
+      "source": "platform_twitter_113",
+      "target": "mariam-veiszadeh_115",
+      "value": 1
+    },
+    {
+      "source": "id-c9uafs7u_116",
+      "target": "platform_4plebs_117",
+      "value": 1.5
+    },
+    {
+      "source": "island-angel_118",
+      "target": "platform_reddit_119",
+      "value": 1.5
+    },
+    {
+      "source": "real-joshua-goldberg_120",
+      "target": "platform_times-of-israel_122",
+      "value": 1
+    },
+    {
+      "source": "platform_times-of-israel_122",
+      "target": "josh-bornstein_121",
+      "value": 1
+    },
+    {
+      "source": "real-joshua-goldberg_120",
+      "target": "platform_twitter_124",
+      "value": 1
+    },
+    {
+      "source": "platform_twitter_124",
+      "target": "lindsay-campbell-fbi_123",
+      "value": 1
+    },
+    {
+      "source": "real-joshua-goldberg_120",
+      "target": "platform_twitter_124",
+      "value": 1
+    },
+    {
+      "source": "platform_twitter_124",
+      "target": "elise-potaka_125",
+      "value": 1
+    },
+    {
+      "source": "real-joshua-goldberg_120",
+      "target": "platform_facebook_126",
+      "value": 1
+    },
+    {
+      "source": "platform_facebook_126",
+      "target": "elise-potaka_125",
+      "value": 1
+    },
+    {
+      "source": "real-joshua-goldberg_120",
+      "target": "platform_twitter_124",
+      "value": 1
+    },
+    {
+      "source": "platform_twitter_124",
+      "target": "luke-mcmahon_127",
+      "value": 1
+    },
+    {
+      "source": "real-joshua-goldberg_120",
+      "target": "platform_twitter_124",
+      "value": 1
+    },
+    {
+      "source": "platform_twitter_124",
+      "target": "elise-potaka_125",
+      "value": 1
+    },
+    {
+      "source": "real-joshua-goldberg_120",
+      "target": "platform_facebook_126",
+      "value": 1
+    },
+    {
+      "source": "platform_facebook_126",
+      "target": "elise-potaka_125",
+      "value": 1
+    },
+    {
+      "source": "real-joshua-goldberg_120",
+      "target": "platform_e-mail_129",
+      "value": 1
+    },
+    {
+      "source": "platform_e-mail_129",
+      "target": "elise-potaka_125",
+      "value": 1
+    },
+    {
+      "source": "real-joshua-goldberg_120",
+      "target": "platform_facebook_126",
+      "value": 1
+    },
+    {
+      "source": "platform_facebook_126",
+      "target": "junaid-thorne_130",
+      "value": 1
+    },
+    {
+      "source": "real-joshua-goldberg_120",
+      "target": "platform_reddit_132",
+      "value": 1
+    },
+    {
+      "source": "platform_reddit_132",
+      "target": "ben-garrison_131",
+      "value": 1
+    },
+    {
+      "source": "real-joshua-goldberg_120",
+      "target": "platform_twitter_124",
+      "value": 1
+    },
+    {
+      "source": "platform_twitter_124",
+      "target": "caitlin-roper_133",
+      "value": 1
+    },
+    {
+      "source": "real-joshua-goldberg_120",
+      "target": "platform_sluthate_135",
+      "value": 1
+    },
+    {
+      "source": "platform_sluthate_135",
+      "target": "dean-saxton_134",
+      "value": 1
+    },
+    {
+      "source": "real-joshua-goldberg_120",
+      "target": "platform_e-mail_129",
+      "value": 1
+    },
+    {
+      "source": "platform_e-mail_129",
+      "target": "nathan-sykes_136",
+      "value": 1
+    },
+    {
+      "source": "real-joshua-goldberg_120",
+      "target": "platform_stormfront_137",
+      "value": 1
+    },
+    {
+      "source": "platform_stormfront_137",
+      "target": "nathan-sykes_136",
+      "value": 1
+    },
+    {
+      "source": "real-joshua-goldberg_120",
+      "target": "platform_twitter_124",
+      "value": 1
+    },
+    {
+      "source": "platform_twitter_124",
+      "target": "nancy-goldstein_138",
+      "value": 1
+    },
+    {
+      "source": "real-joshua-goldberg_120",
+      "target": "platform_sluthate_135",
+      "value": 1
+    },
+    {
+      "source": "platform_sluthate_135",
+      "target": "dean-saxton_134",
+      "value": 1
+    },
+    {
+      "source": "fake-joshua-goldberg_140",
+      "target": "platform_thoughtcatalog_141",
+      "value": 1.5
+    },
+    {
+      "source": "kill-all-pakis_142",
+      "target": "platform_reddit_143",
+      "value": 1.5
+    },
+    {
+      "source": "kill-all-sjws_144",
+      "target": "platform_reddit_145",
+      "value": 1.5
+    },
+    {
+      "source": "le-cancer-kin_146",
+      "target": "platform_reddit_147",
+      "value": 1.5
+    },
+    {
+      "source": "madotsuki-the-dreamer_148",
+      "target": "platform_wikipedia_149",
+      "value": 1.5
+    },
+    {
+      "source": "madotsuki-the-dreamer_148",
+      "target": "platform_imdb_150",
+      "value": 1.5
+    },
+    {
+      "source": "madotsuki-the-dreamer_148",
+      "target": "platform_filmboards_151",
+      "value": 1.5
+    },
+    {
+      "source": "may-may-poster_152",
+      "target": "platform_reddit_153",
+      "value": 1.5
+    },
+    {
+      "source": "may-may-poster_152",
+      "target": "platform_Adult Swim_154",
+      "value": 1.5
+    },
+    {
+      "source": "metacanadian-420_155",
+      "target": "platform_reddit_156",
+      "value": 1.5
+    },
+    {
+      "source": "metropolis-forever_157",
+      "target": "platform_criterion_158",
+      "value": 1.5
+    },
+    {
+      "source": "metropolis-forever_157",
+      "target": "platform_digitpress_159",
+      "value": 1.5
+    },
+    {
+      "source": "metropolis-forever_157",
+      "target": "platform_bluwiki_160",
+      "value": 1.5
+    },
+    {
+      "source": "metropolis-forever_157",
+      "target": "platform_deviantart_161",
+      "value": 1.5
+    },
+    {
+      "source": "metropolis-forever_157",
+      "target": "platform_animesuki_162",
+      "value": 1.5
+    },
+    {
+      "source": "metropolis-forever_157",
+      "target": "platform_badmovies_163",
+      "value": 1.5
+    },
+    {
+      "source": "metropolis-forever_157",
+      "target": "platform_ytmnd_164",
+      "value": 1.5
+    },
+    {
+      "source": "metropolis-forever_157",
+      "target": "platform_Mail_165",
+      "value": 1.5
+    },
+    {
+      "source": "metropolis-forever_157",
+      "target": "platform_tezukainenglish_166",
+      "value": 1.5
+    },
+    {
+      "source": "metropolis-forever_157",
+      "target": "platform_bluelight_167",
+      "value": 1.5
+    },
+    {
+      "source": "metropolis-forever_157",
+      "target": "platform_e-mail_169",
+      "value": 1
+    },
+    {
+      "source": "platform_e-mail_169",
+      "target": "cyndi-lavrenci_168",
+      "value": 1
+    },
+    {
+      "source": "metropolis-forever_157",
+      "target": "platform_twitter_171",
+      "value": 1
+    },
+    {
+      "source": "platform_twitter_171",
+      "target": "grant-taylor_170",
+      "value": 1
+    },
+    {
+      "source": "metropolis-forever_157",
+      "target": "platform_e-mail_169",
+      "value": 1
+    },
+    {
+      "source": "platform_e-mail_169",
+      "target": "grant-taylor_170",
+      "value": 1
+    },
+    {
+      "source": "metropolis-forever_157",
+      "target": "platform_the-west-australian_172",
+      "value": 1
+    },
+    {
+      "source": "platform_the-west-australian_172",
+      "target": "grant-taylor_170",
+      "value": 1
+    },
+    {
+      "source": "metropolis-forever_157",
+      "target": "platform_e-mail_169",
+      "value": 1
+    },
+    {
+      "source": "platform_e-mail_169",
+      "target": "tom-minear_173",
+      "value": 1
+    },
+    {
+      "source": "emily-americana_174",
+      "target": "platform_reddit_175",
+      "value": 1.5
+    },
+    {
+      "source": "metropolis-forever_157",
+      "target": "platform_reddit_175",
+      "value": 1
+    },
+    {
+      "source": "platform_reddit_175",
+      "target": "emily-americana_174",
+      "value": 1
+    },
+    {
+      "source": "tanya-cohen_176",
+      "target": "platform_dailykos_177",
+      "value": 1.5
+    },
+    {
+      "source": "tanya-cohen_176",
+      "target": "platform_reddit_175",
+      "value": 1.5
+    },
+    {
+      "source": "tanya-cohen_176",
+      "target": "platform_thoughtcatalog_178",
+      "value": 1.5
+    },
+    {
+      "source": "tanya-cohen_176",
+      "target": "platform_twitter_171",
+      "value": 1.5
+    },
+    {
+      "source": "metropolis-forever_157",
+      "target": "platform_twitter_171",
+      "value": 1
+    },
+    {
+      "source": "platform_twitter_171",
+      "target": "tanya-cohen_176",
+      "value": 1
+    },
+    {
+      "source": "amina-blackberry_179",
+      "target": "platform_reddit_175",
+      "value": 1.5
+    },
+    {
+      "source": "amina-blackberry_179",
+      "target": "platform_twitter_171",
+      "value": 1.5
+    },
+    {
+      "source": "metropolis-forever_157",
+      "target": "platform_twitter_171",
+      "value": 1
+    },
+    {
+      "source": "platform_twitter_171",
+      "target": "amina-blackberry_179",
+      "value": 1
+    },
+    {
+      "source": "death-to-sjws_180",
+      "target": "platform_reddit_175",
+      "value": 1.5
+    },
+    {
+      "source": "metropolis-forever_157",
+      "target": "platform_reddit_175",
+      "value": 1
+    },
+    {
+      "source": "platform_reddit_175",
+      "target": "death-to-sjws_180",
+      "value": 1
+    },
+    {
+      "source": "michael-slay_181",
+      "target": "platform_medium_182",
+      "value": 1.5
+    },
+    {
+      "source": "michael-slay_181",
+      "target": "platform_reddit_183",
+      "value": 1.5
+    },
+    {
+      "source": "michael-slay_181",
+      "target": "platform_dailystormer_184",
+      "value": 1.5
+    },
+    {
+      "source": "michael-slay_181",
+      "target": "platform_dailystormer_184",
+      "value": 1
+    },
+    {
+      "source": "platform_dailystormer_184",
+      "target": "mariam-veiszadeh_185",
+      "value": 1
+    },
+    {
+      "source": "michael-slay_181",
+      "target": "platform_dailystormer_184",
+      "value": 1
+    },
+    {
+      "source": "platform_dailystormer_184",
+      "target": "andrew-anglin_186",
+      "value": 1
+    },
+    {
+      "source": "michael-slay_181",
+      "target": "platform_stormfront_188",
+      "value": 1
+    },
+    {
+      "source": "platform_stormfront_188",
+      "target": "hadiyo-elmi_187",
+      "value": 1
+    },
+    {
+      "source": "michael-slay_181",
+      "target": "platform_dailystormer_184",
+      "value": 1
+    },
+    {
+      "source": "platform_dailystormer_184",
+      "target": "hadiyo-elmi_187",
+      "value": 1
+    },
+    {
+      "source": "tanya-cohen_189",
+      "target": "platform_dailykos_190",
+      "value": 1.5
+    },
+    {
+      "source": "tanya-cohen_189",
+      "target": "platform_reddit_183",
+      "value": 1.5
+    },
+    {
+      "source": "tanya-cohen_189",
+      "target": "platform_thoughtcatalog_191",
+      "value": 1.5
+    },
+    {
+      "source": "tanya-cohen_189",
+      "target": "platform_twitter_192",
+      "value": 1.5
+    },
+    {
+      "source": "michael-slay_181",
+      "target": "platform_stormfront_188",
+      "value": 1
+    },
+    {
+      "source": "platform_stormfront_188",
+      "target": "tanya-cohen_189",
+      "value": 1
+    },
+    {
+      "source": "michael-slay_181",
+      "target": "platform_dailystormer_184",
+      "value": 1
+    },
+    {
+      "source": "platform_dailystormer_184",
+      "target": "tanya-cohen_189",
+      "value": 1
+    },
+    {
+      "source": "emily-americana_193",
+      "target": "platform_reddit_183",
+      "value": 1.5
+    },
+    {
+      "source": "michael-slay_181",
+      "target": "platform_stormfront_188",
+      "value": 1
+    },
+    {
+      "source": "platform_stormfront_188",
+      "target": "emily-americana_193",
+      "value": 1
+    },
+    {
+      "source": "michael-slay_181",
+      "target": "platform_dailystormer_184",
+      "value": 1
+    },
+    {
+      "source": "platform_dailystormer_184",
+      "target": "emily-americana_193",
+      "value": 1
+    },
+    {
+      "source": "nuke-europe_194",
+      "target": "platform_reddit_183",
+      "value": 1.5
+    },
+    {
+      "source": "michael-slay_181",
+      "target": "platform_stormfront_188",
+      "value": 1
+    },
+    {
+      "source": "platform_stormfront_188",
+      "target": "nuke-europe_194",
+      "value": 1
+    },
+    {
+      "source": "michael-slay_181",
+      "target": "platform_dailystormer_184",
+      "value": 1
+    },
+    {
+      "source": "platform_dailystormer_184",
+      "target": "nuke-europe_194",
+      "value": 1
+    },
+    {
+      "source": "australi-witness_195",
+      "target": "platform_surespot_196",
+      "value": 1.5
+    },
+    {
+      "source": "australi-witness_195",
+      "target": "platform_JustPaste.it_197",
+      "value": 1.5
+    },
+    {
+      "source": "australi-witness_195",
+      "target": "platform_facebook_198",
+      "value": 1.5
+    },
+    {
+      "source": "australi-witness_195",
+      "target": "platform_8chan_199",
+      "value": 1.5
+    },
+    {
+      "source": "australi-witness_195",
+      "target": "platform_twitter_192",
+      "value": 1.5
+    },
+    {
+      "source": "michael-slay_181",
+      "target": "platform_stormfront_188",
+      "value": 1
+    },
+    {
+      "source": "platform_stormfront_188",
+      "target": "australi-witness_195",
+      "value": 1
+    },
+    {
+      "source": "michael-slay_181",
+      "target": "platform_dailystormer_184",
+      "value": 1
+    },
+    {
+      "source": "platform_dailystormer_184",
+      "target": "australi-witness_195",
+      "value": 1
+    },
+    {
+      "source": "australi-witness_195",
+      "target": "platform_surespot_196",
+      "value": 1.5
+    },
+    {
+      "source": "australi-witness_195",
+      "target": "platform_JustPaste.it_197",
+      "value": 1.5
+    },
+    {
+      "source": "australi-witness_195",
+      "target": "platform_facebook_198",
+      "value": 1.5
+    },
+    {
+      "source": "australi-witness_195",
+      "target": "platform_8chan_199",
+      "value": 1.5
+    },
+    {
+      "source": "australi-witness_195",
+      "target": "platform_twitter_192",
+      "value": 1.5
+    },
+    {
+      "source": "michael-slay_181",
+      "target": "platform_dailystormer_184",
+      "value": 1
+    },
+    {
+      "source": "platform_dailystormer_184",
+      "target": "australi-witness_195",
+      "value": 1
+    },
+    {
+      "source": "micronesia-gal_201",
+      "target": "platform_reddit_202",
+      "value": 1.5
+    },
+    {
+      "source": "moon-metropolis_203",
+      "target": "platform_medium_204",
+      "value": 1.5
+    },
+    {
+      "source": "moon-metropolis_203",
+      "target": "platform_wrong-planet_205",
+      "value": 1.5
+    },
+    {
+      "source": "moon-metropolis_203",
+      "target": "platform_lastfm_206",
+      "value": 1.5
+    },
+    {
+      "source": "moon-metropolis_203",
+      "target": "platform_wordpress_207",
+      "value": 1.5
+    },
+    {
+      "source": "moon-metropolis_203",
+      "target": "platform_disqus_208",
+      "value": 1.5
+    },
+    {
+      "source": "moon-metropolis_203",
+      "target": "platform_reddit_209",
+      "value": 1.5
+    },
+    {
+      "source": "moon-metropolis_203",
+      "target": "platform_twitter_210",
+      "value": 1.5
+    },
+    {
+      "source": "moon-metropolis_203",
+      "target": "platform_twitter_210",
+      "value": 1
+    },
+    {
+      "source": "platform_twitter_210",
+      "target": "milo-yiannopoulos_211",
+      "value": 1
+    },
+    {
+      "source": "moon-metropolis_203",
+      "target": "platform_twitter_210",
+      "value": 1
+    },
+    {
+      "source": "platform_twitter_210",
+      "target": "shaun-king_212",
+      "value": 1
+    },
+    {
+      "source": "moon-metropolis_203",
+      "target": "platform_twitter_210",
+      "value": 1
+    },
+    {
+      "source": "platform_twitter_210",
+      "target": "luke-mcmahon_213",
+      "value": 1
+    },
+    {
+      "source": "moon-metropolis_203",
+      "target": "platform_twitter_210",
+      "value": 1
+    },
+    {
+      "source": "platform_twitter_210",
+      "target": "elise-potaka_214",
+      "value": 1
+    },
+    {
+      "source": "moon-metropolis_203",
+      "target": "platform_e-mail_216",
+      "value": 1
+    },
+    {
+      "source": "platform_e-mail_216",
+      "target": "mike-wendling_215",
+      "value": 1
+    },
+    {
+      "source": "moon-metropolis_203",
+      "target": "platform_twitter_210",
+      "value": 1
+    },
+    {
+      "source": "platform_twitter_210",
+      "target": "weev-andrew-auernheimer_217",
+      "value": 1
+    },
+    {
+      "source": "moon-metropolis_203",
+      "target": "platform_e-mail_216",
+      "value": 1
+    },
+    {
+      "source": "platform_e-mail_216",
+      "target": "chiara-zaffino_218",
+      "value": 1
+    },
+    {
+      "source": "moon-metropolis_203",
+      "target": "platform_e-mail_216",
+      "value": 1
+    },
+    {
+      "source": "platform_e-mail_216",
+      "target": "alice-pooley_219",
+      "value": 1
+    },
+    {
+      "source": "moon-metropolis_203",
+      "target": "platform_e-mail_216",
+      "value": 1
+    },
+    {
+      "source": "platform_e-mail_216",
+      "target": "peter-wallace_220",
+      "value": 1
+    },
+    {
+      "source": "moon-metropolis_203",
+      "target": "platform_twitter_210",
+      "value": 1
+    },
+    {
+      "source": "platform_twitter_210",
+      "target": "peter-wallace_220",
+      "value": 1
+    },
+    {
+      "source": "moon-metropolis_203",
+      "target": "platform_e-mail_216",
+      "value": 1
+    },
+    {
+      "source": "platform_e-mail_216",
+      "target": "rita-panahi_221",
+      "value": 1
+    },
+    {
+      "source": "moon-metropolis_203",
+      "target": "platform_e-mail_216",
+      "value": 1
+    },
+    {
+      "source": "platform_e-mail_216",
+      "target": "nikki_222",
+      "value": 1
+    },
+    {
+      "source": "moon-metropolis_203",
+      "target": "platform_twitter_210",
+      "value": 1
+    },
+    {
+      "source": "platform_twitter_210",
+      "target": "nikki_222",
+      "value": 1
+    },
+    {
+      "source": "emily-americana_223",
+      "target": "platform_reddit_209",
+      "value": 1.5
+    },
+    {
+      "source": "moon-metropolis_203",
+      "target": "platform_reddit_209",
+      "value": 1
+    },
+    {
+      "source": "platform_reddit_209",
+      "target": "emily-americana_223",
+      "value": 1
+    },
+    {
+      "source": "tanya-cohen_224",
+      "target": "platform_dailykos_225",
+      "value": 1.5
+    },
+    {
+      "source": "tanya-cohen_224",
+      "target": "platform_reddit_209",
+      "value": 1.5
+    },
+    {
+      "source": "tanya-cohen_224",
+      "target": "platform_thoughtcatalog_226",
+      "value": 1.5
+    },
+    {
+      "source": "tanya-cohen_224",
+      "target": "platform_twitter_210",
+      "value": 1.5
+    },
+    {
+      "source": "moon-metropolis_203",
+      "target": "platform_twitter_210",
+      "value": 1
+    },
+    {
+      "source": "platform_twitter_210",
+      "target": "tanya-cohen_224",
+      "value": 1
+    },
+    {
+      "source": "amina-blackberry_227",
+      "target": "platform_reddit_209",
+      "value": 1.5
+    },
+    {
+      "source": "amina-blackberry_227",
+      "target": "platform_twitter_210",
+      "value": 1.5
+    },
+    {
+      "source": "moon-metropolis_203",
+      "target": "platform_twitter_210",
+      "value": 1
+    },
+    {
+      "source": "platform_twitter_210",
+      "target": "amina-blackberry_227",
+      "value": 1
+    },
+    {
+      "source": "death-to-sjws_228",
+      "target": "platform_reddit_209",
+      "value": 1.5
+    },
+    {
+      "source": "moon-metropolis_203",
+      "target": "platform_reddit_209",
+      "value": 1
+    },
+    {
+      "source": "platform_reddit_209",
+      "target": "death-to-sjws_228",
+      "value": 1
+    },
+    {
+      "source": "moon-metropolis_203",
+      "target": "platform_thoughtcatalog_226",
+      "value": 1
+    },
+    {
+      "source": "platform_thoughtcatalog_226",
+      "target": "chris-lavergne_229",
+      "value": 1
+    },
+    {
+      "source": "moon-metropolis_203",
+      "target": "platform_twitter_210",
+      "value": 1
+    },
+    {
+      "source": "platform_twitter_210",
+      "target": "mariam-veiszadeh_230",
+      "value": 1
+    },
+    {
+      "source": "moon-metropolis_203",
+      "target": "platform_breitbart_232",
+      "value": 1
+    },
+    {
+      "source": "platform_breitbart_232",
+      "target": "steve-bannon_231",
+      "value": 1
+    },
+    {
+      "source": "moon-metropolis_203",
+      "target": "platform_twitter_210",
+      "value": 1
+    },
+    {
+      "source": "platform_twitter_210",
+      "target": "adam-baldwin_233",
+      "value": 1
+    },
+    {
+      "source": "mouthful-of-grandpa_234",
+      "target": "platform_reddit_235",
+      "value": 1.5
+    },
+    {
+      "source": "naruto-2-0_236",
+      "target": "platform_wikipedia_237",
+      "value": 1.5
+    },
+    {
+      "source": "nuke-europe_238",
+      "target": "platform_reddit_239",
+      "value": 1.5
+    },
+    {
+      "source": "pineapple-10_240",
+      "target": "platform_youtube_241",
+      "value": 1.5
+    },
+    {
+      "source": "the-old-jacobite-2_242",
+      "target": "platform_wikipedia_243",
+      "value": 1.5
+    },
+    {
+      "source": "wake-up-white-man_244",
+      "target": "platform_stormfront_245",
+      "value": 1.5
+    },
+    {
+      "source": "wake-up-white-man_244",
+      "target": "platform_vnn_246",
+      "value": 1.5
+    },
+    {
+      "source": "wake-up-white-man_244",
+      "target": "platform_reddit_247",
+      "value": 1.5
+    },
+    {
+      "source": "tanya-cohen_248",
+      "target": "platform_dailykos_249",
+      "value": 1.5
+    },
+    {
+      "source": "tanya-cohen_248",
+      "target": "platform_reddit_250",
+      "value": 1.5
+    },
+    {
+      "source": "tanya-cohen_248",
+      "target": "platform_thoughtcatalog_251",
+      "value": 1.5
+    },
+    {
+      "source": "tanya-cohen_248",
+      "target": "platform_twitter_252",
+      "value": 1.5
+    },
+    {
+      "source": "tanya-cohen_248",
+      "target": "platform_twitter_252",
+      "value": 1
+    },
+    {
+      "source": "platform_twitter_252",
+      "target": "mariam-veiszadeh_253",
+      "value": 1
+    },
+    {
+      "source": "tanya-cohen_248",
+      "target": "platform_thoughtcatalog_251",
+      "value": 1
+    },
+    {
+      "source": "platform_thoughtcatalog_251",
+      "target": "james-taranto-wsj_254",
+      "value": 1
+    },
+    {
+      "source": "michael-slay_255",
+      "target": "platform_medium_256",
+      "value": 1.5
+    },
+    {
+      "source": "michael-slay_255",
+      "target": "platform_reddit_250",
+      "value": 1.5
+    },
+    {
+      "source": "michael-slay_255",
+      "target": "platform_dailystormer_257",
+      "value": 1.5
+    },
+    {
+      "source": "tanya-cohen_248",
+      "target": "platform_twitter_252",
+      "value": 1
+    },
+    {
+      "source": "platform_twitter_252",
+      "target": "michael-slay_255",
+      "value": 1
+    },
+    {
+      "source": "tanya-cohen_248",
+      "target": "platform_daily-kos_259",
+      "value": 1
+    },
+    {
+      "source": "platform_daily-kos_259",
+      "target": "pamela-geller_258",
+      "value": 1
+    },
+    {
+      "source": "tanya-cohen_248",
+      "target": "platform_techdirt_261",
+      "value": 1
+    },
+    {
+      "source": "platform_techdirt_261",
+      "target": "mike-masnick_260",
+      "value": 1
+    },
+    {
+      "source": "australi-witness_263",
+      "target": "platform_surespot_264",
+      "value": 1.5
+    },
+    {
+      "source": "australi-witness_263",
+      "target": "platform_JustPaste.it_265",
+      "value": 1.5
+    },
+    {
+      "source": "australi-witness_263",
+      "target": "platform_facebook_266",
+      "value": 1.5
+    },
+    {
+      "source": "australi-witness_263",
+      "target": "platform_8chan_267",
+      "value": 1.5
+    },
+    {
+      "source": "australi-witness_263",
+      "target": "platform_twitter_268",
+      "value": 1.5
+    },
+    {
+      "source": "luke-mcmahon_262",
+      "target": "platform_twitter_268",
+      "value": 1
+    },
+    {
+      "source": "platform_twitter_268",
+      "target": "australi-witness_263",
+      "value": 1
+    },
+    {
+      "source": "luke-mcmahon_262",
+      "target": "platform_twitter_268",
+      "value": 1
+    },
+    {
+      "source": "platform_twitter_268",
+      "target": "nathan-sykes_269",
+      "value": 1
+    },
+    {
+      "source": "naomi-wolf_270",
+      "target": "platform_twitter_272",
+      "value": 1
+    },
+    {
+      "source": "platform_twitter_272",
+      "target": "josh-bornstein_271",
+      "value": 1
+    },
+    {
+      "source": "tanya-gersh_273",
+      "target": "platform_dailystormer_275",
+      "value": 1
+    },
+    {
+      "source": "platform_dailystormer_275",
+      "target": "andrew-anglin_274",
+      "value": 1
+    },
+    {
+      "source": "tanya-gersh_273",
+      "target": "platform_e-mail_276",
+      "value": 1
+    },
+    {
+      "source": "platform_e-mail_276",
+      "target": "andrew-anglin_274",
+      "value": 1
+    },
+    {
+      "source": "tanya-gersh_273",
+      "target": "platform_twitter_277",
+      "value": 1
+    },
+    {
+      "source": "platform_twitter_277",
+      "target": "andrew-anglin_274",
+      "value": 1
+    }
+  ]
+}

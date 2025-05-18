@@ -1,25 +1,7 @@
 import { useState, useEffect, useCallback } from "react";
-import { Box, Typography, Paper, IconButton, Fade } from "@mui/material";
+import { Box, Typography, Paper, Fade } from "@mui/material";
 import { styled } from "@mui/material/styles";
-import VisibilityIcon from '@mui/icons-material/Visibility';
-import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
-import HudSvg from './HudSvg';
-
-const ToggleButton = styled(IconButton)(({ theme }) => ({
-  position: "absolute",
-  bottom: "80px",
-  right: "20px",
-  backgroundColor: "rgba(0, 0, 0, 0.5)",
-  color: "white",
-  padding: "15px", // Augmenter le padding pour agrandir le bouton
-  width: "60px", // Définir une largeur fixe plus grande
-  height: "60px", // Définir une hauteur fixe plus grande
-  "&:hover": {
-    backgroundColor: "rgba(0, 0, 0, 0.7)",
-  },
-  zIndex: 1001,
-  pointerEvents: "auto", // Pour permettre les clics sur le bouton
-}));
+import HudSvg from "./HudSvg";
 
 const MessageContainer = styled(Box)(({ theme }) => ({
   position: "absolute",
@@ -54,15 +36,13 @@ const HUDOverlay = styled(Box)(({ theme }) => ({
 /**
  * Composant HUD (Heads-Up Display) pour afficher des informations en overlay
  * @param {Object} props - Propriétés du composant
- * @param {boolean} [props.defaultVisible=true] - Détermine si le HUD est visible par défaut
  */
-const HUD = ({ defaultVisible = true }) => {
+const HUD = () => {
   // État pour les données du HUD
   const [currentPosition, setCurrentPosition] = useState({ x: 0, y: 0, z: 0 });
   const [currentSpeed, setCurrentSpeed] = useState(0);
   const [currentTime, setCurrentTime] = useState(0);
   const [distanceToCenter, setDistanceToCenter] = useState(0);
-  const [isVisible, setIsVisible] = useState(defaultVisible);
   const [message, setMessage] = useState("");
   const [showMessage, setShowMessage] = useState(false);
 
@@ -91,7 +71,10 @@ const HUD = ({ defaultVisible = true }) => {
 
         // Afficher un message d'avertissement si on s'approche de la limite
         if (distance > 2300 && !window.__warningShown) {
-          showTemporaryMessage("Attention: Vous approchez de la limite de la zone de navigation", 5000);
+          showTemporaryMessage(
+            "Attention: Vous approchez de la limite de la zone de navigation",
+            5000
+          );
           window.__warningShown = true;
 
           // Réinitialiser l'avertissement après un certain temps
@@ -112,7 +95,7 @@ const HUD = ({ defaultVisible = true }) => {
 
     // Mettre à jour le temps toutes les secondes
     const timeInterval = setInterval(() => {
-      setCurrentTime(prev => prev + 1);
+      setCurrentTime((prev) => prev + 1);
     }, 1000);
 
     // Exposer la fonction showTemporaryMessage globalement
@@ -129,44 +112,42 @@ const HUD = ({ defaultVisible = true }) => {
   const formatTime = (seconds) => {
     const mins = Math.floor(seconds / 60);
     const secs = seconds % 60;
-    return `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
-  };
-
-  // Gérer le basculement de la visibilité du HUD
-  const toggleVisibility = () => {
-    setIsVisible(prev => !prev);
+    return `${mins.toString().padStart(2, "0")}:${secs
+      .toString()
+      .padStart(2, "0")}`;
   };
 
   return (
     <>
-      {/* Bouton pour basculer la visibilité du HUD */}
-      <ToggleButton onClick={toggleVisibility} size="large">
-        {isVisible ? <VisibilityOffIcon fontSize="large" /> : <VisibilityIcon fontSize="large" />}
-      </ToggleButton>
-
-      {/* Overlay SVG du HUD */}
-      {isVisible && (
-        <HUDOverlay>
-          <Box
-            sx={{
-              width: '100%',
-              height: '100%',
-              position: 'relative',
-              animation: 'pulse 4s infinite ease-in-out',
-              '@keyframes pulse': {
-                '0%': { opacity: 0.7 },
-                '50%': { opacity: 0.9 },
-                '100%': { opacity: 0.7 },
-              },
-              filter: 'drop-shadow(0 0 5px rgba(76, 175, 80, 0.5))'
+      {/* Overlay SVG du HUD - Toujours visible */}
+      <HUDOverlay>
+        <Box
+          sx={{
+            width: "100%",
+            height: "100%",
+            position: "relative",
+            animation: "pulse 4s infinite ease-in-out",
+            "@keyframes pulse": {
+              "0%": { opacity: 0.7 },
+              "50%": { opacity: 0.9 },
+              "100%": { opacity: 0.7 },
+            },
+            filter: "drop-shadow(0 0 5px rgba(76, 175, 80, 0.5))",
+          }}
+        >
+          <div
+            style={{
+              width: "100%",
+              height: "100%",
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
             }}
           >
-            <div style={{ width: '100%', height: '100%', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-              <HudSvg position={currentPosition} speed={currentSpeed} />
-            </div>
-          </Box>
-        </HUDOverlay>
-      )}
+            <HudSvg position={currentPosition} speed={currentSpeed} />
+          </div>
+        </Box>
+      </HUDOverlay>
 
       {/* Conteneur de message temporaire */}
       <Fade in={showMessage}>

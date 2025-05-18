@@ -1,10 +1,11 @@
 import { useState, useEffect } from "react";
-import { useLoader } from "@react-three/fiber";
-import { TextureLoader } from "three";
 import { Billboard } from "@react-three/drei";
+import { useTextures } from "../../Game/TexturePreloader";
+import { urlToTextureId } from "../../Game/utils/textureUtils";
 
 /**
  * Composant pour afficher des images SVG en 3D
+ * Utilise le système de cache de textures pour améliorer les performances
  *
  * @param {Object} props - Les propriétés du composant
  * @param {string} props.svgPath - Chemin vers le fichier SVG
@@ -25,42 +26,43 @@ const SvgSprite = ({
   rotation = [0, 0, 0],
   scale = [1, 1, 1],
 }) => {
-  const [texture, setTexture] = useState(null);
   const [dimensions, setDimensions] = useState({ width: 1, height: 1 });
   const [aspectRatio, setAspectRatio] = useState(1);
   const [error, setError] = useState(null);
 
+  // Récupérer les textures depuis le système de cache
+  const { textures, loaded } = useTextures();
+
+  // Extraire l'ID de texture à partir du chemin
+  const textureId = urlToTextureId(svgPath);
+
+  // Récupérer la texture depuis le cache
+  const texture = textures[textureId];
+
   useEffect(() => {
-    // Chargement de l'image SVG
-    const textureLoader = new TextureLoader();
+    // Attendre que les textures soient chargées
+    if (!loaded || !texture) return;
 
-    textureLoader.load(
-      svgPath,
-      (loadedTexture) => {
-        setTexture(loadedTexture);
+    try {
+      // Calculer les dimensions et le ratio d'aspect de l'image
+      const imgWidth = texture.image.width;
+      const imgHeight = texture.image.height;
+      const ratio = imgWidth / imgHeight;
 
-        // Calculer les dimensions et le ratio d'aspect de l'image
-        const imgWidth = loadedTexture.image.width;
-        const imgHeight = loadedTexture.image.height;
-        const ratio = imgWidth / imgHeight;
+      setDimensions({
+        width: size * ratio,
+        height: size,
+      });
 
-        setDimensions({
-          width: size * ratio,
-          height: size,
-        });
-
-        setAspectRatio(ratio);
-      },
-      undefined,
-      (err) => {
-        console.error(`Erreur lors du chargement du SVG ${svgPath}:`, err);
-        setError(err);
-      }
-    );
-  }, [svgPath, size]);
+      setAspectRatio(ratio);
+    } catch (err) {
+      console.error(`Erreur lors du traitement du SVG ${svgPath}:`, err);
+      setError(err);
+    }
+  }, [svgPath, size, texture, loaded]);
 
   // Si une erreur se produit ou si le SVG n'est pas encore chargé
-  if (error || !texture) {
+  if (error || !texture || !loaded) {
     return null;
   }
 
