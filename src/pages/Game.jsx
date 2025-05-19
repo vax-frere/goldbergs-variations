@@ -59,24 +59,24 @@ const INTERACTIVE_PORTRAITS = [
       "Étude sur l'identité en ligne et l'extrémisme numérique. Les travaux de Joshua Goldberg ont permis de comprendre les mécanismes de radicalisation sur les plateformes sociales.",
     boundingBoxSize: 200,
   },
-  {
-    id: "joshua-left",
-    position: [-400, 100, -200],
-    size: 250,
-    title: "L'Infiltration Numérique",
-    description:
-      "Joshua Goldberg a créé de multiples personnalités en ligne pour infiltrer différentes communautés extrémistes. Cette méthode controversée a soulevé des questions éthiques importantes sur les limites de la recherche.",
-    boundingBoxSize: 150,
-  },
-  {
-    id: "joshua-right",
-    position: [400, -50, -150],
-    size: 220,
-    title: "Impact Médiatique",
-    description:
-      "L'affaire Goldberg a révélé la fragilité des écosystèmes d'information et la facilité avec laquelle un seul individu peut manipuler plusieurs communautés en ligne simultanément.",
-    boundingBoxSize: 180,
-  },
+  // {
+  //   id: "joshua-left",
+  //   position: [-400, 100, -200],
+  //   size: 250,
+  //   title: "L'Infiltration Numérique",
+  //   description:
+  //     "Joshua Goldberg a créé de multiples personnalités en ligne pour infiltrer différentes communautés extrémistes. Cette méthode controversée a soulevé des questions éthiques importantes sur les limites de la recherche.",
+  //   boundingBoxSize: 150,
+  // },
+  // {
+  //   id: "joshua-right",
+  //   position: [400, -50, -150],
+  //   size: 220,
+  //   title: "Impact Médiatique",
+  //   description:
+  //     "L'affaire Goldberg a révélé la fragilité des écosystèmes d'information et la facilité avec laquelle un seul individu peut manipuler plusieurs communautés en ligne simultanément.",
+  //   boundingBoxSize: 180,
+  // },
 ];
 
 // Liste des trous noirs à ajouter dans l'espace 3D
