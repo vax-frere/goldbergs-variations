@@ -335,11 +335,7 @@ const Game = () => {
                       ))}
 
                       {/* Afficher les catégories dans l'espace 3D */}
-                      <DistrictLabels
-                        textSize={24}
-                        maxDistance={400}
-                        minDistance={70}
-                      />
+                      <DistrictLabels />
 
                       {/* Ajouter un trou noir animé */}
                       <BlackHoleEffect

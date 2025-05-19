@@ -27,8 +27,8 @@ const DistrictLabels = ({
   textSize = 20,
   textColor = "#ffffff",
   districts = DISTRICTS,
-  maxDistance = 400,
-  minDistance = 70,
+  maxDistance = 1200,
+  minDistance = 800,
 }) => {
   return (
     <group>
