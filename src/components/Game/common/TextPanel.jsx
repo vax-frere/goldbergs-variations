@@ -263,7 +263,7 @@ const TextPanel = memo(() => {
           <div className="platform-content">
             <TextScramble
               text={currentTitle || ""}
-              className="text-panel-text platform-text"
+              className="text-panel-title platform-text"
               speed={0.6}
             />
             <TextScramble
@@ -288,7 +288,7 @@ const TextPanel = memo(() => {
           <div className="text-panel-header">
             <TextScramble
               text={currentTitle || ""}
-              className="text-panel-text"
+              className="text-panel-title"
               speed={0.6}
             />
 
