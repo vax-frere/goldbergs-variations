@@ -30,8 +30,8 @@ export class InputManager {
     this.config = {
       deadzone: 0.1,
       keyboardSensitivity: 1.5,
-      keyboardMovementMultiplier: 3.0,
-      keyboardLookMultiplier: 0.5,
+      keyboardMovementMultiplier: 1.0,
+      keyboardLookMultiplier: 1.8,
     };
 
     // États internes

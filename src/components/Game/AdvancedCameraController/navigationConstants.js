@@ -27,7 +27,7 @@ export const DEFAULT_FLIGHT_CONFIG = {
   maxSpeed: 300, // Maintenu pour la vitesse maximale
   acceleration: 400, // Réduit pour une accélération plus progressive (était 800)
   deceleration: 0.92, // Augmenté pour une décélération plus longue (était 0.85)
-  rotationSpeed: 0.5, // Maintenu pour la rotation
+  rotationSpeed: 1.2, // Augmenté pour une rotation plus sensible (était 0.5)
   deadzone: 0.08, // Maintenu pour la sensibilité
 };
 

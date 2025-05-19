@@ -1,7 +1,9 @@
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useMemo } from "react";
 import { Box, Typography, Paper, Fade } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import HudSvg from "./HudSvg";
+import useGameStore from "../store";
+import { groupNodesByCluster } from "../Graph/utils";
 
 const MessageContainer = styled(Box)(({ theme }) => ({
   position: "absolute",
@@ -19,6 +21,20 @@ const MessageContainer = styled(Box)(({ theme }) => ({
   border: "1px solid rgba(255, 255, 255, 0.1)",
   zIndex: 1000,
   pointerEvents: "none", // Pour permettre les clics à travers le message
+}));
+
+const VisitedPersonasCounter = styled(Box)(({ theme }) => ({
+  position: "absolute",
+  bottom: "20px",
+  right: "20px",
+  color: "rgba(255, 255, 255, 0.7)",
+  zIndex: 1000,
+  fontFamily: "'Courier New', monospace",
+  fontSize: "12px",
+  letterSpacing: "0.5px",
+  textTransform: "lowercase",
+  opacity: 0.7,
+  pointerEvents: "none",
 }));
 
 const HUDOverlay = styled(Box)(({ theme }) => ({
@@ -45,6 +61,54 @@ const HUD = () => {
   const [distanceToCenter, setDistanceToCenter] = useState(0);
   const [message, setMessage] = useState("");
   const [showMessage, setShowMessage] = useState(false);
+  const [totalClusters, setTotalClusters] = useState(0);
+
+  // Récupérer le nombre de personas visitées depuis le store
+  const visitedPersonasCount = useGameStore(
+    (state) => state.visitedPersonasCount
+  );
+  const visitedClusters = useGameStore((state) => state.visitedClusters);
+
+  // Calculer le pourcentage de complétion
+  const completionPercentage = useMemo(() => {
+    if (!totalClusters) return 0;
+    return Math.round((visitedPersonasCount / totalClusters) * 100);
+  }, [visitedPersonasCount, totalClusters]);
+
+  // Effet pour déterminer le nombre total de clusters disponibles
+  useEffect(() => {
+    // Fonction pour obtenir le nombre total de clusters depuis les données du graphe
+    const fetchTotalClusters = async () => {
+      try {
+        // Charger les données du graphe à partir du fichier JSON
+        const response = await fetch(
+          `${import.meta.env.BASE_URL}data/spatialized_graph.data.json`
+        );
+        if (!response.ok) {
+          throw new Error("Failed to load graph data");
+        }
+
+        const data = await response.json();
+
+        if (data && data.nodes && data.nodes.length) {
+          // Grouper les nœuds par cluster pour déterminer le nombre de clusters uniques
+          const clusters = groupNodesByCluster(data.nodes);
+          // Compter uniquement les clusters qui ont un nœud maître
+          const masterClusters = Object.keys(clusters).filter((clusterId) =>
+            clusters[clusterId].some((node) => node.isClusterMaster === true)
+          );
+
+          setTotalClusters(masterClusters.length);
+        }
+      } catch (error) {
+        console.error("Error determining total clusters:", error);
+        // Valeur par défaut si l'analyse échoue
+        setTotalClusters(16);
+      }
+    };
+
+    fetchTotalClusters();
+  }, []);
 
   // Fonction pour afficher un message temporaire
   const showTemporaryMessage = useCallback((text, duration = 3000) => {
@@ -155,6 +219,15 @@ const HUD = () => {
           <Typography variant="body1">{message}</Typography>
         </MessageContainer>
       </Fade>
+
+      {/* Compteur de personas visitées */}
+      {visitedPersonasCount > 0 && (
+        <VisitedPersonasCounter>
+          <Typography variant="body2">
+            {`${visitedPersonasCount}/${totalClusters} personas visited (${completionPercentage}%)`}
+          </Typography>
+        </VisitedPersonasCounter>
+      )}
     </>
   );
 };

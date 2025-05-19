@@ -2,7 +2,11 @@ import { useState, useEffect, useRef } from "react";
 import { useThree, useFrame } from "@react-three/fiber";
 import * as THREE from "three";
 import useGameStore from "../../../Game/store";
-import { calculateClusterBoundingBoxes, findMainNodeInCluster } from "../utils";
+import {
+  calculateClusterBoundingBoxes,
+  findMainNodeInCluster,
+  calculateClusterCentroids,
+} from "../utils";
 
 /**
  * Hook pour détecter le cluster dans lequel se trouve un point devant la caméra
@@ -16,6 +20,8 @@ const useNearestCluster = (nodes, options = {}) => {
     detectionPointDistance = 100,
     // Agrandissement des boîtes englobantes (en %)
     boundingBoxExpansion = 20, // Par défaut, ne pas étendre les boîtes englobantes
+    // Distance maximale au centroïde avant désactivation du cluster
+    maxDistanceToClusterCentroid = 300,
     // Activer les logs de débogage
     debug = false,
   } = options;
@@ -30,8 +36,16 @@ const useNearestCluster = (nodes, options = {}) => {
   const clusterNamesRef = useRef({});
   const clusterSlugsRef = useRef({});
 
-  // Store Zustand pour le cluster actif (maintenant au niveau du Game)
-  const { activeClusterId, setActiveCluster } = useGameStore();
+  // Référence pour les centroïdes des clusters
+  const clusterCentroidsRef = useRef({});
+
+  // Store Zustand pour le cluster actif et en hover
+  const {
+    activeClusterId,
+    hoveredClusterId,
+    setActiveCluster,
+    setHoveredCluster,
+  } = useGameStore();
 
   // Position du point de détection devant la caméra
   const detectionPointRef = useRef(new THREE.Vector3());
@@ -46,8 +60,32 @@ const useNearestCluster = (nodes, options = {}) => {
   // Référence pour l'identification des frames
   const frameCountRef = useRef(0);
 
+  // Référence pour suivre l'état des touches pour l'activation
+  const keyDownRef = useRef({});
+
   // Vecteur directionnel temporaire pour calculs
   const directionVector = new THREE.Vector3();
+
+  // Observer les touches du clavier pour l'activation
+  useEffect(() => {
+    const handleKeyDown = (e) => {
+      keyDownRef.current[e.code] = true;
+    };
+
+    const handleKeyUp = (e) => {
+      keyDownRef.current[e.code] = false;
+    };
+
+    // Ajouter les écouteurs
+    window.addEventListener("keydown", handleKeyDown);
+    window.addEventListener("keyup", handleKeyUp);
+
+    return () => {
+      // Nettoyer les écouteurs
+      window.removeEventListener("keydown", handleKeyDown);
+      window.removeEventListener("keyup", handleKeyUp);
+    };
+  }, []);
 
   // Mettre à jour les boîtes englobantes lorsque les nœuds changent
   useEffect(() => {
@@ -57,6 +95,10 @@ const useNearestCluster = (nodes, options = {}) => {
         nodes,
         true
       );
+
+      // Calculer les centroïdes des clusters
+      const { centroids } = calculateClusterCentroids(nodes, true);
+      clusterCentroidsRef.current = centroids;
 
       // Stockage des slugs pour chaque cluster
       const clusterSlugs = {};
@@ -110,6 +152,7 @@ const useNearestCluster = (nodes, options = {}) => {
       if (debug) {
         console.log("Boîtes englobantes calculées:", boundingBoxesRef.current);
         console.log("Noms des clusters:", clusterNamesRef.current);
+        console.log("Centroïdes des clusters:", clusterCentroidsRef.current);
         console.log("Slugs des clusters:", clusterSlugsRef.current);
       }
     }
@@ -177,8 +220,60 @@ const useNearestCluster = (nodes, options = {}) => {
     return containingCluster;
   };
 
-  // Fonction pour mettre à jour le cluster actif immédiatement
-  const updateActiveCluster = () => {
+  // Vérifier si le bouton d'activation est pressé (touche T ou bouton X de la manette)
+  const isActivationButtonPressed = () => {
+    // Touche T du clavier
+    const isKeyboardActivationPressed = keyDownRef.current["KeyT"] === true;
+
+    // Bouton X de la manette (index 2 dans les gamepads)
+    let isGamepadActivationPressed = false;
+    const gamepads = navigator.getGamepads ? navigator.getGamepads() : [];
+    if (gamepads[0]) {
+      isGamepadActivationPressed = gamepads[0].buttons[2]?.pressed || false;
+    }
+
+    return isKeyboardActivationPressed || isGamepadActivationPressed;
+  };
+
+  // Fonction pour vérifier si la caméra est trop éloignée du centroïde du cluster actif
+  const checkDistanceToActiveCluster = () => {
+    if (!activeClusterId || !clusterCentroidsRef.current[activeClusterId]) {
+      return false;
+    }
+
+    const centroid = clusterCentroidsRef.current[activeClusterId];
+    const centroidPosition = new THREE.Vector3(
+      centroid.x,
+      centroid.y,
+      centroid.z
+    );
+    const distance = camera.position.distanceTo(centroidPosition);
+
+    if (debug) {
+      console.log(`Distance au centroïde du cluster actif: ${distance}`);
+    }
+
+    // Si la distance est supérieure à la limite, désactiver le cluster
+    if (distance > maxDistanceToClusterCentroid) {
+      if (debug) {
+        console.log(
+          `Désactivation automatique du cluster: distance (${distance}) > limite (${maxDistanceToClusterCentroid})`
+        );
+      }
+
+      // Afficher un message dans le HUD si disponible
+      if (window.__showHUDMessage) {
+        window.__showHUDMessage("Vous êtes trop éloigné du cluster", 3000);
+      }
+
+      return true;
+    }
+
+    return false;
+  };
+
+  // Fonction pour mettre à jour les états de hover et d'activation
+  const updateClusterStates = () => {
     // Si aucune boîte englobante n'a été calculée, ne rien faire
     if (!hasBoundingBoxesRef.current) return;
 
@@ -192,35 +287,44 @@ const useNearestCluster = (nodes, options = {}) => {
     // Mettre à jour le temps de dernière vérification
     lastCheckTimeRef.current = now;
 
+    // Si un cluster est actif, vérifier la distance et désactiver si nécessaire
+    if (activeClusterId && checkDistanceToActiveCluster()) {
+      setActiveCluster(null);
+      return;
+    }
+
     // Calculer le point de détection devant la caméra
     detectionPointRef.current.copy(calculateDetectionPoint(camera));
 
     // Trouver le cluster contenant le point
     const containingCluster = findContainingCluster();
 
-    // Logs de débogage
-    if (debug && frameCountRef.current % 200 === 0) {
-      console.log(
-        `Point de détection: (${detectionPointRef.current.x.toFixed(
-          0
-        )}, ${detectionPointRef.current.y.toFixed(
-          0
-        )}, ${detectionPointRef.current.z.toFixed(0)})`
-      );
+    // Vérifier si un bouton d'activation est pressé
+    const activationPressed = isActivationButtonPressed();
 
-      if (containingCluster) {
-        console.log(
-          `Point dans le cluster: ${containingCluster.id} (${containingCluster.name})`
-        );
-      } else {
-        console.log("Point en dehors de tous les clusters");
-      }
-    }
-
-    // Mise à jour immédiate du cluster actif
+    // Mettre à jour l'état de hover
     if (containingCluster) {
-      // Si le cluster actif est différent du cluster contenant le point
-      if (activeClusterId !== containingCluster.id) {
+      // Si on est sur un nouveau cluster en hover
+      if (hoveredClusterId !== containingCluster.id) {
+        setHoveredCluster(
+          containingCluster.id,
+          containingCluster.name,
+          containingCluster.slug
+        );
+
+        if (debug) {
+          console.log(
+            `Cluster survolé: ${containingCluster.id}, nom: ${containingCluster.name}`
+          );
+        }
+      }
+
+      // Si le bouton d'activation est pressé, activer ce cluster
+      if (
+        activationPressed &&
+        hoveredClusterId === containingCluster.id &&
+        activeClusterId !== containingCluster.id
+      ) {
         setActiveCluster(
           containingCluster.id,
           containingCluster.name,
@@ -229,18 +333,29 @@ const useNearestCluster = (nodes, options = {}) => {
 
         if (debug) {
           console.log(
-            `Activation immédiate du cluster: ${containingCluster.id}, slug: ${
+            `Activation du cluster par bouton: ${containingCluster.id}, slug: ${
               containingCluster.slug || "aucun"
             }`
           );
         }
       }
-    } else if (activeClusterId) {
-      // Si aucun cluster ne contient le point mais qu'un cluster est actif, le désactiver
-      setActiveCluster(null, null, null);
+    } else {
+      // Si on ne survole plus aucun cluster, désactiver le hover
+      if (hoveredClusterId) {
+        setHoveredCluster(null, null, null);
 
-      if (debug) {
-        console.log("Désactivation immédiate du cluster");
+        if (debug) {
+          console.log("Désactivation du hover de cluster");
+        }
+      }
+
+      // Si la zone est vide et qu'on appuie sur le bouton d'activation, désactiver le cluster actif
+      if (activationPressed && activeClusterId) {
+        setActiveCluster(null, null, null);
+
+        if (debug) {
+          console.log("Désactivation du cluster actif par bouton");
+        }
       }
     }
 
@@ -250,13 +365,14 @@ const useNearestCluster = (nodes, options = {}) => {
 
   // Utiliser useFrame pour suivre la position de la caméra à chaque frame
   useFrame(() => {
-    // Mettre à jour le cluster actif
-    updateActiveCluster();
+    // Mettre à jour les états de cluster
+    updateClusterStates();
   });
 
-  // Retourner l'ID du cluster actif et les informations sur les boîtes englobantes
+  // Retourner les ID des clusters et les informations sur les boîtes englobantes
   return {
     activeClusterId,
+    hoveredClusterId,
     boundingBoxes: boundingBoxesRef.current,
     clusterNames: clusterNamesRef.current,
     clusterSlugs: clusterSlugsRef.current,

@@ -318,7 +318,10 @@ export class FlightController {
     if (distanceFromCenter > this.boundingSphereRadius) {
       // Afficher un message dans le HUD
       if (window.__showHUDMessage) {
-        window.__showHUDMessage("Limite de navigation atteinte - Retour à la position initiale", 5000);
+        window.__showHUDMessage(
+          "Navigation limit reached - Returning home",
+          3000
+        );
       }
 
       this.returnToDefaultPosition();

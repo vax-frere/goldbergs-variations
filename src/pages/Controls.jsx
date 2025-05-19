@@ -6,13 +6,13 @@ import PageTransition, {
   staggerContainerVariants,
   pageVariants,
 } from "../components/PageTransition";
+import { getImagePath, getSoundPath } from "../utils/assetLoader";
 
 const Controls = () => {
   const navigate = useNavigate();
-  const [playSwitchSound] = useSound(
-    `${import.meta.env.BASE_URL}sounds/switch-on.mp3`,
-    { volume: 0.5 }
-  );
+  const [playSwitchSound] = useSound(getSoundPath("switch-on.mp3"), {
+    volume: 0.5,
+  });
 
   const handleExploreClick = () => {
     playSwitchSound();
@@ -102,7 +102,7 @@ const Controls = () => {
                 >
                   <Box sx={{ maxWidth: "100%", overflow: "hidden" }}>
                     <img
-                      src={`${import.meta.env.BASE_URL}img/gamepad.svg`}
+                      src={getImagePath("gamepad.svg")}
                       alt="Gamepad Controls"
                       style={{
                         maxWidth: "100%",

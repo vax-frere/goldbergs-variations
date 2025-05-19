@@ -270,26 +270,87 @@ export const calculateClusterBoundingBoxes = (nodes, extractNames = false) => {
       clusterNames[clusterId] = clusterName;
     }
 
-    // Créer une boîte englobante avec min et max
-    boundingBoxes[clusterId] = {
-      min: { ...cluster.min },
-      max: { ...cluster.max },
-      // Calculer le centre de la boîte
-      center: {
-        x: (cluster.min.x + cluster.max.x) / 2,
-        y: (cluster.min.y + cluster.max.y) / 2,
-        z: (cluster.min.z + cluster.max.z) / 2,
-      },
-      // Calculer les dimensions de la boîte
-      size: {
-        x: cluster.max.x - cluster.min.x,
-        y: cluster.max.y - cluster.min.y,
-        z: cluster.max.z - cluster.min.z,
-      },
-      nodeCount: cluster.nodes.length,
-      nodes: cluster.nodes,
-      name: clusterName,
+    // Calculer les dimensions de la boîte
+    const size = {
+      x: cluster.max.x - cluster.min.x,
+      y: cluster.max.y - cluster.min.y,
+      z: cluster.max.z - cluster.min.z,
     };
+
+    // Calculer le centre de la boîte
+    const center = {
+      x: (cluster.min.x + cluster.max.x) / 2,
+      y: (cluster.min.y + cluster.max.y) / 2,
+      z: (cluster.min.z + cluster.max.z) / 2,
+    };
+
+    // Appliquer une taille minimum de 10 unités pour chaque dimension
+    const MIN_SIZE = 10;
+    let finalSize = { ...size };
+
+    // Vérifier si une dimension est inférieure à la taille minimum
+    if (size.x < MIN_SIZE) finalSize.x = MIN_SIZE;
+    if (size.y < MIN_SIZE) finalSize.y = MIN_SIZE;
+    if (size.z < MIN_SIZE) finalSize.z = MIN_SIZE;
+
+    // Calculer les nouveaux min et max en utilisant le centre et les dimensions minimales garanties
+    let finalMin = {
+      x: center.x - finalSize.x / 2,
+      y: center.y - finalSize.y / 2,
+      z: center.z - finalSize.z / 2,
+    };
+
+    let finalMax = {
+      x: center.x + finalSize.x / 2,
+      y: center.y + finalSize.y / 2,
+      z: center.z + finalSize.z / 2,
+    };
+
+    // Si le cluster a seulement 2 nœuds ou moins, tripler la taille de la bounding box
+    if (cluster.nodes.length <= 2) {
+      // Calculer les nouvelles dimensions (tripler la taille)
+      const expandFactor = 3;
+      const expandedSize = {
+        x: finalSize.x * expandFactor,
+        y: finalSize.y * expandFactor,
+        z: finalSize.z * expandFactor,
+      };
+
+      // Recalculer les nouveaux min et max en utilisant le centre et les dimensions triplées
+      finalMin = {
+        x: center.x - expandedSize.x / 2,
+        y: center.y - expandedSize.y / 2,
+        z: center.z - expandedSize.z / 2,
+      };
+
+      finalMax = {
+        x: center.x + expandedSize.x / 2,
+        y: center.y + expandedSize.y / 2,
+        z: center.z + expandedSize.z / 2,
+      };
+
+      // Créer la bounding box avec les valeurs étendues
+      boundingBoxes[clusterId] = {
+        min: finalMin,
+        max: finalMax,
+        center: center,
+        size: expandedSize,
+        nodeCount: cluster.nodes.length,
+        nodes: cluster.nodes,
+        name: clusterName,
+      };
+    } else {
+      // Cas normal pour les clusters plus grands
+      boundingBoxes[clusterId] = {
+        min: finalMin,
+        max: finalMax,
+        center: center,
+        size: finalSize,
+        nodeCount: cluster.nodes.length,
+        nodes: cluster.nodes,
+        name: clusterName,
+      };
+    }
   });
 
   // Retourner les noms de clusters si demandé

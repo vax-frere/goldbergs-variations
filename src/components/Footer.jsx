@@ -2,6 +2,7 @@ import { Box, Typography, Modal, Paper, IconButton, Fade } from "@mui/material";
 import { motion } from "framer-motion";
 import { useState } from "react";
 import CloseIcon from "@mui/icons-material/Close";
+import { GamepadIndicator } from "./Game/AdvancedCameraController/CameraIndicators";
 
 const Footer = () => {
   const [open, setOpen] = useState(false);
@@ -21,6 +22,8 @@ const Footer = () => {
           bottom: "32px",
           left: "35px",
           zIndex: 1000,
+          display: "flex",
+          alignItems: "center",
         }}
       >
         <Typography
@@ -31,6 +34,7 @@ const Footer = () => {
             color: "#f5f5f5",
             fontWeight: 300,
             letterSpacing: "0.2px",
+            marginRight: "5px",
           }}
         >
           <span
@@ -44,6 +48,19 @@ const Footer = () => {
             About this experience
           </span>
         </Typography>
+
+        {/* Séparateur vertical */}
+        <Box
+          sx={{
+            height: "12px",
+            width: "1px",
+            backgroundColor: "rgba(255, 255, 255, 0.1)",
+            margin: "0 10px",
+            display: "inline-block",
+          }}
+        />
+
+        <GamepadIndicator isCompact={true} />
       </Box>
 
       <Modal

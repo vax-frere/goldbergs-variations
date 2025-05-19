@@ -73,6 +73,7 @@ const Work = () => {
           value: node.value || node.val,
           color: node.color,
           slug: node.originalId,
+          isClusterMaster: node.isClusterOrigin || false, // Utiliser la propriété existante
           // Ajouter d'autres propriétés spécifiques à votre graphe si nécessaire
         };
       });

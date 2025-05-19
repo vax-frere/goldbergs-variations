@@ -4,7 +4,7 @@ import { getInputManager } from "./inputManager";
 /**
  * Indicateur de connexion de manette
  */
-const GamepadIndicator = () => {
+const GamepadIndicator = ({ isCompact = false }) => {
   const [isConnected, setIsConnected] = useState(false);
 
   useEffect(() => {
@@ -23,34 +23,50 @@ const GamepadIndicator = () => {
     return () => clearInterval(intervalId);
   }, []);
 
-  // Style pour le conteneur
-  const containerStyle = {
-    position: "fixed",
-    bottom: "20px",
-    right: "20px",
-    padding: "10px",
-    backgroundColor: "rgba(0, 0, 0, 0.5)",
-    borderRadius: "5px",
-    display: "flex",
-    alignItems: "center",
-    zIndex: 1000,
-  };
+  // Ne rien afficher si aucun gamepad n'est connecté
+  if (!isConnected) {
+    return null;
+  }
+
+  // Style pour le conteneur, différent selon le mode d'affichage
+  const containerStyle = isCompact
+    ? {
+        display: "flex",
+        alignItems: "center",
+        borderRadius: "5px",
+      }
+    : {
+        position: "fixed",
+        bottom: "20px",
+        right: "20px",
+        padding: "10px",
+        backgroundColor: "rgba(0, 0, 0, 0.5)",
+        borderRadius: "5px",
+        display: "flex",
+        alignItems: "center",
+        zIndex: 1000,
+      };
 
   // Style pour l'indicateur
   const indicatorStyle = {
-    width: "10px",
-    height: "10px",
+    width: isCompact ? "8px" : "10px",
+    height: isCompact ? "8px" : "10px",
     borderRadius: "50%",
-    backgroundColor: isConnected ? "#00ff00" : "#ff0000",
+    backgroundColor: "#00ff00",
     marginRight: "10px",
+  };
+
+  // Style du texte
+  const textStyle = {
+    color: "white",
+    fontSize: isCompact ? "12px" : "14px",
+    opacity: isCompact ? 0.5 : 1,
   };
 
   return (
     <div style={containerStyle}>
       <div style={indicatorStyle}></div>
-      <span style={{ color: "white", fontSize: "14px" }}>
-        {isConnected ? "Gamepad connected" : "Gamepad disconnected"}
-      </span>
+      <span style={textStyle}>Gamepad connected</span>
     </div>
   );
 };

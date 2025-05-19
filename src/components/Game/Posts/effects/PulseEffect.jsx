@@ -2,6 +2,7 @@ import { useRef, useState, useEffect } from "react";
 import { useFrame } from "@react-three/fiber";
 import * as THREE from "three";
 import { Billboard, PositionalAudio } from "@react-three/drei";
+import { getSoundPath } from "../../../../utils/assetLoader";
 
 // Default constants for the animation
 const DEFAULT_DURATION = 0.8; // seconds
@@ -14,8 +15,8 @@ const DEFAULT_MAX_THICKNESS = 0.01; // Ending thickness (thicker)
 
 // Sound files
 const SOUND_FILES = {
-  1: `${import.meta.env.BASE_URL}sounds/touch-a.mp3`,
-  2: `${import.meta.env.BASE_URL}sounds/touch-2.mp3`,
+  1: getSoundPath("touch-a.mp3"),
+  2: getSoundPath("touch-2.mp3"),
 };
 
 /**

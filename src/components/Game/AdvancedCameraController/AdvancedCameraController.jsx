@@ -24,6 +24,7 @@ import {
   CrosshairIndicator,
   sendStartCountingSignal,
 } from "./CameraIndicators";
+import { returnToHome } from "../services/HomeReturnService";
 
 const DEBUG = false;
 
@@ -223,21 +224,23 @@ export function AdvancedCameraController({ config = DEFAULT_FLIGHT_CONFIG }) {
 
     // Afficher les changements d'état
     console.log(
-      `🔄 TRANSITION: Mode orbite ${orbitModeActive ? "ACTIVÉ" : "DÉSACTIVÉ"}`
+      `🔄 TRANSITION: ${
+        orbitModeActive ? "Orbit mode ENABLED" : "Orbit mode DISABLED"
+      }`
     );
 
     // Si l'orbite est activée, enregistrer le temps de démarrage pour l'accélération
     if (orbitModeActive) {
       orbitStartTime.current = Date.now();
       console.log(
-        `🌐 MODE: Orbit activé, position: [${camera.position.x.toFixed(
+        `🌐 MODE: Orbit active, position: [${camera.position.x.toFixed(
           2
         )}, ${camera.position.y.toFixed(2)}, ${camera.position.z.toFixed(2)}]`
       );
 
       // Afficher un message dans le HUD
       if (window.__showHUDMessage) {
-        window.__showHUDMessage("Mode orbite automatique activé", 3000);
+        window.__showHUDMessage("Auto-orbit enabled", 3000);
       }
     }
 
@@ -248,7 +251,7 @@ export function AdvancedCameraController({ config = DEFAULT_FLIGHT_CONFIG }) {
       // Réinitialiser le timer d'accélération
       orbitStartTime.current = null;
       console.log(
-        `🏃‍♂️ MODE: Vol libre repris, position: [${camera.position.x.toFixed(
+        `🏃‍♂️ MODE: Free flight resumed at [${camera.position.x.toFixed(
           2
         )}, ${camera.position.y.toFixed(2)}, ${camera.position.z.toFixed(2)}]`
       );
@@ -256,15 +259,13 @@ export function AdvancedCameraController({ config = DEFAULT_FLIGHT_CONFIG }) {
       // Si on passe effectivement du mode orbite au mode normal
       // (et non pas lors de l'initialisation où prevOrbitMode est undefined)
       if (prevOrbitMode === true) {
-        console.log(
-          `📊 COMPTAGE: Redémarrage du compteur de posts après sortie du mode orbite`
-        );
+        console.log(`📊 TRACKING: Post counter reset after exiting orbit mode`);
         // Redémarrer le compteur de posts
         sendStartCountingSignal();
 
         // Afficher un message dans le HUD
         if (window.__showHUDMessage) {
-          window.__showHUDMessage("Mode vol libre activé", 3000);
+          window.__showHUDMessage("Free flight mode", 3000);
         }
       }
     }
@@ -354,7 +355,7 @@ export function AdvancedCameraController({ config = DEFAULT_FLIGHT_CONFIG }) {
       previousState.orbit !== orbitModeActive
     ) {
       console.log(
-        `🔄 TRANSITION: Activité utilisateur détectée - Ancien état: [AutoRotate: ${previousState.autoRotate}, Orbit: ${previousState.orbit}], Nouvel état: [AutoRotate: ${autoRotateEnabled}, Orbit: ${orbitModeActive}]`
+        `🔄 TRANSITION: User activity detected - State changes: auto-rotation: ${autoRotateEnabled}, orbit: ${orbitModeActive}`
       );
     }
 
@@ -377,7 +378,7 @@ export function AdvancedCameraController({ config = DEFAULT_FLIGHT_CONFIG }) {
         // Vérifier à nouveau qu'on n'est pas en transition ou en orbite avant d'activer
         if (!transitioning.current.active && !orbitModeActive) {
           console.log(
-            `🔄 TRANSITION: Activation de la rotation automatique après inactivité`
+            `🔄 TRANSITION: Auto-rotation activated after inactivity`
           );
           setAutoRotateEnabled(true);
         }
@@ -389,7 +390,7 @@ export function AdvancedCameraController({ config = DEFAULT_FLIGHT_CONFIG }) {
         if (!transitioning.current.active && !orbitModeActive) {
           orbitAttempted.current = true;
           console.log(
-            `📅 PLANIFICATION: Activation du mode orbite après inactivité prolongée`
+            `📅 SCHEDULED: Auto-orbit mode after extended inactivity`
           );
 
           // Déclencher également un événement personnalisé pour la communication intra-page
@@ -403,8 +404,15 @@ export function AdvancedCameraController({ config = DEFAULT_FLIGHT_CONFIG }) {
             // Silencieux en cas d'erreur
           }
 
-          // Retour à la position par défaut PUIS activation du mode orbite
-          animateToCameraPosition(0, true); // Le second paramètre indique qu'il faut activer l'orbite après
+          // Utiliser le service returnToHome au lieu de l'animation directe
+          // pour le retour à la position par défaut PUIS activation du mode orbite
+          console.log(
+            `Utilisation du HomeReturnService pour le retour à l'accueil après inactivité`
+          );
+          returnToHome();
+
+          // Note: returnToHome appelle déjà animateToCameraPosition(0, true) en interne
+          // donc pas besoin de l'appeler manuellement ici
         }
       }, AUTO_ORBIT_DELAY);
     }
@@ -493,9 +501,7 @@ export function AdvancedCameraController({ config = DEFAULT_FLIGHT_CONFIG }) {
         inputs.action2;
 
       if (hasAnyInput) {
-        console.log(
-          `👆 INTERACTION: Désactivation du mode orbite par interaction utilisateur`
-        );
+        console.log(`👆 INTERACTION: Orbit mode disabled by user input`);
         setOrbitModeActive(false);
 
         // Réinitialiser le FlightController pour éviter l'effet d'inertie de rotation
@@ -504,9 +510,7 @@ export function AdvancedCameraController({ config = DEFAULT_FLIGHT_CONFIG }) {
         }
 
         // Redémarrer le compteur de posts quand l'utilisateur sort manuellement du mode orbite
-        console.log(
-          `📊 COMPTAGE: Redémarrage du compteur de posts après interaction utilisateur`
-        );
+        console.log(`📊 TRACKING: Post counter reset after user interaction`);
         sendStartCountingSignal();
 
         detectUserActivity();
@@ -879,15 +883,11 @@ export function AdvancedCameraController({ config = DEFAULT_FLIGHT_CONFIG }) {
 
     // Log la position actuelle et la position cible
     console.log(
-      `🔄 TRANSITION: Début, de position [${camera.position.x.toFixed(
+      `🔄 TRANSITION: From [${camera.position.x.toFixed(
         2
       )}, ${camera.position.y.toFixed(2)}, ${camera.position.z.toFixed(
         2
-      )}] vers position ${index} [${targetPos.position.x.toFixed(
-        2
-      )}, ${targetPos.position.y.toFixed(2)}, ${targetPos.position.z.toFixed(
-        2
-      )}]`
+      )}] to home position`
     );
 
     // Marker l'état de transition
@@ -918,7 +918,7 @@ export function AdvancedCameraController({ config = DEFAULT_FLIGHT_CONFIG }) {
 
     // Afficher un message dans le HUD
     if (window.__showHUDMessage) {
-      window.__showHUDMessage(`Transition vers position ${index + 1}`, 2000);
+      window.__showHUDMessage(`Returning home`, 2000);
     }
 
     // Si on doit activer l'orbite après la transition, programmer un délai

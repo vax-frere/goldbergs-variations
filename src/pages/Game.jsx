@@ -8,6 +8,15 @@ import {
   BOUNDING_SPHERE_RADIUS,
 } from "../components/Game/AdvancedCameraController/navigationConstants";
 
+// Importer le store pour vérifier si un cluster est actif
+import useGameStore from "../components/Game/store";
+
+// Importer le service de base de données
+import { ensureDatabaseLoaded } from "../components/Game/services/DatabaseService";
+
+// Importer le service de retour à l'accueil
+import { initHomeReturnListeners } from "../components/Game/services/HomeReturnService";
+
 // Importer le préchargeur de textures et l'utilitaire de textures
 import TexturePreloader from "../components/Game/TexturePreloader";
 import { getTexturesToPreload } from "../components/Game/utils/textureUtils";
@@ -26,37 +35,48 @@ import {
   ToneMapping,
 } from "@react-three/postprocessing";
 import Posts from "../components/Game/Posts/Posts";
-import SvgSprite from "../components/Game/common/SvgSprite";
-import Text3D from "../components/Game/Text3D";
+import SvgPath from "../components/Game/common/SvgPath";
+import InteractiveImage from "../components/Game/common/InteractiveImage";
+import DistrictLabels from "../components/Game/common/DistrictLabels";
 import { BlackHoleEffect } from "../components/Game/common/BlackHoleEffect";
 import ShootingStars from "../components/Game/common/ShootingStar";
+import Stars from "../components/Game/common/Stars";
 import HUD from "../components/Game/HUD/HUD";
 import TextPanel from "../components/Game/common/TextPanel";
 import LoadingBar from "../components/Game/common/LoadingBar";
+import { getSoundPath, getImagePath } from "../utils/assetLoader";
 
 const DEBUG = false;
 
-// Liste des catégories à afficher dans l'espace 3D
-const CATEGORIES = [
-  { text: "Libertarians", position: [500, 200, -300] },
+// Liste des portraits interactifs de Joshua
+const INTERACTIVE_PORTRAITS = [
   {
-    text: "Antisystem",
-    position: [-400, 300, 200],
+    id: "joshua-center",
+    position: [0, 0, 0],
+    size: 300,
+    title: "Joshua Goldberg",
+    description:
+      "Étude sur l'identité en ligne et l'extrémisme numérique. Les travaux de Joshua Goldberg ont permis de comprendre les mécanismes de radicalisation sur les plateformes sociales.",
+    boundingBoxSize: 200,
   },
   {
-    text: "Conservatives",
-    position: [300, -200, 400],
+    id: "joshua-left",
+    position: [-400, 100, -200],
+    size: 250,
+    title: "L'Infiltration Numérique",
+    description:
+      "Joshua Goldberg a créé de multiples personnalités en ligne pour infiltrer différentes communautés extrémistes. Cette méthode controversée a soulevé des questions éthiques importantes sur les limites de la recherche.",
+    boundingBoxSize: 150,
   },
   {
-    text: "Nationalists",
-    position: [-500, -150, -250],
+    id: "joshua-right",
+    position: [400, -50, -150],
+    size: 220,
+    title: "Impact Médiatique",
+    description:
+      "L'affaire Goldberg a révélé la fragilité des écosystèmes d'information et la facilité avec laquelle un seul individu peut manipuler plusieurs communautés en ligne simultanément.",
+    boundingBoxSize: 180,
   },
-  {
-    text: "Religious",
-    position: [200, 400, 300],
-  },
-  { text: "Culture", position: [-300, 100, 500] },
-  { text: "Social justice", position: [-200, -300, 100] },
 ];
 
 // Liste des trous noirs à ajouter dans l'espace 3D
@@ -69,18 +89,6 @@ const BLACK_HOLE = {
   rotation: [Math.PI / 4, 0, Math.PI / 6], // Rotation sur X et Z
 };
 
-// Textes à afficher en rotation
-const PANEL_TEXTS = [
-  "Welcome to Joshua Goldberg's digital universe. Explore this data galaxy.",
-  "Twitter data points reveal connections between different political communities.",
-  "The black hole is absorbing data and reshaping the digital landscape.",
-  "Shooting stars represent breaking stories traveling through the network.",
-  "These text nodes represent the key communities identified in our research.",
-  "Joshua Goldberg's work focused on understanding far-right extremism online.",
-  "Each node represents a collection of tweets connected by shared themes.",
-  "Navigate through this space to discover the complex web of social media discourse.",
-];
-
 const Game = () => {
   const [graphData, setGraphData] = useState({ nodes: [], links: [] });
   const [isLoading, setIsLoading] = useState(true);
@@ -90,6 +98,17 @@ const Game = () => {
   const [explosionCompleted, setExplosionCompleted] = useState(false);
   // Ajouter un état pour suivre le préchargement des textures
   const [texturePreloadingDone, setTexturePreloadingDone] = useState(false);
+  // État pour suivre le chargement de la base de données
+  const [databaseLoaded, setDatabaseLoaded] = useState(false);
+
+  // Récupérer l'état du cluster actif depuis le store
+  const activeClusterId = useGameStore((state) => state.activeClusterId);
+
+  // Vérifier si un cluster est actif
+  const hasActiveCluster = activeClusterId !== null;
+
+  // Référence pour la fonction de nettoyage des écouteurs d'événements
+  const cleanupListenersRef = useRef(null);
 
   // Utiliser useRef au lieu de useState pour éviter les re-rendus
   const graphInstanceRef = useRef(null);
@@ -107,6 +126,43 @@ const Game = () => {
     setAudioStarted(true);
     console.log("Audio démarré");
   }, []);
+
+  // Fonction pour précharger la base de données
+  useEffect(() => {
+    const loadDatabase = async () => {
+      try {
+        await ensureDatabaseLoaded();
+        setDatabaseLoaded(true);
+        console.log("Base de données chargée avec succès");
+      } catch (error) {
+        console.error(
+          "Erreur lors du chargement de la base de données:",
+          error
+        );
+        // Continuer quand même, ce n'est pas critique
+        setDatabaseLoaded(true);
+      }
+    };
+
+    loadDatabase();
+  }, []);
+
+  // Initialiser les écouteurs d'événements pour le retour à l'accueil
+  useEffect(() => {
+    // Initialiser les écouteurs une fois que le jeu est prêt
+    if (gameStarted && !isLoading && texturePreloadingDone && databaseLoaded) {
+      console.log("Initialisation des écouteurs de retour à l'accueil");
+      cleanupListenersRef.current = initHomeReturnListeners();
+    }
+
+    // Nettoyer les écouteurs lors du démontage du composant
+    return () => {
+      if (cleanupListenersRef.current) {
+        cleanupListenersRef.current();
+        cleanupListenersRef.current = null;
+      }
+    };
+  }, [gameStarted, isLoading, texturePreloadingDone, databaseLoaded]);
 
   // Fonction pour charger les données et construire le graphe
   useEffect(() => {
@@ -145,7 +201,7 @@ const Game = () => {
   }, [gameStarted]);
 
   // Déterminer si l'application est prête à être affichée
-  const isReady = !isLoading && texturePreloadingDone;
+  const isReady = !isLoading && texturePreloadingDone && databaseLoaded;
 
   // Liste des textures à précharger
   const texturesToPreload = getTexturesToPreload();
@@ -193,9 +249,7 @@ const Game = () => {
                 {audioStarted && (
                   <>
                     <SoundPlayer
-                      soundPath={`${
-                        import.meta.env.BASE_URL
-                      }sounds/ambiant.mp3`}
+                      soundPath={getSoundPath("ambiant.mp3")}
                       defaultVolume={0.1}
                       loop={true}
                       autoPlay={true}
@@ -207,9 +261,7 @@ const Game = () => {
                       }}
                     />
                     <SoundPlayer
-                      soundPath={`${
-                        import.meta.env.BASE_URL
-                      }sounds/interview.m4a`}
+                      soundPath={getSoundPath("interview.m4a")}
                       defaultVolume={0.7}
                       loop={true}
                       autoPlay={true}
@@ -255,39 +307,39 @@ const Game = () => {
                   )}
 
                   {/* Ajouter le composant Posts pour afficher les publications */}
-                  {gameStarted && (
+                  {/* {gameStarted && (
                     <Posts
                       renderer="sphere"
                       explosionDuration={5}
                       explosionStagger={0.01}
                       explosionPathVariation={0.3}
                     />
-                  )}
+                  )} */}
 
-                  {/* Ajouter le composant SVG au centre du monde */}
-                  {gameStarted && (
+                  {/* Groupe des éléments spéciaux (masqués lorsqu'un cluster est actif) */}
+                  {gameStarted && !hasActiveCluster && (
                     <>
-                      <SvgSprite
-                        svgPath={`${
-                          import.meta.env.BASE_URL
-                        }img/joshua-goldberg.svg`}
-                        size={300}
-                        position={[0, 0, 0]}
-                        isBillboard={false}
-                        opacity={1}
-                      />
-
-                      {/* Afficher les catégories dans l'espace 3D */}
-                      {CATEGORIES.map((category, index) => (
-                        <Text3D
-                          key={index}
-                          text={category.text}
-                          position={category.position}
-                          size={40}
-                          color="#ffffff"
-                          isBillboard={true}
+                      {/* Ajouter les portraits interactifs de Joshua */}
+                      {INTERACTIVE_PORTRAITS.map((portrait) => (
+                        <InteractiveImage
+                          key={portrait.id}
+                          id={portrait.id}
+                          svgPath={getImagePath("joshua-goldberg.svg")}
+                          position={portrait.position}
+                          size={portrait.size}
+                          title={portrait.title}
+                          description={portrait.description}
+                          boundingBoxSize={portrait.boundingBoxSize}
+                          showBoundingBox={DEBUG}
                         />
                       ))}
+
+                      {/* Afficher les catégories dans l'espace 3D */}
+                      <DistrictLabels
+                        textSize={24}
+                        maxDistance={400}
+                        minDistance={70}
+                      />
 
                       {/* Ajouter un trou noir animé */}
                       <BlackHoleEffect
@@ -303,6 +355,9 @@ const Game = () => {
                       {explosionCompleted && <ShootingStars count={10} />}
                     </>
                   )}
+
+                  {/* Champ d'étoiles en arrière-plan, visible tout le temps */}
+                  <Stars count={5000} radius={3000} size={1.2} />
 
                   {/* Contrôleur de caméra et affichage des informations de navigation */}
                   <AdvancedCameraController />
