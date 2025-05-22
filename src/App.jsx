@@ -6,8 +6,9 @@ import CssBaseline from "@mui/material/CssBaseline";
 import theme from "./theme";
 import Home from "./pages/Home";
 import Controls from "./pages/Controls";
-import Game from "./pages/Game";
-import Work from "./pages/Work";
+import Game from "./pages/Game/Game";
+import ExportForceGraphPage from "./pages/ExportForceGraphPage/ExportForceGraphPage";
+import MovablePage from "./pages/MovablePage";
 import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
 import BackgroundCanvas from "./components/BackgroundCanvas";
@@ -25,7 +26,11 @@ function App() {
           <Route path="/" element={<Home />} />
           <Route path="/controls" element={<Controls />} />
           <Route path="/game" element={<Game />} />
-          <Route path="/spatialize-and-export-forcegraph" element={<Work />} />
+          <Route
+            path="/spatialize-and-export-forcegraph"
+            element={<ExportForceGraphPage />}
+          />
+          <Route path="/move-and-export-forcegraph" element={<MovablePage />} />
         </Routes>
       </AnimatePresence>
       <Footer />

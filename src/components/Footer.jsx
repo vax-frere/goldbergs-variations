@@ -1,9 +1,16 @@
-import { Box, Typography, Modal, Paper, IconButton, Fade } from "@mui/material";
+import {
+  Box,
+  Typography,
+  Modal,
+  Paper,
+  IconButton,
+  Fade,
+  Link,
+} from "@mui/material";
 import { motion } from "framer-motion";
 import { useState } from "react";
 import CloseIcon from "@mui/icons-material/Close";
-import { GamepadIndicator } from "./Game/AdvancedCameraController/CameraIndicators";
-
+import { GamepadIndicator } from "../pages/Game/AdvancedCameraController/CameraIndicators";
 const Footer = () => {
   const [open, setOpen] = useState(false);
 
@@ -122,6 +129,15 @@ const Footer = () => {
               simulates a fragmented mind experiencing the world as a
               simulation, unveiling a digital Joker confronting the Internet's
               contradictions.
+              <br />
+              <br /> Here is the{" "}
+              <Link
+                href="https://tfrere.github.io/joshua-post-timeline/"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                scrapped database
+              </Link>
             </Typography>
 
             <Typography variant="subtitle1" fontWeight="500" gutterBottom>

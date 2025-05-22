@@ -1,50 +1,53 @@
-# Script de Surveillance des Téléchargements
+# Downloads Monitoring Script
 
-Ce script Python surveille le dossier `Téléchargements` (Downloads) de l'utilisateur et déplace automatiquement les fichiers qui se terminent par `.data.json` vers le dossier `./client/public/data/` de l'application.
+This Python script monitors the user's `Downloads` folder and automatically moves files ending with `.data.json` to the application's `./client/public/data/` folder.
 
-## Fonctionnalités
+## Features
 
-- Surveillance en temps réel du dossier Téléchargements
-- Déplacement des fichiers `.data.json` vers le dossier cible
-- Remplacement des fichiers existants avec le même nom
-- Fonctionne sur Windows, macOS et Linux
+- Real-time monitoring of the Downloads folder
+- Moving `.data.json` files to the target folder
+- Replacing existing files with the same name
+- Works on Windows, macOS, and Linux
 
-## Prérequis
+## Prerequisites
 
-Pour exécuter ce script, vous devez avoir Python 3 installé ainsi que les dépendances requises.
+To run this script, you must have Python 3 installed along with the required dependencies.
 
 ```bash
 pip install -r requirements.txt
 ```
 
-## Utilisation
+## Usage
 
-Pour lancer le script manuellement :
+To start the script manually:
 
 ```bash
 python watch_downloads.py
 ```
 
-Pour configurer le script afin qu'il démarre automatiquement avec l'application, vous pouvez :
+To configure the script to start automatically with the application, you can:
 
-### Sur Windows
-- Créer un raccourci du script dans le dossier de démarrage de Windows
-- Ou configurer une tâche planifiée
+### On Windows
 
-### Sur macOS
-- Créer un fichier .plist dans ~/Library/LaunchAgents
-- Ou utiliser l'application Automator pour créer un service de connexion
+- Create a shortcut to the script in the Windows startup folder
+- Or set up a scheduled task
 
-### Sur Linux
-- Ajouter le script à votre fichier .bashrc ou .profile
-- Ou créer un service systemd
+### On macOS
 
-## Arrêt du script
+- Create a .plist file in ~/Library/LaunchAgents
+- Or use the Automator app to create a login service
 
-Pour arrêter le script, appuyez sur Ctrl+C dans le terminal où il s'exécute.
+### On Linux
 
-## Comportement
+- Add the script to your .bashrc or .profile file
+- Or create a systemd service
 
-- Le script vérifie d'abord si des fichiers .data.json sont déjà présents dans le dossier Téléchargements et les déplace.
-- Ensuite, il surveille en continu les nouveaux fichiers et les modifications.
-- Chaque fichier traité est d'abord copié vers la destination, puis supprimé de la source. 
+## Stopping the Script
+
+To stop the script, press Ctrl+C in the terminal where it is running.
+
+## Behavior
+
+- The script first checks if any .data.json files are already present in the Downloads folder and moves them.
+- Then, it continuously monitors for new files and modifications.
+- Each processed file is first copied to the destination, then deleted from the source.

@@ -12,7 +12,8 @@
       "slug": "24-129-100-84",
       "isClusterMaster": true,
       "isJoshua": true,
-      "thematicGroup": "Libertariens et Libéraux"
+      "thematicGroup": "Libertariens et Libéraux",
+      "size": 1
     },
     {
       "id": "platform_wikipedia_1",
@@ -23,7 +24,8 @@
       "y": -412.0487904498448,
       "z": 29.863039068885126,
       "value": 15,
-      "isClusterMaster": false
+      "isClusterMaster": false,
+      "size": 1
     },
     {
       "id": "4krapsucks_2",
@@ -37,7 +39,8 @@
       "slug": "4krapsucks",
       "isClusterMaster": true,
       "isJoshua": true,
-      "thematicGroup": "Libertariens et Libéraux"
+      "thematicGroup": "Libertariens et Libéraux",
+      "size": 1
     },
     {
       "id": "platform_anime-news-network_3",
@@ -48,7 +51,8 @@
       "y": 127.0980165815085,
       "z": 421.47788420083367,
       "value": 15,
-      "isClusterMaster": false
+      "isClusterMaster": false,
+      "size": 1
     },
     {
       "id": "66-177-73-91_4",
@@ -62,7 +66,8 @@
       "slug": "66-177-73-91",
       "isClusterMaster": true,
       "isJoshua": true,
-      "thematicGroup": "Anti-système et Provocateurs"
+      "thematicGroup": "Anti-système et Provocateurs",
+      "size": 1
     },
     {
       "id": "platform_wikipedia_5",
@@ -73,7 +78,8 @@
       "y": -313.4291609239015,
       "z": -51.59486382830546,
       "value": 15,
-      "isClusterMaster": false
+      "isClusterMaster": false,
+      "size": 1
     },
     {
       "id": "76-106-245-93_6",
@@ -87,7 +93,8 @@
       "slug": "76-106-245-93",
       "isClusterMaster": true,
       "isJoshua": true,
-      "thematicGroup": "Anti-système et Provocateurs"
+      "thematicGroup": "Anti-système et Provocateurs",
+      "size": 1
     },
     {
       "id": "platform_wikipedia_7",
@@ -98,7 +105,8 @@
       "y": -296.83611062727766,
       "z": 53.59022984183879,
       "value": 15,
-      "isClusterMaster": false
+      "isClusterMaster": false,
+      "size": 1
     },
     {
       "id": "amina-blackberry_8",
@@ -112,7 +120,8 @@
       "slug": "amina-blackberry",
       "isClusterMaster": true,
       "isJoshua": true,
-      "thematicGroup": "Conservateurs et Traditionalistes"
+      "thematicGroup": "Conservateurs et Traditionalistes",
+      "size": 1
     },
     {
       "id": "platform_reddit_9",
@@ -123,7 +132,8 @@
       "y": 82.76286972047681,
       "z": -430.9337389488248,
       "value": 15,
-      "isClusterMaster": false
+      "isClusterMaster": false,
+      "size": 1
     },
     {
       "id": "platform_twitter_10",
@@ -134,7 +144,8 @@
       "y": 55.92079786271566,
       "z": -456.39934786642925,
       "value": 15,
-      "isClusterMaster": false
+      "isClusterMaster": false,
+      "size": 1
     },
     {
       "id": "michael-slay_11",
@@ -147,7 +158,8 @@
       "value": 10,
       "slug": "michael-slay",
       "isClusterMaster": false,
-      "isJoshua": true
+      "isJoshua": true,
+      "size": 1
     },
     {
       "id": "platform_medium_12",
@@ -158,7 +170,8 @@
       "y": 32.69297004535859,
       "z": -468.24853723375844,
       "value": 15,
-      "isClusterMaster": false
+      "isClusterMaster": false,
+      "size": 1
     },
     {
       "id": "platform_dailystormer_13",
@@ -169,7 +182,8 @@
       "y": 65.09433420456831,
       "z": -461.08666162684005,
       "value": 15,
-      "isClusterMaster": false
+      "isClusterMaster": false,
+      "size": 1
     },
     {
       "id": "josh-bornstein_14",
@@ -182,7 +196,8 @@
       "value": 5,
       "slug": "josh-bornstein",
       "isClusterMaster": false,
-      "isJoshua": false
+      "isJoshua": false,
+      "size": 1
     },
     {
       "id": "australi-witness_15",
@@ -195,7 +210,8 @@
       "value": 10,
       "slug": "australi-witness",
       "isClusterMaster": false,
-      "isJoshua": true
+      "isJoshua": true,
+      "size": 1
     },
     {
       "id": "platform_surespot_16",
@@ -206,7 +222,8 @@
       "y": 36.57928079169081,
       "z": -504.50101458124425,
       "value": 15,
-      "isClusterMaster": false
+      "isClusterMaster": false,
+      "size": 1
     },
     {
       "id": "platform_JustPaste.it_17",
@@ -217,7 +234,8 @@
       "y": -1.248458099269915,
       "z": -473.7928516833625,
       "value": 15,
-      "isClusterMaster": false
+      "isClusterMaster": false,
+      "size": 1
     },
     {
       "id": "platform_facebook_18",
@@ -228,7 +246,8 @@
       "y": 45.6363439482327,
       "z": -462.6602289834945,
       "value": 15,
-      "isClusterMaster": false
+      "isClusterMaster": false,
+      "size": 1
     },
     {
       "id": "platform_8chan_19",
@@ -239,7 +258,8 @@
       "y": 17.45013596889196,
       "z": -479.0456295534434,
       "value": 15,
-      "isClusterMaster": false
+      "isClusterMaster": false,
+      "size": 1
     },
     {
       "id": "aryan-heights_20",
@@ -253,7 +273,8 @@
       "slug": "aryan-heights",
       "isClusterMaster": true,
       "isJoshua": true,
-      "thematicGroup": "Extrême-droite et Nationalisme"
+      "thematicGroup": "Extrême-droite et Nationalisme",
+      "size": 1
     },
     {
       "id": "platform_stormfront_21",
@@ -264,7 +285,8 @@
       "y": -78.04399158562542,
       "z": -357.8075078648894,
       "value": 15,
-      "isClusterMaster": false
+      "isClusterMaster": false,
+      "size": 1
     },
     {
       "id": "australi-witness_22",
@@ -278,7 +300,8 @@
       "slug": "australi-witness",
       "isClusterMaster": true,
       "isJoshua": true,
-      "thematicGroup": "Radicalismes religieux et identitaires"
+      "thematicGroup": "Radicalismes religieux et identitaires",
+      "size": 1
     },
     {
       "id": "platform_surespot_23",
@@ -289,7 +312,8 @@
       "y": -336.17939251198914,
       "z": 319.77001844481333,
       "value": 15,
-      "isClusterMaster": false
+      "isClusterMaster": false,
+      "size": 1
     },
     {
       "id": "platform_JustPaste.it_24",
@@ -300,7 +324,8 @@
       "y": -370.6132066033557,
       "z": 314.24421491162514,
       "value": 15,
-      "isClusterMaster": false
+      "isClusterMaster": false,
+      "size": 1
     },
     {
       "id": "platform_facebook_25",
@@ -311,7 +336,8 @@
       "y": -386.1128767891278,
       "z": 292.0199767021001,
       "value": 15,
-      "isClusterMaster": false
+      "isClusterMaster": false,
+      "size": 1
     },
     {
       "id": "platform_8chan_26",
@@ -322,7 +348,8 @@
       "y": -340.06339168635935,
       "z": 317.8736627495144,
       "value": 15,
-      "isClusterMaster": false
+      "isClusterMaster": false,
+      "size": 1
     },
     {
       "id": "platform_twitter_27",
@@ -333,7 +360,8 @@
       "y": -344.65782591420276,
       "z": 250.26406813646898,
       "value": 15,
-      "isClusterMaster": false
+      "isClusterMaster": false,
+      "size": 1
     },
     {
       "id": "elton-simpson_28",
@@ -346,7 +374,8 @@
       "value": 5,
       "slug": "elton-simpson",
       "isClusterMaster": false,
-      "isJoshua": false
+      "isJoshua": false,
+      "size": 1
     },
     {
       "id": "nadir-soofi_29",
@@ -359,7 +388,8 @@
       "value": 5,
       "slug": "nadir-soofi",
       "isClusterMaster": false,
-      "isJoshua": false
+      "isJoshua": false,
+      "size": 1
     },
     {
       "id": "pamela-geller_30",
@@ -372,7 +402,8 @@
       "value": 5,
       "slug": "pamela-geller",
       "isClusterMaster": false,
-      "isJoshua": false
+      "isJoshua": false,
+      "size": 1
     },
     {
       "id": "elise-potaka_31",
@@ -385,7 +416,8 @@
       "value": 5,
       "slug": "elise-potaka",
       "isClusterMaster": false,
-      "isJoshua": false
+      "isJoshua": false,
+      "size": 1
     },
     {
       "id": "jim-berry-fbi_32",
@@ -398,7 +430,8 @@
       "value": 5,
       "slug": "jim-berry-fbi",
       "isClusterMaster": false,
-      "isJoshua": false
+      "isJoshua": false,
+      "size": 1
     },
     {
       "id": "bindi-cole_33",
@@ -411,7 +444,8 @@
       "value": 5,
       "slug": "bindi-cole",
       "isClusterMaster": false,
-      "isJoshua": false
+      "isJoshua": false,
+      "size": 1
     },
     {
       "id": "bill-leak_34",
@@ -424,7 +458,8 @@
       "value": 5,
       "slug": "bill-leak",
       "isClusterMaster": false,
-      "isJoshua": false
+      "isJoshua": false,
+      "size": 1
     },
     {
       "id": "larry-pickering_35",
@@ -437,7 +472,8 @@
       "value": 5,
       "slug": "larry-pickering",
       "isClusterMaster": false,
-      "isJoshua": false
+      "isJoshua": false,
+      "size": 1
     },
     {
       "id": "rita-katz_36",
@@ -450,7 +486,8 @@
       "value": 5,
       "slug": "rita-katz",
       "isClusterMaster": false,
-      "isJoshua": false
+      "isJoshua": false,
+      "size": 1
     },
     {
       "id": "afp-federal-agent-as-mohamadmo7_37",
@@ -463,7 +500,8 @@
       "value": 5,
       "slug": "afp-federal-agent-as-mohamadmo7",
       "isClusterMaster": false,
-      "isJoshua": false
+      "isJoshua": false,
+      "size": 1
     },
     {
       "id": "fbi-as-wilayaks_38",
@@ -476,7 +514,8 @@
       "value": 5,
       "slug": "fbi-as-wilayaks",
       "isClusterMaster": false,
-      "isJoshua": false
+      "isJoshua": false,
+      "size": 1
     },
     {
       "id": "michael-slay_39",
@@ -489,7 +528,8 @@
       "value": 10,
       "slug": "michael-slay",
       "isClusterMaster": false,
-      "isJoshua": true
+      "isJoshua": true,
+      "size": 1
     },
     {
       "id": "platform_medium_40",
@@ -500,7 +540,8 @@
       "y": -297.6335037704324,
       "z": 179.52381446662633,
       "value": 15,
-      "isClusterMaster": false
+      "isClusterMaster": false,
+      "size": 1
     },
     {
       "id": "platform_reddit_41",
@@ -511,7 +552,8 @@
       "y": -328.9039419395641,
       "z": 190.07938185495632,
       "value": 15,
-      "isClusterMaster": false
+      "isClusterMaster": false,
+      "size": 1
     },
     {
       "id": "platform_dailystormer_42",
@@ -522,7 +564,8 @@
       "y": -298.7911117270818,
       "z": 204.56839048494058,
       "value": 15,
-      "isClusterMaster": false
+      "isClusterMaster": false,
+      "size": 1
     },
     {
       "id": "blaze-it-flaggot_44",
@@ -536,7 +579,8 @@
       "slug": "blaze-it-flaggot",
       "isClusterMaster": true,
       "isJoshua": true,
-      "thematicGroup": "Culture"
+      "thematicGroup": "Culture",
+      "size": 1
     },
     {
       "id": "platform_reddit_45",
@@ -547,7 +591,8 @@
       "y": -123.75915500005377,
       "z": -79.15984875173893,
       "value": 15,
-      "isClusterMaster": false
+      "isClusterMaster": false,
+      "size": 1
     },
     {
       "id": "bw-anime-fan_46",
@@ -561,7 +606,8 @@
       "slug": "bw-anime-fan",
       "isClusterMaster": true,
       "isJoshua": true,
-      "thematicGroup": "Extrême-droite et Nationalisme"
+      "thematicGroup": "Extrême-droite et Nationalisme",
+      "size": 1
     },
     {
       "id": "platform_wikipedia_47",
@@ -572,7 +618,8 @@
       "y": -260.96267893554597,
       "z": -576.1211758685192,
       "value": 15,
-      "isClusterMaster": false
+      "isClusterMaster": false,
+      "size": 1
     },
     {
       "id": "chuck-e-jesus_48",
@@ -586,7 +633,8 @@
       "slug": "chuck-e-jesus",
       "isClusterMaster": true,
       "isJoshua": true,
-      "thematicGroup": "Libertariens et Libéraux"
+      "thematicGroup": "Libertariens et Libéraux",
+      "size": 1
     },
     {
       "id": "platform_reddit_49",
@@ -597,7 +645,8 @@
       "y": 90.66699624152702,
       "z": 447.59140513067547,
       "value": 15,
-      "isClusterMaster": false
+      "isClusterMaster": false,
+      "size": 1
     },
     {
       "id": "death-to-sjws_50",
@@ -611,7 +660,8 @@
       "slug": "death-to-sjws",
       "isClusterMaster": true,
       "isJoshua": true,
-      "thematicGroup": "Extrême-droite et Nationalisme"
+      "thematicGroup": "Extrême-droite et Nationalisme",
+      "size": 1
     },
     {
       "id": "platform_reddit_51",
@@ -622,7 +672,8 @@
       "y": 103.67114092805997,
       "z": -35.32807399326285,
       "value": 15,
-      "isClusterMaster": false
+      "isClusterMaster": false,
+      "size": 1
     },
     {
       "id": "dinah-silverstein_52",
@@ -636,7 +687,8 @@
       "slug": "dinah-silverstein",
       "isClusterMaster": true,
       "isJoshua": true,
-      "thematicGroup": "Gauche et Justice sociale"
+      "thematicGroup": "Gauche et Justice sociale",
+      "size": 1
     },
     {
       "id": "michael-slay_53",
@@ -649,7 +701,8 @@
       "value": 10,
       "slug": "michael-slay",
       "isClusterMaster": false,
-      "isJoshua": true
+      "isJoshua": true,
+      "size": 1
     },
     {
       "id": "platform_medium_54",
@@ -660,7 +713,8 @@
       "y": -18.590283106210578,
       "z": 510.12258614289317,
       "value": 15,
-      "isClusterMaster": false
+      "isClusterMaster": false,
+      "size": 1
     },
     {
       "id": "platform_reddit_55",
@@ -671,7 +725,8 @@
       "y": -37.79416169986138,
       "z": 485.64348718580817,
       "value": 15,
-      "isClusterMaster": false
+      "isClusterMaster": false,
+      "size": 1
     },
     {
       "id": "platform_dailystormer_56",
@@ -682,7 +737,8 @@
       "y": -2.139971266615115,
       "z": 468.74097517031237,
       "value": 15,
-      "isClusterMaster": false
+      "isClusterMaster": false,
+      "size": 1
     },
     {
       "id": "platform_times-of-israel_57",
@@ -693,7 +749,8 @@
       "y": -70.42249979501865,
       "z": 465.2012099549241,
       "value": 15,
-      "isClusterMaster": false
+      "isClusterMaster": false,
+      "size": 1
     },
     {
       "id": "dr-shlomo-goldstein_58",
@@ -707,7 +764,8 @@
       "slug": "dr-shlomo-goldstein",
       "isClusterMaster": true,
       "isJoshua": true,
-      "thematicGroup": "Extrême-droite et Nationalisme"
+      "thematicGroup": "Extrême-droite et Nationalisme",
+      "size": 1
     },
     {
       "id": "platform_reddit_59",
@@ -718,7 +776,8 @@
       "y": 223.52745549869297,
       "z": 576.0552587522587,
       "value": 15,
-      "isClusterMaster": false
+      "isClusterMaster": false,
+      "size": 1
     },
     {
       "id": "ryoko-tamada_60",
@@ -732,7 +791,8 @@
       "slug": "ryoko-tamada",
       "isClusterMaster": true,
       "isJoshua": true,
-      "thematicGroup": "Libertariens et Libéraux"
+      "thematicGroup": "Libertariens et Libéraux",
+      "size": 1
     },
     {
       "id": "platform_twitter_61",
@@ -743,7 +803,8 @@
       "y": -328.05244281470334,
       "z": -313.4562609655561,
       "value": 15,
-      "isClusterMaster": false
+      "isClusterMaster": false,
+      "size": 1
     },
     {
       "id": "jilian-c-york_62",
@@ -756,7 +817,8 @@
       "value": 5,
       "slug": "jilian-c-york",
       "isClusterMaster": false,
-      "isJoshua": false
+      "isJoshua": false,
+      "size": 1
     },
     {
       "id": "platform_e-mail_63",
@@ -767,7 +829,8 @@
       "y": -357.1804068147351,
       "z": -268.27213007525535,
       "value": 15,
-      "isClusterMaster": false
+      "isClusterMaster": false,
+      "size": 1
     },
     {
       "id": "peter-wallace_64",
@@ -780,7 +843,8 @@
       "value": 5,
       "slug": "peter-wallace",
       "isClusterMaster": false,
-      "isJoshua": false
+      "isJoshua": false,
+      "size": 1
     },
     {
       "id": "mariam-veiszadeh_65",
@@ -793,7 +857,8 @@
       "value": 5,
       "slug": "mariam-veiszadeh",
       "isClusterMaster": false,
-      "isJoshua": false
+      "isJoshua": false,
+      "size": 1
     },
     {
       "id": "tanya-cohen_66",
@@ -806,7 +871,8 @@
       "value": 10,
       "slug": "tanya-cohen",
       "isClusterMaster": false,
-      "isJoshua": true
+      "isJoshua": true,
+      "size": 1
     },
     {
       "id": "platform_dailykos_67",
@@ -817,7 +883,8 @@
       "y": -269.14689961988074,
       "z": -382.8302464688135,
       "value": 15,
-      "isClusterMaster": false
+      "isClusterMaster": false,
+      "size": 1
     },
     {
       "id": "platform_reddit_68",
@@ -828,7 +895,8 @@
       "y": -292.4258524322967,
       "z": -365.06815256685115,
       "value": 15,
-      "isClusterMaster": false
+      "isClusterMaster": false,
+      "size": 1
     },
     {
       "id": "platform_thoughtcatalog_69",
@@ -839,7 +907,8 @@
       "y": -264.74344617384617,
       "z": -385.68499285657975,
       "value": 15,
-      "isClusterMaster": false
+      "isClusterMaster": false,
+      "size": 1
     },
     {
       "id": "moon-metropolis_70",
@@ -852,7 +921,8 @@
       "value": 10,
       "slug": "moon-metropolis",
       "isClusterMaster": false,
-      "isJoshua": true
+      "isJoshua": true,
+      "size": 1
     },
     {
       "id": "platform_medium_71",
@@ -863,7 +933,8 @@
       "y": -334.4061634507938,
       "z": -368.7587757880589,
       "value": 15,
-      "isClusterMaster": false
+      "isClusterMaster": false,
+      "size": 1
     },
     {
       "id": "platform_wrong-planet_72",
@@ -874,7 +945,8 @@
       "y": -297.8522804008368,
       "z": -351.1703979618867,
       "value": 15,
-      "isClusterMaster": false
+      "isClusterMaster": false,
+      "size": 1
     },
     {
       "id": "platform_lastfm_73",
@@ -885,7 +957,8 @@
       "y": -353.462197064395,
       "z": -329.8060170072432,
       "value": 15,
-      "isClusterMaster": false
+      "isClusterMaster": false,
+      "size": 1
     },
     {
       "id": "platform_wordpress_74",
@@ -896,7 +969,8 @@
       "y": -310.4863256341868,
       "z": -315.4385651970657,
       "value": 15,
-      "isClusterMaster": false
+      "isClusterMaster": false,
+      "size": 1
     },
     {
       "id": "platform_disqus_75",
@@ -907,7 +981,8 @@
       "y": -327.18082898148737,
       "z": -343.93307231095514,
       "value": 15,
-      "isClusterMaster": false
+      "isClusterMaster": false,
+      "size": 1
     },
     {
       "id": "emily-americana_76",
@@ -921,7 +996,8 @@
       "slug": "emily-americana",
       "isClusterMaster": true,
       "isJoshua": true,
-      "thematicGroup": "Libertariens et Libéraux"
+      "thematicGroup": "Libertariens et Libéraux",
+      "size": 1
     },
     {
       "id": "platform_reddit_77",
@@ -932,7 +1008,8 @@
       "y": 355.61630160400654,
       "z": 182.94694448432153,
       "value": 15,
-      "isClusterMaster": false
+      "isClusterMaster": false,
+      "size": 1
     },
     {
       "id": "michael-slay_78",
@@ -945,7 +1022,8 @@
       "value": 10,
       "slug": "michael-slay",
       "isClusterMaster": false,
-      "isJoshua": true
+      "isJoshua": true,
+      "size": 1
     },
     {
       "id": "platform_medium_79",
@@ -956,7 +1034,8 @@
       "y": 367.7097206126579,
       "z": 231.1628794971409,
       "value": 15,
-      "isClusterMaster": false
+      "isClusterMaster": false,
+      "size": 1
     },
     {
       "id": "platform_dailystormer_80",
@@ -967,7 +1046,8 @@
       "y": 330.48050331048097,
       "z": 254.98013575568433,
       "value": 15,
-      "isClusterMaster": false
+      "isClusterMaster": false,
+      "size": 1
     },
     {
       "id": "european-88_81",
@@ -980,7 +1060,8 @@
       "value": 10,
       "slug": "european-88",
       "isClusterMaster": false,
-      "isJoshua": true
+      "isJoshua": true,
+      "size": 1
     },
     {
       "id": "moon-metropolis_82",
@@ -993,7 +1074,8 @@
       "value": 10,
       "slug": "moon-metropolis",
       "isClusterMaster": false,
-      "isJoshua": true
+      "isJoshua": true,
+      "size": 1
     },
     {
       "id": "platform_wrong-planet_83",
@@ -1004,7 +1086,8 @@
       "y": 399.11824667265995,
       "z": 200.3139864105756,
       "value": 15,
-      "isClusterMaster": false
+      "isClusterMaster": false,
+      "size": 1
     },
     {
       "id": "platform_lastfm_84",
@@ -1015,7 +1098,8 @@
       "y": 377.82792879425926,
       "z": 225.11613073381474,
       "value": 15,
-      "isClusterMaster": false
+      "isClusterMaster": false,
+      "size": 1
     },
     {
       "id": "platform_wordpress_85",
@@ -1026,7 +1110,8 @@
       "y": 418.996947715683,
       "z": 205.130079763501,
       "value": 15,
-      "isClusterMaster": false
+      "isClusterMaster": false,
+      "size": 1
     },
     {
       "id": "platform_disqus_86",
@@ -1037,7 +1122,8 @@
       "y": 366.6472345507396,
       "z": 185.43256416005144,
       "value": 15,
-      "isClusterMaster": false
+      "isClusterMaster": false,
+      "size": 1
     },
     {
       "id": "platform_twitter_87",
@@ -1048,7 +1134,8 @@
       "y": 402.9091700213306,
       "z": 168.84365674843102,
       "value": 15,
-      "isClusterMaster": false
+      "isClusterMaster": false,
+      "size": 1
     },
     {
       "id": "death-to-sjws_88",
@@ -1061,7 +1148,8 @@
       "value": 10,
       "slug": "death-to-sjws",
       "isClusterMaster": false,
-      "isJoshua": true
+      "isJoshua": true,
+      "size": 1
     },
     {
       "id": "emily-goldstein_89",
@@ -1075,7 +1163,8 @@
       "slug": "emily-goldstein",
       "isClusterMaster": true,
       "isJoshua": true,
-      "thematicGroup": "Gauche et Justice sociale"
+      "thematicGroup": "Gauche et Justice sociale",
+      "size": 1
     },
     {
       "id": "platform_thoughtcatalog_90",
@@ -1086,7 +1175,8 @@
       "y": -68.4878482261212,
       "z": -217.38289858306905,
       "value": 15,
-      "isClusterMaster": false
+      "isClusterMaster": false,
+      "size": 1
     },
     {
       "id": "elon-musk_91",
@@ -1099,7 +1189,8 @@
       "value": 5,
       "slug": "elon-musk",
       "isClusterMaster": false,
-      "isJoshua": false
+      "isJoshua": false,
+      "size": 1
     },
     {
       "id": "platform_twitter_92",
@@ -1110,7 +1201,8 @@
       "y": -104.92121911042057,
       "z": -184.49661913597626,
       "value": 15,
-      "isClusterMaster": false
+      "isClusterMaster": false,
+      "size": 1
     },
     {
       "id": "hadiyo-elmi_93",
@@ -1123,7 +1215,8 @@
       "value": 10,
       "slug": "hadiyo-elmi",
       "isClusterMaster": false,
-      "isJoshua": true
+      "isJoshua": true,
+      "size": 1
     },
     {
       "id": "tanya-cohen_94",
@@ -1136,7 +1229,8 @@
       "value": 10,
       "slug": "tanya-cohen",
       "isClusterMaster": false,
-      "isJoshua": true
+      "isJoshua": true,
+      "size": 1
     },
     {
       "id": "platform_dailykos_95",
@@ -1147,7 +1241,8 @@
       "y": -142.41211804020784,
       "z": -187.97641376531564,
       "value": 15,
-      "isClusterMaster": false
+      "isClusterMaster": false,
+      "size": 1
     },
     {
       "id": "platform_reddit_96",
@@ -1158,7 +1253,8 @@
       "y": -118.22760061959218,
       "z": -230.29342858768754,
       "value": 15,
-      "isClusterMaster": false
+      "isClusterMaster": false,
+      "size": 1
     },
     {
       "id": "michael-slay_97",
@@ -1171,7 +1267,8 @@
       "value": 10,
       "slug": "michael-slay",
       "isClusterMaster": false,
-      "isJoshua": true
+      "isJoshua": true,
+      "size": 1
     },
     {
       "id": "platform_medium_98",
@@ -1182,7 +1279,8 @@
       "y": -79.54617095098024,
       "z": -287.79482804717196,
       "value": 15,
-      "isClusterMaster": false
+      "isClusterMaster": false,
+      "size": 1
     },
     {
       "id": "platform_dailystormer_99",
@@ -1193,7 +1291,8 @@
       "y": -91.51712521338415,
       "z": -265.2342897603912,
       "value": 15,
-      "isClusterMaster": false
+      "isClusterMaster": false,
+      "size": 1
     },
     {
       "id": "european-88_100",
@@ -1206,7 +1305,8 @@
       "value": 10,
       "slug": "european-88",
       "isClusterMaster": false,
-      "isJoshua": true
+      "isJoshua": true,
+      "size": 1
     },
     {
       "id": "mariam-veiszadeh_101",
@@ -1219,7 +1319,8 @@
       "value": 5,
       "slug": "mariam-veiszadeh",
       "isClusterMaster": false,
-      "isJoshua": false
+      "isJoshua": false,
+      "size": 1
     },
     {
       "id": "europe-hates-niggers_102",
@@ -1233,7 +1334,8 @@
       "slug": "europe-hates-niggers",
       "isClusterMaster": true,
       "isJoshua": true,
-      "thematicGroup": "Extrême-droite et Nationalisme"
+      "thematicGroup": "Extrême-droite et Nationalisme",
+      "size": 1
     },
     {
       "id": "platform_reddit_103",
@@ -1244,7 +1346,8 @@
       "y": -158.4478358040566,
       "z": -6.516463975034759,
       "value": 15,
-      "isClusterMaster": false
+      "isClusterMaster": false,
+      "size": 1
     },
     {
       "id": "flappy-brd_104",
@@ -1258,7 +1361,8 @@
       "slug": "flappy-brd",
       "isClusterMaster": true,
       "isJoshua": true,
-      "thematicGroup": "Gauche et Justice sociale"
+      "thematicGroup": "Gauche et Justice sociale",
+      "size": 1
     },
     {
       "id": "platform_reddit_105",
@@ -1269,7 +1373,8 @@
       "y": -229.46355165152778,
       "z": 403.5606509730902,
       "value": 15,
-      "isClusterMaster": false
+      "isClusterMaster": false,
+      "size": 1
     },
     {
       "id": "gas-the-kikes_106",
@@ -1283,7 +1388,8 @@
       "slug": "gas-the-kikes",
       "isClusterMaster": true,
       "isJoshua": true,
-      "thematicGroup": "Extrême-droite et Nationalisme"
+      "thematicGroup": "Extrême-droite et Nationalisme",
+      "size": 1
     },
     {
       "id": "platform_reddit_107",
@@ -1294,7 +1400,8 @@
       "y": -322.62962330088374,
       "z": 148.0401847169323,
       "value": 15,
-      "isClusterMaster": false
+      "isClusterMaster": false,
+      "size": 1
     },
     {
       "id": "hadiyo-elmi_108",
@@ -1308,7 +1415,8 @@
       "slug": "hadiyo-elmi",
       "isClusterMaster": true,
       "isJoshua": true,
-      "thematicGroup": "Gauche et Justice sociale"
+      "thematicGroup": "Gauche et Justice sociale",
+      "size": 1
     },
     {
       "id": "michael-slay_109",
@@ -1321,7 +1429,8 @@
       "value": 10,
       "slug": "michael-slay",
       "isClusterMaster": false,
-      "isJoshua": true
+      "isJoshua": true,
+      "size": 1
     },
     {
       "id": "platform_medium_110",
@@ -1332,7 +1441,8 @@
       "y": -10.286931841357724,
       "z": 550.4497054659429,
       "value": 15,
-      "isClusterMaster": false
+      "isClusterMaster": false,
+      "size": 1
     },
     {
       "id": "platform_reddit_111",
@@ -1343,7 +1453,8 @@
       "y": 21.60814513322606,
       "z": 553.776206454741,
       "value": 15,
-      "isClusterMaster": false
+      "isClusterMaster": false,
+      "size": 1
     },
     {
       "id": "platform_dailystormer_112",
@@ -1354,7 +1465,8 @@
       "y": -19.734362217076747,
       "z": 527.8965431165832,
       "value": 15,
-      "isClusterMaster": false
+      "isClusterMaster": false,
+      "size": 1
     },
     {
       "id": "platform_twitter_113",
@@ -1365,7 +1477,8 @@
       "y": 63.191575182852,
       "z": 503.7205077104808,
       "value": 15,
-      "isClusterMaster": false
+      "isClusterMaster": false,
+      "size": 1
     },
     {
       "id": "european-88_114",
@@ -1378,7 +1491,8 @@
       "value": 10,
       "slug": "european-88",
       "isClusterMaster": false,
-      "isJoshua": true
+      "isJoshua": true,
+      "size": 1
     },
     {
       "id": "mariam-veiszadeh_115",
@@ -1391,7 +1505,8 @@
       "value": 5,
       "slug": "mariam-veiszadeh",
       "isClusterMaster": false,
-      "isJoshua": false
+      "isJoshua": false,
+      "size": 1
     },
     {
       "id": "id-c9uafs7u_116",
@@ -1405,7 +1520,8 @@
       "slug": "id-c9uafs7u",
       "isClusterMaster": true,
       "isJoshua": true,
-      "thematicGroup": "Extrême-droite et Nationalisme"
+      "thematicGroup": "Extrême-droite et Nationalisme",
+      "size": 1
     },
     {
       "id": "platform_4plebs_117",
@@ -1416,7 +1532,8 @@
       "y": 108.7302457015849,
       "z": -487.741043837506,
       "value": 15,
-      "isClusterMaster": false
+      "isClusterMaster": false,
+      "size": 1
     },
     {
       "id": "island-angel_118",
@@ -1430,7 +1547,8 @@
       "slug": "island-angel",
       "isClusterMaster": true,
       "isJoshua": true,
-      "thematicGroup": "Anti-système et Provocateurs"
+      "thematicGroup": "Anti-système et Provocateurs",
+      "size": 1
     },
     {
       "id": "platform_reddit_119",
@@ -1441,7 +1559,8 @@
       "y": 155.3501755367835,
       "z": 33.58641788002739,
       "value": 15,
-      "isClusterMaster": false
+      "isClusterMaster": false,
+      "size": 1
     },
     {
       "id": "real-joshua-goldberg_120",
@@ -1455,7 +1574,8 @@
       "slug": "real-joshua-goldberg",
       "isClusterMaster": true,
       "isJoshua": true,
-      "thematicGroup": "Anti-système et Provocateurs"
+      "thematicGroup": "Anti-système et Provocateurs",
+      "size": 1
     },
     {
       "id": "josh-bornstein_121",
@@ -1468,7 +1588,8 @@
       "value": 5,
       "slug": "josh-bornstein",
       "isClusterMaster": false,
-      "isJoshua": false
+      "isJoshua": false,
+      "size": 1
     },
     {
       "id": "platform_times-of-israel_122",
@@ -1479,7 +1600,8 @@
       "y": -292.8543141585448,
       "z": -175.4959938635782,
       "value": 15,
-      "isClusterMaster": false
+      "isClusterMaster": false,
+      "size": 1
     },
     {
       "id": "lindsay-campbell-fbi_123",
@@ -1492,7 +1614,8 @@
       "value": 5,
       "slug": "lindsay-campbell-fbi",
       "isClusterMaster": false,
-      "isJoshua": false
+      "isJoshua": false,
+      "size": 1
     },
     {
       "id": "platform_twitter_124",
@@ -1503,7 +1626,8 @@
       "y": -236.83891776379863,
       "z": -141.25974486980965,
       "value": 15,
-      "isClusterMaster": false
+      "isClusterMaster": false,
+      "size": 1
     },
     {
       "id": "elise-potaka_125",
@@ -1516,7 +1640,8 @@
       "value": 5,
       "slug": "elise-potaka",
       "isClusterMaster": false,
-      "isJoshua": false
+      "isJoshua": false,
+      "size": 1
     },
     {
       "id": "platform_facebook_126",
@@ -1527,7 +1652,8 @@
       "y": -279.1452646557647,
       "z": -184.9178866554218,
       "value": 15,
-      "isClusterMaster": false
+      "isClusterMaster": false,
+      "size": 1
     },
     {
       "id": "luke-mcmahon_127",
@@ -1540,7 +1666,8 @@
       "value": 5,
       "slug": "luke-mcmahon",
       "isClusterMaster": false,
-      "isJoshua": false
+      "isJoshua": false,
+      "size": 1
     },
     {
       "id": "platform_e-mail_129",
@@ -1551,7 +1678,8 @@
       "y": -315.8215302863595,
       "z": -154.92301634646972,
       "value": 15,
-      "isClusterMaster": false
+      "isClusterMaster": false,
+      "size": 1
     },
     {
       "id": "junaid-thorne_130",
@@ -1564,7 +1692,8 @@
       "value": 5,
       "slug": "junaid-thorne",
       "isClusterMaster": false,
-      "isJoshua": false
+      "isJoshua": false,
+      "size": 1
     },
     {
       "id": "ben-garrison_131",
@@ -1577,7 +1706,8 @@
       "value": 5,
       "slug": "ben-garrison",
       "isClusterMaster": false,
-      "isJoshua": false
+      "isJoshua": false,
+      "size": 1
     },
     {
       "id": "platform_reddit_132",
@@ -1588,7 +1718,8 @@
       "y": -294.98292493723613,
       "z": -119.58284452150107,
       "value": 15,
-      "isClusterMaster": false
+      "isClusterMaster": false,
+      "size": 1
     },
     {
       "id": "caitlin-roper_133",
@@ -1601,7 +1732,8 @@
       "value": 5,
       "slug": "caitlin-roper",
       "isClusterMaster": false,
-      "isJoshua": false
+      "isJoshua": false,
+      "size": 1
     },
     {
       "id": "dean-saxton_134",
@@ -1614,7 +1746,8 @@
       "value": 5,
       "slug": "dean-saxton",
       "isClusterMaster": false,
-      "isJoshua": false
+      "isJoshua": false,
+      "size": 1
     },
     {
       "id": "platform_sluthate_135",
@@ -1625,7 +1758,8 @@
       "y": -293.50937044648737,
       "z": -101.22821451894592,
       "value": 15,
-      "isClusterMaster": false
+      "isClusterMaster": false,
+      "size": 1
     },
     {
       "id": "nathan-sykes_136",
@@ -1638,7 +1772,8 @@
       "value": 5,
       "slug": "nathan-sykes",
       "isClusterMaster": false,
-      "isJoshua": false
+      "isJoshua": false,
+      "size": 1
     },
     {
       "id": "platform_stormfront_137",
@@ -1649,7 +1784,8 @@
       "y": -323.1681025230737,
       "z": -122.74556339621864,
       "value": 15,
-      "isClusterMaster": false
+      "isClusterMaster": false,
+      "size": 1
     },
     {
       "id": "nancy-goldstein_138",
@@ -1662,7 +1798,8 @@
       "value": 5,
       "slug": "nancy-goldstein",
       "isClusterMaster": false,
-      "isJoshua": false
+      "isJoshua": false,
+      "size": 1
     },
     {
       "id": "fake-joshua-goldberg_140",
@@ -1676,7 +1813,8 @@
       "slug": "fake-joshua-goldberg",
       "isClusterMaster": true,
       "isJoshua": true,
-      "thematicGroup": "Anti-système et Provocateurs"
+      "thematicGroup": "Anti-système et Provocateurs",
+      "size": 1
     },
     {
       "id": "platform_thoughtcatalog_141",
@@ -1687,7 +1825,8 @@
       "y": -322.412264039695,
       "z": 476.53994225379466,
       "value": 15,
-      "isClusterMaster": false
+      "isClusterMaster": false,
+      "size": 1
     },
     {
       "id": "kill-all-pakis_142",
@@ -1701,7 +1840,8 @@
       "slug": "kill-all-pakis",
       "isClusterMaster": true,
       "isJoshua": true,
-      "thematicGroup": "Extrême-droite et Nationalisme"
+      "thematicGroup": "Extrême-droite et Nationalisme",
+      "size": 1
     },
     {
       "id": "platform_reddit_143",
@@ -1712,7 +1852,8 @@
       "y": -464.2558058921381,
       "z": 109.70973593234378,
       "value": 15,
-      "isClusterMaster": false
+      "isClusterMaster": false,
+      "size": 1
     },
     {
       "id": "kill-all-sjws_144",
@@ -1726,7 +1867,8 @@
       "slug": "kill-all-sjws",
       "isClusterMaster": true,
       "isJoshua": true,
-      "thematicGroup": "Extrême-droite et Nationalisme"
+      "thematicGroup": "Extrême-droite et Nationalisme",
+      "size": 1
     },
     {
       "id": "platform_reddit_145",
@@ -1737,7 +1879,8 @@
       "y": 191.52557875769472,
       "z": -166.27132402003966,
       "value": 15,
-      "isClusterMaster": false
+      "isClusterMaster": false,
+      "size": 1
     },
     {
       "id": "le-cancer-kin_146",
@@ -1751,7 +1894,8 @@
       "slug": "le-cancer-kin",
       "isClusterMaster": true,
       "isJoshua": true,
-      "thematicGroup": "Extrême-droite et Nationalisme"
+      "thematicGroup": "Extrême-droite et Nationalisme",
+      "size": 1
     },
     {
       "id": "platform_reddit_147",
@@ -1762,7 +1906,8 @@
       "y": 128.08592638522703,
       "z": 185.8539804749239,
       "value": 15,
-      "isClusterMaster": false
+      "isClusterMaster": false,
+      "size": 1
     },
     {
       "id": "madotsuki-the-dreamer_148",
@@ -1776,7 +1921,8 @@
       "slug": "madotsuki-the-dreamer",
       "isClusterMaster": true,
       "isJoshua": true,
-      "thematicGroup": "Culture"
+      "thematicGroup": "Culture",
+      "size": 1
     },
     {
       "id": "platform_wikipedia_149",
@@ -1787,7 +1933,8 @@
       "y": -449.7675960473158,
       "z": -504.58352390016597,
       "value": 15,
-      "isClusterMaster": false
+      "isClusterMaster": false,
+      "size": 1
     },
     {
       "id": "platform_imdb_150",
@@ -1798,7 +1945,8 @@
       "y": -437.34457758979556,
       "z": -485.6032119006046,
       "value": 15,
-      "isClusterMaster": false
+      "isClusterMaster": false,
+      "size": 1
     },
     {
       "id": "platform_filmboards_151",
@@ -1809,7 +1957,8 @@
       "y": -482.83647781245423,
       "z": -451.5668666113766,
       "value": 15,
-      "isClusterMaster": false
+      "isClusterMaster": false,
+      "size": 1
     },
     {
       "id": "may-may-poster_152",
@@ -1823,7 +1972,8 @@
       "slug": "may-may-poster",
       "isClusterMaster": true,
       "isJoshua": true,
-      "thematicGroup": "Extrême-droite et Nationalisme"
+      "thematicGroup": "Extrême-droite et Nationalisme",
+      "size": 1
     },
     {
       "id": "platform_reddit_153",
@@ -1834,7 +1984,8 @@
       "y": 165.57844809554587,
       "z": -446.27698936183464,
       "value": 15,
-      "isClusterMaster": false
+      "isClusterMaster": false,
+      "size": 1
     },
     {
       "id": "platform_Adult Swim_154",
@@ -1845,7 +1996,8 @@
       "y": 158.87808645348431,
       "z": -477.8602108758843,
       "value": 15,
-      "isClusterMaster": false
+      "isClusterMaster": false,
+      "size": 1
     },
     {
       "id": "metacanadian-420_155",
@@ -1859,7 +2011,8 @@
       "slug": "metacanadian-420",
       "isClusterMaster": true,
       "isJoshua": true,
-      "thematicGroup": "Gauche et Justice sociale"
+      "thematicGroup": "Gauche et Justice sociale",
+      "size": 1
     },
     {
       "id": "platform_reddit_156",
@@ -1870,7 +2023,8 @@
       "y": -115.68068893140268,
       "z": -35.28467389807796,
       "value": 15,
-      "isClusterMaster": false
+      "isClusterMaster": false,
+      "size": 1
     },
     {
       "id": "metropolis-forever_157",
@@ -1884,7 +2038,8 @@
       "slug": "metropolis-forever",
       "isClusterMaster": true,
       "isJoshua": true,
-      "thematicGroup": "Libertariens et Libéraux"
+      "thematicGroup": "Libertariens et Libéraux",
+      "size": 1
     },
     {
       "id": "platform_criterion_158",
@@ -1895,7 +2050,8 @@
       "y": -0.36496451648337497,
       "z": 28.178443045667144,
       "value": 15,
-      "isClusterMaster": false
+      "isClusterMaster": false,
+      "size": 1
     },
     {
       "id": "platform_digitpress_159",
@@ -1906,7 +2062,8 @@
       "y": -29.7715097553572,
       "z": 32.71352725314506,
       "value": 15,
-      "isClusterMaster": false
+      "isClusterMaster": false,
+      "size": 1
     },
     {
       "id": "platform_bluwiki_160",
@@ -1917,7 +2074,8 @@
       "y": 28.454858916698402,
       "z": 47.6192010521783,
       "value": 15,
-      "isClusterMaster": false
+      "isClusterMaster": false,
+      "size": 1
     },
     {
       "id": "platform_deviantart_161",
@@ -1928,7 +2086,8 @@
       "y": -23.09821878228184,
       "z": 95.9284821836625,
       "value": 15,
-      "isClusterMaster": false
+      "isClusterMaster": false,
+      "size": 1
     },
     {
       "id": "platform_animesuki_162",
@@ -1939,7 +2098,8 @@
       "y": -9.502428141843712,
       "z": 48.67979269987776,
       "value": 15,
-      "isClusterMaster": false
+      "isClusterMaster": false,
+      "size": 1
     },
     {
       "id": "platform_badmovies_163",
@@ -1950,7 +2110,8 @@
       "y": 16.581355811495147,
       "z": 57.51306344163332,
       "value": 15,
-      "isClusterMaster": false
+      "isClusterMaster": false,
+      "size": 1
     },
     {
       "id": "platform_ytmnd_164",
@@ -1961,7 +2122,8 @@
       "y": -37.279180656121724,
       "z": 53.7397472377189,
       "value": 15,
-      "isClusterMaster": false
+      "isClusterMaster": false,
+      "size": 1
     },
     {
       "id": "platform_Mail_165",
@@ -1972,7 +2134,8 @@
       "y": 30.85903372889091,
       "z": 83.19133502903472,
       "value": 15,
-      "isClusterMaster": false
+      "isClusterMaster": false,
+      "size": 1
     },
     {
       "id": "platform_tezukainenglish_166",
@@ -1983,7 +2146,8 @@
       "y": 15.36654343226437,
       "z": 90.25811286599472,
       "value": 15,
-      "isClusterMaster": false
+      "isClusterMaster": false,
+      "size": 1
     },
     {
       "id": "platform_bluelight_167",
@@ -1994,7 +2158,8 @@
       "y": -6.196946228989456,
       "z": 78.21203456091534,
       "value": 15,
-      "isClusterMaster": false
+      "isClusterMaster": false,
+      "size": 1
     },
     {
       "id": "cyndi-lavrenci_168",
@@ -2007,7 +2172,8 @@
       "value": 5,
       "slug": "cyndi-lavrenci",
       "isClusterMaster": false,
-      "isJoshua": false
+      "isJoshua": false,
+      "size": 1
     },
     {
       "id": "platform_e-mail_169",
@@ -2018,7 +2184,8 @@
       "y": -50.2319362404885,
       "z": 101.34656456320522,
       "value": 15,
-      "isClusterMaster": false
+      "isClusterMaster": false,
+      "size": 1
     },
     {
       "id": "grant-taylor_170",
@@ -2031,7 +2198,8 @@
       "value": 5,
       "slug": "grant-taylor",
       "isClusterMaster": false,
-      "isJoshua": false
+      "isJoshua": false,
+      "size": 1
     },
     {
       "id": "platform_twitter_171",
@@ -2042,7 +2210,8 @@
       "y": 45.47297637471133,
       "z": 66.13369606080997,
       "value": 15,
-      "isClusterMaster": false
+      "isClusterMaster": false,
+      "size": 1
     },
     {
       "id": "platform_the-west-australian_172",
@@ -2053,7 +2222,8 @@
       "y": 4.915031474755488,
       "z": 119.75991234274335,
       "value": 15,
-      "isClusterMaster": false
+      "isClusterMaster": false,
+      "size": 1
     },
     {
       "id": "tom-minear_173",
@@ -2066,7 +2236,8 @@
       "value": 5,
       "slug": "tom-minear",
       "isClusterMaster": false,
-      "isJoshua": false
+      "isJoshua": false,
+      "size": 1
     },
     {
       "id": "emily-americana_174",
@@ -2079,7 +2250,8 @@
       "value": 10,
       "slug": "emily-americana",
       "isClusterMaster": false,
-      "isJoshua": true
+      "isJoshua": true,
+      "size": 1
     },
     {
       "id": "platform_reddit_175",
@@ -2090,7 +2262,8 @@
       "y": 7.170054707521041,
       "z": 19.11487713705753,
       "value": 15,
-      "isClusterMaster": false
+      "isClusterMaster": false,
+      "size": 1
     },
     {
       "id": "tanya-cohen_176",
@@ -2103,7 +2276,8 @@
       "value": 10,
       "slug": "tanya-cohen",
       "isClusterMaster": false,
-      "isJoshua": true
+      "isJoshua": true,
+      "size": 1
     },
     {
       "id": "platform_dailykos_177",
@@ -2114,7 +2288,8 @@
       "y": 109.5995616137628,
       "z": 24.507954936395905,
       "value": 15,
-      "isClusterMaster": false
+      "isClusterMaster": false,
+      "size": 1
     },
     {
       "id": "platform_thoughtcatalog_178",
@@ -2125,7 +2300,8 @@
       "y": 110.74108132813988,
       "z": 4.875188796887569,
       "value": 15,
-      "isClusterMaster": false
+      "isClusterMaster": false,
+      "size": 1
     },
     {
       "id": "amina-blackberry_179",
@@ -2138,7 +2314,8 @@
       "value": 10,
       "slug": "amina-blackberry",
       "isClusterMaster": false,
-      "isJoshua": true
+      "isJoshua": true,
+      "size": 1
     },
     {
       "id": "death-to-sjws_180",
@@ -2151,7 +2328,8 @@
       "value": 10,
       "slug": "death-to-sjws",
       "isClusterMaster": false,
-      "isJoshua": true
+      "isJoshua": true,
+      "size": 1
     },
     {
       "id": "michael-slay_181",
@@ -2165,7 +2343,8 @@
       "slug": "michael-slay",
       "isClusterMaster": true,
       "isJoshua": true,
-      "thematicGroup": "Extrême-droite et Nationalisme"
+      "thematicGroup": "Extrême-droite et Nationalisme",
+      "size": 1
     },
     {
       "id": "platform_medium_182",
@@ -2176,7 +2355,8 @@
       "y": 409.4587626951183,
       "z": -28.38687123912615,
       "value": 15,
-      "isClusterMaster": false
+      "isClusterMaster": false,
+      "size": 1
     },
     {
       "id": "platform_reddit_183",
@@ -2187,7 +2367,8 @@
       "y": 349.00646583287545,
       "z": 7.518756871316132,
       "value": 15,
-      "isClusterMaster": false
+      "isClusterMaster": false,
+      "size": 1
     },
     {
       "id": "platform_dailystormer_184",
@@ -2198,7 +2379,8 @@
       "y": 349.6289087599971,
       "z": -16.831590310709387,
       "value": 15,
-      "isClusterMaster": false
+      "isClusterMaster": false,
+      "size": 1
     },
     {
       "id": "mariam-veiszadeh_185",
@@ -2211,7 +2393,8 @@
       "value": 5,
       "slug": "mariam-veiszadeh",
       "isClusterMaster": false,
-      "isJoshua": false
+      "isJoshua": false,
+      "size": 1
     },
     {
       "id": "andrew-anglin_186",
@@ -2224,7 +2407,8 @@
       "value": 5,
       "slug": "andrew-anglin",
       "isClusterMaster": false,
-      "isJoshua": false
+      "isJoshua": false,
+      "size": 1
     },
     {
       "id": "hadiyo-elmi_187",
@@ -2237,7 +2421,8 @@
       "value": 10,
       "slug": "hadiyo-elmi",
       "isClusterMaster": false,
-      "isJoshua": true
+      "isJoshua": true,
+      "size": 1
     },
     {
       "id": "platform_stormfront_188",
@@ -2248,7 +2433,8 @@
       "y": 339.850504769312,
       "z": -3.7070024794135272,
       "value": 15,
-      "isClusterMaster": false
+      "isClusterMaster": false,
+      "size": 1
     },
     {
       "id": "tanya-cohen_189",
@@ -2261,7 +2447,8 @@
       "value": 10,
       "slug": "tanya-cohen",
       "isClusterMaster": false,
-      "isJoshua": true
+      "isJoshua": true,
+      "size": 1
     },
     {
       "id": "platform_dailykos_190",
@@ -2272,7 +2459,8 @@
       "y": 294.37223263927496,
       "z": 61.83216580053619,
       "value": 15,
-      "isClusterMaster": false
+      "isClusterMaster": false,
+      "size": 1
     },
     {
       "id": "platform_thoughtcatalog_191",
@@ -2283,7 +2471,8 @@
       "y": 330.76534228732675,
       "z": 61.68402547750596,
       "value": 15,
-      "isClusterMaster": false
+      "isClusterMaster": false,
+      "size": 1
     },
     {
       "id": "platform_twitter_192",
@@ -2294,7 +2483,8 @@
       "y": 283.35471407157985,
       "z": 27.194021502998208,
       "value": 15,
-      "isClusterMaster": false
+      "isClusterMaster": false,
+      "size": 1
     },
     {
       "id": "emily-americana_193",
@@ -2307,7 +2497,8 @@
       "value": 10,
       "slug": "emily-americana",
       "isClusterMaster": false,
-      "isJoshua": true
+      "isJoshua": true,
+      "size": 1
     },
     {
       "id": "nuke-europe_194",
@@ -2320,7 +2511,8 @@
       "value": 10,
       "slug": "nuke-europe",
       "isClusterMaster": false,
-      "isJoshua": true
+      "isJoshua": true,
+      "size": 1
     },
     {
       "id": "australi-witness_195",
@@ -2333,7 +2525,8 @@
       "value": 10,
       "slug": "australi-witness",
       "isClusterMaster": false,
-      "isJoshua": true
+      "isJoshua": true,
+      "size": 1
     },
     {
       "id": "platform_surespot_196",
@@ -2344,7 +2537,8 @@
       "y": 264.0863983314766,
       "z": 26.01810918543455,
       "value": 15,
-      "isClusterMaster": false
+      "isClusterMaster": false,
+      "size": 1
     },
     {
       "id": "platform_JustPaste.it_197",
@@ -2355,7 +2549,8 @@
       "y": 293.4319986141264,
       "z": 24.09517157611339,
       "value": 15,
-      "isClusterMaster": false
+      "isClusterMaster": false,
+      "size": 1
     },
     {
       "id": "platform_facebook_198",
@@ -2366,7 +2561,8 @@
       "y": 257.49260437421157,
       "z": -2.1123203955942866,
       "value": 15,
-      "isClusterMaster": false
+      "isClusterMaster": false,
+      "size": 1
     },
     {
       "id": "platform_8chan_199",
@@ -2377,7 +2573,8 @@
       "y": 285.90118584493786,
       "z": -3.589103788914982,
       "value": 15,
-      "isClusterMaster": false
+      "isClusterMaster": false,
+      "size": 1
     },
     {
       "id": "micronesia-gal_201",
@@ -2391,7 +2588,8 @@
       "slug": "micronesia-gal",
       "isClusterMaster": true,
       "isJoshua": true,
-      "thematicGroup": "Culture"
+      "thematicGroup": "Culture",
+      "size": 1
     },
     {
       "id": "platform_reddit_202",
@@ -2402,7 +2600,8 @@
       "y": -330.44186812562674,
       "z": -58.261443998005646,
       "value": 15,
-      "isClusterMaster": false
+      "isClusterMaster": false,
+      "size": 1
     },
     {
       "id": "moon-metropolis_203",
@@ -2416,7 +2615,8 @@
       "slug": "moon-metropolis",
       "isClusterMaster": true,
       "isJoshua": true,
-      "thematicGroup": "Libertariens et Libéraux"
+      "thematicGroup": "Libertariens et Libéraux",
+      "size": 1
     },
     {
       "id": "platform_medium_204",
@@ -2427,7 +2627,8 @@
       "y": 351.9229023500944,
       "z": -250.85374791481945,
       "value": 15,
-      "isClusterMaster": false
+      "isClusterMaster": false,
+      "size": 1
     },
     {
       "id": "platform_wrong-planet_205",
@@ -2438,7 +2639,8 @@
       "y": 328.47407070572245,
       "z": -248.4531638792807,
       "value": 15,
-      "isClusterMaster": false
+      "isClusterMaster": false,
+      "size": 1
     },
     {
       "id": "platform_lastfm_206",
@@ -2449,7 +2651,8 @@
       "y": 350.66479512086744,
       "z": -219.30212023598676,
       "value": 15,
-      "isClusterMaster": false
+      "isClusterMaster": false,
+      "size": 1
     },
     {
       "id": "platform_wordpress_207",
@@ -2460,7 +2663,8 @@
       "y": 326.6182287207724,
       "z": -196.64892230361914,
       "value": 15,
-      "isClusterMaster": false
+      "isClusterMaster": false,
+      "size": 1
     },
     {
       "id": "platform_disqus_208",
@@ -2471,7 +2675,8 @@
       "y": 363.9079377652647,
       "z": -228.1193991439953,
       "value": 15,
-      "isClusterMaster": false
+      "isClusterMaster": false,
+      "size": 1
     },
     {
       "id": "platform_reddit_209",
@@ -2482,7 +2687,8 @@
       "y": 268.56986570627384,
       "z": -221.10156771072016,
       "value": 15,
-      "isClusterMaster": false
+      "isClusterMaster": false,
+      "size": 1
     },
     {
       "id": "platform_twitter_210",
@@ -2493,7 +2699,8 @@
       "y": 321.86806286588035,
       "z": -266.3315742104381,
       "value": 15,
-      "isClusterMaster": false
+      "isClusterMaster": false,
+      "size": 1
     },
     {
       "id": "milo-yiannopoulos_211",
@@ -2506,7 +2713,8 @@
       "value": 5,
       "slug": "milo-yiannopoulos",
       "isClusterMaster": false,
-      "isJoshua": false
+      "isJoshua": false,
+      "size": 1
     },
     {
       "id": "shaun-king_212",
@@ -2519,7 +2727,8 @@
       "value": 5,
       "slug": "shaun-king",
       "isClusterMaster": false,
-      "isJoshua": false
+      "isJoshua": false,
+      "size": 1
     },
     {
       "id": "luke-mcmahon_213",
@@ -2532,7 +2741,8 @@
       "value": 5,
       "slug": "luke-mcmahon",
       "isClusterMaster": false,
-      "isJoshua": false
+      "isJoshua": false,
+      "size": 1
     },
     {
       "id": "elise-potaka_214",
@@ -2545,7 +2755,8 @@
       "value": 5,
       "slug": "elise-potaka",
       "isClusterMaster": false,
-      "isJoshua": false
+      "isJoshua": false,
+      "size": 1
     },
     {
       "id": "mike-wendling_215",
@@ -2558,7 +2769,8 @@
       "value": 5,
       "slug": "mike-wendling",
       "isClusterMaster": false,
-      "isJoshua": false
+      "isJoshua": false,
+      "size": 1
     },
     {
       "id": "platform_e-mail_216",
@@ -2569,7 +2781,8 @@
       "y": 371.47210922832375,
       "z": -194.17478730176256,
       "value": 15,
-      "isClusterMaster": false
+      "isClusterMaster": false,
+      "size": 1
     },
     {
       "id": "weev-andrew-auernheimer_217",
@@ -2582,7 +2795,8 @@
       "value": 5,
       "slug": "weev-andrew-auernheimer",
       "isClusterMaster": false,
-      "isJoshua": false
+      "isJoshua": false,
+      "size": 1
     },
     {
       "id": "chiara-zaffino_218",
@@ -2595,7 +2809,8 @@
       "value": 5,
       "slug": "chiara-zaffino",
       "isClusterMaster": false,
-      "isJoshua": false
+      "isJoshua": false,
+      "size": 1
     },
     {
       "id": "alice-pooley_219",
@@ -2608,7 +2823,8 @@
       "value": 5,
       "slug": "alice-pooley",
       "isClusterMaster": false,
-      "isJoshua": false
+      "isJoshua": false,
+      "size": 1
     },
     {
       "id": "peter-wallace_220",
@@ -2621,7 +2837,8 @@
       "value": 5,
       "slug": "peter-wallace",
       "isClusterMaster": false,
-      "isJoshua": false
+      "isJoshua": false,
+      "size": 1
     },
     {
       "id": "rita-panahi_221",
@@ -2634,7 +2851,8 @@
       "value": 5,
       "slug": "rita-panahi",
       "isClusterMaster": false,
-      "isJoshua": false
+      "isJoshua": false,
+      "size": 1
     },
     {
       "id": "nikki_222",
@@ -2647,7 +2865,8 @@
       "value": 5,
       "slug": "nikki",
       "isClusterMaster": false,
-      "isJoshua": false
+      "isJoshua": false,
+      "size": 1
     },
     {
       "id": "emily-americana_223",
@@ -2660,7 +2879,8 @@
       "value": 10,
       "slug": "emily-americana",
       "isClusterMaster": false,
-      "isJoshua": true
+      "isJoshua": true,
+      "size": 1
     },
     {
       "id": "tanya-cohen_224",
@@ -2673,7 +2893,8 @@
       "value": 10,
       "slug": "tanya-cohen",
       "isClusterMaster": false,
-      "isJoshua": true
+      "isJoshua": true,
+      "size": 1
     },
     {
       "id": "platform_dailykos_225",
@@ -2684,7 +2905,8 @@
       "y": 250.1095134333302,
       "z": -247.65381536195864,
       "value": 15,
-      "isClusterMaster": false
+      "isClusterMaster": false,
+      "size": 1
     },
     {
       "id": "platform_thoughtcatalog_226",
@@ -2695,7 +2917,8 @@
       "y": 299.4448396946799,
       "z": -230.8535919113622,
       "value": 15,
-      "isClusterMaster": false
+      "isClusterMaster": false,
+      "size": 1
     },
     {
       "id": "amina-blackberry_227",
@@ -2708,7 +2931,8 @@
       "value": 10,
       "slug": "amina-blackberry",
       "isClusterMaster": false,
-      "isJoshua": true
+      "isJoshua": true,
+      "size": 1
     },
     {
       "id": "death-to-sjws_228",
@@ -2721,7 +2945,8 @@
       "value": 10,
       "slug": "death-to-sjws",
       "isClusterMaster": false,
-      "isJoshua": true
+      "isJoshua": true,
+      "size": 1
     },
     {
       "id": "chris-lavergne_229",
@@ -2734,7 +2959,8 @@
       "value": 5,
       "slug": "chris-lavergne",
       "isClusterMaster": false,
-      "isJoshua": false
+      "isJoshua": false,
+      "size": 1
     },
     {
       "id": "mariam-veiszadeh_230",
@@ -2747,7 +2973,8 @@
       "value": 5,
       "slug": "mariam-veiszadeh",
       "isClusterMaster": false,
-      "isJoshua": false
+      "isJoshua": false,
+      "size": 1
     },
     {
       "id": "steve-bannon_231",
@@ -2760,7 +2987,8 @@
       "value": 5,
       "slug": "steve-bannon",
       "isClusterMaster": false,
-      "isJoshua": false
+      "isJoshua": false,
+      "size": 1
     },
     {
       "id": "platform_breitbart_232",
@@ -2771,7 +2999,8 @@
       "y": 353.0007209605115,
       "z": -254.70752276277682,
       "value": 15,
-      "isClusterMaster": false
+      "isClusterMaster": false,
+      "size": 1
     },
     {
       "id": "adam-baldwin_233",
@@ -2784,7 +3013,8 @@
       "value": 5,
       "slug": "adam-baldwin",
       "isClusterMaster": false,
-      "isJoshua": false
+      "isJoshua": false,
+      "size": 1
     },
     {
       "id": "mouthful-of-grandpa_234",
@@ -2798,7 +3028,8 @@
       "slug": "mouthful-of-grandpa",
       "isClusterMaster": true,
       "isJoshua": true,
-      "thematicGroup": "Extrême-droite et Nationalisme"
+      "thematicGroup": "Extrême-droite et Nationalisme",
+      "size": 1
     },
     {
       "id": "platform_reddit_235",
@@ -2809,7 +3040,8 @@
       "y": 181.8395521984081,
       "z": -612.9169485499458,
       "value": 15,
-      "isClusterMaster": false
+      "isClusterMaster": false,
+      "size": 1
     },
     {
       "id": "naruto-2-0_236",
@@ -2823,7 +3055,8 @@
       "slug": "naruto-2-0",
       "isClusterMaster": true,
       "isJoshua": true,
-      "thematicGroup": "Anti-système et Provocateurs"
+      "thematicGroup": "Anti-système et Provocateurs",
+      "size": 1
     },
     {
       "id": "platform_wikipedia_237",
@@ -2834,7 +3067,8 @@
       "y": 303.8601706399023,
       "z": -548.9662509639649,
       "value": 15,
-      "isClusterMaster": false
+      "isClusterMaster": false,
+      "size": 1
     },
     {
       "id": "nuke-europe_238",
@@ -2848,7 +3082,8 @@
       "slug": "nuke-europe",
       "isClusterMaster": true,
       "isJoshua": true,
-      "thematicGroup": "Extrême-droite et Nationalisme"
+      "thematicGroup": "Extrême-droite et Nationalisme",
+      "size": 1
     },
     {
       "id": "platform_reddit_239",
@@ -2859,7 +3094,8 @@
       "y": -283.95328156246194,
       "z": 41.74171214605564,
       "value": 15,
-      "isClusterMaster": false
+      "isClusterMaster": false,
+      "size": 1
     },
     {
       "id": "pineapple-10_240",
@@ -2873,7 +3109,8 @@
       "slug": "pineapple-10",
       "isClusterMaster": true,
       "isJoshua": true,
-      "thematicGroup": "Culture"
+      "thematicGroup": "Culture",
+      "size": 1
     },
     {
       "id": "platform_youtube_241",
@@ -2884,7 +3121,8 @@
       "y": -340.694052406053,
       "z": -452.96776828865876,
       "value": 15,
-      "isClusterMaster": false
+      "isClusterMaster": false,
+      "size": 1
     },
     {
       "id": "the-old-jacobite-2_242",
@@ -2898,7 +3136,8 @@
       "slug": "the-old-jacobite-2",
       "isClusterMaster": true,
       "isJoshua": true,
-      "thematicGroup": "Culture"
+      "thematicGroup": "Culture",
+      "size": 1
     },
     {
       "id": "platform_wikipedia_243",
@@ -2909,7 +3148,8 @@
       "y": 216.1000366494143,
       "z": 569.5860270514434,
       "value": 15,
-      "isClusterMaster": false
+      "isClusterMaster": false,
+      "size": 1
     },
     {
       "id": "wake-up-white-man_244",
@@ -2923,7 +3163,8 @@
       "slug": "wake-up-white-man",
       "isClusterMaster": true,
       "isJoshua": true,
-      "thematicGroup": "Extrême-droite et Nationalisme"
+      "thematicGroup": "Extrême-droite et Nationalisme",
+      "size": 1
     },
     {
       "id": "platform_stormfront_245",
@@ -2934,7 +3175,8 @@
       "y": -233.27831089513387,
       "z": 360.48068402232786,
       "value": 15,
-      "isClusterMaster": false
+      "isClusterMaster": false,
+      "size": 1
     },
     {
       "id": "platform_vnn_246",
@@ -2945,7 +3187,8 @@
       "y": -292.53830641145646,
       "z": 367.0988673186521,
       "value": 15,
-      "isClusterMaster": false
+      "isClusterMaster": false,
+      "size": 1
     },
     {
       "id": "platform_reddit_247",
@@ -2956,367 +3199,8 @@
       "y": -243.92033407278393,
       "z": 406.23989941619635,
       "value": 15,
-      "isClusterMaster": false
-    },
-    {
-      "id": "tanya-cohen_248",
-      "name": "Tanya Cohen",
-      "type": "character",
-      "cluster": 41,
-      "x": -449.04601412690823,
-      "y": 116.7237437352879,
-      "z": 197.00730519981835,
-      "value": 10,
-      "slug": "tanya-cohen",
-      "isClusterMaster": true,
-      "isJoshua": true,
-      "thematicGroup": "Gauche et Justice sociale"
-    },
-    {
-      "id": "platform_dailykos_249",
-      "name": "dailykos",
-      "type": "platform",
-      "cluster": 41,
-      "x": -454.8950631958904,
-      "y": 110.22213003061827,
-      "z": 232.79398350852694,
-      "value": 15,
-      "isClusterMaster": false
-    },
-    {
-      "id": "platform_reddit_250",
-      "name": "reddit",
-      "type": "platform",
-      "cluster": 41,
-      "x": -462.7893929551088,
-      "y": 148.97206805697664,
-      "z": 160.38148964636383,
-      "value": 15,
-      "isClusterMaster": false
-    },
-    {
-      "id": "platform_thoughtcatalog_251",
-      "name": "thoughtcatalog",
-      "type": "platform",
-      "cluster": 41,
-      "x": -454.2717852265252,
-      "y": 72.75109605487414,
-      "z": 206.5957250881917,
-      "value": 15,
-      "isClusterMaster": false
-    },
-    {
-      "id": "platform_twitter_252",
-      "name": "twitter",
-      "type": "platform",
-      "cluster": 41,
-      "x": -468.2686722283922,
-      "y": 158.27429353433772,
-      "z": 192.25652382452634,
-      "value": 15,
-      "isClusterMaster": false
-    },
-    {
-      "id": "mariam-veiszadeh_253",
-      "name": "Mariam Veiszadeh",
-      "type": "character",
-      "cluster": 41,
-      "x": -476.53532567304836,
-      "y": 186.07486696448996,
-      "z": 215.829719917571,
-      "value": 5,
-      "slug": "mariam-veiszadeh",
       "isClusterMaster": false,
-      "isJoshua": false
-    },
-    {
-      "id": "james-taranto-wsj_254",
-      "name": "James Taranto",
-      "type": "character",
-      "cluster": 41,
-      "x": -455.9365721328647,
-      "y": 37.198298534724266,
-      "z": 221.1853737570264,
-      "value": 5,
-      "slug": "james-taranto-wsj",
-      "isClusterMaster": false,
-      "isJoshua": false
-    },
-    {
-      "id": "michael-slay_255",
-      "name": "Michael Slay",
-      "type": "character",
-      "cluster": 41,
-      "x": -472.9639058165251,
-      "y": 191.85528677388922,
-      "z": 143.9467878028874,
-      "value": 10,
-      "slug": "michael-slay",
-      "isClusterMaster": false,
-      "isJoshua": true
-    },
-    {
-      "id": "platform_medium_256",
-      "name": "medium",
-      "type": "platform",
-      "cluster": 41,
-      "x": -471.30944285667016,
-      "y": 227.12231566385825,
-      "z": 127.75515513060664,
-      "value": 15,
-      "isClusterMaster": false
-    },
-    {
-      "id": "platform_dailystormer_257",
-      "name": "dailystormer",
-      "type": "platform",
-      "cluster": 41,
-      "x": -479.87266580268647,
-      "y": 202.3701200777196,
-      "z": 107.60033206245748,
-      "value": 15,
-      "isClusterMaster": false
-    },
-    {
-      "id": "pamela-geller_258",
-      "name": "Pamela Geller",
-      "type": "character",
-      "cluster": 41,
-      "x": -381.550904937303,
-      "y": 122.78119776772172,
-      "z": 254.6405613164131,
-      "value": 5,
-      "slug": "pamela-geller",
-      "isClusterMaster": false,
-      "isJoshua": false
-    },
-    {
-      "id": "platform_daily-kos_259",
-      "name": "daily-kos",
-      "type": "platform",
-      "cluster": 41,
-      "x": -410.5233894365664,
-      "y": 117.81813554499381,
-      "z": 229.36137552821017,
-      "value": 15,
-      "isClusterMaster": false
-    },
-    {
-      "id": "mike-masnick_260",
-      "name": "Mike Masnick (Techdirt)",
-      "type": "character",
-      "cluster": 41,
-      "x": -387.1061811213369,
-      "y": 148.32134116555773,
-      "z": 154.0708566051711,
-      "value": 5,
-      "slug": "mike-masnick",
-      "isClusterMaster": false,
-      "isJoshua": false
-    },
-    {
-      "id": "platform_techdirt_261",
-      "name": "techdirt",
-      "type": "platform",
-      "cluster": 41,
-      "x": -411.49217915149285,
-      "y": 126.79619874973487,
-      "z": 173.14320767323935,
-      "value": 15,
-      "isClusterMaster": false
-    },
-    {
-      "id": "luke-mcmahon_262",
-      "name": "Luke McMahon",
-      "type": "character",
-      "cluster": 41,
-      "x": 481.54959490253,
-      "y": 185.6935911750866,
-      "z": 221.23454834098928,
-      "value": 5,
-      "slug": "luke-mcmahon",
-      "isClusterMaster": false,
-      "isJoshua": false,
-      "thematicGroup": ""
-    },
-    {
-      "id": "australi-witness_263",
-      "name": "Australi Witness",
-      "type": "character",
-      "cluster": 41,
-      "x": 496.98062722392746,
-      "y": 262.0256321495385,
-      "z": 211.71868942736648,
-      "value": 10,
-      "slug": "australi-witness",
-      "isClusterMaster": false,
-      "isJoshua": true
-    },
-    {
-      "id": "platform_surespot_264",
-      "name": "surespot",
-      "type": "platform",
-      "cluster": 41,
-      "x": 525.7606278811216,
-      "y": 286.1516786384068,
-      "z": 212.47233849311058,
-      "value": 15,
-      "isClusterMaster": false
-    },
-    {
-      "id": "platform_JustPaste.it_265",
-      "name": "JustPaste.it",
-      "type": "platform",
-      "cluster": 41,
-      "x": 492.8836398496736,
-      "y": 283.766653979954,
-      "z": 181.0113735244368,
-      "value": 15,
-      "isClusterMaster": false
-    },
-    {
-      "id": "platform_facebook_266",
-      "name": "facebook",
-      "type": "platform",
-      "cluster": 41,
-      "x": 483.4079517890098,
-      "y": 296.28900044402474,
-      "z": 217.64575202482047,
-      "value": 15,
-      "isClusterMaster": false
-    },
-    {
-      "id": "platform_8chan_267",
-      "name": "8chan",
-      "type": "platform",
-      "cluster": 41,
-      "x": 515.4446208296381,
-      "y": 254.8977835991194,
-      "z": 180.14224331948628,
-      "value": 15,
-      "isClusterMaster": false
-    },
-    {
-      "id": "platform_twitter_268",
-      "name": "twitter",
-      "type": "platform",
-      "cluster": 41,
-      "x": 490.6875873507971,
-      "y": 220.10671416803825,
-      "z": 224.2204529691593,
-      "value": 15,
-      "isClusterMaster": false
-    },
-    {
-      "id": "nathan-sykes_269",
-      "name": "Nathan Sykes",
-      "type": "character",
-      "cluster": 41,
-      "x": 516.3410571455964,
-      "y": 203.35345370846468,
-      "z": 242.1576884816468,
-      "value": 5,
-      "slug": "nathan-sykes",
-      "isClusterMaster": false,
-      "isJoshua": false
-    },
-    {
-      "id": "naomi-wolf_270",
-      "name": "Naomi Wolf",
-      "type": "character",
-      "cluster": 41,
-      "x": 48.376736177476104,
-      "y": -383.95944599537796,
-      "z": 535.3741954595133,
-      "value": 5,
-      "slug": "naomi-wolf",
-      "isClusterMaster": false,
-      "isJoshua": false,
-      "thematicGroup": ""
-    },
-    {
-      "id": "josh-bornstein_271",
-      "name": "Josh Bornstein",
-      "type": "character",
-      "cluster": 41,
-      "x": 59.010755794301595,
-      "y": -318.37835415460273,
-      "z": 552.6454834569047,
-      "value": 5,
-      "slug": "josh-bornstein",
-      "isClusterMaster": false,
-      "isJoshua": false
-    },
-    {
-      "id": "platform_twitter_272",
-      "name": "twitter",
-      "type": "platform",
-      "cluster": 41,
-      "x": 52.93165300469049,
-      "y": -351.54870040148353,
-      "z": 546.4539218210992,
-      "value": 15,
-      "isClusterMaster": false
-    },
-    {
-      "id": "tanya-gersh_273",
-      "name": "Tanya Gersh ",
-      "type": "character",
-      "cluster": 41,
-      "x": 46.191091442298635,
-      "y": 33.73096056216916,
-      "z": 629.1950460308194,
-      "value": 5,
-      "slug": "tanya-gersh",
-      "isClusterMaster": false,
-      "isJoshua": false,
-      "thematicGroup": ""
-    },
-    {
-      "id": "andrew-anglin_274",
-      "name": "Andrew Anglin",
-      "type": "character",
-      "cluster": 41,
-      "x": 84.17939937757795,
-      "y": 70.0432942123702,
-      "z": 630.3268714593282,
-      "value": 5,
-      "slug": "andrew-anglin",
-      "isClusterMaster": false,
-      "isJoshua": false
-    },
-    {
-      "id": "platform_dailystormer_275",
-      "name": "dailystormer",
-      "type": "platform",
-      "cluster": 41,
-      "x": 86.34746891428783,
-      "y": 29.964280664124033,
-      "z": 625.3236793989649,
-      "value": 15,
-      "isClusterMaster": false
-    },
-    {
-      "id": "platform_e-mail_276",
-      "name": "e-mail",
-      "type": "platform",
-      "cluster": 41,
-      "x": 49.25199493273801,
-      "y": 70.56903640065819,
-      "z": 613.1082700041297,
-      "value": 15,
-      "isClusterMaster": false
-    },
-    {
-      "id": "platform_twitter_277",
-      "name": "twitter",
-      "type": "platform",
-      "cluster": 41,
-      "x": 49.68917305717486,
-      "y": 66.06929911340644,
-      "z": 651.3432143191895,
-      "value": 15,
-      "isClusterMaster": false
+      "size": 1
     }
   ],
   "links": [

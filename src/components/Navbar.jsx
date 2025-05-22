@@ -6,7 +6,7 @@ import VolumeOffOutlinedIcon from "@mui/icons-material/VolumeOffOutlined";
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import useSound from "use-sound";
-import { GlobalAudioController } from "./Game/SoundPlayer/SoundPlayer";
+import { GlobalAudioController } from "../pages/Game/common/SoundPlayer";
 
 // Composant pour un bouton d'icône animé
 const AnimatedIconButton = ({ onClick, ariaLabel, children, transition }) => {

@@ -116,7 +116,7 @@ def main():
     observer.start()
     
     try:
-        print("Surveillance démarrée. Appuyez sur Ctrl+C pour arrêter.")
+        print("Monitoring started. Press Ctrl+C to stop.")
         while True:
             time.sleep(1)
     except KeyboardInterrupt:
