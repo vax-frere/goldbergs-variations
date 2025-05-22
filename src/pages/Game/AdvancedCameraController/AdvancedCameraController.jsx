@@ -24,9 +24,7 @@ import {
   CrosshairIndicator,
   sendStartCountingSignal,
 } from "./CameraIndicators";
-import { returnToHome } from "../services/HomeReturnService";
-
-const DEBUG = false;
+import useDebugMode from "../../../hooks/useDebugMode";
 
 /**
  * Contrôleur de caméra avancé en mode vol libre uniquement
@@ -47,6 +45,9 @@ export function AdvancedCameraController({ config = DEFAULT_FLIGHT_CONFIG }) {
     endPosition: new Vector3(),
     endTarget: new Vector3(),
   });
+
+  // Utiliser le hook de mode debug
+  const [debugMode] = useDebugMode(false);
 
   // Définir la valeur de FOV constante
   const fov = CAMERA_FOV;
@@ -315,7 +316,7 @@ export function AdvancedCameraController({ config = DEFAULT_FLIGHT_CONFIG }) {
     }
   }, [camera]);
 
-  // Function to detect user activity
+  // Fonction pour détecter l'activité utilisateur et gérer les timers d'inactivité
   const detectUserActivity = () => {
     const previousState = {
       autoRotate: autoRotateEnabled,
@@ -367,7 +368,6 @@ export function AdvancedCameraController({ config = DEFAULT_FLIGHT_CONFIG }) {
 
     if (orbitTimerId.current) {
       clearTimeout(orbitTimerId.current);
-      orbitTimerId.current = null;
     }
 
     // Ne programmer les timers que si on est en mode normal
@@ -404,15 +404,13 @@ export function AdvancedCameraController({ config = DEFAULT_FLIGHT_CONFIG }) {
             // Silencieux en cas d'erreur
           }
 
-          // Utiliser le service returnToHome au lieu de l'animation directe
-          // pour le retour à la position par défaut PUIS activation du mode orbite
+          // Retourner à la position initiale directement
           console.log(
-            `Utilisation du HomeReturnService pour le retour à l'accueil après inactivité`
+            `Retour à la position initiale après inactivité et activation du mode orbite`
           );
-          returnToHome();
 
-          // Note: returnToHome appelle déjà animateToCameraPosition(0, true) en interne
-          // donc pas besoin de l'appeler manuellement ici
+          // Animer la caméra vers la position 0 (vue d'ensemble) et activer le mode orbite
+          animateToCameraPosition(0, true);
         }
       }, AUTO_ORBIT_DELAY);
     }

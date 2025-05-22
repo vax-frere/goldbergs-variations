@@ -1,11 +1,8 @@
 import React, { memo, useMemo, useEffect, useRef, useState } from "react";
 import * as THREE from "three";
 import { Billboard, Text } from "@react-three/drei";
-import useGraphStore from "../store";
 import useGameStore from "../../store";
-import { useTextures } from "../../common/TexturePreloader";
-import { urlToTextureId } from "../../utils/textureUtils";
-import { getOrCreateGeometry, getOrCreateMaterial } from "../cache";
+import useAssets from "../../../../hooks/useAssets";
 import NodeHoverEffect from "../effects/NodeHoverEffect";
 import SvgPath from "../../common/SvgPath";
 
@@ -20,6 +17,9 @@ const OptimizedNode = memo(
       return null;
     }
 
+    // Utiliser le service d'assets centralisé
+    const assets = useAssets();
+
     // État pour gérer les erreurs de chargement des SVG
     const [svgError, setSvgError] = useState(false);
 
@@ -29,9 +29,6 @@ const OptimizedNode = memo(
 
     // Vérifier si le nœud a déjà été visité
     const isNodeVisited = useGameStore((state) => state.isNodeVisited(node.id));
-
-    // Récupérer les textures préchargées
-    const { textures, loaded } = useTextures();
 
     // Créer un ID unique pour ce nœud
     const nodeId = node.id || "unknown";
@@ -146,29 +143,42 @@ const OptimizedNode = memo(
       };
     }, [isClusterMaster, isNodeVisited, textOpacity]);
 
-    // Matériau pour la sphère de base
-    const sphereMaterial = useMemo(() => {
-      // Utiliser une couleur unique pour tous les types de noeuds
-      return getOrCreateMaterial("default-sphere", () => {
+    // Créer ou récupérer le matériau pour la sphère de base
+    useEffect(() => {
+      if (!assets.isReady) return;
+
+      assets.createMaterial("default-sphere", () => {
         return new THREE.MeshBasicMaterial({
           color: new THREE.Color("#ffffff"),
           transparent: true,
           opacity: 0.7,
         });
       });
-    }, []);
+    }, [assets.isReady]);
 
-    const sphereGeometry = useMemo(() => {
-      return getOrCreateGeometry("sphere-simple", () => {
+    // Créer ou récupérer la géométrie de sphère
+    useEffect(() => {
+      if (!assets.isReady) return;
+
+      assets.createGeometry("sphere-simple", () => {
         return new THREE.SphereGeometry(size, 8, 8);
       });
-    }, [size, displayMode]);
+    }, [assets.isReady, size]);
 
-    // Mémoiser les couleurs pour l'effet de hover
+    // Récupérer les assets créés
+    const sphereMaterial = assets.getMaterial("default-sphere");
+    const sphereGeometry = assets.getGeometry("sphere-simple");
+
+    // Mémoiser les couleurs pour l'effet de hover - Déplacer AVANT le retour conditionnel
     const hoverEffectColor = useMemo(() => {
       // Couleur blanche pour l'effet de hover standard
       return [1.0, 1.0, 1.0];
     }, []);
+
+    // Si les assets ne sont pas prêts, ne rien rendre
+    if (!assets.isReady || !sphereMaterial || !sphereGeometry) {
+      return null;
+    }
 
     // Taille de l'icône avec modification selon le type de nœud (sans la réduction pour les visités)
     const iconFinalSize = iconSize * (isClusterMaster ? 3 : 1.5);
@@ -200,29 +210,33 @@ const OptimizedNode = memo(
           </Billboard>
         )}
 
-        {/* Icône avec SVGPath (visible uniquement en mode advanced) */}
+        {/* Icône SVG avec Billboard pour toujours faire face à la caméra */}
+        {/* Version différente selon le mode */}
         {displayMode === "advanced" && (
-          <SvgPath
-            svgPath={svgPath}
-            size={iconFinalSize}
+          <Billboard
             position={[0, 0, 0]}
-            isBillboard={true}
-            opacity={visitedNodeStyle.opacity}
-            color={visitedNodeStyle.color}
-            lineWidth={visitedNodeStyle.lineWidth}
-            onError={handleSvgError}
-          />
+            scale={[
+              iconFinalSize * (isNodeVisited ? 0.6 : 1.0),
+              iconFinalSize * (isNodeVisited ? 0.6 : 1.0),
+              1,
+            ]}
+          >
+            <SvgPath
+              svgPath={svgPath}
+              color={visitedNodeStyle.color}
+              opacity={visitedNodeStyle.opacity}
+              lineWidth={visitedNodeStyle.lineWidth}
+              onError={handleSvgError}
+              size={1.0}
+            />
+          </Billboard>
         )}
 
-        {/* Effet de hover lorsque le nœud est actif */}
-        {displayMode === "advanced" && (
+        {/* Ajouter un effet de hover uniquement en mode advanced et pour les nœuds actifs */}
+        {displayMode === "advanced" && isNodeActive && (
           <NodeHoverEffect
-            position={[0, 0, 0]}
-            active={isNodeActive}
-            size={size * (isClusterMaster ? 1.8 : 1.5)}
             color={hoverEffectColor}
-            opacity={isNodeVisited ? 0.3 : 0.8} // Effet de hover beaucoup plus subtil pour les nœuds visités
-            node={node}
+            size={isClusterMaster ? 15 : 10}
           />
         )}
       </group>

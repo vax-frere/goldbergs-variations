@@ -2,7 +2,7 @@ import { useRef, useState, useEffect } from "react";
 import { useFrame } from "@react-three/fiber";
 import * as THREE from "three";
 import { Billboard, PositionalAudio } from "@react-three/drei";
-import { getSoundPath } from "../../../../utils/assetLoader";
+import useAssets from "../../../../hooks/useAssets";
 
 // Default constants for the animation
 const DEFAULT_DURATION = 0.8; // seconds
@@ -13,10 +13,10 @@ const DEFAULT_MAX_SCALE = 3.0;
 const DEFAULT_MIN_THICKNESS = 1; // Starting thickness (thin)
 const DEFAULT_MAX_THICKNESS = 0.01; // Ending thickness (thicker)
 
-// Sound files
+// Sound files mapping
 const SOUND_FILES = {
-  1: getSoundPath("touch-a.mp3"),
-  2: getSoundPath("touch-2.mp3"),
+  1: "touch-a.mp3",
+  2: "touch-2.mp3",
 };
 
 /**
@@ -51,6 +51,9 @@ export function PulseEffect({
   // State to store the sound URL
   const [soundUrl, setSoundUrl] = useState("");
 
+  // Utiliser le service d'assets
+  const assets = useAssets();
+
   // Ref for audio
   const audioRef = useRef();
 
@@ -78,15 +81,18 @@ export function PulseEffect({
     timeRef.current = 0;
 
     // Get the sound based on the sound prop
-    const selectedSound = SOUND_FILES[sound] || SOUND_FILES[1]; // Default to first sound if invalid option
-    setSoundUrl(selectedSound);
+    if (assets.isReady) {
+      const soundFile = SOUND_FILES[sound] || SOUND_FILES[1]; // Default to first sound if invalid option
+      const soundPath = assets.getSoundPath(soundFile);
+      setSoundUrl(soundPath);
 
-    // Play sound (with a small delay to ensure the URL is set)
-    setTimeout(() => {
-      if (audioRef.current) {
-        audioRef.current.play();
-      }
-    }, 10);
+      // Play sound (with a small delay to ensure the URL is set)
+      setTimeout(() => {
+        if (audioRef.current) {
+          audioRef.current.play();
+        }
+      }, 10);
+    }
 
     // Return cleanup function
     return () => {
@@ -94,7 +100,7 @@ export function PulseEffect({
         audioRef.current.stop();
       }
     };
-  }, [position, sound]);
+  }, [position, sound, assets.isReady]);
 
   // Animation update
   useFrame((_, delta) => {
@@ -147,8 +153,8 @@ export function PulseEffect({
     }
   });
 
-  // Don't render if no position is provided
-  if (!position) return null;
+  // Don't render if no position is provided or assets aren't ready
+  if (!position || !assets.isReady) return null;
 
   // Easing functions for smoother animations
   function easeOutQuart(x) {

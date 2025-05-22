@@ -1,13 +1,9 @@
-import { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, useMemo } from "react";
 import { Billboard } from "@react-three/drei";
 import * as THREE from "three";
 import { SVGLoader } from "three/examples/jsm/loaders/SVGLoader";
-import { useTextures } from "./TexturePreloader";
-import { urlToTextureId } from "../utils/textureUtils";
-
-// Cache local pour stocker les données SVG parsées
-// Cela permet de ne pas parser plusieurs fois le même SVG
-const svgDataCache = new Map();
+import useAssets from "../../../hooks/useAssets";
+import { useFrame } from "@react-three/fiber";
 
 /**
  * Component to display SVG paths directly in 3D as outlines (no fill)
@@ -42,13 +38,14 @@ const SvgPath = ({
   const [dimensions, setDimensions] = useState({ width: 1, height: 1 });
   const [error, setError] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
+  const [materials, setMaterials] = useState({});
   const groupRef = useRef();
 
-  // Récupérer les textures depuis le système de cache
-  const { textures, loaded } = useTextures();
+  // Utiliser notre service d'assets centralisé
+  const assets = useAssets();
 
-  // Extraire l'ID de texture à partir du chemin
-  const textureId = urlToTextureId(svgPath);
+  // Extraire l'ID unique pour ce SVG
+  const svgId = `svg-data-${svgPath.replace(/[^a-zA-Z0-9]/g, "-")}`;
 
   // Essayer de charger le SVG par défaut si nécessaire
   const tryLoadDefault = (errorMessage) => {
@@ -89,79 +86,51 @@ const SvgPath = ({
   };
 
   useEffect(() => {
+    if (!assets.isReady) return;
+
     setIsLoading(true);
     setError(null);
 
-    // Vérifier si les données SVG sont déjà en cache
-    if (svgDataCache.has(svgPath)) {
+    // Vérifier si les données SVG sont déjà dans le service d'assets
+    const cachedSvgData = assets.getCustomData(svgId);
+    if (cachedSvgData) {
       console.log(`Utilisation du cache pour SVG: ${svgPath}`);
-      const cachedData = svgDataCache.get(svgPath);
-      setSvgData(cachedData.data);
-      setDimensions(cachedData.dimensions);
+      setSvgData(cachedSvgData.data);
+      setDimensions(cachedSvgData.dimensions);
       setIsLoading(false);
       return;
     }
 
-    // Si la texture est chargée dans le système centralisé, l'utiliser comme source
-    // sinon, charger directement le SVG
-    if (loaded && textures[textureId]) {
-      console.log(`Texture SVG trouvée dans le cache central: ${textureId}`);
-
-      // On doit quand même parser le SVG pour obtenir les chemins
-      // Mais on évite de télécharger à nouveau le fichier
-      fetch(svgPath)
-        .then((response) => {
-          if (!response.ok) {
-            throw new Error(`Erreur HTTP: ${response.status}`);
-          }
-          return response.text();
-        })
-        .then((svgText) => {
-          const loader = new SVGLoader();
-          try {
-            const data = loader.parse(svgText);
-            // Vérifier que le SVG contient des chemins valides
-            if (data.paths && data.paths.length > 0) {
-              processSvgData(data);
-            } else {
-              throw new Error("Le SVG ne contient pas de chemins valides");
-            }
-          } catch (parseError) {
-            console.error(`Erreur de parsing SVG: ${svgPath}`, parseError);
-            if (onError) onError(parseError);
-            tryLoadDefault(`Erreur lors du parsing du SVG ${svgPath}`);
-          }
-        })
-        .catch((fetchError) => {
-          console.error(`Erreur de chargement SVG: ${svgPath}`, fetchError);
-          if (onError) onError(fetchError);
-          tryLoadDefault(`Erreur lors du chargement du SVG ${svgPath}`);
-        });
-    } else {
-      const loader = new SVGLoader();
-      loader.load(
-        svgPath,
-        (data) => {
+    // Charger et parser le SVG
+    fetch(svgPath)
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error(`Erreur HTTP: ${response.status}`);
+        }
+        return response.text();
+      })
+      .then((svgText) => {
+        const loader = new SVGLoader();
+        try {
+          const data = loader.parse(svgText);
           // Vérifier que le SVG contient des chemins valides
           if (data.paths && data.paths.length > 0) {
             processSvgData(data);
           } else {
-            const emptyError = new Error(
-              "Le SVG ne contient pas de chemins valides"
-            );
-            if (onError) onError(emptyError);
-            tryLoadDefault(`SVG vide ${svgPath}`);
+            throw new Error("Le SVG ne contient pas de chemins valides");
           }
-        },
-        undefined,
-        (loadError) => {
-          console.error(`Error loading SVG ${svgPath}:`, loadError);
-          if (onError) onError(loadError);
-          tryLoadDefault(`Échec du chargement du SVG ${svgPath}`);
+        } catch (parseError) {
+          console.error(`Erreur de parsing SVG: ${svgPath}`, parseError);
+          if (onError) onError(parseError);
+          tryLoadDefault(`Erreur lors du parsing du SVG ${svgPath}`);
         }
-      );
-    }
-  }, [svgPath, loaded, textures, textureId, onError]);
+      })
+      .catch((fetchError) => {
+        console.error(`Erreur de chargement SVG: ${svgPath}`, fetchError);
+        if (onError) onError(fetchError);
+        tryLoadDefault(`Erreur lors du chargement du SVG ${svgPath}`);
+      });
+  }, [svgPath, assets.isReady, svgId, onError]);
 
   // Fonction pour traiter les données SVG et calculer les dimensions
   const processSvgData = (data) => {
@@ -187,16 +156,56 @@ const SvgPath = ({
       aspectRatio,
     };
 
-    // Stocker dans le cache local
-    svgDataCache.set(svgPath, {
-      data: data,
-      dimensions: dimensionsData,
-    });
+    // Stocker dans le service d'assets
+    if (assets.isReady) {
+      assets.setCustomData(svgId, {
+        data: data,
+        dimensions: dimensionsData,
+      });
+    }
 
     setSvgData(data);
     setDimensions(dimensionsData);
     setIsLoading(false);
   };
+
+  // Create a material for the lines
+  const createLineMaterial = () => {
+    return new THREE.LineBasicMaterial({
+      color: new THREE.Color(color),
+      transparent: true,
+      opacity,
+      linewidth: lineWidth,
+    });
+  };
+
+  // Préparer les matériaux pour les lignes SVG
+  useEffect(() => {
+    if (!svgData || !assets.isReady) return;
+
+    // Créer un objet pour stocker les matériaux
+    const newMaterials = {};
+
+    // Parcourir les chemins SVG et créer des matériaux
+    svgData.paths.forEach((path, pathIndex) => {
+      path.subPaths.forEach((subPath, subPathIndex) => {
+        const key = `path-${pathIndex}-subpath-${subPathIndex}`;
+        const materialId = `svgpath-${svgId}-${key}-${color}-${lineWidth}`;
+
+        // Récupérer ou créer le matériau
+        let material = assets.getMaterial(materialId);
+        if (!material) {
+          material = createLineMaterial();
+          assets.createMaterial(materialId, () => material);
+        }
+
+        newMaterials[key] = material;
+      });
+    });
+
+    // Mettre à jour l'état des matériaux
+    setMaterials(newMaterials);
+  }, [svgData, assets.isReady, svgId, color, lineWidth, opacity]);
 
   // Rendu d'un cercle de secours en cas d'erreur
   const renderFallbackCircle = () => {
@@ -223,8 +232,8 @@ const SvgPath = ({
     );
   };
 
-  // Si en chargement, ne rien rendre
-  if (isLoading) {
+  // Si en chargement ou si le service d'assets n'est pas prêt, ne rien rendre
+  if (isLoading || !assets.isReady) {
     return null;
   }
 
@@ -247,67 +256,34 @@ const SvgPath = ({
   // Offset to center the SVG
   const centerOffset = [-dimensions.center.x, -dimensions.center.y, 0];
 
-  // Create a material for the lines
-  const lineMaterial = new THREE.LineBasicMaterial({
-    color: new THREE.Color(color),
-    transparent: true,
-    opacity,
-    linewidth: lineWidth,
-  });
-
-  // Generate line segments from SVG paths
-  const pathLines = svgData.paths.flatMap((path, pathIndex) => {
+  // Create the lines from the SVG paths
+  const lines = svgData.paths.map((path, pathIndex) => {
     return path.subPaths.map((subPath, subPathIndex) => {
       const points = subPath.getPoints();
+      const geometry = new THREE.BufferGeometry().setFromPoints(points);
+      const key = `path-${pathIndex}-subpath-${subPathIndex}`;
 
-      // Create a geometry from the points
-      const geometry = new THREE.BufferGeometry();
-      const vertices = [];
+      // Utiliser le matériau créé dans le useEffect
+      const material = materials[key] || createLineMaterial();
 
-      // Add each point to the vertices array
-      points.forEach((point) => {
-        vertices.push(point.x, point.y, 0);
-      });
-
-      // If the subpath is closed, connect the last point to the first
-      if (subPath.closed && points.length > 1) {
-        vertices.push(points[0].x, points[0].y, 0);
-      }
-
-      // Set the vertices as a position attribute
-      geometry.setAttribute(
-        "position",
-        new THREE.Float32BufferAttribute(vertices, 3)
-      );
-
-      return (
-        <line
-          key={`${pathIndex}-${subPathIndex}`}
-          geometry={geometry}
-          material={lineMaterial}
-          position={centerOffset}
-        />
-      );
+      return <line key={key} geometry={geometry} material={material} />;
     });
   });
 
-  const content = (
+  // Render the SVG
+  const svgContent = (
     <group
       ref={groupRef}
       position={position}
       rotation={rotation}
       scale={computedScale}
     >
-      {pathLines}
+      <group position={centerOffset}>{lines}</group>
     </group>
   );
 
-  return isBillboard ? <Billboard>{content}</Billboard> : content;
-};
-
-// Nettoyage du cache SVG quand le composant est démonté
-SvgPath.clearCache = () => {
-  svgDataCache.clear();
+  // Use Billboard if needed
+  return isBillboard ? <Billboard>{svgContent}</Billboard> : svgContent;
 };
 
 export default SvgPath;

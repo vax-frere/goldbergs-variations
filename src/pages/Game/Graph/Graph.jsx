@@ -13,11 +13,7 @@ import useNearestCluster from "./hooks/useNearestCluster";
 import useGameStore from "../store";
 import BoundingBoxDebug from "./debug/BoundingBoxDebug";
 import { Billboard, Text, Box } from "@react-three/drei";
-import {
-  preloadCommonGeometries,
-  preloadCommonMaterials,
-  clearCaches,
-} from "./cache";
+import useAssets from "../../../hooks/useAssets";
 import { calculateClusterCentroids } from "./utils";
 import useNodeDetection from "./hooks/useNodeDetection";
 import "./effects/NodeHoverEffect";
@@ -28,6 +24,9 @@ import { getInputManager } from "../AdvancedCameraController/inputManager";
 const Graph = forwardRef(({ graphData, debugMode = false }, ref) => {
   // Référence du groupe pour manipuler la position globale
   const groupRef = useRef();
+
+  // Utiliser le service d'assets centralisé
+  const assets = useAssets();
 
   // Récupérer l'ID du cluster actif depuis le store
   const activeClusterId = useGameStore((state) => state.activeClusterId);
@@ -91,18 +90,80 @@ const Graph = forwardRef(({ graphData, debugMode = false }, ref) => {
     [graphData]
   );
 
-  // Précharger les géométries et matériaux pour éviter les saccades lors des premiers affichages
+  // Précharger les géométries et matériaux communs
   useEffect(() => {
-    // Précharger les géométries et matériaux communs
-    preloadCommonGeometries();
-    preloadCommonMaterials();
+    if (!assets.isReady) return;
+
+    // Précharger les géométries communes
+    assets.createGeometry(
+      "sphere-simple",
+      () => new THREE.SphereGeometry(3, 8, 8)
+    );
+    assets.createGeometry(
+      "sphere-advanced",
+      () => new THREE.SphereGeometry(3, 16, 16)
+    );
+    assets.createGeometry("plane", () => new THREE.PlaneGeometry(1, 1));
+
+    // Précharger les matériaux communs
+    assets.createMaterial(
+      "node-simple-sphere",
+      () =>
+        new THREE.MeshBasicMaterial({
+          color: "#ffffff",
+          transparent: true,
+          opacity: 0.8,
+        })
+    );
+
+    assets.createMaterial(
+      "node-advanced-sphere",
+      () =>
+        new THREE.MeshBasicMaterial({
+          color: "#ffffff",
+          transparent: true,
+          opacity: 0.2,
+        })
+    );
+
+    assets.createMaterial(
+      "link-simple",
+      () =>
+        new THREE.LineBasicMaterial({
+          color: "#ffffff",
+          transparent: true,
+          opacity: 0.3,
+        })
+    );
+
+    assets.createMaterial(
+      "link-advanced",
+      () =>
+        new THREE.LineBasicMaterial({
+          color: "#4080ff",
+          transparent: true,
+          opacity: 0.8,
+        })
+    );
+
+    assets.createMaterial(
+      "link-dashed",
+      () =>
+        new THREE.LineDashedMaterial({
+          color: "#ffffff",
+          transparent: true,
+          opacity: 0.8,
+          dashSize: 1.0,
+          gapSize: 1.0,
+        })
+    );
 
     // Nettoyage lors du démontage du composant
     return () => {
-      // Nettoyer les caches lors du démontage pour éviter les fuites mémoire
-      clearCaches();
+      // Le service d'assets gérera lui-même le cycle de vie des ressources
+      // Aucune action spécifique n'est nécessaire ici
     };
-  }, []);
+  }, [assets.isReady]);
 
   // Vérifier si un cluster est actif
   const hasActiveCluster = activeClusterId !== null;

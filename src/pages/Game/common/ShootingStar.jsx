@@ -1,6 +1,7 @@
 import { useRef, useEffect, useState } from "react";
 import { useFrame } from "@react-three/fiber";
 import * as THREE from "three";
+import useAssets from "../../../hooks/useAssets";
 
 // Constantes pour les étoiles filantes - optimisées pour des trajectoires plus courtes et rapides
 const DEFAULT_SPEED = 300; // Vitesse augmentée pour que ce soit plus éphémère
@@ -33,39 +34,6 @@ const getRandomPointInsideSphere = (radius) => {
   return getRandomPointOnSphere(r);
 };
 
-// Création d'une texture d'étoile filante améliorée
-const createStarTexture = () => {
-  const size = 256; // Taille augmentée pour plus de détails
-  const canvas = document.createElement("canvas");
-  canvas.width = size;
-  canvas.height = size;
-  const ctx = canvas.getContext("2d");
-
-  // Gradient radial plus lumineux pour le point principal
-  const gradientCore = ctx.createRadialGradient(
-    size / 2,
-    size / 2,
-    0,
-    size / 2,
-    size / 2,
-    size / 2
-  );
-  gradientCore.addColorStop(0, "rgba(255, 255, 255, 1)");
-  gradientCore.addColorStop(0.1, "rgba(255, 255, 255, 1)");
-  gradientCore.addColorStop(0.3, "rgba(255, 255, 255, 0.9)");
-  gradientCore.addColorStop(0.5, "rgba(230, 240, 255, 0.8)");
-  gradientCore.addColorStop(0.7, "rgba(180, 220, 255, 0.6)");
-  gradientCore.addColorStop(0.9, "rgba(140, 180, 255, 0.3)");
-  gradientCore.addColorStop(1, "rgba(120, 140, 255, 0)");
-
-  ctx.fillStyle = gradientCore;
-  ctx.fillRect(0, 0, size, size);
-
-  const texture = new THREE.CanvasTexture(canvas);
-  texture.needsUpdate = true;
-  return texture;
-};
-
 /**
  * Composant qui gère plusieurs étoiles filantes
  *
@@ -87,7 +55,49 @@ export function ShootingStars({
 }) {
   const [stars, setStars] = useState([]);
   const nextSpawnTime = useRef(0);
-  const starTexture = useRef(createStarTexture());
+
+  // Utiliser le service d'assets
+  const assets = useAssets();
+
+  // Créer ou récupérer la texture d'étoile
+  useEffect(() => {
+    if (!assets.isReady) return;
+
+    // Créer la texture d'étoile si elle n'existe pas déjà
+    if (!assets.getCustomData("shootingstar-texture")) {
+      const size = 256; // Taille augmentée pour plus de détails
+      const canvas = document.createElement("canvas");
+      canvas.width = size;
+      canvas.height = size;
+      const ctx = canvas.getContext("2d");
+
+      // Gradient radial plus lumineux pour le point principal
+      const gradientCore = ctx.createRadialGradient(
+        size / 2,
+        size / 2,
+        0,
+        size / 2,
+        size / 2,
+        size / 2
+      );
+      gradientCore.addColorStop(0, "rgba(255, 255, 255, 1)");
+      gradientCore.addColorStop(0.1, "rgba(255, 255, 255, 1)");
+      gradientCore.addColorStop(0.3, "rgba(255, 255, 255, 0.9)");
+      gradientCore.addColorStop(0.5, "rgba(230, 240, 255, 0.8)");
+      gradientCore.addColorStop(0.7, "rgba(180, 220, 255, 0.6)");
+      gradientCore.addColorStop(0.9, "rgba(140, 180, 255, 0.3)");
+      gradientCore.addColorStop(1, "rgba(120, 140, 255, 0)");
+
+      ctx.fillStyle = gradientCore;
+      ctx.fillRect(0, 0, size, size);
+
+      const texture = new THREE.CanvasTexture(canvas);
+      texture.needsUpdate = true;
+
+      // Stocker la texture dans les données personnalisées
+      assets.setCustomData("shootingstar-texture", texture);
+    }
+  }, [assets.isReady]);
 
   // Générer une nouvelle étoile filante
   const createNewStar = () => {
@@ -193,101 +203,117 @@ export function ShootingStars({
         Math.random() * (spawnInterval.max - spawnInterval.min);
     }
 
-    // Mettre à jour les étoiles existantes
-    setStars((prevStars) =>
-      prevStars
-        .map((star) => {
-          // Incrémenter le temps écoulé
-          const elapsedTime = star.elapsedTime + delta;
+    // Mettre à jour les étoiles existantes de façon plus efficace
+    // On utilise une seule mise à jour de l'état pour éviter les rendus multiples
+    setStars((prevStars) => {
+      const updatedStars = [];
+      let stateChanged = false;
 
-          // Calculer le pourcentage de progression de la durée de vie
-          const lifeProgress = elapsedTime / star.lifetime;
+      prevStars.forEach((star) => {
+        // Incrémenter le temps écoulé
+        const elapsedTime = star.elapsedTime + delta;
 
-          // Calculer la nouvelle position uniquement si l'étoile est encore active (moins de 90% de sa durée de vie)
-          let newPosition;
-          if (lifeProgress < 0.9) {
-            newPosition = star.position
-              .clone()
-              .add(star.direction.clone().multiplyScalar(star.speed * delta));
-          } else {
-            // Pendant la phase de disparition, on maintient la position
-            newPosition = star.position.clone();
-          }
+        // Calculer le pourcentage de progression de la durée de vie
+        const lifeProgress = elapsedTime / star.lifetime;
 
-          // Distance parcourue depuis la dernière frame
-          const distanceMoved = star.position.distanceTo(newPosition);
+        // Si l'étoile a dépassé sa durée de vie, on la supprime
+        if (lifeProgress >= 1.0) {
+          stateChanged = true;
+          return; // Ne pas l'ajouter à updatedStars
+        }
 
-          // Créer plusieurs points intermédiaires entre l'ancienne et la nouvelle position
-          // pour assurer une traînée continue sans écarts
-          const newTrail = [];
+        // Calculer la nouvelle position
+        let newPosition;
+        if (lifeProgress < 0.9) {
+          newPosition = star.position
+            .clone()
+            .add(star.direction.clone().multiplyScalar(star.speed * delta));
+        } else {
+          // Pendant la phase de disparition, on maintient la position
+          newPosition = star.position.clone();
+        }
 
-          // Si l'étoile est encore active
-          if (lifeProgress < 0.9) {
-            // Nombre de points intermédiaires basé sur la distance et la vitesse
-            // Plus de points pour une traînée plus dense
-            const numIntermediatePoints = Math.max(
-              2,
-              Math.ceil(distanceMoved * 4)
-            );
+        // Distance parcourue depuis la dernière frame
+        const distanceMoved = star.position.distanceTo(newPosition);
 
-            // Générer les points intermédiaires
-            for (let i = 0; i <= numIntermediatePoints; i++) {
-              const t = i / numIntermediatePoints;
-              const intermediatePos = star.position
-                .clone()
-                .lerp(newPosition, t);
-              newTrail.push(intermediatePos);
-            }
-          }
+        // Créer plusieurs points intermédiaires entre l'ancienne et la nouvelle position
+        const newTrail = [];
 
-          // Ajouter les points existants pour conserver une traînée plus longue
-          if (star.trail.length > 0) {
-            // Déterminer combien de points à conserver
-            // Si l'étoile est en fin de vie, on réduit progressivement la traînée
-            const fadeOutFactor =
-              lifeProgress > 0.9
-                ? 1 - (lifeProgress - 0.9) / 0.1 // De 1 à 0 pendant les 10% finaux
-                : 1;
-
-            const keepCount = Math.floor(
-              Math.min(
-                star.trail.length,
-                star.tailLength * fadeOutFactor - newTrail.length
-              )
-            );
-
-            // Ajouter les points de la traînée existante
-            for (let i = 0; i < keepCount; i++) {
-              newTrail.push(star.trail[i]);
-            }
-          }
-
-          // Limiter la longueur de la traînée
-          const finalTrail = newTrail.slice(0, Math.floor(star.tailLength));
-
-          return {
-            ...star,
-            position: newPosition,
-            elapsedTime,
-            trail: finalTrail,
-            // Marquer que l'étoile est en train de s'estomper
-            fading: lifeProgress > 0.9,
-            fadeProgress: lifeProgress > 0.9 ? (lifeProgress - 0.9) / 0.1 : 0,
-          };
-        })
-        .filter((star) => {
-          // Garder seulement les étoiles qui n'ont pas dépassé leur durée de vie
-          // et qui sont encore dans la sphère
-          return (
-            star.elapsedTime < star.lifetime &&
-            star.position.length() < sphereRadius
+        // Si l'étoile est encore active
+        if (lifeProgress < 0.9) {
+          // Nombre de points intermédiaires basé sur la distance et la vitesse
+          // Plus de points pour une traînée plus dense
+          const numIntermediatePoints = Math.max(
+            2,
+            Math.ceil(distanceMoved * 4)
           );
-        })
-    );
+
+          // Générer les points intermédiaires
+          for (let i = 0; i <= numIntermediatePoints; i++) {
+            const t = i / numIntermediatePoints;
+            const intermediatePos = star.position.clone().lerp(newPosition, t);
+            newTrail.push(intermediatePos);
+          }
+        }
+
+        // Ajouter les points existants pour conserver une traînée plus longue
+        if (star.trail.length > 0) {
+          // Déterminer combien de points à conserver
+          // Si l'étoile est en fin de vie, on réduit progressivement la traînée
+          const fadeOutFactor =
+            lifeProgress > 0.9
+              ? 1 - (lifeProgress - 0.9) / 0.1 // De 1 à 0 pendant les 10% finaux
+              : 1;
+
+          const keepCount = Math.floor(
+            Math.min(
+              star.trail.length,
+              star.tailLength * fadeOutFactor - newTrail.length
+            )
+          );
+
+          // Ajouter les points de la traînée existante
+          for (let i = 0; i < keepCount && i < star.trail.length; i++) {
+            newTrail.push(star.trail[i]);
+          }
+        }
+
+        // Limiter la taille de la traînée pour économiser la mémoire
+        const maxTrailPoints = Math.min(star.tailLength, 250);
+        const finalTrail = newTrail.slice(0, maxTrailPoints);
+
+        // Mettre à jour l'étoile
+        updatedStars.push({
+          ...star,
+          position: newPosition,
+          elapsedTime,
+          trail: finalTrail,
+          // Marquer que l'étoile est en train de s'estomper
+          fading: lifeProgress > 0.9,
+          fadeProgress: lifeProgress > 0.9 ? (lifeProgress - 0.9) / 0.1 : 0,
+        });
+        stateChanged = true;
+      });
+
+      // Si rien n'a changé, retourner l'état précédent tel quel
+      return stateChanged ? updatedStars : prevStars;
+    });
   });
 
+  // Si les assets ne sont pas prêts, ne rien afficher
+  if (!assets.isReady) {
+    return null;
+  }
+
+  // Récupérer la texture d'étoile depuis le service d'assets
+  const starTexture = assets.getCustomData("shootingstar-texture");
+  if (!starTexture) {
+    return null;
+  }
+
+  // Rendu des étoiles filantes
   return (
-    <group renderOrder={100}>
+    <group>
       {stars.map((star) => (
         <ShootingStarWithFadingTail
           key={star.id}
@@ -296,7 +322,7 @@ export function ShootingStars({
           size={star.size}
           color={star.color}
           progress={star.elapsedTime / star.lifetime}
-          texture={starTexture.current}
+          texture={starTexture}
           fading={star.fading}
           fadeProgress={star.fadeProgress}
         />
@@ -320,29 +346,88 @@ function ShootingStarWithFadingTail({
 }) {
   const pointRef = useRef();
   const tailRef = useRef();
+  const assets = useAssets();
 
-  // Matériau pour le point brillant principal
-  const material = useRef(
-    new THREE.PointsMaterial({
-      size,
-      map: texture,
-      transparent: true,
-      blending: THREE.AdditiveBlending,
-      depthWrite: false,
-      color: color,
-      opacity: fading ? Math.max(0, 1 - fadeProgress * 2) : 1.0, // Disparition plus rapide du point principal
-      sizeAttenuation: true,
-    })
-  );
-
-  // Appliquer la disparition progressive au matériau
+  // Créer ou récupérer le matériau pour le point principal
   useEffect(() => {
-    if (material.current) {
-      material.current.opacity = fading
-        ? Math.max(0, 1 - fadeProgress * 2)
-        : 1.0;
+    if (!assets.isReady) return;
+
+    // Identifiant unique pour ce matériau
+    const materialId = `star-point-material-${color.getHexString()}`;
+
+    // Créer le matériau si nécessaire
+    assets.createMaterial(materialId, () => {
+      return new THREE.PointsMaterial({
+        size,
+        map: texture,
+        transparent: true,
+        blending: THREE.AdditiveBlending,
+        depthWrite: false,
+        color: color,
+        opacity: fading ? Math.max(0, 1 - fadeProgress * 2) : 1.0, // Disparition plus rapide du point principal
+        sizeAttenuation: true,
+      });
+    });
+
+    // Mettre à jour l'opacité du matériau
+    const material = assets.getMaterial(materialId);
+    if (material) {
+      material.opacity = fading ? Math.max(0, 1 - fadeProgress * 2) : 1.0;
     }
-  }, [fading, fadeProgress]);
+  }, [assets.isReady, color, size, fading, fadeProgress, texture]);
+
+  // Créer ou récupérer le matériau pour la traînée
+  useEffect(() => {
+    if (!assets.isReady) return;
+
+    // Identifiant unique pour ce matériau
+    const materialId = `star-tail-material-${color.getHexString()}`;
+
+    // Créer le matériau si nécessaire
+    assets.createMaterial(materialId, () => {
+      return new THREE.ShaderMaterial({
+        uniforms: {
+          pointTexture: { value: texture },
+          color: { value: new THREE.Color(color) },
+        },
+        vertexShader: `
+          attribute float size;
+          attribute float opacity;
+          varying float vOpacity;
+          
+          void main() {
+            vOpacity = opacity;
+            vec4 mvPosition = modelViewMatrix * vec4(position, 1.0);
+            gl_PointSize = size * (600.0 / -mvPosition.z); // Taille augmentée pour plus de visibilité
+            gl_Position = projectionMatrix * mvPosition;
+          }
+        `,
+        fragmentShader: `
+          uniform sampler2D pointTexture;
+          uniform vec3 color;
+          varying float vOpacity;
+          
+          void main() {
+            vec4 texColor = texture2D(pointTexture, gl_PointCoord);
+            // Augmenter la luminosité et l'éclat
+            vec3 brightColor = color * 1.5;
+            
+            // Ajout d'une très légère teinte bleue pour un effet plus céleste
+            brightColor.b = min(1.0, brightColor.b * 1.2);
+            
+            // Effet de dégradé plus subtil
+            gl_FragColor = vec4(brightColor, vOpacity * 0.9) * texColor;
+            
+            // Garder plus de détails sur les bords
+            if (gl_FragColor.a < 0.01) discard;
+          }
+        `,
+        transparent: true,
+        blending: THREE.AdditiveBlending,
+        depthWrite: false,
+      });
+    });
+  }, [assets.isReady, color, texture]);
 
   // Créer la traînée avec des points
   useEffect(() => {
@@ -391,50 +476,22 @@ function ShootingStarWithFadingTail({
     }
   }, [trail, fading, fadeProgress]);
 
-  // Matériau pour la traînée avec des points qui s'estompent
-  const tailMaterial = useRef(
-    new THREE.ShaderMaterial({
-      uniforms: {
-        pointTexture: { value: texture },
-        color: { value: new THREE.Color(color) },
-      },
-      vertexShader: `
-        attribute float size;
-        attribute float opacity;
-        varying float vOpacity;
-        
-        void main() {
-          vOpacity = opacity;
-          vec4 mvPosition = modelViewMatrix * vec4(position, 1.0);
-          gl_PointSize = size * (600.0 / -mvPosition.z); // Taille augmentée pour plus de visibilité
-          gl_Position = projectionMatrix * mvPosition;
-        }
-      `,
-      fragmentShader: `
-        uniform sampler2D pointTexture;
-        uniform vec3 color;
-        varying float vOpacity;
-        
-        void main() {
-          vec4 texColor = texture2D(pointTexture, gl_PointCoord);
-          // Augmenter la luminosité et l'éclat
-          vec3 brightColor = color * 1.5;
-          
-          // Ajout d'une très légère teinte bleue pour un effet plus céleste
-          brightColor.b = min(1.0, brightColor.b * 1.2);
-          
-          // Effet de dégradé plus subtil
-          gl_FragColor = vec4(brightColor, vOpacity * 0.9) * texColor;
-          
-          // Garder plus de détails sur les bords
-          if (gl_FragColor.a < 0.01) discard;
-        }
-      `,
-      transparent: true,
-      blending: THREE.AdditiveBlending,
-      depthWrite: false,
-    })
+  // Si les assets ne sont pas prêts, ne rien afficher
+  if (!assets.isReady) {
+    return null;
+  }
+
+  // Récupérer les matériaux depuis le service d'assets
+  const material = assets.getMaterial(
+    `star-point-material-${color.getHexString()}`
   );
+  const tailMaterial = assets.getMaterial(
+    `star-tail-material-${color.getHexString()}`
+  );
+
+  if (!material || !tailMaterial) {
+    return null;
+  }
 
   return (
     <group renderOrder={100}>
@@ -448,14 +505,13 @@ function ShootingStarWithFadingTail({
             itemSize={3}
           />
         </bufferGeometry>
-        <primitive object={material.current} />
+        <primitive object={material} />
       </points>
 
-      {/* Traînée en points lumineux */}
+      {/* Traînée de l'étoile filante */}
       {trail.length > 1 && (
         <points ref={tailRef} renderOrder={100}>
-          <bufferGeometry />
-          <primitive object={tailMaterial.current} />
+          <primitive object={tailMaterial} />
         </points>
       )}
     </group>

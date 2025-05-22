@@ -1,33 +1,60 @@
 import { useRef, useMemo, useEffect } from "react";
 import * as THREE from "three";
-import { useLoader } from "@react-three/fiber";
+import useAssets from "../../../hooks/useAssets";
 
 /**
  * Composant qui génère un champ d'étoiles autour de la scène
  * Utilise des points avec une texture pour une meilleure performance et rendu
  *
  * @param {Object} props - Propriétés du composant
- * @param {number} [props.count=5000] - Nombre d'étoiles à générer
+ * @param {number} [props.count=3000] - Nombre d'étoiles à générer
  * @param {number} [props.radius=3000] - Rayon de la sphère sur laquelle les étoiles sont placées
  * @param {number} [props.size=1.5] - Taille des étoiles
  */
-export function Stars({ count = 5000, radius = 3000, size = 1.5 }) {
-  // Charger la texture de la particule
-  const texture = useLoader(
-    THREE.TextureLoader,
-    `${import.meta.env.BASE_URL}textures/particle.png`
-  );
+export function Stars({ count = 3000, radius = 3000, size = 1.5 }) {
+  // Référence aux points pour éviter les re-rendus inutiles
+  const pointsRef = useRef();
 
-  // Créer les positions et les couleurs des étoiles
+  // Utiliser le service d'assets
+  const assets = useAssets();
+
+  // Créer ou récupérer la texture de particule
+  useEffect(() => {
+    if (!assets.isReady) return;
+
+    if (!assets.getCustomData("star-particle")) {
+      // Créer une texture simple sur un canvas pour éviter les chargements externes
+      const canvas = document.createElement("canvas");
+      canvas.width = 32;
+      canvas.height = 32;
+      const ctx = canvas.getContext("2d");
+
+      // Gradient radial pour l'étoile
+      const gradient = ctx.createRadialGradient(16, 16, 0, 16, 16, 16);
+      gradient.addColorStop(0, "rgba(255, 255, 255, 1)");
+      gradient.addColorStop(0.4, "rgba(240, 240, 255, 0.8)");
+      gradient.addColorStop(1, "rgba(0, 0, 0, 0)");
+
+      ctx.fillStyle = gradient;
+      ctx.fillRect(0, 0, 32, 32);
+
+      // Créer une texture à partir du canvas
+      const texture = new THREE.CanvasTexture(canvas);
+      texture.needsUpdate = true;
+      assets.setCustomData("star-particle", texture);
+    }
+  }, [assets.isReady]);
+
+  // Créer les positions et les couleurs des étoiles une seule fois
   const [positions, colors, sizes] = useMemo(() => {
     const positions = new Float32Array(count * 3);
     const colors = new Float32Array(count * 3);
     const sizes = new Float32Array(count);
 
     for (let i = 0; i < count; i++) {
-      // Générer une position aléatoire sur une sphère
-      const phi = Math.acos(-1 + (2 * i) / count);
-      const theta = Math.sqrt(count * Math.PI) * phi;
+      // Générer une position aléatoire sur une sphère plus efficacement
+      const theta = Math.random() * Math.PI * 2;
+      const phi = Math.acos(2 * Math.random() - 1);
 
       // Conversion en coordonnées cartésiennes
       const x = radius * Math.sin(phi) * Math.cos(theta);
@@ -57,8 +84,17 @@ export function Stars({ count = 5000, radius = 3000, size = 1.5 }) {
     return [positions, colors, sizes];
   }, [count, radius, size]);
 
+  // Si les assets ne sont pas prêts, ne rien rendre
+  if (!assets.isReady) {
+    return null;
+  }
+
+  // Récupérer la texture
+  const texture = assets.getCustomData("star-particle");
+  if (!texture) return null;
+
   return (
-    <points>
+    <points ref={pointsRef}>
       <bufferGeometry>
         <bufferAttribute
           attach="attributes-position"

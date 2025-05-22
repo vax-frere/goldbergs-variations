@@ -2,7 +2,8 @@ import React, { useMemo, useRef, useEffect, useState } from "react";
 import * as THREE from "three";
 import { Line } from "@react-three/drei";
 import { useThree, useFrame } from "@react-three/fiber";
-import { getOrCreateGeometry, getOrCreateMaterial } from "../cache";
+import useAssets from "../../../../hooks/useAssets";
+import useGameStore from "../../store";
 
 /**
  * Composant pour visualiser les boîtes englobantes des clusters en mode débogage
@@ -20,6 +21,9 @@ const BoundingBoxDebug = ({
   const linesRef = useRef({});
   const groupRef = useRef();
 
+  // Utiliser le service d'assets centralisé
+  const assets = useAssets();
+
   // Référence pour le vecteur de direction (réutilisée à chaque frame)
   const directionVector = useMemo(() => new THREE.Vector3(0, 0, -1), []);
   const detectionPoint = useMemo(() => new THREE.Vector3(), []);
@@ -34,9 +38,11 @@ const BoundingBoxDebug = ({
   // Accès à la caméra
   const { camera } = useThree();
 
-  // Matériau partagé pour la sphère de détection
-  const sphereMaterial = useMemo(() => {
-    return getOrCreateMaterial(
+  // Créer le matériau et la géométrie pour la sphère de détection
+  useEffect(() => {
+    if (!assets.isReady) return;
+
+    assets.createMaterial(
       "debug-sphere",
       () =>
         new THREE.MeshBasicMaterial({
@@ -46,15 +52,16 @@ const BoundingBoxDebug = ({
           depthTest: false,
         })
     );
-  }, []);
 
-  // Géométrie partagée pour la sphère de détection
-  const sphereGeometry = useMemo(() => {
-    return getOrCreateGeometry(
+    assets.createGeometry(
       "debug-sphere",
       () => new THREE.SphereGeometry(1, 8, 8)
     );
-  }, []);
+  }, [assets.isReady]);
+
+  // Récupérer les assets créés
+  const sphereMaterial = assets.getMaterial("debug-sphere");
+  const sphereGeometry = assets.getGeometry("debug-sphere");
 
   // Effet pour suivre les changements de l'ID de cluster actif
   useEffect(() => {
@@ -65,7 +72,7 @@ const BoundingBoxDebug = ({
 
   // Mettre à jour la position du point de détection à chaque frame avec interpolation
   useFrame(() => {
-    if (!show || !sphereRef.current) return;
+    if (!show || !sphereRef.current || !assets.isReady) return;
 
     // Réutiliser le vecteur de direction pour éviter les allocations mémoire
     directionVector.set(0, 0, -1).applyQuaternion(camera.quaternion);
@@ -108,7 +115,12 @@ const BoundingBoxDebug = ({
 
   // Générer les lignes pour chaque boîte englobante une seule fois
   const boxLines = useMemo(() => {
-    if (!show || !boundingBoxes || Object.keys(boundingBoxes).length === 0) {
+    if (
+      !show ||
+      !boundingBoxes ||
+      Object.keys(boundingBoxes).length === 0 ||
+      !assets.isReady
+    ) {
       return null;
     }
 
@@ -188,19 +200,21 @@ const BoundingBoxDebug = ({
 
       return <group key={clusterId}>{lines}</group>;
     });
-  }, [boundingBoxes, show]); // Notez l'absence de activeClusterId dans les dépendances
+  }, [boundingBoxes, show, activeClusterId, assets.isReady]);
 
-  if (!show) return null;
+  if (!show || !assets.isReady) return null;
 
   return (
     <group ref={groupRef}>
       {boxLines}
 
       {/* Point de détection comme une sphère rouge avec matériau et géométrie partagés */}
-      {/* <mesh ref={sphereRef} renderOrder={1000}>
-        <primitive object={sphereGeometry} attach="geometry" />
-        <primitive object={sphereMaterial} attach="material" />
-      </mesh> */}
+      {sphereGeometry && sphereMaterial && (
+        <mesh ref={sphereRef} renderOrder={1000}>
+          <primitive object={sphereGeometry} attach="geometry" />
+          <primitive object={sphereMaterial} attach="material" />
+        </mesh>
+      )}
     </group>
   );
 };
@@ -259,33 +273,43 @@ const BoundingBoxDebugWrapper = ({
         });
       }
 
-      setBoxData((prev) => ({ ...prev, boundingBoxes }));
-    });
-  }, [nodes, show, boundingBoxExpansion]);
+      // Mettre à jour le state avec les nouvelles données
+      setBoxData({
+        boundingBoxes,
+        activeClusterId: null,
+      });
 
-  // Gérer l'ID du cluster actif à partir du store
-  useEffect(() => {
-    if (!show) return;
-
-    // Importer de manière dynamique pour éviter les dépendances circulaires
-    import("../store").then((module) => {
-      const unsubscribe = module.default.subscribe(
-        (state) => state.activeClusterId,
-        (activeClusterId) => {
-          // Limiter la fréquence des mises à jour (throttling)
-          const now = Date.now();
-          if (now - lastUpdateRef.current > 100) {
-            // 100ms entre les mises à jour
-            setBoxData((prev) => ({ ...prev, activeClusterId }));
-            lastUpdateRef.current = now;
-          }
-        }
+      console.log(
+        `BoundingBoxDebug: Boîtes englobantes calculées pour ${
+          Object.keys(boundingBoxes).length
+        } clusters avec expansion de ${boundingBoxExpansion}%`
       );
-
-      return unsubscribe;
     });
-  }, [show]);
+  }, [nodes, boundingBoxExpansion, show]);
 
+  // Récupérer l'ID du cluster actif depuis le store global
+  const activeClusterId = useGameStore((state) => state.activeClusterId);
+
+  // Mettre à jour l'ID du cluster actif dans l'état local
+  useEffect(() => {
+    if (boxData.activeClusterId !== activeClusterId) {
+      setBoxData((prev) => ({
+        ...prev,
+        activeClusterId,
+      }));
+    }
+  }, [activeClusterId, boxData.activeClusterId]);
+
+  // Ne rien rendre si on n'a pas encore calculé les boîtes englobantes
+  if (
+    !show ||
+    !boxData.boundingBoxes ||
+    Object.keys(boxData.boundingBoxes).length === 0
+  ) {
+    return null;
+  }
+
+  // Rendre le composant principal avec les props nécessaires
   return (
     <BoundingBoxDebug
       nodes={nodes}

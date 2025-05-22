@@ -1,14 +1,19 @@
 /**
  * Utilitaires pour le graphe
  */
+import useAssetStore from "../../../services/AssetService";
 
 // Fonction pour charger les données du graphe
 export const loadSpatializedGraph = async () => {
   try {
-    // Charger le fichier JSON depuis le dossier public
-    const response = await fetch(
-      `${import.meta.env.BASE_URL}data/final_spatialized_graph.data.json`
+    // Obtenir le chemin des données depuis le service d'assets
+    const assetService = useAssetStore.getState();
+    const graphPath = assetService.getDataPath(
+      "final_spatialized_graph.data.json"
     );
+
+    // Charger le fichier JSON
+    const response = await fetch(graphPath);
 
     if (!response.ok) {
       throw new Error(

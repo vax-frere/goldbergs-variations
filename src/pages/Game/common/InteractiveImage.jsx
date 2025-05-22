@@ -10,6 +10,7 @@ import * as THREE from "three";
 import useGameStore from "../store";
 import { useFrame, useThree } from "@react-three/fiber";
 import SvgPath from "./SvgPath";
+import useAssets from "../../../hooks/useAssets";
 
 /**
  * Composant affichant une image interactive qui peut déclencher le TextPanel
@@ -28,6 +29,9 @@ const InteractiveImage = ({
 }) => {
   const { camera } = useThree();
   const groupRef = useRef();
+
+  // Utiliser notre service d'assets
+  const assets = useAssets();
 
   // Utiliser les fonctions et états du store dédiés aux éléments interactifs
   const setActiveInteractiveElement = useGameStore(
@@ -130,18 +134,33 @@ const InteractiveImage = ({
       // Créer une géométrie à partir des points
       const geometry = new THREE.BufferGeometry().setFromPoints(points);
 
+      // Créer un matériau pour la ligne via notre service d'assets
+      const materialId = `bbox-line-material-${id}`;
+
+      if (assets.isReady) {
+        assets.createMaterial(materialId, () => {
+          return new THREE.LineBasicMaterial({
+            color: "#00ff00",
+            transparent: true,
+            opacity: 0.3,
+            linewidth: 1,
+          });
+        });
+      }
+
+      const material = assets.getMaterial(materialId);
+
+      if (!material) {
+        return null;
+      }
+
       return (
         <line key={`bbox-line-${i}`} geometry={geometry}>
-          <lineBasicMaterial
-            color="#00ff00"
-            transparent
-            opacity={0.3}
-            linewidth={1}
-          />
+          <primitive object={material} />
         </line>
       );
     });
-  }, [showBoundingBox, boundingBox]);
+  }, [showBoundingBox, boundingBox, assets.isReady, id]);
 
   // Fonction pour calculer le point de détection devant la caméra
   const calculateDetectionPoint = useCallback((camera) => {
@@ -225,6 +244,8 @@ const InteractiveImage = ({
 
   // Mettre à jour l'état à chaque frame avec limitation de fréquence
   useFrame(() => {
+    if (!assets.isReady) return;
+
     const now = Date.now();
 
     // Limiter la fréquence des vérifications pour les performances
@@ -246,11 +267,19 @@ const InteractiveImage = ({
     };
   }, [id, activeInteractiveElementId, setActiveInteractiveElement]);
 
+  // Si le service d'assets n'est pas prêt, ne rien afficher
+  if (!assets.isReady) {
+    return null;
+  }
+
+  // Récupérer le chemin de l'image SVG depuis le service d'assets si nécessaire
+  const resolvedSvgPath = assets.getImagePath(svgPath) || svgPath;
+
   return (
     <group ref={groupRef} position={position} rotation={rotation}>
       {/* Image SVG */}
       <SvgPath
-        svgPath={svgPath}
+        svgPath={resolvedSvgPath}
         size={size}
         position={[0, 0, 0]}
         isBillboard={false}
@@ -260,7 +289,7 @@ const InteractiveImage = ({
       />
 
       {/* Bounding box uniquement en mode debug */}
-      {showBoundingBox && <group>{boundingBoxLines}</group>}
+      {showBoundingBox && assets.isReady && <group>{boundingBoxLines}</group>}
     </group>
   );
 };

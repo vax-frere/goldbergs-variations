@@ -8,18 +8,15 @@ import {
   BOUNDING_SPHERE_RADIUS,
 } from "./AdvancedCameraController/navigationConstants";
 
+// Importer le hook de mode debug
+import useDebugMode from "../../hooks/useDebugMode";
+
 // Importer le store pour vérifier si un cluster est actif
 import useGameStore from "./store";
 
-// Importer le service de base de données
-import { ensureDatabaseLoaded } from "./services/DatabaseService";
-
-// Importer le service de retour à l'accueil
-import { initHomeReturnListeners } from "./services/HomeReturnService";
-
-// Importer le préchargeur de textures et l'utilitaire de textures
-import TexturePreloader from "./common/TexturePreloader";
-import { getTexturesToPreload } from "./utils/textureUtils";
+// Importer le nouveau service d'assets
+import useAssets from "../../hooks/useAssets";
+import { initializeAssetService } from "../../services/AssetService";
 
 import GridReferences from "../../components/GridReferences";
 import Graph from "./Graph";
@@ -44,9 +41,6 @@ import Stars from "./common/Stars";
 import HUD from "./HUD/HUD";
 import TextPanel from "./common/TextPanel";
 import LoadingBar from "./common/LoadingBar";
-import { getSoundPath, getImagePath } from "../../utils/assetLoader";
-
-const DEBUG = true;
 
 // Liste des portraits interactifs de Joshua
 const INTERACTIVE_PORTRAITS = [
@@ -86,10 +80,9 @@ const Game = () => {
   const [gameStarted, setGameStarted] = useState(true);
   const [audioStarted, setAudioStarted] = useState(true);
   const [explosionCompleted, setExplosionCompleted] = useState(false);
-  // Ajouter un état pour suivre le préchargement des textures
-  const [texturePreloadingDone, setTexturePreloadingDone] = useState(false);
-  // État pour suivre le chargement de la base de données
-  const [databaseLoaded, setDatabaseLoaded] = useState(false);
+
+  // Utiliser notre hook de mode debug
+  const [debugMode, toggleDebugMode] = useDebugMode(false);
 
   // Récupérer l'état du cluster actif depuis le store
   const activeClusterId = useGameStore((state) => state.activeClusterId);
@@ -97,11 +90,11 @@ const Game = () => {
   // Vérifier si un cluster est actif
   const hasActiveCluster = activeClusterId !== null;
 
-  // Référence pour la fonction de nettoyage des écouteurs d'événements
-  const cleanupListenersRef = useRef(null);
-
   // Utiliser useRef au lieu de useState pour éviter les re-rendus
   const graphInstanceRef = useRef(null);
+
+  // Utiliser notre nouveau hook pour les assets
+  const assets = useAssets({ autoInit: true });
 
   // Utiliser useCallback pour stabiliser cette fonction
   const getGraphRef = useCallback((instance) => {
@@ -116,43 +109,6 @@ const Game = () => {
     setAudioStarted(true);
     console.log("Audio démarré");
   }, []);
-
-  // Fonction pour précharger la base de données
-  useEffect(() => {
-    const loadDatabase = async () => {
-      try {
-        await ensureDatabaseLoaded();
-        setDatabaseLoaded(true);
-        console.log("Base de données chargée avec succès");
-      } catch (error) {
-        console.error(
-          "Erreur lors du chargement de la base de données:",
-          error
-        );
-        // Continuer quand même, ce n'est pas critique
-        setDatabaseLoaded(true);
-      }
-    };
-
-    loadDatabase();
-  }, []);
-
-  // Initialiser les écouteurs d'événements pour le retour à l'accueil
-  useEffect(() => {
-    // Initialiser les écouteurs une fois que le jeu est prêt
-    if (gameStarted && !isLoading && texturePreloadingDone && databaseLoaded) {
-      console.log("Initialisation des écouteurs de retour à l'accueil");
-      cleanupListenersRef.current = initHomeReturnListeners();
-    }
-
-    // Nettoyer les écouteurs lors du démontage du composant
-    return () => {
-      if (cleanupListenersRef.current) {
-        cleanupListenersRef.current();
-        cleanupListenersRef.current = null;
-      }
-    };
-  }, [gameStarted, isLoading, texturePreloadingDone, databaseLoaded]);
 
   // Fonction pour charger les données et construire le graphe
   useEffect(() => {
@@ -191,195 +147,191 @@ const Game = () => {
   }, [gameStarted]);
 
   // Déterminer si l'application est prête à être affichée
-  const isReady = !isLoading && texturePreloadingDone && databaseLoaded;
-
-  // Liste des textures à précharger
-  const texturesToPreload = getTexturesToPreload();
+  const isReady = !isLoading && assets.isReady;
 
   return (
-    <TexturePreloader texturesList={texturesToPreload}>
-      {(textureState) => {
-        // Utiliser useEffect pour mettre à jour l'état sans causer d'erreurs React
-        useEffect(() => {
-          if (textureState.loaded && !texturePreloadingDone) {
-            // Utiliser un timeout pour éviter les mises à jour pendant le rendu
-            const timer = setTimeout(() => {
-              setTexturePreloadingDone(true);
-            }, 0);
-            return () => clearTimeout(timer);
-          }
-        }, [textureState.loaded, texturePreloadingDone]);
+    <div
+      style={{
+        width: "100vw",
+        height: "100vh",
+        position: "absolute",
+        top: 0,
+        left: 0,
+      }}
+    >
+      {/* Indicateur visuel du mode debug */}
+      {debugMode && (
+        <div
+          style={{
+            position: "absolute",
+            top: "10px",
+            left: "10px",
+            background: "rgba(255, 0, 0, 0.7)",
+            color: "white",
+            padding: "5px 10px",
+            borderRadius: "4px",
+            fontSize: "12px",
+            zIndex: 1000,
+          }}
+        >
+          MODE DEBUG (Appuyez sur P pour désactiver)
+        </div>
+      )}
 
-        // Limiter la valeur de progress à 100% maximum
-        const progressValue = Math.min(textureState.progress, 100);
+      {/* Écran de chargement si le jeu n'est pas prêt */}
+      {!isReady && (
+        <LoadingBar
+          progress={assets.progress}
+          label="Initializing data galaxy"
+          fullScreen={true}
+        />
+      )}
 
-        return (
-          <div
+      {/* Ne montrer le contenu que lorsque tout est chargé */}
+      {isReady && (
+        <>
+          {/* Composants de son - contrôlés par audioStarted */}
+          {audioStarted && (
+            <>
+              <SoundPlayer
+                soundPath={assets.getSoundPath("ambiant.mp3")}
+                defaultVolume={0.1}
+                loop={true}
+                autoPlay={true}
+                displayControls={false}
+                controlPosition={{ top: "20px", right: "20px" }}
+                tooltipLabels={{
+                  mute: "Couper le son",
+                  unmute: "Activer le son",
+                }}
+              />
+              <SoundPlayer
+                soundPath={assets.getSoundPath("interview.m4a")}
+                defaultVolume={0.7}
+                loop={true}
+                autoPlay={true}
+                displayControls={false}
+                controlPosition={{ top: "20px", right: "80px" }}
+                tooltipLabels={{
+                  mute: "Couper l'interview",
+                  unmute: "Activer l'interview",
+                }}
+              />
+            </>
+          )}
+
+          <Canvas
+            shadows
             style={{
-              width: "100vw",
-              height: "100vh",
-              position: "absolute",
-              top: 0,
-              left: 0,
+              background: "#000",
+              width: "100%",
+              height: "100%",
+            }}
+            camera={{
+              position: [0, -300, BASE_CAMERA_DISTANCE * 4],
+              fov: CAMERA_FOV,
+              near: 0.1,
+              far: 1000000,
             }}
           >
-            {/* Écran de chargement si le jeu n'est pas prêt */}
-            {(!isReady || isLoading || !textureState.loaded) && (
-              <LoadingBar
-                progress={progressValue}
-                label="Initializing data galaxy"
-                fullScreen={true}
+            {/* Éclairage global */}
+            <ambientLight intensity={0.6} color="#ffffff" />
+            <directionalLight
+              position={[100, 100, 100]}
+              intensity={0.8}
+              color="#f0f0ff"
+            />
+
+            {/* Utiliser notre nouveau composant Graph au lieu de ForceGraph */}
+            {gameStarted && (
+              <Graph
+                ref={getGraphRef}
+                graphData={graphData}
+                debugMode={debugMode}
               />
             )}
 
-            {/* Ne montrer le contenu que lorsque tout est chargé */}
-            {(isReady || textureState.loaded) && (
+            {/* Ajouter le composant Posts pour afficher les publications */}
+            {/* {gameStarted && (
+              <Posts
+                renderer="sphere"
+                explosionDuration={5}
+                explosionStagger={0.01}
+                explosionPathVariation={0.3}
+              />
+            )} */}
+
+            {/* Groupe des éléments spéciaux (masqués lorsqu'un cluster est actif) */}
+            {gameStarted && !hasActiveCluster && (
               <>
-                {/* Composants de son - contrôlés par audioStarted */}
-                {audioStarted && (
-                  <>
-                    <SoundPlayer
-                      soundPath={getSoundPath("ambiant.mp3")}
-                      defaultVolume={0.1}
-                      loop={true}
-                      autoPlay={true}
-                      displayControls={false}
-                      controlPosition={{ top: "20px", right: "20px" }}
-                      tooltipLabels={{
-                        mute: "Couper le son",
-                        unmute: "Activer le son",
-                      }}
-                    />
-                    <SoundPlayer
-                      soundPath={getSoundPath("interview.m4a")}
-                      defaultVolume={0.7}
-                      loop={true}
-                      autoPlay={true}
-                      displayControls={false}
-                      controlPosition={{ top: "20px", right: "80px" }}
-                      tooltipLabels={{
-                        mute: "Couper l'interview",
-                        unmute: "Activer l'interview",
-                      }}
-                    />
-                  </>
-                )}
-
-                <Canvas
-                  shadows
-                  style={{
-                    background: "#000",
-                    width: "100%",
-                    height: "100%",
-                  }}
-                  camera={{
-                    position: [0, -300, BASE_CAMERA_DISTANCE * 4],
-                    fov: CAMERA_FOV,
-                    near: 0.1,
-                    far: 1000000,
-                  }}
-                >
-                  {/* Éclairage global */}
-                  <ambientLight intensity={0.6} color="#ffffff" />
-                  <directionalLight
-                    position={[100, 100, 100]}
-                    intensity={0.8}
-                    color="#f0f0ff"
+                {/* Ajouter les portraits interactifs de Joshua */}
+                {INTERACTIVE_PORTRAITS.map((portrait) => (
+                  <InteractiveImage
+                    key={portrait.id}
+                    id={portrait.id}
+                    svgPath={assets.getImagePath("joshua-goldberg.svg")}
+                    position={portrait.position}
+                    size={portrait.size}
+                    title={portrait.title}
+                    description={portrait.description}
+                    boundingBoxSize={portrait.boundingBoxSize}
+                    showBoundingBox={debugMode}
                   />
+                ))}
 
-                  {/* Utiliser notre nouveau composant Graph au lieu de ForceGraph */}
-                  {gameStarted && (
-                    <Graph
-                      ref={getGraphRef}
-                      graphData={graphData}
-                      debugMode={DEBUG}
-                    />
-                  )}
+                {/* Afficher les catégories dans l'espace 3D */}
+                <DistrictLabels />
 
-                  {/* Ajouter le composant Posts pour afficher les publications */}
-                  {/* {gameStarted && (
-                    <Posts
-                      renderer="sphere"
-                      explosionDuration={5}
-                      explosionStagger={0.01}
-                      explosionPathVariation={0.3}
-                    />
-                  )} */}
+                {/* Ajouter un trou noir animé */}
+                <BlackHoleEffect
+                  position={[450, 0, 100]}
+                  size={12}
+                  particleCount={15000}
+                  rotationSpeed={0.3}
+                  spiralTightness={3.0}
+                  rotation={[Math.PI / 4, 0, Math.PI / 6]}
+                />
 
-                  {/* Groupe des éléments spéciaux (masqués lorsqu'un cluster est actif) */}
-                  {gameStarted && !hasActiveCluster && (
-                    <>
-                      {/* Ajouter les portraits interactifs de Joshua */}
-                      {INTERACTIVE_PORTRAITS.map((portrait) => (
-                        <InteractiveImage
-                          key={portrait.id}
-                          id={portrait.id}
-                          svgPath={getImagePath("joshua-goldberg.svg")}
-                          position={portrait.position}
-                          size={portrait.size}
-                          title={portrait.title}
-                          description={portrait.description}
-                          boundingBoxSize={portrait.boundingBoxSize}
-                          showBoundingBox={DEBUG}
-                        />
-                      ))}
-
-                      {/* Afficher les catégories dans l'espace 3D */}
-                      <DistrictLabels />
-
-                      {/* Ajouter un trou noir animé */}
-                      <BlackHoleEffect
-                        position={[450, 0, 100]}
-                        size={12}
-                        particleCount={35000}
-                        rotationSpeed={0.3}
-                        spiralTightness={3.0}
-                        rotation={[Math.PI / 4, 0, Math.PI / 6]}
-                      />
-
-                      {/* Ajouter des étoiles filantes si l'explosion est terminée */}
-                      {explosionCompleted && <ShootingStars count={10} />}
-                    </>
-                  )}
-
-                  {/* Champ d'étoiles en arrière-plan, visible tout le temps */}
-                  <Stars count={5000} radius={3000} size={1.2} />
-
-                  {/* Contrôleur de caméra et affichage des informations de navigation */}
-                  <AdvancedCameraController />
-
-                  {/* Post-processing pour ajouter des effets visuels */}
-                  {/* <EffectComposer>
-                    <Bloom
-                      intensity={0.15}
-                      luminanceThreshold={0.01}
-                      luminanceSmoothing={0.03}
-                    />
-                    <ToneMapping
-                      exposure={1.5} // Augmente la luminosité générale
-                      gamma={0.8} // Contraste
-                      vignette={0.5} // Assombrit les bords
-                    />
-                  </EffectComposer> */}
-
-                  {/* Stats pour le débogage */}
-                  {DEBUG && <Stats />}
-                </Canvas>
-
-                {/* Interface utilisateur pour la navigation et le HUD - déplacés en dehors du Canvas */}
-                {gameStarted && DEBUG && (
-                  <DebugNavigationUI graphRef={graphInstanceRef} />
-                )}
-                {gameStarted && <HUD />}
-
-                {/* Afficher le panneau de texte informatif en dehors du Canvas */}
-                {gameStarted && <TextPanel />}
+                {/* Ajouter des étoiles filantes si l'explosion est terminée */}
+                {explosionCompleted && <ShootingStars count={5} />}
               </>
             )}
-          </div>
-        );
-      }}
-    </TexturePreloader>
+
+            {/* Champ d'étoiles en arrière-plan, visible tout le temps */}
+            <Stars count={2000} radius={3000} size={1.2} />
+
+            {/* Contrôleur de caméra et affichage des informations de navigation */}
+            <AdvancedCameraController />
+
+            {/* Post-processing pour ajouter des effets visuels */}
+            {/* <EffectComposer>
+              <Bloom
+                intensity={0.15}
+                luminanceThreshold={0.01}
+                luminanceSmoothing={0.03}
+              />
+              <ToneMapping
+                exposure={1.5} // Augmente la luminosité générale
+                gamma={0.8} // Contraste
+                vignette={0.5} // Assombrit les bords
+              />
+            </EffectComposer> */}
+
+            {/* Stats pour le débogage */}
+            {debugMode && <Stats />}
+          </Canvas>
+
+          {/* Interface utilisateur pour la navigation et le HUD - déplacés en dehors du Canvas */}
+          {gameStarted && debugMode && (
+            <DebugNavigationUI graphRef={graphInstanceRef} />
+          )}
+          {gameStarted && <HUD />}
+
+          {/* Afficher le panneau de texte informatif en dehors du Canvas */}
+          {gameStarted && <TextPanel />}
+        </>
+      )}
+    </div>
   );
 };
 

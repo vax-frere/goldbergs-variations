@@ -1,34 +1,22 @@
-import React, { memo, useMemo, useRef } from "react";
+import React, { memo, useMemo, useRef, useEffect, useState } from "react";
 import { Line } from "@react-three/drei";
 import * as THREE from "three";
-import useGraphStore from "../store";
-import { getOrCreateMaterial } from "../cache";
+import useAssets from "../../../../hooks/useAssets";
 
 /**
  * Composant Link optimisé avec React.memo pour éviter les re-rendus inutiles
  * S'affiche en mode simple (ligne) ou advanced (ligne avec flèche) selon la prop mode
+ * Utilise le système d'assets centralisé pour les matériaux
  */
 const OptimizedLink = memo(
   ({ sourceNode, targetNode, mode = "simple", isDirect = true }) => {
-    // Ne rien afficher si les nœuds source ou destination n'ont pas de coordonnées
-    if (
-      !sourceNode?.x ||
-      !sourceNode?.y ||
-      !sourceNode?.z ||
-      !targetNode?.x ||
-      !targetNode?.y ||
-      !targetNode?.z
-    ) {
-      return null;
-    }
+    // 1. Tous les hooks doivent être appelés au début du composant
+    // Utiliser notre service d'assets centralisé
+    const assets = useAssets();
 
-    // Mode d'affichage fourni par les props
+    // 2. Définir toutes les variables d'état et conditions utilisées par les hooks
     const displayMode = mode;
-
-    // Vérifier si le lien est direct ou indirect
     const isIndirect = isDirect === false || isDirect === "Indirect";
-
-    // Dash uniquement en mode advanced et si lien indirect
     const isDashed = displayMode === "advanced" && isIndirect;
 
     // Constantes pour les lignes en pointillé
@@ -38,17 +26,32 @@ const OptimizedLink = memo(
     // Constantes pour les flèches
     const arrowSize = 2.0; // Taille de la flèche
     const arrowAngle = Math.PI / 4; // Angle de 45 degrés pour les branches de la flèche
-    const offsetDistance = 7.5; // Distance d'offset pour les flèches
 
-    // Calculer l'offset pour les points de départ et d'arrivée (mémoisation)
-    const {
-      sourceVector,
-      targetVector,
-      direction,
-      sourceWithOffset,
-      targetWithOffset,
-      points,
-    } = useMemo(() => {
+    // 3. Vérification précoce pour savoir si on doit rendre quoi que ce soit
+    const shouldRender =
+      sourceNode?.x !== undefined &&
+      sourceNode?.y !== undefined &&
+      sourceNode?.z !== undefined &&
+      targetNode?.x !== undefined &&
+      targetNode?.y !== undefined &&
+      targetNode?.z !== undefined &&
+      assets.isReady;
+
+    // 4. Calculer les valeurs mémoïsées - toujours définir tous les hooks, même si on n'utilise pas leur résultat
+    const vectorData = useMemo(() => {
+      if (!shouldRender)
+        return {
+          sourceVector: null,
+          targetVector: null,
+          direction: null,
+          sourceWithOffset: null,
+          targetWithOffset: null,
+          points: [
+            [0, 0, 0],
+            [0, 0, 0],
+          ],
+        };
+
       // On crée un vecteur de la source vers la cible
       const srcVector = new THREE.Vector3(
         sourceNode.x,
@@ -98,52 +101,24 @@ const OptimizedLink = memo(
         points: pts,
       };
     }, [
-      sourceNode.x,
-      sourceNode.y,
-      sourceNode.z,
-      targetNode.x,
-      targetNode.y,
-      targetNode.z,
-      sourceNode.value,
-      targetNode.value,
+      shouldRender,
+      sourceNode?.x,
+      sourceNode?.y,
+      sourceNode?.z,
+      targetNode?.x,
+      targetNode?.y,
+      targetNode?.z,
+      sourceNode?.value,
+      targetNode?.value,
     ]);
 
-    // Récupérer les matériaux pour les deux modes depuis le cache centralisé
-    const simpleMaterial = useMemo(() => {
-      return getOrCreateMaterial("link-simple", () => {
-        return new THREE.LineBasicMaterial({
-          color: "#ffffff",
-          transparent: true,
-          opacity: 0.3,
-        });
-      });
-    }, []);
+    const { points, direction, targetWithOffset } = vectorData;
 
-    const advancedMaterial = useMemo(() => {
-      return getOrCreateMaterial("link-advanced", () => {
-        return new THREE.LineBasicMaterial({
-          color: "#ffffff",
-          transparent: true,
-          opacity: 0.8,
-        });
-      });
-    }, []);
-
-    const dashedMaterial = useMemo(() => {
-      return getOrCreateMaterial("link-dashed", () => {
-        return new THREE.LineDashedMaterial({
-          color: "#ffffff",
-          transparent: true,
-          opacity: 0.8,
-          dashSize: dashSize,
-          gapSize: gapSize,
-        });
-      });
-    }, [dashSize, gapSize]);
-
-    // Créer les vecteurs pour les flèches
+    // 5. Arrow vectors - toujours définir le hook
     const arrowVectors = useMemo(() => {
-      if (displayMode !== "advanced") return null;
+      if (!shouldRender || displayMode !== "advanced") {
+        return null;
+      }
 
       // Trouver un vecteur perpendiculaire
       const up = new THREE.Vector3(0, 1, 0);
@@ -178,11 +153,20 @@ const OptimizedLink = memo(
         branch2Start: targetWithOffset,
         branch2End,
       };
-    }, [displayMode, direction, targetWithOffset, arrowSize, arrowAngle]);
+    }, [
+      shouldRender,
+      displayMode,
+      direction,
+      targetWithOffset,
+      arrowSize,
+      arrowAngle,
+    ]);
 
-    // Créer la géométrie pour la ligne en pointillé avec distances
+    // 6. Dashed line geometry - toujours définir le hook
     const dashedLineGeometry = useMemo(() => {
-      if (!isDashed) return null;
+      if (!shouldRender || !isDashed) {
+        return null;
+      }
 
       // Créer une BufferGeometry à partir des points
       const geometry = new THREE.BufferGeometry();
@@ -207,7 +191,54 @@ const OptimizedLink = memo(
       );
 
       return geometry;
-    }, [points, isDashed]);
+    }, [shouldRender, isDashed, points]);
+
+    // 7. Effets pour créer les matériaux
+    useEffect(() => {
+      if (!assets.isReady) return;
+
+      // Créer tous les matériaux dans un seul effet
+      assets.createMaterial("link-simple", () => {
+        return new THREE.LineBasicMaterial({
+          color: "#ffffff",
+          transparent: true,
+          opacity: 0.3,
+        });
+      });
+
+      assets.createMaterial("link-advanced", () => {
+        return new THREE.LineBasicMaterial({
+          color: "#ffffff",
+          transparent: true,
+          opacity: 0.8,
+        });
+      });
+
+      assets.createMaterial("link-dashed", () => {
+        return new THREE.LineDashedMaterial({
+          color: "#ffffff",
+          transparent: true,
+          opacity: 0.8,
+          dashSize: dashSize,
+          gapSize: gapSize,
+        });
+      });
+    }, [assets.isReady, dashSize, gapSize]);
+
+    // 8. Early return après les hooks si on ne doit rien afficher
+    if (!shouldRender) {
+      return null;
+    }
+
+    // Récupérer les matériaux depuis le service d'assets
+    const simpleMaterial = assets.getMaterial("link-simple");
+    const advancedMaterial = assets.getMaterial("link-advanced");
+    const dashedMaterial = assets.getMaterial("link-dashed");
+
+    // Si les matériaux ne sont pas encore disponibles, ne rien afficher
+    if (!simpleMaterial || !advancedMaterial || (isDashed && !dashedMaterial)) {
+      return null;
+    }
 
     // Rendu optimisé avec le type de lien approprié selon le mode
     if (displayMode === "simple") {
