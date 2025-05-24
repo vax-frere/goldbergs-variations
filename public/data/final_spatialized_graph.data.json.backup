@@ -12,8 +12,7 @@
       "slug": "24-129-100-84",
       "isClusterMaster": true,
       "isJoshua": true,
-      "clusterSlug": "24-129-100-84",
-      "thematicGroup": "Libertariens et Libéraux"
+      "clusterSlug": "24-129-100-84"
     },
     {
       "id": "platform_wikipedia_1",
@@ -39,8 +38,7 @@
       "slug": "4krapsucks",
       "isClusterMaster": true,
       "isJoshua": true,
-      "clusterSlug": "4krapsucks",
-      "thematicGroup": "Libertariens et Libéraux"
+      "clusterSlug": "4krapsucks"
     },
     {
       "id": "platform_anime-news-network_3",
@@ -66,8 +64,7 @@
       "slug": "66-177-73-91",
       "isClusterMaster": true,
       "isJoshua": true,
-      "clusterSlug": "66-177-73-91",
-      "thematicGroup": "Anti-système et Provocateurs"
+      "clusterSlug": "66-177-73-91"
     },
     {
       "id": "platform_wikipedia_5",
@@ -93,8 +90,7 @@
       "slug": "76-106-245-93",
       "isClusterMaster": true,
       "isJoshua": true,
-      "clusterSlug": "76-106-245-93",
-      "thematicGroup": "Anti-système et Provocateurs"
+      "clusterSlug": "76-106-245-93"
     },
     {
       "id": "platform_wikipedia_7",
@@ -120,8 +116,7 @@
       "slug": "amina-blackberry",
       "isClusterMaster": true,
       "isJoshua": true,
-      "clusterSlug": "amina-blackberry",
-      "thematicGroup": "Conservateurs et Traditionalistes"
+      "clusterSlug": "amina-blackberry"
     },
     {
       "id": "platform_twitter_9",
@@ -159,8 +154,7 @@
       "slug": "michael-slay",
       "isClusterMaster": false,
       "isJoshua": true,
-      "clusterSlug": "amina-blackberry",
-      "thematicGroup": "Extrême-droite et Nationalisme"
+      "clusterSlug": "amina-blackberry"
     },
     {
       "id": "platform_medium_12",
@@ -198,8 +192,7 @@
       "slug": "josh-bornstein",
       "isClusterMaster": false,
       "isJoshua": false,
-      "clusterSlug": "amina-blackberry",
-      "thematicGroup": ""
+      "clusterSlug": "amina-blackberry"
     },
     {
       "id": "australi-witness_15",
@@ -213,8 +206,7 @@
       "slug": "australi-witness",
       "isClusterMaster": false,
       "isJoshua": true,
-      "clusterSlug": "amina-blackberry",
-      "thematicGroup": "Radicalismes religieux et identitaires"
+      "clusterSlug": "amina-blackberry"
     },
     {
       "id": "platform_8chan_16",
@@ -276,8 +268,7 @@
       "slug": "aryan-heights",
       "isClusterMaster": true,
       "isJoshua": true,
-      "clusterSlug": "aryan-heights",
-      "thematicGroup": "Extrême-droite et Nationalisme"
+      "clusterSlug": "aryan-heights"
     },
     {
       "id": "platform_stormfront_21",
@@ -303,8 +294,7 @@
       "slug": "australi-witness",
       "isClusterMaster": true,
       "isJoshua": true,
-      "clusterSlug": "australi-witness",
-      "thematicGroup": "Radicalismes religieux et identitaires"
+      "clusterSlug": "australi-witness"
     },
     {
       "id": "platform_8chan_23",
@@ -378,8 +368,7 @@
       "slug": "elton-simpson",
       "isClusterMaster": false,
       "isJoshua": false,
-      "clusterSlug": "australi-witness",
-      "thematicGroup": ""
+      "clusterSlug": "australi-witness"
     },
     {
       "id": "nadir-soofi_29",
@@ -393,8 +382,7 @@
       "slug": "nadir-soofi",
       "isClusterMaster": false,
       "isJoshua": false,
-      "clusterSlug": "australi-witness",
-      "thematicGroup": ""
+      "clusterSlug": "australi-witness"
     },
     {
       "id": "pamela-geller_30",
@@ -408,8 +396,7 @@
       "slug": "pamela-geller",
       "isClusterMaster": false,
       "isJoshua": false,
-      "clusterSlug": "australi-witness",
-      "thematicGroup": ""
+      "clusterSlug": "australi-witness"
     },
     {
       "id": "elise-potaka_31",
@@ -423,8 +410,7 @@
       "slug": "elise-potaka",
       "isClusterMaster": false,
       "isJoshua": false,
-      "clusterSlug": "australi-witness",
-      "thematicGroup": ""
+      "clusterSlug": "australi-witness"
     },
     {
       "id": "jim-berry-fbi_32",
@@ -438,8 +424,7 @@
       "slug": "jim-berry-fbi",
       "isClusterMaster": false,
       "isJoshua": false,
-      "clusterSlug": "australi-witness",
-      "thematicGroup": ""
+      "clusterSlug": "australi-witness"
     },
     {
       "id": "bindi-cole_33",
@@ -453,8 +438,7 @@
       "slug": "bindi-cole",
       "isClusterMaster": false,
       "isJoshua": false,
-      "clusterSlug": "australi-witness",
-      "thematicGroup": ""
+      "clusterSlug": "australi-witness"
     },
     {
       "id": "bill-leak_34",
@@ -468,8 +452,7 @@
       "slug": "bill-leak",
       "isClusterMaster": false,
       "isJoshua": false,
-      "clusterSlug": "australi-witness",
-      "thematicGroup": ""
+      "clusterSlug": "australi-witness"
     },
     {
       "id": "larry-pickering_35",
@@ -483,8 +466,7 @@
       "slug": "larry-pickering",
       "isClusterMaster": false,
       "isJoshua": false,
-      "clusterSlug": "australi-witness",
-      "thematicGroup": ""
+      "clusterSlug": "australi-witness"
     },
     {
       "id": "rita-katz_36",
@@ -498,8 +480,7 @@
       "slug": "rita-katz",
       "isClusterMaster": false,
       "isJoshua": false,
-      "clusterSlug": "australi-witness",
-      "thematicGroup": ""
+      "clusterSlug": "australi-witness"
     },
     {
       "id": "afp-federal-agent-as-mohamadmo7_37",
@@ -513,8 +494,7 @@
       "slug": "afp-federal-agent-as-mohamadmo7",
       "isClusterMaster": false,
       "isJoshua": false,
-      "clusterSlug": "australi-witness",
-      "thematicGroup": ""
+      "clusterSlug": "australi-witness"
     },
     {
       "id": "fbi-as-wilayaks_38",
@@ -528,8 +508,7 @@
       "slug": "fbi-as-wilayaks",
       "isClusterMaster": false,
       "isJoshua": false,
-      "clusterSlug": "australi-witness",
-      "thematicGroup": ""
+      "clusterSlug": "australi-witness"
     },
     {
       "id": "michael-slay_39",
@@ -543,8 +522,7 @@
       "slug": "michael-slay",
       "isClusterMaster": false,
       "isJoshua": true,
-      "clusterSlug": "australi-witness",
-      "thematicGroup": "Extrême-droite et Nationalisme"
+      "clusterSlug": "australi-witness"
     },
     {
       "id": "platform_medium_40",
@@ -594,8 +572,7 @@
       "slug": "blaze-it-flaggot",
       "isClusterMaster": true,
       "isJoshua": true,
-      "clusterSlug": "blaze-it-flaggot",
-      "thematicGroup": "Culture"
+      "clusterSlug": "blaze-it-flaggot"
     },
     {
       "id": "platform_reddit_45",
@@ -621,8 +598,7 @@
       "slug": "bw-anime-fan",
       "isClusterMaster": true,
       "isJoshua": true,
-      "clusterSlug": "bw-anime-fan",
-      "thematicGroup": "Extrême-droite et Nationalisme"
+      "clusterSlug": "bw-anime-fan"
     },
     {
       "id": "platform_wikipedia_47",
@@ -648,8 +624,7 @@
       "slug": "chuck-e-jesus",
       "isClusterMaster": true,
       "isJoshua": true,
-      "clusterSlug": "chuck-e-jesus",
-      "thematicGroup": "Libertariens et Libéraux"
+      "clusterSlug": "chuck-e-jesus"
     },
     {
       "id": "platform_reddit_49",
@@ -675,8 +650,7 @@
       "slug": "death-to-sjws",
       "isClusterMaster": true,
       "isJoshua": true,
-      "clusterSlug": "death-to-sjws",
-      "thematicGroup": "Extrême-droite et Nationalisme"
+      "clusterSlug": "death-to-sjws"
     },
     {
       "id": "platform_reddit_51",
@@ -702,8 +676,7 @@
       "slug": "dinah-silverstein",
       "isClusterMaster": true,
       "isJoshua": true,
-      "clusterSlug": "dinah-silverstein",
-      "thematicGroup": "Gauche et Justice sociale"
+      "clusterSlug": "dinah-silverstein"
     },
     {
       "id": "michael-slay_53",
@@ -717,8 +690,7 @@
       "slug": "michael-slay",
       "isClusterMaster": false,
       "isJoshua": true,
-      "clusterSlug": "dinah-silverstein",
-      "thematicGroup": "Extrême-droite et Nationalisme"
+      "clusterSlug": "dinah-silverstein"
     },
     {
       "id": "platform_medium_54",
@@ -780,8 +752,7 @@
       "slug": "dr-shlomo-goldstein",
       "isClusterMaster": true,
       "isJoshua": true,
-      "clusterSlug": "dr-shlomo-goldstein",
-      "thematicGroup": "Extrême-droite et Nationalisme"
+      "clusterSlug": "dr-shlomo-goldstein"
     },
     {
       "id": "platform_reddit_59",
@@ -807,8 +778,7 @@
       "slug": "ryoko-tamada",
       "isClusterMaster": true,
       "isJoshua": true,
-      "clusterSlug": "ryoko-tamada",
-      "thematicGroup": "Libertariens et Libéraux"
+      "clusterSlug": "ryoko-tamada"
     },
     {
       "id": "platform_twitter_61",
@@ -834,8 +804,7 @@
       "slug": "jilian-c-york",
       "isClusterMaster": false,
       "isJoshua": false,
-      "clusterSlug": "ryoko-tamada",
-      "thematicGroup": ""
+      "clusterSlug": "ryoko-tamada"
     },
     {
       "id": "platform_e-mail_63",
@@ -861,8 +830,7 @@
       "slug": "peter-wallace",
       "isClusterMaster": false,
       "isJoshua": false,
-      "clusterSlug": "ryoko-tamada",
-      "thematicGroup": ""
+      "clusterSlug": "ryoko-tamada"
     },
     {
       "id": "mariam-veiszadeh_65",
@@ -876,8 +844,7 @@
       "slug": "mariam-veiszadeh",
       "isClusterMaster": false,
       "isJoshua": false,
-      "clusterSlug": "ryoko-tamada",
-      "thematicGroup": ""
+      "clusterSlug": "ryoko-tamada"
     },
     {
       "id": "tanya-cohen_66",
@@ -891,8 +858,7 @@
       "slug": "tanya-cohen",
       "isClusterMaster": false,
       "isJoshua": true,
-      "clusterSlug": "ryoko-tamada",
-      "thematicGroup": "Gauche et Justice sociale"
+      "clusterSlug": "ryoko-tamada"
     },
     {
       "id": "platform_dailykos_67",
@@ -942,8 +908,7 @@
       "slug": "moon-metropolis",
       "isClusterMaster": false,
       "isJoshua": true,
-      "clusterSlug": "ryoko-tamada",
-      "thematicGroup": "Libertariens et Libéraux"
+      "clusterSlug": "ryoko-tamada"
     },
     {
       "id": "platform_disqus_71",
@@ -1017,8 +982,7 @@
       "slug": "emily-americana",
       "isClusterMaster": true,
       "isJoshua": true,
-      "clusterSlug": "emily-americana",
-      "thematicGroup": "Libertariens et Libéraux"
+      "clusterSlug": "emily-americana"
     },
     {
       "id": "platform_reddit_77",
@@ -1044,8 +1008,7 @@
       "slug": "michael-slay",
       "isClusterMaster": false,
       "isJoshua": true,
-      "clusterSlug": "emily-americana",
-      "thematicGroup": "Extrême-droite et Nationalisme"
+      "clusterSlug": "emily-americana"
     },
     {
       "id": "platform_medium_79",
@@ -1083,8 +1046,7 @@
       "slug": "european-88",
       "isClusterMaster": false,
       "isJoshua": true,
-      "clusterSlug": "emily-americana",
-      "thematicGroup": "Extrême-droite et Nationalisme"
+      "clusterSlug": "emily-americana"
     },
     {
       "id": "moon-metropolis_82",
@@ -1098,8 +1060,7 @@
       "slug": "moon-metropolis",
       "isClusterMaster": false,
       "isJoshua": true,
-      "clusterSlug": "emily-americana",
-      "thematicGroup": "Libertariens et Libéraux"
+      "clusterSlug": "emily-americana"
     },
     {
       "id": "platform_disqus_83",
@@ -1173,8 +1134,7 @@
       "slug": "death-to-sjws",
       "isClusterMaster": false,
       "isJoshua": true,
-      "clusterSlug": "emily-americana",
-      "thematicGroup": "Extrême-droite et Nationalisme"
+      "clusterSlug": "emily-americana"
     },
     {
       "id": "emily-goldstein_89",
@@ -1188,8 +1148,7 @@
       "slug": "emily-goldstein",
       "isClusterMaster": true,
       "isJoshua": true,
-      "clusterSlug": "emily-goldstein",
-      "thematicGroup": "Gauche et Justice sociale"
+      "clusterSlug": "emily-goldstein"
     },
     {
       "id": "platform_thoughtcatalog_90",
@@ -1215,8 +1174,7 @@
       "slug": "elon-musk",
       "isClusterMaster": false,
       "isJoshua": false,
-      "clusterSlug": "emily-goldstein",
-      "thematicGroup": ""
+      "clusterSlug": "emily-goldstein"
     },
     {
       "id": "platform_twitter_92",
@@ -1242,8 +1200,7 @@
       "slug": "hadiyo-elmi",
       "isClusterMaster": false,
       "isJoshua": true,
-      "clusterSlug": "emily-goldstein",
-      "thematicGroup": "Gauche et Justice sociale"
+      "clusterSlug": "emily-goldstein"
     },
     {
       "id": "tanya-cohen_94",
@@ -1257,8 +1214,7 @@
       "slug": "tanya-cohen",
       "isClusterMaster": false,
       "isJoshua": true,
-      "clusterSlug": "emily-goldstein",
-      "thematicGroup": "Gauche et Justice sociale"
+      "clusterSlug": "emily-goldstein"
     },
     {
       "id": "platform_dailykos_95",
@@ -1296,8 +1252,7 @@
       "slug": "michael-slay",
       "isClusterMaster": false,
       "isJoshua": true,
-      "clusterSlug": "emily-goldstein",
-      "thematicGroup": "Extrême-droite et Nationalisme"
+      "clusterSlug": "emily-goldstein"
     },
     {
       "id": "platform_medium_98",
@@ -1335,8 +1290,7 @@
       "slug": "european-88",
       "isClusterMaster": false,
       "isJoshua": true,
-      "clusterSlug": "emily-goldstein",
-      "thematicGroup": "Extrême-droite et Nationalisme"
+      "clusterSlug": "emily-goldstein"
     },
     {
       "id": "mariam-veiszadeh_101",
@@ -1350,8 +1304,7 @@
       "slug": "mariam-veiszadeh",
       "isClusterMaster": false,
       "isJoshua": false,
-      "clusterSlug": "emily-goldstein",
-      "thematicGroup": ""
+      "clusterSlug": "emily-goldstein"
     },
     {
       "id": "europe-hates-niggers_102",
@@ -1365,8 +1318,7 @@
       "slug": "europe-hates-niggers",
       "isClusterMaster": true,
       "isJoshua": true,
-      "clusterSlug": "europe-hates-niggers",
-      "thematicGroup": "Extrême-droite et Nationalisme"
+      "clusterSlug": "europe-hates-niggers"
     },
     {
       "id": "platform_reddit_103",
@@ -1392,8 +1344,7 @@
       "slug": "flappy-brd",
       "isClusterMaster": true,
       "isJoshua": true,
-      "clusterSlug": "flappy-brd",
-      "thematicGroup": "Gauche et Justice sociale"
+      "clusterSlug": "flappy-brd"
     },
     {
       "id": "platform_reddit_105",
@@ -1419,8 +1370,7 @@
       "slug": "gas-the-kikes",
       "isClusterMaster": true,
       "isJoshua": true,
-      "clusterSlug": "gas-the-kikes",
-      "thematicGroup": "Extrême-droite et Nationalisme"
+      "clusterSlug": "gas-the-kikes"
     },
     {
       "id": "platform_reddit_107",
@@ -1446,8 +1396,7 @@
       "slug": "hadiyo-elmi",
       "isClusterMaster": true,
       "isJoshua": true,
-      "clusterSlug": "hadiyo-elmi",
-      "thematicGroup": "Gauche et Justice sociale"
+      "clusterSlug": "hadiyo-elmi"
     },
     {
       "id": "michael-slay_109",
@@ -1461,8 +1410,7 @@
       "slug": "michael-slay",
       "isClusterMaster": false,
       "isJoshua": true,
-      "clusterSlug": "hadiyo-elmi",
-      "thematicGroup": "Extrême-droite et Nationalisme"
+      "clusterSlug": "hadiyo-elmi"
     },
     {
       "id": "platform_medium_110",
@@ -1524,8 +1472,7 @@
       "slug": "european-88",
       "isClusterMaster": false,
       "isJoshua": true,
-      "clusterSlug": "hadiyo-elmi",
-      "thematicGroup": "Extrême-droite et Nationalisme"
+      "clusterSlug": "hadiyo-elmi"
     },
     {
       "id": "mariam-veiszadeh_115",
@@ -1539,8 +1486,7 @@
       "slug": "mariam-veiszadeh",
       "isClusterMaster": false,
       "isJoshua": false,
-      "clusterSlug": "hadiyo-elmi",
-      "thematicGroup": ""
+      "clusterSlug": "hadiyo-elmi"
     },
     {
       "id": "id-c9uafs7u_116",
@@ -1554,8 +1500,7 @@
       "slug": "id-c9uafs7u",
       "isClusterMaster": true,
       "isJoshua": true,
-      "clusterSlug": "id-c9uafs7u",
-      "thematicGroup": "Extrême-droite et Nationalisme"
+      "clusterSlug": "id-c9uafs7u"
     },
     {
       "id": "platform_4plebs_117",
@@ -1581,8 +1526,7 @@
       "slug": "island-angel",
       "isClusterMaster": true,
       "isJoshua": true,
-      "clusterSlug": "island-angel",
-      "thematicGroup": "Anti-système et Provocateurs"
+      "clusterSlug": "island-angel"
     },
     {
       "id": "platform_reddit_119",
@@ -1608,8 +1552,7 @@
       "slug": "real-joshua-goldberg",
       "isClusterMaster": true,
       "isJoshua": true,
-      "clusterSlug": "real-joshua-goldberg",
-      "thematicGroup": "Anti-système et Provocateurs"
+      "clusterSlug": "real-joshua-goldberg"
     },
     {
       "id": "josh-bornstein_121",
@@ -1623,8 +1566,7 @@
       "slug": "josh-bornstein",
       "isClusterMaster": false,
       "isJoshua": false,
-      "clusterSlug": "real-joshua-goldberg",
-      "thematicGroup": ""
+      "clusterSlug": "real-joshua-goldberg"
     },
     {
       "id": "platform_times-of-israel_122",
@@ -1650,8 +1592,7 @@
       "slug": "lindsay-campbell-fbi",
       "isClusterMaster": false,
       "isJoshua": false,
-      "clusterSlug": "real-joshua-goldberg",
-      "thematicGroup": ""
+      "clusterSlug": "real-joshua-goldberg"
     },
     {
       "id": "platform_twitter_124",
@@ -1677,8 +1618,7 @@
       "slug": "elise-potaka",
       "isClusterMaster": false,
       "isJoshua": false,
-      "clusterSlug": "real-joshua-goldberg",
-      "thematicGroup": ""
+      "clusterSlug": "real-joshua-goldberg"
     },
     {
       "id": "platform_facebook_126",
@@ -1704,8 +1644,7 @@
       "slug": "luke-mcmahon",
       "isClusterMaster": false,
       "isJoshua": false,
-      "clusterSlug": "real-joshua-goldberg",
-      "thematicGroup": ""
+      "clusterSlug": "real-joshua-goldberg"
     },
     {
       "id": "platform_e-mail_129",
@@ -1731,8 +1670,7 @@
       "slug": "junaid-thorne",
       "isClusterMaster": false,
       "isJoshua": false,
-      "clusterSlug": "real-joshua-goldberg",
-      "thematicGroup": ""
+      "clusterSlug": "real-joshua-goldberg"
     },
     {
       "id": "ben-garrison_131",
@@ -1746,8 +1684,7 @@
       "slug": "ben-garrison",
       "isClusterMaster": false,
       "isJoshua": false,
-      "clusterSlug": "real-joshua-goldberg",
-      "thematicGroup": ""
+      "clusterSlug": "real-joshua-goldberg"
     },
     {
       "id": "platform_reddit_132",
@@ -1773,8 +1710,7 @@
       "slug": "caitlin-roper",
       "isClusterMaster": false,
       "isJoshua": false,
-      "clusterSlug": "real-joshua-goldberg",
-      "thematicGroup": ""
+      "clusterSlug": "real-joshua-goldberg"
     },
     {
       "id": "dean-saxton_134",
@@ -1788,8 +1724,7 @@
       "slug": "dean-saxton",
       "isClusterMaster": false,
       "isJoshua": false,
-      "clusterSlug": "real-joshua-goldberg",
-      "thematicGroup": ""
+      "clusterSlug": "real-joshua-goldberg"
     },
     {
       "id": "platform_sluthate_135",
@@ -1815,8 +1750,7 @@
       "slug": "nathan-sykes",
       "isClusterMaster": false,
       "isJoshua": false,
-      "clusterSlug": "real-joshua-goldberg",
-      "thematicGroup": ""
+      "clusterSlug": "real-joshua-goldberg"
     },
     {
       "id": "platform_stormfront_137",
@@ -1842,8 +1776,7 @@
       "slug": "nancy-goldstein",
       "isClusterMaster": false,
       "isJoshua": false,
-      "clusterSlug": "real-joshua-goldberg",
-      "thematicGroup": ""
+      "clusterSlug": "real-joshua-goldberg"
     },
     {
       "id": "fake-joshua-goldberg_140",
@@ -1857,8 +1790,7 @@
       "slug": "fake-joshua-goldberg",
       "isClusterMaster": true,
       "isJoshua": true,
-      "clusterSlug": "fake-joshua-goldberg",
-      "thematicGroup": "Anti-système et Provocateurs"
+      "clusterSlug": "fake-joshua-goldberg"
     },
     {
       "id": "platform_thoughtcatalog_141",
@@ -1884,8 +1816,7 @@
       "slug": "kill-all-pakis",
       "isClusterMaster": true,
       "isJoshua": true,
-      "clusterSlug": "kill-all-pakis",
-      "thematicGroup": "Extrême-droite et Nationalisme"
+      "clusterSlug": "kill-all-pakis"
     },
     {
       "id": "platform_reddit_143",
@@ -1911,8 +1842,7 @@
       "slug": "kill-all-sjws",
       "isClusterMaster": true,
       "isJoshua": true,
-      "clusterSlug": "kill-all-sjws",
-      "thematicGroup": "Extrême-droite et Nationalisme"
+      "clusterSlug": "kill-all-sjws"
     },
     {
       "id": "platform_reddit_145",
@@ -1938,8 +1868,7 @@
       "slug": "le-cancer-kin",
       "isClusterMaster": true,
       "isJoshua": true,
-      "clusterSlug": "le-cancer-kin",
-      "thematicGroup": "Extrême-droite et Nationalisme"
+      "clusterSlug": "le-cancer-kin"
     },
     {
       "id": "platform_reddit_147",
@@ -1965,8 +1894,7 @@
       "slug": "madotsuki-the-dreamer",
       "isClusterMaster": true,
       "isJoshua": true,
-      "clusterSlug": "madotsuki-the-dreamer",
-      "thematicGroup": "Culture"
+      "clusterSlug": "madotsuki-the-dreamer"
     },
     {
       "id": "platform_filmboards_149",
@@ -2016,8 +1944,7 @@
       "slug": "may-may-poster",
       "isClusterMaster": true,
       "isJoshua": true,
-      "clusterSlug": "may-may-poster",
-      "thematicGroup": "Extrême-droite et Nationalisme"
+      "clusterSlug": "may-may-poster"
     },
     {
       "id": "platform_Adult Swim_153",
@@ -2055,8 +1982,7 @@
       "slug": "metacanadian-420",
       "isClusterMaster": true,
       "isJoshua": true,
-      "clusterSlug": "metacanadian-420",
-      "thematicGroup": "Gauche et Justice sociale"
+      "clusterSlug": "metacanadian-420"
     },
     {
       "id": "platform_reddit_156",
@@ -2082,8 +2008,7 @@
       "slug": "metropolis-forever",
       "isClusterMaster": true,
       "isJoshua": true,
-      "clusterSlug": "metropolis-forever",
-      "thematicGroup": "Libertariens et Libéraux"
+      "clusterSlug": "metropolis-forever"
     },
     {
       "id": "platform_deviantart_158",
@@ -2217,8 +2142,7 @@
       "slug": "cyndi-lavrenci",
       "isClusterMaster": false,
       "isJoshua": false,
-      "clusterSlug": "metropolis-forever",
-      "thematicGroup": ""
+      "clusterSlug": "metropolis-forever"
     },
     {
       "id": "platform_e-mail_169",
@@ -2244,8 +2168,7 @@
       "slug": "grant-taylor",
       "isClusterMaster": false,
       "isJoshua": false,
-      "clusterSlug": "metropolis-forever",
-      "thematicGroup": ""
+      "clusterSlug": "metropolis-forever"
     },
     {
       "id": "platform_twitter_171",
@@ -2283,8 +2206,7 @@
       "slug": "tom-minear",
       "isClusterMaster": false,
       "isJoshua": false,
-      "clusterSlug": "metropolis-forever",
-      "thematicGroup": ""
+      "clusterSlug": "metropolis-forever"
     },
     {
       "id": "emily-americana_174",
@@ -2298,8 +2220,7 @@
       "slug": "emily-americana",
       "isClusterMaster": false,
       "isJoshua": true,
-      "clusterSlug": "metropolis-forever",
-      "thematicGroup": "Libertariens et Libéraux"
+      "clusterSlug": "metropolis-forever"
     },
     {
       "id": "platform_reddit_175",
@@ -2325,8 +2246,7 @@
       "slug": "tanya-cohen",
       "isClusterMaster": false,
       "isJoshua": true,
-      "clusterSlug": "metropolis-forever",
-      "thematicGroup": "Gauche et Justice sociale"
+      "clusterSlug": "metropolis-forever"
     },
     {
       "id": "platform_dailykos_177",
@@ -2364,8 +2284,7 @@
       "slug": "amina-blackberry",
       "isClusterMaster": false,
       "isJoshua": true,
-      "clusterSlug": "metropolis-forever",
-      "thematicGroup": "Conservateurs et Traditionalistes"
+      "clusterSlug": "metropolis-forever"
     },
     {
       "id": "death-to-sjws_180",
@@ -2379,8 +2298,7 @@
       "slug": "death-to-sjws",
       "isClusterMaster": false,
       "isJoshua": true,
-      "clusterSlug": "metropolis-forever",
-      "thematicGroup": "Extrême-droite et Nationalisme"
+      "clusterSlug": "metropolis-forever"
     },
     {
       "id": "michael-slay_181",
@@ -2394,8 +2312,7 @@
       "slug": "michael-slay",
       "isClusterMaster": true,
       "isJoshua": true,
-      "clusterSlug": "michael-slay",
-      "thematicGroup": "Extrême-droite et Nationalisme"
+      "clusterSlug": "michael-slay"
     },
     {
       "id": "platform_medium_182",
@@ -2445,8 +2362,7 @@
       "slug": "mariam-veiszadeh",
       "isClusterMaster": false,
       "isJoshua": false,
-      "clusterSlug": "michael-slay",
-      "thematicGroup": ""
+      "clusterSlug": "michael-slay"
     },
     {
       "id": "andrew-anglin_186",
@@ -2460,8 +2376,7 @@
       "slug": "andrew-anglin",
       "isClusterMaster": false,
       "isJoshua": false,
-      "clusterSlug": "michael-slay",
-      "thematicGroup": ""
+      "clusterSlug": "michael-slay"
     },
     {
       "id": "hadiyo-elmi_187",
@@ -2475,8 +2390,7 @@
       "slug": "hadiyo-elmi",
       "isClusterMaster": false,
       "isJoshua": true,
-      "clusterSlug": "michael-slay",
-      "thematicGroup": "Gauche et Justice sociale"
+      "clusterSlug": "michael-slay"
     },
     {
       "id": "platform_stormfront_188",
@@ -2502,8 +2416,7 @@
       "slug": "tanya-cohen",
       "isClusterMaster": false,
       "isJoshua": true,
-      "clusterSlug": "michael-slay",
-      "thematicGroup": "Gauche et Justice sociale"
+      "clusterSlug": "michael-slay"
     },
     {
       "id": "platform_dailykos_190",
@@ -2553,8 +2466,7 @@
       "slug": "emily-americana",
       "isClusterMaster": false,
       "isJoshua": true,
-      "clusterSlug": "michael-slay",
-      "thematicGroup": "Libertariens et Libéraux"
+      "clusterSlug": "michael-slay"
     },
     {
       "id": "nuke-europe_194",
@@ -2568,8 +2480,7 @@
       "slug": "nuke-europe",
       "isClusterMaster": false,
       "isJoshua": true,
-      "clusterSlug": "michael-slay",
-      "thematicGroup": "Extrême-droite et Nationalisme"
+      "clusterSlug": "michael-slay"
     },
     {
       "id": "australi-witness_195",
@@ -2583,8 +2494,7 @@
       "slug": "australi-witness",
       "isClusterMaster": false,
       "isJoshua": true,
-      "clusterSlug": "michael-slay",
-      "thematicGroup": "Radicalismes religieux et identitaires"
+      "clusterSlug": "michael-slay"
     },
     {
       "id": "platform_8chan_196",
@@ -2646,8 +2556,7 @@
       "slug": "micronesia-gal",
       "isClusterMaster": true,
       "isJoshua": true,
-      "clusterSlug": "micronesia-gal",
-      "thematicGroup": "Culture"
+      "clusterSlug": "micronesia-gal"
     },
     {
       "id": "platform_reddit_202",
@@ -2673,8 +2582,7 @@
       "slug": "moon-metropolis",
       "isClusterMaster": true,
       "isJoshua": true,
-      "clusterSlug": "moon-metropolis",
-      "thematicGroup": "Libertariens et Libéraux"
+      "clusterSlug": "moon-metropolis"
     },
     {
       "id": "platform_disqus_204",
@@ -2772,8 +2680,7 @@
       "slug": "milo-yiannopoulos",
       "isClusterMaster": false,
       "isJoshua": false,
-      "clusterSlug": "moon-metropolis",
-      "thematicGroup": ""
+      "clusterSlug": "moon-metropolis"
     },
     {
       "id": "shaun-king_212",
@@ -2787,8 +2694,7 @@
       "slug": "shaun-king",
       "isClusterMaster": false,
       "isJoshua": false,
-      "clusterSlug": "moon-metropolis",
-      "thematicGroup": ""
+      "clusterSlug": "moon-metropolis"
     },
     {
       "id": "luke-mcmahon_213",
@@ -2802,8 +2708,7 @@
       "slug": "luke-mcmahon",
       "isClusterMaster": false,
       "isJoshua": false,
-      "clusterSlug": "moon-metropolis",
-      "thematicGroup": ""
+      "clusterSlug": "moon-metropolis"
     },
     {
       "id": "elise-potaka_214",
@@ -2817,8 +2722,7 @@
       "slug": "elise-potaka",
       "isClusterMaster": false,
       "isJoshua": false,
-      "clusterSlug": "moon-metropolis",
-      "thematicGroup": ""
+      "clusterSlug": "moon-metropolis"
     },
     {
       "id": "mike-wendling_215",
@@ -2832,8 +2736,7 @@
       "slug": "mike-wendling",
       "isClusterMaster": false,
       "isJoshua": false,
-      "clusterSlug": "moon-metropolis",
-      "thematicGroup": ""
+      "clusterSlug": "moon-metropolis"
     },
     {
       "id": "platform_e-mail_216",
@@ -2859,8 +2762,7 @@
       "slug": "weev-andrew-auernheimer",
       "isClusterMaster": false,
       "isJoshua": false,
-      "clusterSlug": "moon-metropolis",
-      "thematicGroup": ""
+      "clusterSlug": "moon-metropolis"
     },
     {
       "id": "chiara-zaffino_218",
@@ -2874,8 +2776,7 @@
       "slug": "chiara-zaffino",
       "isClusterMaster": false,
       "isJoshua": false,
-      "clusterSlug": "moon-metropolis",
-      "thematicGroup": ""
+      "clusterSlug": "moon-metropolis"
     },
     {
       "id": "alice-pooley_219",
@@ -2889,8 +2790,7 @@
       "slug": "alice-pooley",
       "isClusterMaster": false,
       "isJoshua": false,
-      "clusterSlug": "moon-metropolis",
-      "thematicGroup": ""
+      "clusterSlug": "moon-metropolis"
     },
     {
       "id": "peter-wallace_220",
@@ -2904,8 +2804,7 @@
       "slug": "peter-wallace",
       "isClusterMaster": false,
       "isJoshua": false,
-      "clusterSlug": "moon-metropolis",
-      "thematicGroup": ""
+      "clusterSlug": "moon-metropolis"
     },
     {
       "id": "rita-panahi_221",
@@ -2919,8 +2818,7 @@
       "slug": "rita-panahi",
       "isClusterMaster": false,
       "isJoshua": false,
-      "clusterSlug": "moon-metropolis",
-      "thematicGroup": ""
+      "clusterSlug": "moon-metropolis"
     },
     {
       "id": "nikki_222",
@@ -2934,8 +2832,7 @@
       "slug": "nikki",
       "isClusterMaster": false,
       "isJoshua": false,
-      "clusterSlug": "moon-metropolis",
-      "thematicGroup": ""
+      "clusterSlug": "moon-metropolis"
     },
     {
       "id": "emily-americana_223",
@@ -2949,8 +2846,7 @@
       "slug": "emily-americana",
       "isClusterMaster": false,
       "isJoshua": true,
-      "clusterSlug": "moon-metropolis",
-      "thematicGroup": "Libertariens et Libéraux"
+      "clusterSlug": "moon-metropolis"
     },
     {
       "id": "tanya-cohen_224",
@@ -2964,8 +2860,7 @@
       "slug": "tanya-cohen",
       "isClusterMaster": false,
       "isJoshua": true,
-      "clusterSlug": "moon-metropolis",
-      "thematicGroup": "Gauche et Justice sociale"
+      "clusterSlug": "moon-metropolis"
     },
     {
       "id": "platform_dailykos_225",
@@ -3003,8 +2898,7 @@
       "slug": "amina-blackberry",
       "isClusterMaster": false,
       "isJoshua": true,
-      "clusterSlug": "moon-metropolis",
-      "thematicGroup": "Conservateurs et Traditionalistes"
+      "clusterSlug": "moon-metropolis"
     },
     {
       "id": "death-to-sjws_228",
@@ -3018,8 +2912,7 @@
       "slug": "death-to-sjws",
       "isClusterMaster": false,
       "isJoshua": true,
-      "clusterSlug": "moon-metropolis",
-      "thematicGroup": "Extrême-droite et Nationalisme"
+      "clusterSlug": "moon-metropolis"
     },
     {
       "id": "chris-lavergne_229",
@@ -3033,8 +2926,7 @@
       "slug": "chris-lavergne",
       "isClusterMaster": false,
       "isJoshua": false,
-      "clusterSlug": "moon-metropolis",
-      "thematicGroup": ""
+      "clusterSlug": "moon-metropolis"
     },
     {
       "id": "mariam-veiszadeh_230",
@@ -3048,8 +2940,7 @@
       "slug": "mariam-veiszadeh",
       "isClusterMaster": false,
       "isJoshua": false,
-      "clusterSlug": "moon-metropolis",
-      "thematicGroup": ""
+      "clusterSlug": "moon-metropolis"
     },
     {
       "id": "steve-bannon_231",
@@ -3063,8 +2954,7 @@
       "slug": "steve-bannon",
       "isClusterMaster": false,
       "isJoshua": false,
-      "clusterSlug": "moon-metropolis",
-      "thematicGroup": ""
+      "clusterSlug": "moon-metropolis"
     },
     {
       "id": "platform_breitbart_232",
@@ -3104,8 +2994,7 @@
       "slug": "mouthful-of-grandpa",
       "isClusterMaster": true,
       "isJoshua": true,
-      "clusterSlug": "mouthful-of-grandpa",
-      "thematicGroup": "Extrême-droite et Nationalisme"
+      "clusterSlug": "mouthful-of-grandpa"
     },
     {
       "id": "platform_reddit_235",
@@ -3131,8 +3020,7 @@
       "slug": "naruto-2-0",
       "isClusterMaster": true,
       "isJoshua": true,
-      "clusterSlug": "naruto-2-0",
-      "thematicGroup": "Anti-système et Provocateurs"
+      "clusterSlug": "naruto-2-0"
     },
     {
       "id": "platform_wikipedia_237",
@@ -3158,8 +3046,7 @@
       "slug": "nuke-europe",
       "isClusterMaster": true,
       "isJoshua": true,
-      "clusterSlug": "nuke-europe",
-      "thematicGroup": "Extrême-droite et Nationalisme"
+      "clusterSlug": "nuke-europe"
     },
     {
       "id": "platform_reddit_239",
@@ -3185,8 +3072,7 @@
       "slug": "pineapple-10",
       "isClusterMaster": true,
       "isJoshua": true,
-      "clusterSlug": "pineapple-10",
-      "thematicGroup": "Culture"
+      "clusterSlug": "pineapple-10"
     },
     {
       "id": "platform_youtube_241",
@@ -3212,8 +3098,7 @@
       "slug": "the-old-jacobite-2",
       "isClusterMaster": true,
       "isJoshua": true,
-      "clusterSlug": "the-old-jacobite-2",
-      "thematicGroup": "Culture"
+      "clusterSlug": "the-old-jacobite-2"
     },
     {
       "id": "platform_wikipedia_243",
@@ -3239,8 +3124,7 @@
       "slug": "wake-up-white-man",
       "isClusterMaster": true,
       "isJoshua": true,
-      "clusterSlug": "wake-up-white-man",
-      "thematicGroup": "Extrême-droite et Nationalisme"
+      "clusterSlug": "wake-up-white-man"
     },
     {
       "id": "platform_vnn_245",
@@ -3290,8 +3174,7 @@
       "slug": "tanya-cohen",
       "isClusterMaster": true,
       "isJoshua": true,
-      "clusterSlug": "tanya-cohen",
-      "thematicGroup": "Gauche et Justice sociale"
+      "clusterSlug": "tanya-cohen"
     },
     {
       "id": "platform_dailykos_249",
@@ -3353,8 +3236,7 @@
       "slug": "mariam-veiszadeh",
       "isClusterMaster": false,
       "isJoshua": false,
-      "clusterSlug": "tanya-cohen",
-      "thematicGroup": ""
+      "clusterSlug": "tanya-cohen"
     },
     {
       "id": "james-taranto-wsj_254",
@@ -3368,8 +3250,7 @@
       "slug": "james-taranto-wsj",
       "isClusterMaster": false,
       "isJoshua": false,
-      "clusterSlug": "tanya-cohen",
-      "thematicGroup": ""
+      "clusterSlug": "tanya-cohen"
     },
     {
       "id": "michael-slay_255",
@@ -3383,8 +3264,7 @@
       "slug": "michael-slay",
       "isClusterMaster": false,
       "isJoshua": true,
-      "clusterSlug": "tanya-cohen",
-      "thematicGroup": "Extrême-droite et Nationalisme"
+      "clusterSlug": "tanya-cohen"
     },
     {
       "id": "platform_medium_256",
@@ -3422,8 +3302,7 @@
       "slug": "pamela-geller",
       "isClusterMaster": false,
       "isJoshua": false,
-      "clusterSlug": "tanya-cohen",
-      "thematicGroup": ""
+      "clusterSlug": "tanya-cohen"
     },
     {
       "id": "platform_daily-kos_259",
@@ -3449,8 +3328,7 @@
       "slug": "mike-masnick",
       "isClusterMaster": false,
       "isJoshua": false,
-      "clusterSlug": "tanya-cohen",
-      "thematicGroup": ""
+      "clusterSlug": "tanya-cohen"
     },
     {
       "id": "platform_techdirt_261",
