@@ -394,7 +394,6 @@ export function AdvancedCameraController({ config = DEFAULT_FLIGHT_CONFIG }) {
           );
 
           // Déclencher également un événement personnalisé pour la communication intra-page
-          // Cela contourne les problèmes potentiels avec le socket
           try {
             const resetEvent = new CustomEvent("resetVisitedPosts", {
               detail: { timestamp: Date.now() },

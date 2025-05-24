@@ -1,12 +1,9 @@
 import { useNavigate, useLocation } from "react-router-dom";
 import { Box } from "@mui/material";
 import ArrowBackOutlinedIcon from "@mui/icons-material/ArrowBackOutlined";
-import VolumeUpOutlinedIcon from "@mui/icons-material/VolumeUpOutlined";
-import VolumeOffOutlinedIcon from "@mui/icons-material/VolumeOffOutlined";
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import useSound from "use-sound";
-import { GlobalAudioController } from "../pages/Game/common/SoundPlayer";
 
 // Composant pour un bouton d'icône animé
 const AnimatedIconButton = ({ onClick, ariaLabel, children, transition }) => {
@@ -46,7 +43,7 @@ const AnimatedIconButton = ({ onClick, ariaLabel, children, transition }) => {
 const Navbar = () => {
   const navigate = useNavigate();
   const location = useLocation();
-  const [isMuted, setIsMuted] = useState(GlobalAudioController.isMuted);
+
   const [playSwitchSound] = useSound(
     `${import.meta.env.BASE_URL}sounds/switch-on.mp3`,
     { volume: 0.5 }
@@ -54,34 +51,11 @@ const Navbar = () => {
 
   const isHome = location.pathname === "/";
 
-  // Synchroniser l'état local avec l'état global du son
-  useEffect(() => {
-    const unsubscribe = GlobalAudioController.addMuteListener((muted) => {
-      setIsMuted(muted);
-    });
-
-    return unsubscribe;
-  }, []);
-
   const handleBack = () => {
     playSwitchSound();
     setTimeout(() => {
       navigate(-1);
     }, 300); // Ajoute un court délai pour que le son puisse jouer avant la navigation
-  };
-
-  const toggleMute = () => {
-    playSwitchSound();
-    GlobalAudioController.toggleMute();
-    // Pas besoin de mettre à jour l'état local ici car le listener le fera
-  };
-
-  // Animation rapide pour les icônes de son
-  const soundIconTransition = {
-    type: "spring",
-    stiffness: 500, // Augmentation de la raideur
-    damping: 25, // Légère augmentation de l'amortissement
-    duration: 0.15, // Durée plus courte
   };
 
   return (
@@ -95,7 +69,7 @@ const Navbar = () => {
         justifyContent: "space-between",
         alignItems: "center",
         padding: "20px",
-        zIndex: 1000,
+        zIndex: 999,
       }}
     >
       {/* Back button, only visible when not on home page */}
@@ -113,21 +87,8 @@ const Navbar = () => {
         </AnimatePresence>
       </Box>
 
-      {/* Sound toggle button - always visible */}
-      <AnimatePresence mode="wait" initial={false}>
-        <AnimatedIconButton
-          key={isMuted ? "muted" : "unmuted"}
-          onClick={toggleMute}
-          ariaLabel={isMuted ? "Unmute" : "Mute"}
-          transition={soundIconTransition}
-        >
-          {isMuted ? (
-            <VolumeOffOutlinedIcon fontSize="large" />
-          ) : (
-            <VolumeUpOutlinedIcon fontSize="large" />
-          )}
-        </AnimatedIconButton>
-      </AnimatePresence>
+      {/* Espace vide à droite pour maintenir l'alignement */}
+      <Box sx={{ width: 50 }} />
     </Box>
   );
 };

@@ -1,61 +1,7 @@
 /**
  * Utilitaires pour le graphe
  */
-import useAssetStore from "../../../services/AssetService";
-
-// Fonction pour charger les données du graphe
-export const loadSpatializedGraph = async () => {
-  try {
-    // Obtenir le chemin des données depuis le service d'assets
-    const assetService = useAssetStore.getState();
-    const graphPath = assetService.getDataPath(
-      "final_spatialized_graph.data.json"
-    );
-
-    // Charger le fichier JSON
-    const response = await fetch(graphPath);
-
-    if (!response.ok) {
-      throw new Error(
-        `Erreur lors du chargement des données: ${response.status}`
-      );
-    }
-
-    // Convertir la réponse en JSON
-    const data = await response.json();
-
-    // Vérifier et formater les données
-    if (!data.nodes || !data.links) {
-      throw new Error("Format de données incorrect: nœuds ou liens manquants");
-    }
-
-    // S'assurer que tous les nœuds ont des coordonnées 3D
-    const formattedNodes = data.nodes.map((node) => ({
-      ...node,
-      x: node.x || 0,
-      y: node.y || 0,
-      z: node.z || 0,
-      value: node.value || 5, // Taille par défaut
-    }));
-
-    // Formater les liens pour s'assurer qu'ils ont les bonnes propriétés
-    const formattedLinks = data.links.map((link) => ({
-      ...link,
-      // Assurer que source et target sont des ID
-      source: typeof link.source === "object" ? link.source.id : link.source,
-      target: typeof link.target === "object" ? link.target.id : link.target,
-      value: link.value || 1, // Épaisseur par défaut
-    }));
-
-    return {
-      nodes: formattedNodes,
-      links: formattedLinks,
-    };
-  } catch (error) {
-    console.error("Erreur lors du chargement du graphe:", error);
-    throw error;
-  }
-};
+import useAssetStore from "../services/AssetService";
 
 // Fonction pour trouver les liens associés à un nœud
 export const getNodeLinks = (nodeId, links) => {

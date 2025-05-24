@@ -1,20 +1,18 @@
-import React, {
-  useState,
-  useEffect,
-  useRef,
-  useMemo,
-  useCallback,
-} from "react";
+import React, { useState, useEffect, useRef, useMemo } from "react";
 import { Billboard } from "@react-three/drei";
 import * as THREE from "three";
 import useGameStore from "../store";
 import { useFrame, useThree } from "@react-three/fiber";
 import SvgPath from "./SvgPath";
 import useAssets from "../../../hooks/useAssets";
+import useCollisionStore, {
+  CollisionLayers,
+} from "../services/CollisionService";
 
 /**
  * Composant affichant une image interactive qui peut déclencher le TextPanel
  * avec une bounding box pour la détection d'interaction
+ * Utilise le système de collision centralisé
  */
 const InteractiveImage = ({
   id,
@@ -33,6 +31,9 @@ const InteractiveImage = ({
   // Utiliser notre service d'assets
   const assets = useAssets();
 
+  // Accéder au service de collision centralisé
+  const collisionService = useCollisionStore();
+
   // Utiliser les fonctions et états du store dédiés aux éléments interactifs
   const setActiveInteractiveElement = useGameStore(
     (state) => state.setActiveInteractiveElement
@@ -45,25 +46,25 @@ const InteractiveImage = ({
   // État pour savoir si cet élément est actuellement actif
   const isActive = activeInteractiveElementId === id;
 
-  // Référence pour le point de détection
-  const detectionPointRef = useRef(new THREE.Vector3());
-
   // Référence pour le dernier état d'activation
   const lastActiveStateRef = useRef(false);
 
-  // Ajouter un état local pour limiter la fréquence des mises à jour
-  const [lastCheckTime, setLastCheckTime] = useState(0);
-  const throttleTime = 100; // 100ms entre les vérifications
+  // Référence pour la dernière vérification
+  const lastCheckTimeRef = useRef(0);
+  const throttleTimeRef = useRef(100); // 100ms entre les vérifications
 
-  // Vecteur directionnel pour les calculs
-  const directionVector = new THREE.Vector3();
+  // Référence pour le dernier état connu de la bounding box
+  const boundingBoxRef = useRef(null);
+
+  // Référence pour le dernier ID
+  const idRef = useRef(id);
 
   // Demi-taille de la bounding box
   const halfSize = boundingBoxSize / 2;
 
   // Définir les limites de la bounding box
   const boundingBox = useMemo(() => {
-    return {
+    const box = {
       min: {
         x: position[0] - halfSize,
         y: position[1] - halfSize,
@@ -79,141 +80,80 @@ const InteractiveImage = ({
         y: position[1],
         z: position[2],
       },
+      id,
+      name: title,
+      data: { id, title, description },
+      layer: CollisionLayers.INTERACTIVE,
     };
-  }, [position, halfSize]);
 
-  // Créer les lignes pour la bounding box
-  const boundingBoxLines = useMemo(() => {
-    if (!showBoundingBox) return null;
+    // Mettre à jour la référence pour usage dans les effets
+    boundingBoxRef.current = box;
+    idRef.current = id;
 
-    const { min, max } = boundingBox;
+    return box;
+  }, [position, halfSize, id, title, description]);
 
-    // Définir les 8 sommets de la boîte
-    const vertices = [
-      // Face avant (en z)
-      [min.x, min.y, min.z],
-      [max.x, min.y, min.z],
-      [max.x, max.y, min.z],
-      [min.x, max.y, min.z],
-      // Face arrière (en z)
-      [min.x, min.y, max.z],
-      [max.x, min.y, max.z],
-      [max.x, max.y, max.z],
-      [min.x, max.y, max.z],
-    ];
+  // Enregistrer cette image dans le service de collision
+  useEffect(() => {
+    // Obtenir les références locales (pour éviter les dépendances)
+    const currentId = idRef.current;
+    const currentBox = boundingBoxRef.current;
+    const debug = collisionService.debugMode;
 
-    // Définir les 12 arêtes de la boîte
-    const edges = [
-      // Face avant
-      [0, 1],
-      [1, 2],
-      [2, 3],
-      [3, 0],
-      // Face arrière
-      [4, 5],
-      [5, 6],
-      [6, 7],
-      [7, 4],
-      // Connexions entre les faces
-      [0, 4],
-      [1, 5],
-      [2, 6],
-      [3, 7],
-    ];
+    // Enregistrer la boîte englobante dans le service de collision
+    collisionService.registerInteractiveElement(currentId, currentBox);
 
-    return edges.map((edge, i) => {
-      const start = vertices[edge[0]];
-      const end = vertices[edge[1]];
-
-      // Créer un tableau de points pour cette ligne
-      const points = [
-        new THREE.Vector3(start[0], start[1], start[2]),
-        new THREE.Vector3(end[0], end[1], end[2]),
-      ];
-
-      // Créer une géométrie à partir des points
-      const geometry = new THREE.BufferGeometry().setFromPoints(points);
-
-      // Créer un matériau pour la ligne via notre service d'assets
-      const materialId = `bbox-line-material-${id}`;
-
-      if (assets.isReady) {
-        assets.createMaterial(materialId, () => {
-          return new THREE.LineBasicMaterial({
-            color: "#00ff00",
-            transparent: true,
-            opacity: 0.3,
-            linewidth: 1,
-          });
-        });
-      }
-
-      const material = assets.getMaterial(materialId);
-
-      if (!material) {
-        return null;
-      }
-
-      return (
-        <line key={`bbox-line-${i}`} geometry={geometry}>
-          <primitive object={material} />
-        </line>
+    if (debug) {
+      console.log(
+        `InteractiveImage: registered element ${currentId} in collision service`
       );
-    });
-  }, [showBoundingBox, boundingBox, assets.isReady, id]);
+    }
 
-  // Fonction pour calculer le point de détection devant la caméra
-  const calculateDetectionPoint = useCallback((camera) => {
-    // Récupérer la direction dans laquelle la caméra regarde
-    directionVector.set(0, 0, -1).applyQuaternion(camera.quaternion);
+    // Nettoyer lors du démontage
+    return () => {
+      // Supprimer la boîte englobante du service de collision
+      collisionService.unregisterInteractiveElement(currentId);
 
-    // Calculer le point à 100 unités devant la caméra
-    return new THREE.Vector3()
-      .copy(camera.position)
-      .addScaledVector(directionVector, 100);
-  }, []);
+      // Si cet élément est actif lors du démontage, le désactiver
+      if (activeInteractiveElementId === currentId) {
+        setActiveInteractiveElement(null, null, null);
+      }
+    };
+  }, [position, size]); // Dépendances minimales: uniquement quand position ou taille change
 
-  // Fonction pour vérifier si un point est à l'intérieur de la bounding box
-  const isPointInBoundingBox = useCallback(
-    (point) => {
-      // Vérification de sécurité
-      if (!point || !boundingBox) return false;
-
-      return (
-        point.x >= boundingBox.min.x &&
-        point.x <= boundingBox.max.x &&
-        point.y >= boundingBox.min.y &&
-        point.y <= boundingBox.max.y &&
-        point.z >= boundingBox.min.z &&
-        point.z <= boundingBox.max.z
-      );
-    },
-    [boundingBox]
-  );
-
-  // Fonction pour mettre à jour l'état d'activation
-  const updateActivationState = useCallback(() => {
+  // Fonction pour mettre à jour l'état d'activation à l'aide du service de collision
+  const updateActivationState = () => {
     // Ne pas faire la détection si un cluster est actif
     if (activeClusterId !== null) {
       if (isActive) {
         setActiveInteractiveElement(null, null, null);
-        console.log("InteractiveImage: désactivation car un cluster est actif");
       }
       return;
     }
 
-    // Calculer le point de détection
-    const detectionPoint = calculateDetectionPoint(camera);
-    detectionPointRef.current = detectionPoint;
+    // Limiter la fréquence des vérifications
+    const now = Date.now();
+    if (now - lastCheckTimeRef.current < throttleTimeRef.current) {
+      return;
+    }
+    lastCheckTimeRef.current = now;
 
-    // Vérifier si le point de détection est dans la bounding box
-    const pointIsInBox = isPointInBoundingBox(detectionPoint);
+    // Utiliser le service de collision pour calculer le point de détection
+    collisionService.calculateDetectionPoint(camera);
+
+    // Vérifier si l'élément interactif contient le point de détection
+    const containingElement =
+      collisionService.findContainingInteractiveElement();
+
+    // Vérifier si cet élément contient le point
+    const isPointInThisElement =
+      containingElement && containingElement.id === id;
 
     // Mettre à jour seulement si l'état a changé
-    if (pointIsInBox !== lastActiveStateRef.current) {
-      lastActiveStateRef.current = pointIsInBox;
+    if (isPointInThisElement !== lastActiveStateRef.current) {
+      lastActiveStateRef.current = isPointInThisElement;
 
-      if (pointIsInBox) {
+      if (isPointInThisElement) {
         // Préparer les données de l'élément pour le store
         const elementData = {
           id,
@@ -222,50 +162,19 @@ const InteractiveImage = ({
         };
 
         // Activer l'élément interactif
-        console.log(`InteractiveImage: activation de ${id} - ${title}`);
         setActiveInteractiveElement(id, "image", elementData);
       } else if (isActive) {
         // Désactiver l'élément seulement si c'est celui-ci qui est actif
-        console.log(`InteractiveImage: désactivation de ${id}`);
         setActiveInteractiveElement(null, null, null);
       }
     }
-  }, [
-    id,
-    title,
-    description,
-    isActive,
-    activeClusterId,
-    camera,
-    setActiveInteractiveElement,
-    isPointInBoundingBox,
-    calculateDetectionPoint,
-  ]);
+  };
 
-  // Mettre à jour l'état à chaque frame avec limitation de fréquence
+  // Mettre à jour l'état à chaque frame
   useFrame(() => {
     if (!assets.isReady) return;
-
-    const now = Date.now();
-
-    // Limiter la fréquence des vérifications pour les performances
-    if (now - lastCheckTime < throttleTime) {
-      return;
-    }
-
-    setLastCheckTime(now);
     updateActivationState();
   });
-
-  // Assurer le nettoyage lors du démontage du composant
-  useEffect(() => {
-    return () => {
-      // Si cet élément est actif lors du démontage, le désactiver
-      if (activeInteractiveElementId === id) {
-        setActiveInteractiveElement(null, null, null);
-      }
-    };
-  }, [id, activeInteractiveElementId, setActiveInteractiveElement]);
 
   // Si le service d'assets n'est pas prêt, ne rien afficher
   if (!assets.isReady) {
@@ -288,8 +197,7 @@ const InteractiveImage = ({
         lineWidth={isActive ? 3 : 2} // Ligne plus épaisse quand actif
       />
 
-      {/* Bounding box uniquement en mode debug */}
-      {showBoundingBox && assets.isReady && <group>{boundingBoxLines}</group>}
+      {/* Les boîtes englobantes sont maintenant gérées par CollisionDebugRenderer */}
     </group>
   );
 };

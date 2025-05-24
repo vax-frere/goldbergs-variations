@@ -101,6 +101,7 @@ const ExportForceGraphPage = () => {
           polarisation: node.polarisation,
           cercle: node.cercle,
           politicalSphere: node.politicalSphere,
+          clusterSlug: node.clusterSlug,
         };
       });
 

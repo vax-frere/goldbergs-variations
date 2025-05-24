@@ -25,6 +25,11 @@ const useGameStore = create((set, get) => ({
   activeInteractiveElementType: null,
   activeInteractiveElementData: null,
 
+  // États pour les différents modes du jeu (utilisés par le système de collision)
+  activeDialogue: null,
+  isInMenuMode: false,
+  isInCutscene: false,
+
   // État pour suivre les clusters visités
   visitedClusters: [],
   visitedPersonasCount: 0,
@@ -32,28 +37,47 @@ const useGameStore = create((set, get) => ({
   // État pour suivre les nœuds déjà visités
   visitedNodes: [],
 
-  // Fonction pour définir le cluster actif
-  setActiveCluster: (clusterId, clusterName = null, clusterSlug = null) => {
-    // Vérifier si ce cluster a déjà été visité
-    const state = get();
-    const alreadyVisited = state.visitedClusters.some(
-      (cluster) => cluster.id === clusterId
-    );
+  // État pour les contrôles audio (simplifié)
+  audioEnabled: true,
 
-    // Si le cluster n'a pas encore été visité, l'ajouter à la liste
-    if (clusterId && !alreadyVisited) {
-      set((state) => ({
-        visitedClusters: [
-          ...state.visitedClusters,
-          {
-            id: clusterId,
-            name: clusterName,
-            slug: clusterSlug,
-            visitedAt: new Date().toISOString(),
-          },
-        ],
-        visitedPersonasCount: state.visitedPersonasCount + 1,
-      }));
+  // Fonction pour définir les contrôles audio
+  setAudioControls: (controls) => {
+    set({
+      audioControls: {
+        ...get().audioControls,
+        ...controls,
+      },
+    });
+  },
+
+  // Fonction pour définir le cluster actif
+  setActiveCluster: (
+    clusterId = null,
+    clusterName = null,
+    clusterSlug = null
+  ) => {
+    // Si le cluster est actif et n'a pas encore été visité, l'ajouter à la liste des clusters visités
+    if (clusterId) {
+      const state = get();
+      const alreadyVisited = state.visitedClusters.some(
+        (cluster) => cluster.id === clusterId
+      );
+
+      // Si ce cluster n'a pas encore été visité, l'ajouter à la liste et incrémenter le compteur
+      if (!alreadyVisited) {
+        set((state) => ({
+          visitedClusters: [
+            ...state.visitedClusters,
+            {
+              id: clusterId,
+              name: clusterName,
+              slug: clusterSlug,
+              visitedAt: new Date().toISOString(),
+            },
+          ],
+          visitedPersonasCount: state.visitedPersonasCount + 1,
+        }));
+      }
     }
 
     // Mettre à jour le cluster actif
@@ -61,15 +85,22 @@ const useGameStore = create((set, get) => ({
       activeClusterId: clusterId,
       activeClusterName: clusterName,
       activeClusterSlug: clusterSlug,
-      // Désactiver les éléments interactifs lorsqu'un cluster est activé
+      // Réinitialiser l'état du nœud actif et des éléments interactifs
+      activeNodeId: null,
+      activeNodeName: null,
+      activeNodeData: null,
       activeInteractiveElementId: null,
       activeInteractiveElementType: null,
       activeInteractiveElementData: null,
     });
   },
 
-  // Fonction pour définir le cluster survolé
-  setHoveredCluster: (clusterId, clusterName = null, clusterSlug = null) =>
+  // Fonction pour définir le cluster survolé (hover)
+  setHoveredCluster: (
+    clusterId = null,
+    clusterName = null,
+    clusterSlug = null
+  ) =>
     set({
       hoveredClusterId: clusterId,
       hoveredClusterName: clusterName,
@@ -131,6 +162,11 @@ const useGameStore = create((set, get) => ({
       activeNodeData: null,
     }),
 
+  // Fonctions pour gérer les différents modes de jeu
+  setDialogue: (dialogueData = null) => set({ activeDialogue: dialogueData }),
+  setMenuMode: (isActive = false) => set({ isInMenuMode: isActive }),
+  setCutsceneMode: (isActive = false) => set({ isInCutscene: isActive }),
+
   // Fonction utilitaire pour tout réinitialiser
   resetAllActiveStates: () =>
     set({
@@ -143,6 +179,9 @@ const useGameStore = create((set, get) => ({
       activeInteractiveElementId: null,
       activeInteractiveElementType: null,
       activeInteractiveElementData: null,
+      activeDialogue: null,
+      isInMenuMode: false,
+      isInCutscene: false,
     }),
 
   // Fonction pour réinitialiser les clusters visités (utile pour les tests ou nouvelle session)
@@ -165,6 +204,9 @@ const useGameStore = create((set, get) => ({
       visitedPersonasCount: 0,
       visitedNodes: [],
     }),
+
+  // Fonction pour activer/désactiver l'audio global
+  toggleAudio: () => set((state) => ({ audioEnabled: !state.audioEnabled })),
 
   // État d'autres éléments du jeu peut être ajouté ici
   // ...

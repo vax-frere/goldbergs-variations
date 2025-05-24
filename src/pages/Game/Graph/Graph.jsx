@@ -5,22 +5,31 @@ import React, {
   useImperativeHandle,
   useEffect,
   useState,
+  useCallback,
 } from "react";
 import * as THREE from "three";
 import OptimizedNode from "./Node/OptimizedNode";
 import OptimizedLink from "./Link/OptimizedLink";
-import useNearestCluster from "./hooks/useNearestCluster";
 import useGameStore from "../store";
 import BoundingBoxDebug from "./debug/BoundingBoxDebug";
+import CollisionDebugRenderer from "./debug/CollisionDebugRenderer";
 import { Billboard, Text, Box } from "@react-three/drei";
+import { useFrame } from "@react-three/fiber";
 import useAssets from "../../../hooks/useAssets";
-import { calculateClusterCentroids } from "./utils";
+import {
+  calculateClusterCentroids,
+  calculateClusterBoundingBoxes,
+} from "./utils";
 import useNodeDetection from "./hooks/useNodeDetection";
 import "./effects/NodeHoverEffect";
 import { getInputManager } from "../AdvancedCameraController/inputManager";
+import useCollisionStore, {
+  CollisionLayers,
+} from "../services/CollisionService";
+import useCollisionDetection from "./hooks/useCollisionDetection";
 
 // Composant pour afficher un graphe avec des nœuds et des liens
-// Utilise un système de détection de cluster proche pour améliorer l'affichage
+// Utilise un système de détection de collision centralisé
 const Graph = forwardRef(({ graphData, debugMode = false }, ref) => {
   // Référence du groupe pour manipuler la position globale
   const groupRef = useRef();
@@ -28,14 +37,37 @@ const Graph = forwardRef(({ graphData, debugMode = false }, ref) => {
   // Utiliser le service d'assets centralisé
   const assets = useAssets();
 
-  // Récupérer l'ID du cluster actif depuis le store
-  const activeClusterId = useGameStore((state) => state.activeClusterId);
-  const activeNodeId = useGameStore((state) => state.activeNodeId);
+  // Accéder au service de collision
+  const collisionService = useCollisionStore();
+
+  // Référence pour stocker la dernière valeur des boîtes de collision
+  const lastClusterBoxesRef = useRef(null);
+
+  // Utiliser le hook de détection de collision centralisé
+  const {
+    hoveredClusterId,
+    activeClusterId,
+    activeNodeId,
+    registerClusterBoxes,
+  } = useCollisionDetection({
+    debug: debugMode,
+    detectClusters: true,
+    detectNodes: true,
+    detectInteractiveElements: true,
+    enabledLayers: [
+      CollisionLayers.CLUSTERS,
+      CollisionLayers.NODES,
+      CollisionLayers.INTERACTIVE,
+    ],
+  });
+
+  // Récupérer les informations du store Zustand
+  const setActiveCluster = useGameStore((state) => state.setActiveCluster);
+  const hoveredClusterName = useGameStore((state) => state.hoveredClusterName);
   const activeNodeName = useGameStore((state) => state.activeNodeName);
 
-  // Récupérer les informations du cluster survolé
-  const hoveredClusterId = useGameStore((state) => state.hoveredClusterId);
-  const hoveredClusterName = useGameStore((state) => state.hoveredClusterName);
+  // Référence pour le dernier état du cluster survolé
+  const lastHoveredRef = useRef({ id: null, name: null });
 
   // Créer une Map pour accéder rapidement aux nœuds par ID
   const nodeMap = useMemo(() => {
@@ -44,32 +76,113 @@ const Graph = forwardRef(({ graphData, debugMode = false }, ref) => {
     return new Map(graphData.nodes.map((node) => [node.id, node]));
   }, [graphData?.nodes]);
 
-  // Utiliser le hook pour détecter le cluster le plus proche
-  // Paramètres ajustés pour une détection immédiate sans délai
-  const nearestClusterOptions = {
-    debug: debugMode, // Activer/désactiver les logs de débogage
-    boundingBoxExpansion: 20, // Expansion des boîtes englobantes (en %)
-    maxDistanceToClusterCentroid: 400, // Distance maximale avant désactivation du cluster
-  };
-
-  useNearestCluster(graphData?.nodes, nearestClusterOptions);
-
-  // Utiliser le hook pour détecter le nœud le plus proche quand un cluster est actif
-  const nodeDetectionOptions = {
+  // Utiliser le hook pour détecter les noeuds quand un cluster est actif
+  // Cette ligne est essentielle pour que les noeuds en mode avancé
+  // soient détectables par le système de collision
+  const { nodeBoundingBoxes } = useNodeDetection(graphData?.nodes, {
     debug: debugMode,
-    nodeBoundingBoxSize: 30,
-  };
+    collisionLayer: CollisionLayers.NODES,
+  });
 
-  const { nodeBoundingBoxes } = useNodeDetection(
-    graphData?.nodes,
-    nodeDetectionOptions
-  );
+  // Debug: Afficher le nombre de boîtes de nœuds détectées
+  useEffect(() => {
+    if (debugMode && Object.keys(nodeBoundingBoxes || {}).length > 0) {
+      console.log(
+        `Graph: Node detection active avec ${
+          Object.keys(nodeBoundingBoxes).length
+        } boîtes de nœuds`
+      );
+    }
+  }, [debugMode, nodeBoundingBoxes]);
 
   // Calculer les centroïdes des clusters
   const { centroids, clusterNames } = useMemo(() => {
     if (!graphData?.nodes) return { centroids: {}, clusterNames: {} };
     return calculateClusterCentroids(graphData.nodes, true);
   }, [graphData?.nodes]);
+
+  // Fonction pour vérifier si la touche d'activation est pressée
+  const isActivationKeyPressed = useCallback(() => {
+    // Utiliser l'InputManager pour vérifier l'état des touches
+    const inputManager = getInputManager();
+
+    // Vérifier si la touche T est pressée (clavier) ou bouton X (manette)
+    const isKeyboardActivationPressed =
+      inputManager.keysPressed["KeyT"] || false;
+
+    // Bouton X de la manette (index 2 dans les gamepads)
+    let isGamepadActivationPressed = false;
+    const gamepads = navigator.getGamepads ? navigator.getGamepads() : [];
+    if (gamepads[0]) {
+      isGamepadActivationPressed = gamepads[0].buttons[2]?.pressed || false;
+    }
+
+    return isKeyboardActivationPressed || isGamepadActivationPressed;
+  }, []);
+
+  // Gérer l'activation du cluster
+  useFrame(() => {
+    // Ne rien faire si un cluster est déjà actif
+    if (activeClusterId !== null) return;
+
+    // Mettre à jour le dernier cluster survolé
+    if (hoveredClusterId !== lastHoveredRef.current.id) {
+      lastHoveredRef.current = {
+        id: hoveredClusterId,
+        name: hoveredClusterName,
+      };
+    }
+
+    // Vérifier si on peut activer un cluster
+    if (
+      hoveredClusterId !== null &&
+      isActivationKeyPressed() &&
+      activeClusterId === null
+    ) {
+      // Activer le cluster
+      setActiveCluster(hoveredClusterId, hoveredClusterName);
+
+      if (debugMode) {
+        console.log(
+          `Graph: Activation du cluster ${hoveredClusterId} (${hoveredClusterName})`
+        );
+      }
+    }
+  });
+
+  // Enregistrer les boîtes englobantes des clusters dans le service de collision
+  useEffect(() => {
+    // Éviter d'enregistrer si les données ne sont pas prêtes
+    if (!graphData?.nodes || !graphData.nodes.length) return;
+
+    // Calculer les boîtes englobantes des clusters
+    const { boundingBoxes } = calculateClusterBoundingBoxes(
+      graphData.nodes,
+      true
+    );
+
+    // Ne mettre à jour que si les boîtes ont changé
+    if (
+      !lastClusterBoxesRef.current ||
+      JSON.stringify(lastClusterBoxesRef.current) !==
+        JSON.stringify(boundingBoxes)
+    ) {
+      // Enregistrer dans le service de collision
+      registerClusterBoxes(boundingBoxes);
+
+      // Mettre à jour la référence
+      lastClusterBoxesRef.current = boundingBoxes;
+
+      if (debugMode) {
+        console.log("Graph: Registered cluster collision boxes", boundingBoxes);
+      }
+    }
+
+    // Nettoyer lors du démontage
+    return () => {
+      // Les ressources sont nettoyées automatiquement par le service
+    };
+  }, [graphData?.nodes, registerClusterBoxes, debugMode]);
 
   // Exposer des méthodes via la référence
   useImperativeHandle(
@@ -401,40 +514,23 @@ const Graph = forwardRef(({ graphData, debugMode = false }, ref) => {
           {/* Nœuds avancés */}
           {activeClusterNodes}
 
-          {/* Afficher les boîtes englobantes des nœuds en mode debug */}
-          {debugMode &&
-            Object.entries(nodeBoundingBoxes).map(([nodeId, box]) => (
-              <group key={`node-bbox-${nodeId}`}>
-                <Box
-                  position={[
-                    (box.min.x + box.max.x) / 2,
-                    (box.min.y + box.max.y) / 2,
-                    (box.min.z + box.max.z) / 2,
-                  ]}
-                  args={[
-                    box.max.x - box.min.x,
-                    box.max.y - box.min.y,
-                    box.max.z - box.min.z,
-                  ]}
-                >
-                  <meshBasicMaterial
-                    color={nodeId === activeNodeId ? "#ff0000" : "#00ff00"}
-                    wireframe
-                    transparent
-                    opacity={0.3}
-                  />
-                </Box>
-              </group>
-            ))}
+          {/* 
+            Note: Nous n'affichons plus manuellement les boîtes englobantes des nœuds ici
+            car elles sont maintenant gérées par le CollisionDebugRenderer centralisé
+          */}
         </group>
       )}
 
       {/* Afficher les boîtes englobantes en mode debug */}
       {debugMode && (
-        <BoundingBoxDebug
-          nodes={graphData?.nodes}
+        <CollisionDebugRenderer
           show={true}
-          boundingBoxExpansion={nearestClusterOptions.boundingBoxExpansion}
+          showClusters={true}
+          showNodes={true}
+          showInteractive={true}
+          activeClusterId={activeClusterId}
+          hoveredClusterId={hoveredClusterId}
+          activeNodeId={activeNodeId}
         />
       )}
 

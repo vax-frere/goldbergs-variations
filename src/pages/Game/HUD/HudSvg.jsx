@@ -1,4 +1,5 @@
 import React, { useEffect, useRef } from "react";
+import useAssets from "../../../hooks/useAssets";
 
 /**
  * Composant SVG du HUD qui affiche la position actuelle et la vitesse
@@ -11,6 +12,9 @@ const HudSvg = ({ position = { x: 0, y: 0, z: 0 }, speed = 0 }) => {
   const speedBarRef = useRef(null);
   const speedBarFillRef = useRef(null);
   const MAX_SPEED = 300; // Vitesse maximale pour la barre (pleine)
+
+  // Utiliser le hook useAssets pour accéder aux fonctions de gestion des assets
+  const { getImage } = useAssets();
 
   // Charger le SVG et mettre à jour les informations
   useEffect(() => {
@@ -43,8 +47,8 @@ const HudSvg = ({ position = { x: 0, y: 0, z: 0 }, speed = 0 }) => {
       }
     };
 
-    // Charger le SVG depuis le fichier
-    fetch(`${import.meta.env.BASE_URL}img/hud-example.svg`)
+    // Charger le SVG depuis le fichier en utilisant l'asset manager
+    fetch(getImage("hud.svg"))
       .then((response) => response.text())
       .then((svgText) => {
         if (svgRef.current) {
@@ -60,7 +64,7 @@ const HudSvg = ({ position = { x: 0, y: 0, z: 0 }, speed = 0 }) => {
 
     // Mettre à jour les informations lorsqu'elles changent
     updateHudInfo();
-  }, [position, speed]);
+  }, [position, speed, getImage]);
 
   return (
     <div

@@ -1,7 +1,6 @@
 import { useRef, useEffect, useState, useCallback } from "react";
 import { Canvas } from "@react-three/fiber";
 import { Stats } from "@react-three/drei";
-import { log } from "../../utils/logger";
 import {
   CAMERA_FOV,
   BASE_CAMERA_DISTANCE,
@@ -16,16 +15,14 @@ import useGameStore from "./store";
 
 // Importer le nouveau service d'assets
 import useAssets from "../../hooks/useAssets";
-import { initializeAssetService } from "../../services/AssetService";
+import { initializeAssetService } from "./services/AssetService";
 
 import GridReferences from "../../components/GridReferences";
 import Graph from "./Graph";
-import { loadSpatializedGraph } from "./Graph/utils";
 import AdvancedCameraController, {
   GamepadIndicator,
 } from "./AdvancedCameraController/AdvancedCameraController";
 import DebugNavigationUI from "./AdvancedCameraController/DebugNavigationUI";
-import SoundPlayer from "./common/SoundPlayer";
 import {
   EffectComposer,
   Bloom,
@@ -41,6 +38,9 @@ import Stars from "./common/Stars";
 import HUD from "./HUD/HUD";
 import TextPanel from "./common/TextPanel";
 import LoadingBar from "./common/LoadingBar";
+import useCollisionStore from "./services/CollisionService";
+import GameStateManager from "./GameStateManager";
+import GameAudio from "./common/GameAudio";
 
 // Liste des portraits interactifs de Joshua
 const INTERACTIVE_PORTRAITS = [
@@ -76,10 +76,7 @@ const INTERACTIVE_PORTRAITS = [
 const Game = () => {
   const [graphData, setGraphData] = useState({ nodes: [], links: [] });
   const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState(null);
-  const [gameStarted, setGameStarted] = useState(true);
-  const [audioStarted, setAudioStarted] = useState(true);
-  const [explosionCompleted, setExplosionCompleted] = useState(false);
+  const [gameStarted, setGameStarted] = useState(false);
 
   // Utiliser notre hook de mode debug
   const [debugMode, toggleDebugMode] = useDebugMode(false);
@@ -96,18 +93,14 @@ const Game = () => {
   // Utiliser notre nouveau hook pour les assets
   const assets = useAssets({ autoInit: true });
 
+  // Accéder au service de collision
+  const collisionService = useCollisionStore();
+
   // Utiliser useCallback pour stabiliser cette fonction
   const getGraphRef = useCallback((instance) => {
     if (instance) {
-      log("Référence du graphe obtenue");
       graphInstanceRef.current = instance;
     }
-  }, []);
-
-  // Fonction pour démarrer l'audio immédiatement
-  const startAudio = useCallback(() => {
-    setAudioStarted(true);
-    console.log("Audio démarré");
   }, []);
 
   // Fonction pour charger les données et construire le graphe
@@ -116,38 +109,46 @@ const Game = () => {
       try {
         setIsLoading(true);
 
-        // Utiliser notre nouvelle fonction pour charger les données spatialisées
-        const data = await loadSpatializedGraph();
+        // Utiliser le service d'assets pour charger le graphe spatialisé
+        const data = await assets.loadGraphData();
 
         // Mettre à jour l'état du graphe avec les nœuds et liens
         setGraphData(data);
         setIsLoading(false);
+
+        // Configurer initialement le service de collision avec le mode debug
+        if (debugMode) {
+          collisionService.setDebugMode(true);
+        }
+
+        // Démarrer le jeu quand les données sont chargées
+        setGameStarted(true);
       } catch (err) {
         console.error("Erreur lors du chargement des données:", err);
-        setError(err.message);
         setIsLoading(false);
       }
     };
 
-    fetchData();
-  }, []);
-
-  // Effet pour gérer le délai de l'explosion
-  useEffect(() => {
-    if (gameStarted) {
-      const timer = setTimeout(() => {
-        setExplosionCompleted(true);
-        console.log("Explosion terminée, étoiles filantes activées");
-      }, 5000);
-
-      return () => {
-        clearTimeout(timer);
-      };
+    // Ne charger les données que lorsque le service d'assets est prêt
+    if (assets.isReady) {
+      fetchData();
     }
-  }, [gameStarted]);
+  }, [assets.isReady, debugMode]); // Dépendre de l'état de préparation des assets
+
+  // Mettre à jour le mode debug du service de collision seulement quand il change
+  // et utiliser une référence pour éviter les mises à jour en boucle
+  const lastDebugModeRef = useRef(debugMode);
+  useEffect(() => {
+    // Ne mettre à jour que si le mode debug a vraiment changé
+    if (lastDebugModeRef.current !== debugMode) {
+      collisionService.setDebugMode(debugMode);
+      lastDebugModeRef.current = debugMode;
+    }
+  }, [debugMode]); // Dépendance stable
 
   // Déterminer si l'application est prête à être affichée
-  const isReady = !isLoading && assets.isReady;
+  // S'assurer que les assets sont chargés ET que le graphe est prêt
+  const isReady = !isLoading && assets.isReady && graphData.nodes.length > 0;
 
   return (
     <div
@@ -159,6 +160,7 @@ const Game = () => {
         left: 0,
       }}
     >
+      {console.log("render")}
       {/* Indicateur visuel du mode debug */}
       {debugMode && (
         <div
@@ -182,7 +184,11 @@ const Game = () => {
       {!isReady && (
         <LoadingBar
           progress={assets.progress}
-          label="Initializing data galaxy"
+          label={
+            isLoading
+              ? "Chargement des données du graphe..."
+              : "Initialisation de la galaxie de données"
+          }
           fullScreen={true}
         />
       )}
@@ -190,35 +196,8 @@ const Game = () => {
       {/* Ne montrer le contenu que lorsque tout est chargé */}
       {isReady && (
         <>
-          {/* Composants de son - contrôlés par audioStarted */}
-          {audioStarted && (
-            <>
-              <SoundPlayer
-                soundPath={assets.getSoundPath("ambiant.mp3")}
-                defaultVolume={0.1}
-                loop={true}
-                autoPlay={true}
-                displayControls={false}
-                controlPosition={{ top: "20px", right: "20px" }}
-                tooltipLabels={{
-                  mute: "Couper le son",
-                  unmute: "Activer le son",
-                }}
-              />
-              <SoundPlayer
-                soundPath={assets.getSoundPath("interview.m4a")}
-                defaultVolume={0.7}
-                loop={true}
-                autoPlay={true}
-                displayControls={false}
-                controlPosition={{ top: "20px", right: "80px" }}
-                tooltipLabels={{
-                  mute: "Couper l'interview",
-                  unmute: "Activer l'interview",
-                }}
-              />
-            </>
-          )}
+          {/* Gestionnaire d'état de jeu pour configurer les collisions */}
+          <GameStateManager debugMode={debugMode} />
 
           <Canvas
             shadows
@@ -242,7 +221,7 @@ const Game = () => {
               color="#f0f0ff"
             />
 
-            {/* Utiliser notre nouveau composant Graph au lieu de ForceGraph */}
+            {/* Afficher le Graph quand le jeu a démarré */}
             {gameStarted && (
               <Graph
                 ref={getGraphRef}
@@ -251,15 +230,8 @@ const Game = () => {
               />
             )}
 
-            {/* Ajouter le composant Posts pour afficher les publications */}
-            {/* {gameStarted && (
-              <Posts
-                renderer="sphere"
-                explosionDuration={5}
-                explosionStagger={0.01}
-                explosionPathVariation={0.3}
-              />
-            )} */}
+            {/* Ajouter le composant de gestion audio */}
+            <GameAudio />
 
             {/* Groupe des éléments spéciaux (masqués lorsqu'un cluster est actif) */}
             {gameStarted && !hasActiveCluster && (
@@ -292,8 +264,8 @@ const Game = () => {
                   rotation={[Math.PI / 4, 0, Math.PI / 6]}
                 />
 
-                {/* Ajouter des étoiles filantes si l'explosion est terminée */}
-                {explosionCompleted && <ShootingStars count={5} />}
+                {/* Ajouter des étoiles filantes en permanence */}
+                <ShootingStars count={5} />
               </>
             )}
 
@@ -304,7 +276,7 @@ const Game = () => {
             <AdvancedCameraController />
 
             {/* Post-processing pour ajouter des effets visuels */}
-            {/* <EffectComposer>
+            <EffectComposer>
               <Bloom
                 intensity={0.15}
                 luminanceThreshold={0.01}
@@ -315,7 +287,7 @@ const Game = () => {
                 gamma={0.8} // Contraste
                 vignette={0.5} // Assombrit les bords
               />
-            </EffectComposer> */}
+            </EffectComposer>
 
             {/* Stats pour le débogage */}
             {debugMode && <Stats />}
