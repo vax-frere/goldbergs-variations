@@ -1,7 +1,8 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, useMemo } from "react";
 import { styled } from "@mui/material/styles";
 import Box from "@mui/material/Box";
-import { useActiveLevel } from "../../store";
+import { useActiveLevel, useGameStore } from "../../store";
+import useAssets from "../../hooks/useAssets";
 import AudioStatus from "./components/AudioStatus";
 import TextPanel from "./components/TextPanel";
 import Subtitles from "./components/Subtitles";
@@ -33,6 +34,19 @@ const ActiveLevelName = styled(Box)(({ theme }) => ({
   fontWeight: "bold",
 }));
 
+// Style plus discret pour le compteur de personas
+const VisitedPersonasCounter = styled(Box)(({ theme }) => ({
+  position: "fixed",
+  bottom: "25px",
+  right: "25px",
+  fontSize: "11px",
+  fontFamily: "monospace",
+  color: "rgba(255, 255, 255, 0.4)",
+  zIndex: 1000,
+  pointerEvents: "none",
+  whiteSpace: "nowrap",
+}));
+
 /**
  * Composant HUD (Heads-Up Display) pour afficher des informations en overlay
  */
@@ -42,8 +56,33 @@ const HUD = () => {
   const [currentSpeed, setCurrentSpeed] = useState(0);
   const [svgContent, setSvgContent] = useState(null);
 
-  // Récupérer le niveau actif depuis le store
+  // Récupérer le niveau actif et le compteur de personas depuis le store
   const activeLevel = useActiveLevel();
+  const visitedPersonasCount = useGameStore(
+    (state) => state.visitedPersonasCount
+  );
+  const assets = useAssets({ autoInit: false });
+
+  // Calculer le nombre total de clusters à partir des données du graphe
+  const totalClusters = useMemo(() => {
+    if (!assets.isReady) return 0;
+    const graphData = assets.getData("graph");
+    if (!graphData?.nodes) return 0;
+
+    // Créer un Set des clusterSlugs uniques
+    const uniqueClusters = new Set(
+      graphData.nodes
+        .filter((node) => node.clusterSlug)
+        .map((node) => node.clusterSlug)
+    );
+
+    return uniqueClusters.size;
+  }, [assets.isReady, assets.getData]);
+
+  // Calculer le pourcentage de complétion
+  const completionPercentage = Math.round(
+    (visitedPersonasCount / (totalClusters || 1)) * 100
+  );
 
   // Références pour la barre de vitesse
   const speedBarRef = useRef(null);
@@ -114,14 +153,19 @@ const HUD = () => {
         <ActiveLevelName>
           {activeLevel.name ||
             (activeLevel.type === "cluster"
-              ? // Pour les clusters, on formate le slug pour l'affichage
-                `Cluster: ${activeLevel.id
+              ? `Cluster: ${activeLevel.id
                   .split("-")
                   .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
                   .join(" ")}`
-              : // Pour les autres types, on garde le format par défaut
-                `${activeLevel.type || "Level"}: ${activeLevel.id}`)}
+              : `${activeLevel.type || "Level"}: ${activeLevel.id}`)}
         </ActiveLevelName>
+      )}
+
+      {/* Compteur de personas visitées - affiché si au moins 1 cluster visité */}
+      {visitedPersonasCount > 0 && totalClusters > 0 && (
+        <VisitedPersonasCounter>
+          {`${visitedPersonasCount}/${totalClusters} personas visitées (${completionPercentage}%)`}
+        </VisitedPersonasCounter>
       )}
 
       {/* Composants d'interface utilisateur */}

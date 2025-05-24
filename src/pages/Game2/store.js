@@ -19,7 +19,7 @@ export const GAME_LEVELS = {
 };
 
 // Store unifié avec gestion des niveaux
-const useGameStore = create((set, get) => ({
+export const useGameStore = create((set, get) => ({
   // États gérés par ce store
   audioEnabled: true, // État du son (activé par défaut)
   debug: getInitialDebugState(), // État du mode debug initialisé depuis le localStorage
@@ -127,7 +127,9 @@ const useGameStore = create((set, get) => ({
       }
     }
 
-    console.log("Changing level to:", newLevel, "with data:", levelData);
+    console.log("[DEBUG] Changing level to:", newLevel);
+    console.log("[DEBUG] Level data:", levelData);
+    console.log("[DEBUG] Current visited clusters:", state.visitedClusters);
 
     // Si on change de niveau, gérer la transition
     if (state.currentLevel !== newLevel) {
@@ -152,11 +154,17 @@ const useGameStore = create((set, get) => ({
 
     // Si c'est un cluster et qu'il n'a pas encore été visité, l'ajouter à la liste
     if (levelData && levelData.type === "cluster") {
+      console.log("[DEBUG] Processing cluster visit");
+      console.log("[DEBUG] Cluster ID:", levelData.id);
+
       const alreadyVisited = state.visitedClusters.some(
         (cluster) => cluster.slug === levelData.id
       );
 
+      console.log("[DEBUG] Already visited?", alreadyVisited);
+
       if (!alreadyVisited) {
+        console.log("[DEBUG] Adding to visited clusters");
         set((state) => ({
           visitedClusters: [
             ...state.visitedClusters,
@@ -167,6 +175,8 @@ const useGameStore = create((set, get) => ({
           ],
           visitedPersonasCount: state.visitedPersonasCount + 1,
         }));
+
+        console.log("[DEBUG] New visited count:", get().visitedPersonasCount);
       }
     }
   },
@@ -218,6 +228,8 @@ const useGameStore = create((set, get) => ({
     }),
 }));
 
+export default useGameStore;
+
 // Selectors spécifiques pour optimiser les re-rendus
 
 // Selector spécifique pour hoveredCluster
@@ -238,5 +250,3 @@ export const useIsTransitioning = () =>
 // Selector spécifique pour les données du nœud actif
 export const useActiveNodeData = () =>
   useGameStore((state) => state.activeNodeData);
-
-export default useGameStore;

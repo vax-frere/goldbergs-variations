@@ -129,7 +129,15 @@ const Graph = memo(() => {
       // Récupérer les données complètes du cluster depuis les boîtes de collision
       const boundingBoxes =
         useCollisionStore.getState().boundingBoxRefs.clusterBoxes;
-      const box = boundingBoxes[activeClusterIdRef.current];
+
+      // Trouver la boîte qui correspond au cluster survolé
+      const box = Object.values(boundingBoxes).find(
+        (box) => box.data?.id === hoveredCluster
+      );
+
+      console.log("[DEBUG] Activating cluster");
+      console.log("[DEBUG] Hovered cluster:", hoveredCluster);
+      console.log("[DEBUG] Box data:", box?.data);
 
       // Le hoveredCluster est déjà le slug
       const clusterData = {
@@ -138,9 +146,10 @@ const Graph = memo(() => {
         name: box?.data?.name || null,
       };
 
+      console.log("[DEBUG] Cluster data to activate:", clusterData);
+
       // Activer le niveau cluster avancé avec les données du cluster
       setActiveLevel(clusterData);
-      console.log("Activating advanced cluster level for:", clusterData);
     }
   });
 
@@ -168,13 +177,19 @@ const Graph = memo(() => {
     // Créer les matériaux
     materialsRef.current.node = new THREE.MeshBasicMaterial({
       color: "#ffffff",
-      transparent: true,
-      opacity: 0.9,
+      transparent: false,
+    });
+    materialsRef.current.visitedNode = new THREE.MeshBasicMaterial({
+      color: "#444444",
+      transparent: false,
     });
     materialsRef.current.line = new THREE.LineBasicMaterial({
       color: "#ffffff",
-      transparent: true,
-      opacity: 0.5,
+      transparent: false,
+    });
+    materialsRef.current.visitedLine = new THREE.LineBasicMaterial({
+      color: "#333333",
+      transparent: false,
     });
 
     // Nettoyage
@@ -372,6 +387,26 @@ const Graph = memo(() => {
     }
   }, [hoveredCluster, setActiveNodeData]);
 
+  // Vérifier si un nœud a été visité
+  const isNodeVisited = useGameStore((state) => state.isNodeVisited);
+
+  // Vérifier si un cluster a été visité
+  const isClusterVisited = useCallback(
+    (node) => {
+      if (!node || !node.clusterSlug) return false;
+      return isNodeVisited(node.clusterSlug);
+    },
+    [isNodeVisited]
+  );
+
+  // Vérifier si un lien doit être grisé (les deux nœuds sont visités)
+  const isLinkVisited = useCallback(
+    (source, target) => {
+      return isClusterVisited(source) && isClusterVisited(target);
+    },
+    [isClusterVisited]
+  );
+
   // Si les données ne sont pas encore chargées
   if (!graphData) return null;
 
@@ -384,7 +419,11 @@ const Graph = memo(() => {
             key={`node-${index}`}
             position={[node.x || 0, node.y || 0, node.z || 0]}
             geometry={geometriesRef.current.node}
-            material={materialsRef.current.node}
+            material={
+              isClusterVisited(node)
+                ? materialsRef.current.visitedNode
+                : materialsRef.current.node
+            }
           />
         ))}
 
@@ -412,7 +451,11 @@ const Graph = memo(() => {
             <line
               key={`edge-${index}`}
               geometry={edge.geometry}
-              material={materialsRef.current.line}
+              material={
+                isLinkVisited(source, target)
+                  ? materialsRef.current.visitedLine
+                  : materialsRef.current.line
+              }
             />
           );
         })}
@@ -424,6 +467,9 @@ const Graph = memo(() => {
             id={clusterId}
             centroid={centroid}
             name={clusterNames[clusterId] || clusterId}
+            isVisited={isClusterVisited(
+              nodes.find((n) => n.cluster === clusterId)
+            )}
           />
         ))}
       </group>
@@ -432,54 +478,28 @@ const Graph = memo(() => {
 });
 
 /**
- * Composant optimisé pour le label de cluster qui ne se met à jour
+ * Composant pour afficher le nom d'un cluster
+ * Utilise un contexte pour ne mettre à jour le composant
  * que lorsque son état actif change, sans re-rendre le graphe complet
  */
-const ClusterLabel = memo(({ id, centroid, name }) => {
+const ClusterLabel = memo(({ id, centroid, name, isVisited }) => {
   const [isActive, setIsActive] = useState(false);
   const context = useContext(ActiveClusterContext);
-  const isInitialRender = useRef(true);
-  const { interactionKey } = useInteractionText();
   const hoveredCluster = useGameStore((state) => state.hoveredCluster);
+  const { interactionKey } = useInteractionText();
 
-  // S'assurer que l'état est correctement mis à jour même lors d'un changement synchrone
-  const updateActivity = useRef((active) => {
-    if (active !== isActive) {
-      setIsActive(active);
-    }
-  });
-
-  // Mettre à jour la référence à la fonction quand isActive change
+  // Mettre à jour l'état actif quand le contexte change
   useEffect(() => {
-    updateActivity.current = (active) => {
-      if (active !== isActive) {
-        setIsActive(active);
-      }
-    };
-  }, [isActive, id]);
-
-  // Créer un objet avec la méthode de mise à jour pour la notification
-  const componentRef = useRef({
-    updateActivity: (active) => updateActivity.current(active),
-  });
-
-  // S'enregistrer auprès du gestionnaire de labels
-  useEffect(() => {
-    if (context) {
-      // Enregistrer le composant immédiatement
-      context.registerLabel(id, componentRef.current);
-
-      // Nettoyer lors du démontage
-      return () => {
-        context.unregisterLabel(id);
-      };
+    if (context && context.updateActivity) {
+      context.updateActivity(id, setIsActive);
     }
   }, [context, id]);
 
-  // Créer une copie du centroid pour éviter de modifier la prop directement
-  const position = Array.isArray(centroid)
-    ? [...centroid]
-    : [centroid.x || 0, centroid.y || 0, centroid.z || 0];
+  // Position du texte
+  const position = useMemo(
+    () => [centroid.x || 0, centroid.y || 0, centroid.z || 0],
+    [centroid]
+  );
 
   // Vérifier si ce cluster est actuellement survolé
   const isHovered = hoveredCluster === id;
@@ -491,7 +511,7 @@ const ClusterLabel = memo(({ id, centroid, name }) => {
         text={name}
         position={position}
         size={15}
-        color="#ffffff"
+        color={isVisited ? "#666666" : "#ffffff"}
         reverseOpacity={true}
         maxDistance={1000}
         minDistance={300}
@@ -506,8 +526,7 @@ const ClusterLabel = memo(({ id, centroid, name }) => {
           text={`Press ${interactionKey} to enter`}
           position={[position[0], position[1] - 20, position[2]]}
           size={12}
-          color="#ffffff"
-          opacity={0.8}
+          color={isVisited ? "#666666" : "#ffffff"}
           reverseOpacity={true}
           maxDistance={800}
           minDistance={200}
