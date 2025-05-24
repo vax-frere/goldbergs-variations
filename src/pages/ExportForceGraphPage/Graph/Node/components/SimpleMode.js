@@ -1,8 +1,19 @@
 import * as THREE from "three";
 import { COLORS } from "../Node";
 
+// Tableau des districts avec leurs couleurs (même que dans ForceGraph.jsx et Game2/Graph.jsx)
+const DISTRICTS = [
+  { text: "Libertarians", position: [500, 200, -300], color: "#c0392b" },
+  { text: "Antisystem", position: [-200, 350, 200], color: "#f39c12" },
+  { text: "Conservatives", position: [300, -200, 400], color: "#d35400" },
+  { text: "Nationalists", position: [-500, -150, -250], color: "#27ae60" },
+  { text: "Religious", position: [200, 400, 300], color: "#fff8e" },
+  { text: "Culture", position: [-300, 100, 500], color: "#3498db" },
+  { text: "Social justice", position: [-150, -350, 100], color: "#44adfff" },
+];
+
 /**
- * SimpleMode component - Renders node as a simple white sphere
+ * SimpleMode component - Renders node as a simple sphere with thematic group colors
  */
 export class SimpleMode {
   constructor(node) {
@@ -22,23 +33,19 @@ export class SimpleMode {
       size = 2;
     }
 
-    // Déterminer la couleur du nœud en fonction de son type et de son groupe thématique
+    // Fonction pour obtenir la couleur d'un district par son nom
+    const getDistrictColor = (thematicGroup) => {
+      const district = DISTRICTS.find(d => d.text === thematicGroup);
+      return district ? district.color : "#ffffff"; // Blanc par défaut
+    };
+
+    // Déterminer la couleur du nœud : seuls les cluster masters sont colorés
     let nodeColor = "white";
 
-    // if (this.node.id === "central_joshua") {
-    //   nodeColor = COLORS.centralJoshua;
-    // } else if (this.node.isJoshua) {
-    //   nodeColor = COLORS.joshua;
-    // } else if (this.node.type === "source" || this.node.type === "platform") {
-    //   nodeColor = COLORS.source;
-    // } else if (this.node.type === "character" && this.node.thematicGroup) {
-    //   // Utiliser la couleur du groupe thématique si disponible
-    //   nodeColor =
-    //     COLORS.thematicGroups[this.node.thematicGroup] ||
-    //     COLORS.thematicGroups.default;
-    // } else if (this.node.type === "character") {
-    //   nodeColor = COLORS.character;
-    // }
+    if (this.node.type === "character" && this.node.isClusterMaster && this.node.thematicGroup) {
+      // SEULS les cluster masters utilisent les couleurs des districts
+      nodeColor = getDistrictColor(this.node.thematicGroup);
+    }
 
     // Création d'une sphère avec la couleur appropriée
     const geometry = new THREE.SphereGeometry(size, 16, 16);

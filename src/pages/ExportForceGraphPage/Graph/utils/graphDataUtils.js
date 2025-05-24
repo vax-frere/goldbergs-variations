@@ -55,25 +55,32 @@ export const loadGraphData = async (config = {}) => {
 
     console.log("Début du chargement des données...");
 
+    // Charger le fichier final_spatialized_graph.data.json qui contient les thematicGroup et positions
     const response = await fetch(
-      `${import.meta.env.BASE_URL}data/database.data.json`
+      `${import.meta.env.BASE_URL}data/final_spatialized_graph.data.json`
     );
     if (!response.ok) {
       throw new Error(`Erreur HTTP: ${response.status}`);
     }
 
-    const data = await response.json();
+    const graphData = await response.json();
     console.log(
-      `Début du chargement des données... ${data.length} personnages chargés du fichier database.data.json`
+      `Données chargées depuis final_spatialized_graph.data.json: ${graphData.nodes?.length || 0} nodes, ${graphData.links?.length || 0} links`
     );
 
-    // Construire le graphe à partir des données
-    const { nodes, links } = buildGraphFromCharacterData(data);
+    // Vérifier que les données ont la structure attendue
+    if (!graphData.nodes || !graphData.links) {
+      throw new Error("Structure de données invalide: nodes ou links manquants");
+    }
 
-    // Analyse des clusters après construction
-    analyzeGraphClusters(nodes, links);
+    // Nettoyer les liens orphelins
+    const cleanedData = cleanOrphanLinks(graphData.nodes, graphData.links);
+    console.log(`🧹 Nettoyage: ${graphData.links.length - cleanedData.links.length} liens orphelins supprimés`);
 
-    return { nodes, links };
+    // Analyse des clusters après chargement
+    analyzeGraphClusters(cleanedData.nodes, cleanedData.links);
+
+    return { nodes: cleanedData.nodes, links: cleanedData.links };
   } catch (err) {
     console.error("Erreur lors du chargement des données:", err);
     throw err;
@@ -124,9 +131,9 @@ export const analyzeGraphClusters = (nodes, links) => {
         nodes: [],
         characters: [],
         platforms: [],
-        offsetX: node.offsetX,
-        offsetY: node.offsetY,
-        offsetZ: node.offsetZ,
+        offsetX: node.offsetX || 0,
+        offsetY: node.offsetY || 0,
+        offsetZ: node.offsetZ || 0,
         origin: clusterOrigins[node.cluster] || { name: "Inconnu" },
       };
     }
@@ -182,11 +189,17 @@ export const analyzeGraphClusters = (nodes, links) => {
       : `${cluster.origin.name} (${cluster.origin.totalPosts || 0} posts)`;
 
     console.log(`[CLUSTER ${cluster.id}] Origine: ${originInfo}`);
-    console.log(
-      `  - Position: (${cluster.offsetX.toFixed(2)}, ${cluster.offsetY.toFixed(
-        2
-      )}, ${cluster.offsetZ.toFixed(2)})`
-    );
+
+    // Afficher la position seulement si les offsets existent
+    if (cluster.offsetX !== 0 || cluster.offsetY !== 0 || cluster.offsetZ !== 0) {
+      console.log(
+        `  - Position offset: (${cluster.offsetX.toFixed(2)}, ${cluster.offsetY.toFixed(
+          2
+        )}, ${cluster.offsetZ.toFixed(2)})`
+      );
+    } else {
+      console.log(`  - Position offset: Non définie (utilise positions du fichier)`);
+    }
     console.log(
       `  - ${cluster.nodes.length} nœuds (${cluster.characters.length} personnages, ${cluster.platforms.length} plateformes)`
     );
@@ -960,4 +973,33 @@ export const updateGraphConfig = (newConfig) => {
 
   console.log("  - Nouvelle config:", { ...graphConfig });
   return graphConfig;
+};
+
+/**
+ * Nettoie les liens orphelins (qui pointent vers des nodes inexistants)
+ * @param {Array} nodes - Tableau des nœuds du graphe
+ * @param {Array} links - Tableau des liens du graphe
+ * @returns {{nodes: Array, links: Array}} Données nettoyées
+ */
+export const cleanOrphanLinks = (nodes, links) => {
+  // Créer un Set des IDs de nodes existants pour une recherche rapide
+  const nodeIds = new Set(nodes.map(node => node.id));
+
+  // Filtrer les liens pour ne garder que ceux dont source et target existent
+  const validLinks = links.filter(link => {
+    const sourceExists = nodeIds.has(link.source);
+    const targetExists = nodeIds.has(link.target);
+
+    if (!sourceExists || !targetExists) {
+      console.warn(`🔗 Lien orphelin supprimé: ${link.source} -> ${link.target} (source: ${sourceExists}, target: ${targetExists})`);
+      return false;
+    }
+
+    return true;
+  });
+
+  return {
+    nodes: nodes,
+    links: validLinks
+  };
 };

@@ -38,7 +38,7 @@ export const createLinkObject = (link, source, target) => {
   // S'assurer que source et target sont des objets avec des coordonnées x, y, z
   const ensureValidPosition = (pos) => {
     if (!pos) {
-      console.warn("Position undefined, using default");
+      // console.warn("Position undefined, using default");
       return { x: 0, y: 0, z: 0 };
     }
 

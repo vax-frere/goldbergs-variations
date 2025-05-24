@@ -13,7 +13,7 @@
       "isClusterMaster": true,
       "isJoshua": true,
       "clusterSlug": "24-129-100-84",
-      "thematicGroup": "Libertariens et Libéraux"
+      "thematicGroup": "Libertarians"
     },
     {
       "id": "platform_wikipedia_1",
@@ -40,7 +40,7 @@
       "isClusterMaster": true,
       "isJoshua": true,
       "clusterSlug": "4krapsucks",
-      "thematicGroup": "Libertariens et Libéraux"
+      "thematicGroup": "Libertarians"
     },
     {
       "id": "platform_anime-news-network_3",
@@ -67,7 +67,7 @@
       "isClusterMaster": true,
       "isJoshua": true,
       "clusterSlug": "66-177-73-91",
-      "thematicGroup": "Anti-système et Provocateurs"
+      "thematicGroup": "Antisystem"
     },
     {
       "id": "platform_wikipedia_5",
@@ -94,7 +94,7 @@
       "isClusterMaster": true,
       "isJoshua": true,
       "clusterSlug": "76-106-245-93",
-      "thematicGroup": "Anti-système et Provocateurs"
+      "thematicGroup": "Antisystem"
     },
     {
       "id": "platform_wikipedia_7",
@@ -121,7 +121,7 @@
       "isClusterMaster": true,
       "isJoshua": true,
       "clusterSlug": "amina-blackberry",
-      "thematicGroup": "Conservateurs et Traditionalistes"
+      "thematicGroup": "Conservatives"
     },
     {
       "id": "platform_twitter_9",
@@ -160,7 +160,7 @@
       "isClusterMaster": false,
       "isJoshua": true,
       "clusterSlug": "amina-blackberry",
-      "thematicGroup": "Extrême-droite et Nationalisme"
+      "thematicGroup": "Nationalists"
     },
     {
       "id": "platform_medium_12",
@@ -214,7 +214,7 @@
       "isClusterMaster": false,
       "isJoshua": true,
       "clusterSlug": "amina-blackberry",
-      "thematicGroup": "Radicalismes religieux et identitaires"
+      "thematicGroup": "Religious"
     },
     {
       "id": "platform_8chan_16",
@@ -277,7 +277,7 @@
       "isClusterMaster": true,
       "isJoshua": true,
       "clusterSlug": "aryan-heights",
-      "thematicGroup": "Extrême-droite et Nationalisme"
+      "thematicGroup": "Nationalists"
     },
     {
       "id": "platform_stormfront_21",
@@ -304,7 +304,7 @@
       "isClusterMaster": true,
       "isJoshua": true,
       "clusterSlug": "australi-witness",
-      "thematicGroup": "Radicalismes religieux et identitaires"
+      "thematicGroup": "Religious"
     },
     {
       "id": "platform_8chan_23",
@@ -544,7 +544,7 @@
       "isClusterMaster": false,
       "isJoshua": true,
       "clusterSlug": "australi-witness",
-      "thematicGroup": "Extrême-droite et Nationalisme"
+      "thematicGroup": "Nationalists"
     },
     {
       "id": "platform_medium_40",
@@ -622,7 +622,7 @@
       "isClusterMaster": true,
       "isJoshua": true,
       "clusterSlug": "bw-anime-fan",
-      "thematicGroup": "Extrême-droite et Nationalisme"
+      "thematicGroup": "Nationalists"
     },
     {
       "id": "platform_wikipedia_47",
@@ -649,7 +649,7 @@
       "isClusterMaster": true,
       "isJoshua": true,
       "clusterSlug": "chuck-e-jesus",
-      "thematicGroup": "Libertariens et Libéraux"
+      "thematicGroup": "Libertarians"
     },
     {
       "id": "platform_reddit_49",
@@ -676,7 +676,7 @@
       "isClusterMaster": true,
       "isJoshua": true,
       "clusterSlug": "death-to-sjws",
-      "thematicGroup": "Extrême-droite et Nationalisme"
+      "thematicGroup": "Nationalists"
     },
     {
       "id": "platform_reddit_51",
@@ -703,7 +703,7 @@
       "isClusterMaster": true,
       "isJoshua": true,
       "clusterSlug": "dinah-silverstein",
-      "thematicGroup": "Gauche et Justice sociale"
+      "thematicGroup": "Social justice"
     },
     {
       "id": "michael-slay_53",
@@ -718,7 +718,7 @@
       "isClusterMaster": false,
       "isJoshua": true,
       "clusterSlug": "dinah-silverstein",
-      "thematicGroup": "Extrême-droite et Nationalisme"
+      "thematicGroup": "Nationalists"
     },
     {
       "id": "platform_medium_54",
@@ -781,7 +781,7 @@
       "isClusterMaster": true,
       "isJoshua": true,
       "clusterSlug": "dr-shlomo-goldstein",
-      "thematicGroup": "Extrême-droite et Nationalisme"
+      "thematicGroup": "Nationalists"
     },
     {
       "id": "platform_reddit_59",
@@ -808,7 +808,7 @@
       "isClusterMaster": true,
       "isJoshua": true,
       "clusterSlug": "ryoko-tamada",
-      "thematicGroup": "Libertariens et Libéraux"
+      "thematicGroup": "Libertarians"
     },
     {
       "id": "platform_twitter_61",
@@ -892,7 +892,7 @@
       "isClusterMaster": false,
       "isJoshua": true,
       "clusterSlug": "ryoko-tamada",
-      "thematicGroup": "Gauche et Justice sociale"
+      "thematicGroup": "Social justice"
     },
     {
       "id": "platform_dailykos_67",
@@ -943,7 +943,7 @@
       "isClusterMaster": false,
       "isJoshua": true,
       "clusterSlug": "ryoko-tamada",
-      "thematicGroup": "Libertariens et Libéraux"
+      "thematicGroup": "Libertarians"
     },
     {
       "id": "platform_disqus_71",
@@ -1018,7 +1018,7 @@
       "isClusterMaster": true,
       "isJoshua": true,
       "clusterSlug": "emily-americana",
-      "thematicGroup": "Libertariens et Libéraux"
+      "thematicGroup": "Libertarians"
     },
     {
       "id": "platform_reddit_77",
@@ -1045,7 +1045,7 @@
       "isClusterMaster": false,
       "isJoshua": true,
       "clusterSlug": "emily-americana",
-      "thematicGroup": "Extrême-droite et Nationalisme"
+      "thematicGroup": "Nationalists"
     },
     {
       "id": "platform_medium_79",
@@ -1084,7 +1084,7 @@
       "isClusterMaster": false,
       "isJoshua": true,
       "clusterSlug": "emily-americana",
-      "thematicGroup": "Extrême-droite et Nationalisme"
+      "thematicGroup": "Nationalists"
     },
     {
       "id": "moon-metropolis_82",
@@ -1099,7 +1099,7 @@
       "isClusterMaster": false,
       "isJoshua": true,
       "clusterSlug": "emily-americana",
-      "thematicGroup": "Libertariens et Libéraux"
+      "thematicGroup": "Libertarians"
     },
     {
       "id": "platform_disqus_83",
@@ -1174,7 +1174,7 @@
       "isClusterMaster": false,
       "isJoshua": true,
       "clusterSlug": "emily-americana",
-      "thematicGroup": "Extrême-droite et Nationalisme"
+      "thematicGroup": "Nationalists"
     },
     {
       "id": "emily-goldstein_89",
@@ -1189,7 +1189,7 @@
       "isClusterMaster": true,
       "isJoshua": true,
       "clusterSlug": "emily-goldstein",
-      "thematicGroup": "Gauche et Justice sociale"
+      "thematicGroup": "Social justice"
     },
     {
       "id": "platform_thoughtcatalog_90",
@@ -1243,7 +1243,7 @@
       "isClusterMaster": false,
       "isJoshua": true,
       "clusterSlug": "emily-goldstein",
-      "thematicGroup": "Gauche et Justice sociale"
+      "thematicGroup": "Social justice"
     },
     {
       "id": "tanya-cohen_94",
@@ -1258,7 +1258,7 @@
       "isClusterMaster": false,
       "isJoshua": true,
       "clusterSlug": "emily-goldstein",
-      "thematicGroup": "Gauche et Justice sociale"
+      "thematicGroup": "Social justice"
     },
     {
       "id": "platform_dailykos_95",
@@ -1297,7 +1297,7 @@
       "isClusterMaster": false,
       "isJoshua": true,
       "clusterSlug": "emily-goldstein",
-      "thematicGroup": "Extrême-droite et Nationalisme"
+      "thematicGroup": "Nationalists"
     },
     {
       "id": "platform_medium_98",
@@ -1336,7 +1336,7 @@
       "isClusterMaster": false,
       "isJoshua": true,
       "clusterSlug": "emily-goldstein",
-      "thematicGroup": "Extrême-droite et Nationalisme"
+      "thematicGroup": "Nationalists"
     },
     {
       "id": "mariam-veiszadeh_101",
@@ -1366,7 +1366,7 @@
       "isClusterMaster": true,
       "isJoshua": true,
       "clusterSlug": "europe-hates-niggers",
-      "thematicGroup": "Extrême-droite et Nationalisme"
+      "thematicGroup": "Nationalists"
     },
     {
       "id": "platform_reddit_103",
@@ -1393,7 +1393,7 @@
       "isClusterMaster": true,
       "isJoshua": true,
       "clusterSlug": "flappy-brd",
-      "thematicGroup": "Gauche et Justice sociale"
+      "thematicGroup": "Social justice"
     },
     {
       "id": "platform_reddit_105",
@@ -1420,7 +1420,7 @@
       "isClusterMaster": true,
       "isJoshua": true,
       "clusterSlug": "gas-the-kikes",
-      "thematicGroup": "Extrême-droite et Nationalisme"
+      "thematicGroup": "Nationalists"
     },
     {
       "id": "platform_reddit_107",
@@ -1447,7 +1447,7 @@
       "isClusterMaster": true,
       "isJoshua": true,
       "clusterSlug": "hadiyo-elmi",
-      "thematicGroup": "Gauche et Justice sociale"
+      "thematicGroup": "Social justice"
     },
     {
       "id": "michael-slay_109",
@@ -1462,7 +1462,7 @@
       "isClusterMaster": false,
       "isJoshua": true,
       "clusterSlug": "hadiyo-elmi",
-      "thematicGroup": "Extrême-droite et Nationalisme"
+      "thematicGroup": "Nationalists"
     },
     {
       "id": "platform_medium_110",
@@ -1525,7 +1525,7 @@
       "isClusterMaster": false,
       "isJoshua": true,
       "clusterSlug": "hadiyo-elmi",
-      "thematicGroup": "Extrême-droite et Nationalisme"
+      "thematicGroup": "Nationalists"
     },
     {
       "id": "mariam-veiszadeh_115",
@@ -1555,7 +1555,7 @@
       "isClusterMaster": true,
       "isJoshua": true,
       "clusterSlug": "id-c9uafs7u",
-      "thematicGroup": "Extrême-droite et Nationalisme"
+      "thematicGroup": "Nationalists"
     },
     {
       "id": "platform_4plebs_117",
@@ -1582,7 +1582,7 @@
       "isClusterMaster": true,
       "isJoshua": true,
       "clusterSlug": "island-angel",
-      "thematicGroup": "Anti-système et Provocateurs"
+      "thematicGroup": "Antisystem"
     },
     {
       "id": "platform_reddit_119",
@@ -1609,7 +1609,7 @@
       "isClusterMaster": true,
       "isJoshua": true,
       "clusterSlug": "real-joshua-goldberg",
-      "thematicGroup": "Anti-système et Provocateurs"
+      "thematicGroup": "Antisystem"
     },
     {
       "id": "josh-bornstein_121",
@@ -1858,7 +1858,7 @@
       "isClusterMaster": true,
       "isJoshua": true,
       "clusterSlug": "fake-joshua-goldberg",
-      "thematicGroup": "Anti-système et Provocateurs"
+      "thematicGroup": "Antisystem"
     },
     {
       "id": "platform_thoughtcatalog_141",
@@ -1885,7 +1885,7 @@
       "isClusterMaster": true,
       "isJoshua": true,
       "clusterSlug": "kill-all-pakis",
-      "thematicGroup": "Extrême-droite et Nationalisme"
+      "thematicGroup": "Nationalists"
     },
     {
       "id": "platform_reddit_143",
@@ -1912,7 +1912,7 @@
       "isClusterMaster": true,
       "isJoshua": true,
       "clusterSlug": "kill-all-sjws",
-      "thematicGroup": "Extrême-droite et Nationalisme"
+      "thematicGroup": "Nationalists"
     },
     {
       "id": "platform_reddit_145",
@@ -1939,7 +1939,7 @@
       "isClusterMaster": true,
       "isJoshua": true,
       "clusterSlug": "le-cancer-kin",
-      "thematicGroup": "Extrême-droite et Nationalisme"
+      "thematicGroup": "Nationalists"
     },
     {
       "id": "platform_reddit_147",
@@ -2017,7 +2017,7 @@
       "isClusterMaster": true,
       "isJoshua": true,
       "clusterSlug": "may-may-poster",
-      "thematicGroup": "Extrême-droite et Nationalisme"
+      "thematicGroup": "Nationalists"
     },
     {
       "id": "platform_Adult Swim_153",
@@ -2056,7 +2056,7 @@
       "isClusterMaster": true,
       "isJoshua": true,
       "clusterSlug": "metacanadian-420",
-      "thematicGroup": "Gauche et Justice sociale"
+      "thematicGroup": "Social justice"
     },
     {
       "id": "platform_reddit_156",
@@ -2083,7 +2083,7 @@
       "isClusterMaster": true,
       "isJoshua": true,
       "clusterSlug": "metropolis-forever",
-      "thematicGroup": "Libertariens et Libéraux"
+      "thematicGroup": "Libertarians"
     },
     {
       "id": "platform_deviantart_158",
@@ -2299,7 +2299,7 @@
       "isClusterMaster": false,
       "isJoshua": true,
       "clusterSlug": "metropolis-forever",
-      "thematicGroup": "Libertariens et Libéraux"
+      "thematicGroup": "Libertarians"
     },
     {
       "id": "platform_reddit_175",
@@ -2326,7 +2326,7 @@
       "isClusterMaster": false,
       "isJoshua": true,
       "clusterSlug": "metropolis-forever",
-      "thematicGroup": "Gauche et Justice sociale"
+      "thematicGroup": "Social justice"
     },
     {
       "id": "platform_dailykos_177",
@@ -2365,7 +2365,7 @@
       "isClusterMaster": false,
       "isJoshua": true,
       "clusterSlug": "metropolis-forever",
-      "thematicGroup": "Conservateurs et Traditionalistes"
+      "thematicGroup": "Conservatives"
     },
     {
       "id": "death-to-sjws_180",
@@ -2380,7 +2380,7 @@
       "isClusterMaster": false,
       "isJoshua": true,
       "clusterSlug": "metropolis-forever",
-      "thematicGroup": "Extrême-droite et Nationalisme"
+      "thematicGroup": "Nationalists"
     },
     {
       "id": "michael-slay_181",
@@ -2395,7 +2395,7 @@
       "isClusterMaster": true,
       "isJoshua": true,
       "clusterSlug": "michael-slay",
-      "thematicGroup": "Extrême-droite et Nationalisme"
+      "thematicGroup": "Nationalists"
     },
     {
       "id": "platform_medium_182",
@@ -2476,7 +2476,7 @@
       "isClusterMaster": false,
       "isJoshua": true,
       "clusterSlug": "michael-slay",
-      "thematicGroup": "Gauche et Justice sociale"
+      "thematicGroup": "Social justice"
     },
     {
       "id": "platform_stormfront_188",
@@ -2503,7 +2503,7 @@
       "isClusterMaster": false,
       "isJoshua": true,
       "clusterSlug": "michael-slay",
-      "thematicGroup": "Gauche et Justice sociale"
+      "thematicGroup": "Social justice"
     },
     {
       "id": "platform_dailykos_190",
@@ -2554,7 +2554,7 @@
       "isClusterMaster": false,
       "isJoshua": true,
       "clusterSlug": "michael-slay",
-      "thematicGroup": "Libertariens et Libéraux"
+      "thematicGroup": "Libertarians"
     },
     {
       "id": "nuke-europe_194",
@@ -2569,7 +2569,7 @@
       "isClusterMaster": false,
       "isJoshua": true,
       "clusterSlug": "michael-slay",
-      "thematicGroup": "Extrême-droite et Nationalisme"
+      "thematicGroup": "Nationalists"
     },
     {
       "id": "australi-witness_195",
@@ -2584,7 +2584,7 @@
       "isClusterMaster": false,
       "isJoshua": true,
       "clusterSlug": "michael-slay",
-      "thematicGroup": "Radicalismes religieux et identitaires"
+      "thematicGroup": "Religious"
     },
     {
       "id": "platform_8chan_196",
@@ -2674,7 +2674,7 @@
       "isClusterMaster": true,
       "isJoshua": true,
       "clusterSlug": "moon-metropolis",
-      "thematicGroup": "Libertariens et Libéraux"
+      "thematicGroup": "Libertarians"
     },
     {
       "id": "platform_disqus_204",
@@ -2950,7 +2950,7 @@
       "isClusterMaster": false,
       "isJoshua": true,
       "clusterSlug": "moon-metropolis",
-      "thematicGroup": "Libertariens et Libéraux"
+      "thematicGroup": "Libertarians"
     },
     {
       "id": "tanya-cohen_224",
@@ -2965,7 +2965,7 @@
       "isClusterMaster": false,
       "isJoshua": true,
       "clusterSlug": "moon-metropolis",
-      "thematicGroup": "Gauche et Justice sociale"
+      "thematicGroup": "Social justice"
     },
     {
       "id": "platform_dailykos_225",
@@ -3004,7 +3004,7 @@
       "isClusterMaster": false,
       "isJoshua": true,
       "clusterSlug": "moon-metropolis",
-      "thematicGroup": "Conservateurs et Traditionalistes"
+      "thematicGroup": "Conservatives"
     },
     {
       "id": "death-to-sjws_228",
@@ -3019,7 +3019,7 @@
       "isClusterMaster": false,
       "isJoshua": true,
       "clusterSlug": "moon-metropolis",
-      "thematicGroup": "Extrême-droite et Nationalisme"
+      "thematicGroup": "Nationalists"
     },
     {
       "id": "chris-lavergne_229",
@@ -3105,7 +3105,7 @@
       "isClusterMaster": true,
       "isJoshua": true,
       "clusterSlug": "mouthful-of-grandpa",
-      "thematicGroup": "Extrême-droite et Nationalisme"
+      "thematicGroup": "Nationalists"
     },
     {
       "id": "platform_reddit_235",
@@ -3132,7 +3132,7 @@
       "isClusterMaster": true,
       "isJoshua": true,
       "clusterSlug": "naruto-2-0",
-      "thematicGroup": "Anti-système et Provocateurs"
+      "thematicGroup": "Antisystem"
     },
     {
       "id": "platform_wikipedia_237",
@@ -3159,7 +3159,7 @@
       "isClusterMaster": true,
       "isJoshua": true,
       "clusterSlug": "nuke-europe",
-      "thematicGroup": "Extrême-droite et Nationalisme"
+      "thematicGroup": "Nationalists"
     },
     {
       "id": "platform_reddit_239",
@@ -3240,7 +3240,7 @@
       "isClusterMaster": true,
       "isJoshua": true,
       "clusterSlug": "wake-up-white-man",
-      "thematicGroup": "Extrême-droite et Nationalisme"
+      "thematicGroup": "Nationalists"
     },
     {
       "id": "platform_vnn_245",
@@ -3291,7 +3291,7 @@
       "isClusterMaster": true,
       "isJoshua": true,
       "clusterSlug": "tanya-cohen",
-      "thematicGroup": "Gauche et Justice sociale"
+      "thematicGroup": "Social justice"
     },
     {
       "id": "platform_dailykos_249",
@@ -3384,7 +3384,7 @@
       "isClusterMaster": false,
       "isJoshua": true,
       "clusterSlug": "tanya-cohen",
-      "thematicGroup": "Extrême-droite et Nationalisme"
+      "thematicGroup": "Nationalists"
     },
     {
       "id": "platform_medium_256",

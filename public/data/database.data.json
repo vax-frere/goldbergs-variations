@@ -9,6 +9,7 @@
     "fictionOrImpersonation": "fiction",
     "platform": ["wikipedia"],
     "thematic": "Contradicteur libertarien",
+    "thematicGroup": "Libertarians",
     "career": "",
     "genre": "masculin",
     "polarisation": "gauche",
@@ -222,36 +223,21 @@
         "word": "blanked",
         "score": 14.81
       }
-    ],
-    "mostImpactPost": {
-      "type": "post",
-      "originalPoster": null,
-      "url": "https://en.wikipedia.org/w/index.php?title=User_talk:24.129.100.84&diff=prev&oldid=280227309",
-      "creationDate": 1238250938,
-      "content": "",
-      "title": "User talk:24.129.100.84",
-      "medias": [],
-      "topic": "page_User talk:24.129.100.84",
-      "complement": {
-        "comment": ""
-      },
-      "id": "24-129-100-84",
-      "source": "wikipedia",
-      "character": "24-129-100-84",
-      "postUID": 1,
-      "impact": 1
-    }
+    ]
   },
   {
     "slug": "4krapsucks",
     "biography": "Utilisateur d’Anime News Network actif en 2006, fortement critique envers l’entreprise 4Kids, connue pour ses censures sur les animes. Il montrait une passion marquée pour les animes non-censurés, exprimant souvent ses préférences et critiques sur divers forums de fans d’anime",
     "mostViralContent": "",
     "displayName": "4KrapSucks",
-    "aliases": ["4KrapSucks"],
+    "aliases": [
+      "4KrapSucks"
+    ],
     "isJoshua": true,
     "fictionOrImpersonation": "fiction",
     "platform": [],
     "thematic": "Contradicteur libertarien",
+    "thematicGroup": "Libertarians",
     "career": "",
     "genre": "masculin",
     "polarisation": "gauche",
@@ -260,7 +246,9 @@
     "links": [],
     "biography-250": null,
     "posts": [],
-    "sources": ["anime-news-network"],
+    "sources": [
+      "anime-news-network"
+    ],
     "totalPosts": 195,
     "hasEnoughPostsToUseInFrequencyPosts": true,
     "hasEnoughTextToMakeWordcloud": true,
@@ -465,36 +453,23 @@
         "word": "kids",
         "score": 19.01
       }
-    ],
-    "mostImpactPost": {
-      "complement": {
-        "replies": 201
-      },
-      "type": "post",
-      "originalPoster": "4KrapSucks",
-      "url": "https://www.animenewsnetwork.com/bbs/phpBB2/viewtopic.php?t=27539&highlight=",
-      "creationDate": 1157005680,
-      "content": "Here is where you can talk about which anime you find to be incredibly overrated, and which anime you think is underrated.\n\n\nOverrated:Neon Genesis Evangelion:Yep you read that right.  This show is soooo overrated.  It's also pretty boring.  And the whole religious symbolism thing is just there to cause controversy.\n\n\nUnderrated:Legend of Duo:This horror/action mini-show is actually pretty good.  It is a bit confusing but if you like vampire horror stuff you should like this.  More info can be found on the page.",
-      "title": "Most overrated and most underrated anime. [1/14] - Forum - Anime News Networkfr-FR",
-      "medias": [],
-      "topic": "Forum - View topicMost overrated and most underrated anime.",
-      "id": "4krapsucks",
-      "source": "anime-news-network",
-      "character": "4KrapSucks",
-      "postUID": 721,
-      "impact": 201
-    }
+    ]
   },
   {
     "slug": "66-177-73-91",
     "biography": "Utilisateur Wikipédia très actif entre 2008 et 2009, éditant divers articles sur les jeux vidéo et certains sujets historiques ou culturels, comme le nazisme et Hitler. Son implication semble éclectique, mêlant interventions sérieuses et plus provocantes ou humoristiques​database_all.",
     "mostViralContent": "",
     "displayName": "66-177-73-91",
-    "aliases": ["66-177-73-91"],
+    "aliases": [
+      "66-177-73-91"
+    ],
     "isJoshua": true,
     "fictionOrImpersonation": "fiction",
-    "platform": ["wikipedia"],
+    "platform": [
+      "wikipedia"
+    ],
     "thematic": "Contradicteur intellectuel",
+    "thematicGroup": "Antisystem",
     "career": "",
     "genre": "masculin",
     "polarisation": "gauche",
@@ -503,7 +478,9 @@
     "links": [],
     "biography-250": null,
     "posts": [],
-    "sources": ["wikipedia"],
+    "sources": [
+      "wikipedia"
+    ],
     "totalPosts": 187,
     "hasEnoughPostsToUseInFrequencyPosts": true,
     "hasEnoughTextToMakeWordcloud": false,
@@ -708,36 +685,23 @@
         "word": "cartridges",
         "score": 13.64
       }
-    ],
-    "mostImpactPost": {
-      "type": "post",
-      "originalPoster": null,
-      "url": "https://en.wikipedia.org/w/index.php?title=Lascaux&diff=prev&oldid=384489631",
-      "creationDate": 1284329389,
-      "content": "/* History */",
-      "title": "Lascaux",
-      "medias": [],
-      "topic": "page_Lascaux",
-      "complement": {
-        "comment": "/* History */"
-      },
-      "id": "66-177-73-91",
-      "source": "wikipedia",
-      "character": "66-177-73-91",
-      "postUID": 858,
-      "impact": 1
-    }
+    ]
   },
   {
     "slug": "76-106-245-93",
     "biography": "Une autre adresse IP probablement utilisée par Goldberg dans son vaste réseau d'opérations en ligne. Il a créé de nombreuses identités pour influencer et manipuler les discussions politiques.",
     "mostViralContent": "",
     "displayName": "76-106-245-93",
-    "aliases": ["76-106-245-93"],
+    "aliases": [
+      "76-106-245-93"
+    ],
     "isJoshua": true,
     "fictionOrImpersonation": "fiction",
-    "platform": ["wikipedia"],
+    "platform": [
+      "wikipedia"
+    ],
     "thematic": "Contradicteur intellectuel",
+    "thematicGroup": "Antisystem",
     "career": "",
     "genre": "masculin",
     "polarisation": "gauche",
@@ -746,7 +710,9 @@
     "links": [],
     "biography-250": null,
     "posts": [],
-    "sources": ["wikipedia"],
+    "sources": [
+      "wikipedia"
+    ],
     "totalPosts": 215,
     "hasEnoughPostsToUseInFrequencyPosts": true,
     "hasEnoughTextToMakeWordcloud": false,
@@ -951,36 +917,23 @@
         "word": "httpwwwbroadcastnowcoukmtvbasekicksoffwithstationzeroanimation1216002article",
         "score": 50.0
       }
-    ],
-    "mostImpactPost": {
-      "type": "post",
-      "originalPoster": null,
-      "url": "https://en.wikipedia.org/w/index.php?title=Station_Zero&diff=prev&oldid=677486786",
-      "creationDate": 1440340313,
-      "content": "",
-      "title": "Station Zero",
-      "medias": [],
-      "topic": "page_Station Zero",
-      "complement": {
-        "comment": ""
-      },
-      "id": "76-106-245-93",
-      "source": "wikipedia",
-      "character": "76-106-245-93",
-      "postUID": 1045,
-      "impact": 1
-    }
+    ]
   },
   {
     "slug": "amina-blackberry",
     "biography": "Personnage fictif présenté comme une conservatrice afro-américaine sur Twitter, utilisant une rhétorique anti-progressiste et provocatrice. Elle était populaire pour ses critiques incisives des « gauchistes blancs », attirant rapidement un millier d'abonnés conservateurs sensibles à ses messages sarcastiques et provocateurs​",
     "mostViralContent": "",
     "displayName": "Amina Blackberry",
-    "aliases": ["AminaBlackberry", "Amina Blackberry", "Blackberry_Rosemary"],
+    "aliases": [
+      "AminaBlackberry",
+      "Amina Blackberry",
+      "Blackberry_Rosemary"
+    ],
     "isJoshua": true,
     "fictionOrImpersonation": "impersonation",
     "platform": [],
     "thematic": "Conservatrice",
+    "thematicGroup": "Conservatives",
     "career": "Blogueur / Chroniqueur",
     "genre": "féminin",
     "polarisation": "droite",
@@ -996,7 +949,9 @@
         "virality": "",
         "mediaCoverage": "",
         "linkType": "destinataire",
-        "platforms": ["twitter"]
+        "platforms": [
+          "twitter"
+        ]
       },
       {
         "type": "outgoing",
@@ -1007,7 +962,9 @@
         "virality": "",
         "mediaCoverage": "",
         "linkType": "destinataire",
-        "platforms": ["twitter"]
+        "platforms": [
+          "twitter"
+        ]
       },
       {
         "type": "outgoing",
@@ -1018,12 +975,17 @@
         "virality": "",
         "mediaCoverage": "",
         "linkType": "destinataire",
-        "platforms": ["twitter"]
+        "platforms": [
+          "twitter"
+        ]
       }
     ],
     "biography-250": null,
     "posts": [],
-    "sources": ["twitter", "reddit"],
+    "sources": [
+      "reddit",
+      "twitter"
+    ],
     "totalPosts": 1964,
     "hasEnoughPostsToUseInFrequencyPosts": true,
     "hasEnoughTextToMakeWordcloud": true,
@@ -1065,11 +1027,11 @@
         "score": 59.28
       },
       {
-        "word": "racist",
+        "word": "black",
         "score": 57.49
       },
       {
-        "word": "black",
+        "word": "racist",
         "score": 57.49
       },
       {
@@ -1117,11 +1079,11 @@
         "score": 35.03
       },
       {
-        "word": "world",
+        "word": "left",
         "score": 34.13
       },
       {
-        "word": "left",
+        "word": "world",
         "score": 34.13
       },
       {
@@ -1149,10 +1111,6 @@
         "score": 32.34
       },
       {
-        "word": "lol",
-        "score": 31.44
-      },
-      {
         "word": "human",
         "score": 31.44
       },
@@ -1161,11 +1119,11 @@
         "score": 31.44
       },
       {
-        "word": "moonmetropolis",
-        "score": 30.54
+        "word": "lol",
+        "score": 31.44
       },
       {
-        "word": "real",
+        "word": "law",
         "score": 30.54
       },
       {
@@ -1173,7 +1131,11 @@
         "score": 30.54
       },
       {
-        "word": "law",
+        "word": "real",
+        "score": 30.54
+      },
+      {
+        "word": "moonmetropolis",
         "score": 30.54
       },
       {
@@ -1181,19 +1143,19 @@
         "score": 29.64
       },
       {
-        "word": "gun",
-        "score": 28.74
-      },
-      {
         "word": "isis",
         "score": 28.74
       },
       {
-        "word": "ban",
-        "score": 27.84
+        "word": "gun",
+        "score": 28.74
       },
       {
         "word": "australians",
+        "score": 27.84
+      },
+      {
+        "word": "ban",
         "score": 27.84
       },
       {
@@ -1201,12 +1163,16 @@
         "score": 27.84
       },
       {
+        "word": "europeans",
+        "score": 26.95
+      },
+      {
         "word": "children",
         "score": 26.95
       },
       {
-        "word": "europeans",
-        "score": 26.95
+        "word": "fuck",
+        "score": 26.05
       },
       {
         "word": "country",
@@ -1217,47 +1183,28 @@
         "score": 26.05
       },
       {
-        "word": "fuck",
-        "score": 26.05
-      },
-      {
         "word": "european",
         "score": 25.15
       },
       {
-        "word": "article",
+        "word": "twitter",
         "score": 24.25
       }
-    ],
-    "mostImpactPost": {
-      "type": "tweet",
-      "creationDate": 1437318633,
-      "url": "https://twitter.com/AminaBlackberry/status/622815804137041920",
-      "medias": [],
-      "title": "\"RT @axelk: PDF becomes 4th most popular religion http://t.co/tsQvJwiAdR\"",
-      "content": "\"RT @axelk: PDF becomes 4th most popular religion http://t.co/tsQvJwiAdR\"",
-      "originalPoster": "@axelk",
-      "complement": {
-        "retwitt": 51580,
-        "tweetType": "ReTweet"
-      },
-      "id": "aminablackberry",
-      "source": "twitter",
-      "character": "AminaBlackberry",
-      "postUID": 1749,
-      "impact": 51580
-    }
+    ]
   },
   {
     "slug": "aryan-heights",
-    "biography": "Alias suprémaciste blanc que Goldberg aurait utilisé. Bien qu’étant lui-même juif, il a créé des personnages néo-nazis dans le cadre de ses activités de \"guerrier du clavier\" couvrant des idéologies contradictoires.",
+    "biography": "Alias suprémaciste blanc que Goldberg aurait utilisé. Bien qu’étant lui-même d'origine juive, il a créé des personnages néo-nazis dans le cadre de ses activités de \"guerrier du clavier\" couvrant des idéologies contradictoires.",
     "mostViralContent": "",
     "displayName": "Aryan Heights",
-    "aliases": ["Aryan Heights"],
+    "aliases": [
+      "Aryan Heights"
+    ],
     "isJoshua": true,
     "fictionOrImpersonation": "fiction",
     "platform": [],
     "thematic": "Néo-nazi",
+    "thematicGroup": "Nationalists",
     "career": "Propagandiste",
     "genre": "masculin",
     "polarisation": "droite",
@@ -1266,7 +1213,9 @@
     "links": [],
     "biography-250": null,
     "posts": [],
-    "sources": ["stormfront"],
+    "sources": [
+      "stormfront"
+    ],
     "totalPosts": 35,
     "hasEnoughPostsToUseInFrequencyPosts": false,
     "hasEnoughTextToMakeWordcloud": false,
@@ -1471,29 +1420,11 @@
         "word": "abomination",
         "score": 13.04
       }
-    ],
-    "mostImpactPost": {
-      "complement": {
-        "index": "29"
-      },
-      "type": "comment",
-      "url": "https://www.stormfront.org/forum/t742926/",
-      "creationDate": 1284982620,
-      "content": "If Arizona was TRULY racist, they wouldn't have even allowed a mixed-breed abomination like Alba to ever enter their State.",
-      "title": "Jessica Alba slams RACIST and FOOLISH Arizona immigration law - Page 3 - Stormfront",
-      "medias": [],
-      "topic": "Jessica Alba slams RACIST and FOOLISH Arizona immigration law",
-      "originalPoster": "White separatist",
-      "id": "aryan-heights",
-      "source": "stormfront",
-      "character": "Aryan Heights",
-      "postUID": 3224,
-      "impact": 1
-    }
+    ]
   },
   {
     "slug": "australi-witness",
-    "biography": "Persona fictif se présentant comme un jihadiste australien, incitant explicitement à des actes terroristes violents contre des communautés juives et des événements publics en Australie et aux États-Unis. Utilisé par Goldberg pour interagir avec de vrais jihadistes afin de collecter des informations sensibles et inciter à la violence terroriste​",
+    "biography": "Persona fictif se présentant comme un jihadiste australien, incitant explicitement à des actes terroristes violents contre des communautés juives et des événements publics en Australie et aux États-Unis. Utilisé par Goldberg pour interagir avec de vrais jihadistes afin de collecter des informations sensibles et de les dénoncer.",
     "mostViralContent": "",
     "displayName": "Australi Witness",
     "aliases": [
@@ -1505,6 +1436,7 @@
     "fictionOrImpersonation": "fiction",
     "platform": [],
     "thematic": "Faux radical djihadiste",
+    "thematicGroup": "Religious",
     "career": "Recruteur terroriste",
     "genre": "masculin",
     "polarisation": "droite",
@@ -1520,7 +1452,9 @@
         "virality": "50K+ RTs / Médias majeurs",
         "mediaCoverage": "Très forte",
         "linkType": "destinataire",
-        "platforms": ["twitter"]
+        "platforms": [
+          "twitter"
+        ]
       },
       {
         "type": "outgoing",
@@ -1531,7 +1465,9 @@
         "virality": "50K+ RTs / Médias internationaux",
         "mediaCoverage": "Très forte",
         "linkType": "destinataire",
-        "platforms": ["twitter"]
+        "platforms": [
+          "twitter"
+        ]
       },
       {
         "type": "outgoing",
@@ -1542,7 +1478,9 @@
         "virality": "Modérément repris dans les médias",
         "mediaCoverage": "Moyenne",
         "linkType": "destinataire",
-        "platforms": ["twitter"]
+        "platforms": [
+          "twitter"
+        ]
       },
       {
         "type": "outgoing",
@@ -1553,7 +1491,9 @@
         "virality": "",
         "mediaCoverage": "",
         "linkType": "destinateur",
-        "platforms": ["twitter"]
+        "platforms": [
+          "twitter"
+        ]
       },
       {
         "type": "outgoing",
@@ -1564,7 +1504,9 @@
         "virality": "Traqué publiquement",
         "mediaCoverage": "Forte",
         "linkType": "destinateur",
-        "platforms": ["twitter"]
+        "platforms": [
+          "twitter"
+        ]
       },
       {
         "type": "outgoing",
@@ -1575,7 +1517,9 @@
         "virality": "Modérément viral",
         "mediaCoverage": "Faible",
         "linkType": "destinataire",
-        "platforms": ["twitter"]
+        "platforms": [
+          "twitter"
+        ]
       },
       {
         "type": "outgoing",
@@ -1586,7 +1530,9 @@
         "virality": "Quelques mentions dans les médias",
         "mediaCoverage": "Modérée",
         "linkType": "destinataire",
-        "platforms": ["twitter"]
+        "platforms": [
+          "twitter"
+        ]
       },
       {
         "type": "outgoing",
@@ -1597,7 +1543,9 @@
         "virality": "Caricatures attaquées en ligne",
         "mediaCoverage": "Moyenne",
         "linkType": "destinataire",
-        "platforms": ["twitter"]
+        "platforms": [
+          "twitter"
+        ]
       },
       {
         "type": "outgoing",
@@ -1608,7 +1556,9 @@
         "virality": "Fort impact sur les enquêtes",
         "mediaCoverage": "Très forte",
         "linkType": "destinataire",
-        "platforms": ["twitter"]
+        "platforms": [
+          "twitter"
+        ]
       },
       {
         "type": "outgoing",
@@ -1619,7 +1569,9 @@
         "virality": "",
         "mediaCoverage": "",
         "linkType": "destinateur",
-        "platforms": ["surespot"]
+        "platforms": [
+          "surespot"
+        ]
       },
       {
         "type": "outgoing",
@@ -1630,7 +1582,9 @@
         "virality": "",
         "mediaCoverage": "",
         "linkType": "destinateur",
-        "platforms": ["surespot"]
+        "platforms": [
+          "surespot"
+        ]
       },
       {
         "type": "outgoing",
@@ -1641,7 +1595,9 @@
         "virality": "",
         "mediaCoverage": "",
         "linkType": "destinataire",
-        "platforms": ["twitter"]
+        "platforms": [
+          "twitter"
+        ]
       },
       {
         "type": "outgoing",
@@ -1652,12 +1608,20 @@
         "virality": "",
         "mediaCoverage": "",
         "linkType": "",
-        "platforms": ["surespot"]
+        "platforms": [
+          "surespot"
+        ]
       }
     ],
     "biography-250": "« AustralianWitness », se faisant passer pour un djihadiste, était en réalité Joshua Goldberg, semant le chaos en ligne. Le canular révéla l'influence d'un individu usant de fausses identités.",
     "posts": [],
-    "sources": ["8chan", "surespot", "facebook", "twitter", "JustPaste.it"],
+    "sources": [
+      "twitter",
+      "8chan",
+      "JustPaste.it",
+      "facebook",
+      "surespot"
+    ],
     "totalPosts": 529,
     "hasEnoughPostsToUseInFrequencyPosts": true,
     "hasEnoughTextToMakeWordcloud": true,
@@ -1723,11 +1687,11 @@
         "score": 41.6
       },
       {
-        "word": "september",
+        "word": "synagogue",
         "score": 35.29
       },
       {
-        "word": "synagogue",
+        "word": "september",
         "score": 35.29
       },
       {
@@ -1735,11 +1699,11 @@
         "score": 34.03
       },
       {
-        "word": "heard",
+        "word": "bomb",
         "score": 32.77
       },
       {
-        "word": "bomb",
+        "word": "heard",
         "score": 32.77
       },
       {
@@ -1747,11 +1711,11 @@
         "score": 30.25
       },
       {
-        "word": "event",
+        "word": "messages",
         "score": 28.99
       },
       {
-        "word": "messages",
+        "word": "event",
         "score": 28.99
       },
       {
@@ -1787,19 +1751,19 @@
         "score": 25.21
       },
       {
-        "word": "attacks",
-        "score": 23.95
-      },
-      {
         "word": "brothers",
         "score": 23.95
       },
       {
-        "word": "caught",
+        "word": "attacks",
         "score": 23.95
       },
       {
         "word": "target",
+        "score": 23.95
+      },
+      {
+        "word": "caught",
         "score": 23.95
       },
       {
@@ -1808,10 +1772,6 @@
       },
       {
         "word": "pbuh",
-        "score": 22.69
-      },
-      {
-        "word": "talk",
         "score": 22.69
       },
       {
@@ -1827,11 +1787,15 @@
         "score": 22.69
       },
       {
-        "word": "perth",
-        "score": 21.43
+        "word": "talk",
+        "score": 22.69
       },
       {
         "word": "state",
+        "score": 21.43
+      },
+      {
+        "word": "kill",
         "score": 21.43
       },
       {
@@ -1847,7 +1811,7 @@
         "score": 21.43
       },
       {
-        "word": "kill",
+        "word": "perth",
         "score": 21.43
       },
       {
@@ -1855,38 +1819,28 @@
         "score": 20.17
       },
       {
-        "word": "world",
+        "word": "send",
         "score": 20.17
       },
       {
-        "word": "send",
+        "word": "perfect",
         "score": 20.17
       }
-    ],
-    "mostImpactPost": {
-      "type": "post",
-      "creationDate": 1439416800,
-      "medias": [],
-      "title": "@moeyAK47 Brother, please check your DMs.",
-      "content": "@moeyAK47 Brother, please check your DMs.",
-      "originalPoster": "AusSecret",
-      "id": "aussecret",
-      "source": "twitter",
-      "character": "AusSecret",
-      "postUID": 3259,
-      "impact": 1
-    }
+    ]
   },
   {
     "slug": "blaze-it-flaggot",
     "biography": "Probablement un pseudonyme en ligne créé par Goldberg, faisant référence à la culture du cannabis et incluant un langage offensant, conforme à son habitude de créer des identités provocatrices.",
     "mostViralContent": "",
     "displayName": "Blaze It Flaggot",
-    "aliases": ["Blaze_It_Flaggot"],
+    "aliases": [
+      "Blaze_It_Flaggot"
+    ],
     "isJoshua": true,
     "fictionOrImpersonation": "fiction",
     "platform": [],
     "thematic": "Otaku",
+    "thematicGroup": "Culture",
     "career": "",
     "genre": "masculin",
     "polarisation": "droite",
@@ -1895,7 +1849,9 @@
     "links": [],
     "biography-250": "Blaze It Flaggot, possiblement un alias humoristique sans traces notables en ligne, illustre la volatilité du web où des pseudonymes éphémères apparaissent et disparaissent, laissant un mystère.",
     "posts": [],
-    "sources": ["reddit"],
+    "sources": [
+      "reddit"
+    ],
     "totalPosts": 1,
     "hasEnoughPostsToUseInFrequencyPosts": false,
     "hasEnoughTextToMakeWordcloud": false,
@@ -1916,36 +1872,24 @@
         "word": "taiwan",
         "score": 300.0
       }
-    ],
-    "mostImpactPost": {
-      "type": "post",
-      "originalPoster": "Blaze_It_Flaggot",
-      "url": "https://www.reddit.com//r/vexillology/comments/24m5vo/flag_of_keelung_city_taiwan/",
-      "medias": ["http://i.imgur.com/DNkqH4b.png"],
-      "content": "Flag of Keelung City, Taiwan",
-      "creationDate": 1399117340,
-      "topic": "vexillology",
-      "title": "Flag of Keelung City, Taiwan",
-      "complement": {
-        "redditScore": 5
-      },
-      "id": "blaze-it-flaggot",
-      "source": "reddit",
-      "character": "Blaze_It_Flaggot",
-      "postUID": 3788,
-      "impact": 1
-    }
+    ]
   },
   {
     "slug": "bw-anime-fan",
-    "biography": "Persona probable utilisé par Goldberg dans les communautés de fans d’anime, où il aurait pu se faire passer pour un amateur d’anime noir. Il était connu pour s’intégrer à divers fandoms sous des identités variées.",
+    "biography": "b-w-anime-fan était un contributeur très actif sur Wikipédia en 2006, passionné d’anime, de manga et de culture pop. Fan de Doraemon, Kappa Mikey et Sennin Buraku, il a multiplié les modifications sur les pages utilisateurs, discussions et débats de suppression, adoptant parfois un ton conflictuel, entre passion et tensions communautaires.",
     "mostViralContent": "",
     "displayName": "Bw Anime Fan",
-    "aliases": ["Bw Anime Fan", "b-w-anime-fan"],
+    "aliases": [
+      "Bw Anime Fan",
+      "b-w-anime-fan"
+    ],
     "isJoshua": true,
     "fictionOrImpersonation": "fiction",
-    "platform": ["wikipedia"],
+    "platform": [
+      "wikipedia"
+    ],
     "thematic": "Néo-nazi",
+    "thematicGroup": "Nationalists",
     "career": "",
     "genre": "masculin",
     "polarisation": "droite",
@@ -1954,7 +1898,9 @@
     "links": [],
     "biography-250": null,
     "posts": [],
-    "sources": ["wikipedia"],
+    "sources": [
+      "wikipedia"
+    ],
     "totalPosts": 587,
     "hasEnoughPostsToUseInFrequencyPosts": true,
     "hasEnoughTextToMakeWordcloud": false,
@@ -2159,36 +2105,21 @@
         "word": "redirects",
         "score": 66.67
       }
-    ],
-    "mostImpactPost": {
-      "type": "post",
-      "originalPoster": null,
-      "url": "https://en.wikipedia.org/w/index.php?title=Kiteretsu_Daihyakka&diff=prev&oldid=81802815",
-      "creationDate": 1161006655,
-      "content": "",
-      "title": "Kiteretsu Daihyakka",
-      "medias": [],
-      "topic": "page_Kiteretsu Daihyakka",
-      "complement": {
-        "comment": ""
-      },
-      "id": "b-w-anime-fan",
-      "source": "wikipedia",
-      "character": "b-w-anime-fan",
-      "postUID": 3789,
-      "impact": 1
-    }
+    ]
   },
   {
     "slug": "chuck-e-jesus",
-    "biography": "Persona satirique probable créé par Goldberg, pouvant se moquer des déclarations religieuses de Duncan Brannan, l’ancienne voix de Chuck E. Cheese, qui avait mentionné Jésus-Christ dans son message d’adieu.",
+    "biography": "Chuck-E-Jesus était un utilisateur actif de Reddit autour de 2014, mêlant prises de position contre l’antisémitisme, défenses provocantes de la liberté d’expression, et interventions sur les dérives complotistes. Il relaie en 2019 une déclaration controversée de Joshua Goldberg, marquant un lien ambigu avec les sphères de la troll culture.",
     "mostViralContent": "",
     "displayName": "Chuck E Jesus",
-    "aliases": ["Chuck-E-Jesus"],
+    "aliases": [
+      "Chuck-E-Jesus"
+    ],
     "isJoshua": true,
     "fictionOrImpersonation": "fiction",
     "platform": [],
     "thematic": "Libertarien absolutiste de la liberté d’expression",
+    "thematicGroup": "Libertarians",
     "career": "",
     "genre": "masculin",
     "polarisation": "droite",
@@ -2197,7 +2128,9 @@
     "links": [],
     "biography-250": null,
     "posts": [],
-    "sources": ["reddit"],
+    "sources": [
+      "reddit"
+    ],
     "totalPosts": 7,
     "hasEnoughPostsToUseInFrequencyPosts": false,
     "hasEnoughTextToMakeWordcloud": false,
@@ -2402,38 +2335,21 @@
         "word": "warnings",
         "score": 100.0
       }
-    ],
-    "mostImpactPost": {
-      "type": "post",
-      "originalPoster": "Chuck-E-Jesus",
-      "url": "https://www.reddit.com//r/internetdrama/comments/ae9wnx/notorious_reddit_troll_joshua_goldberg_releases/",
-      "medias": [
-        "https://www.reddit.com/r/internetdrama/comments/ae9wnx/notorious_reddit_troll_joshua_goldberg_releases/"
-      ],
-      "content": "Link: [https://medium.com/@MoonMetropolis/first-public-statement-from-joshua-goldberg-8bb061aa56a0](https://medium.com/@MoonMetropolis/first-public-statement-from-joshua-goldberg-8bb061aa56a0)",
-      "creationDate": 1547059637,
-      "topic": "internetdrama",
-      "title": "Notorious Reddit troll Joshua Goldberg releases first public statement since his arrest, admits to having had at least 27 different Reddit accounts.",
-      "complement": {
-        "redditScore": 23
-      },
-      "id": "chuck-e-jesus",
-      "source": "reddit",
-      "character": "Chuck-E-Jesus",
-      "postUID": 4376,
-      "impact": 1
-    }
+    ]
   },
   {
     "slug": "death-to-sjws",
-    "biography": "Persona anti-justice sociale probablement créé par Goldberg. Il a souvent pris pour cible des activistes progressistes et a créé des comptes exprimant une haine extrême envers les défenseurs de la justice sociale.",
+    "biography": "Death_to_SJWs était un utilisateur Reddit actif autour de 2014, connu pour ses commentaires et ses positions anti-« SJW ». Il publiait principalement dans des sous-forums traitant de théorie du complot, de politique libertarienne et de racisme. Son style provocateur mêlait moquerie, dénonciation et discours haineux, suscitant controverses et polarisation.",
     "mostViralContent": "",
     "displayName": "Death to SJWs",
-    "aliases": ["Death_to_SJWs"],
+    "aliases": [
+      "Death_to_SJWs"
+    ],
     "isJoshua": true,
     "fictionOrImpersonation": "fiction",
     "platform": [],
     "thematic": "Néo-nazi",
+    "thematicGroup": "Nationalists",
     "career": "Propagandiste",
     "genre": "masculin",
     "polarisation": "droite",
@@ -2442,7 +2358,9 @@
     "links": [],
     "biography-250": null,
     "posts": [],
-    "sources": ["reddit"],
+    "sources": [
+      "reddit"
+    ],
     "totalPosts": 564,
     "hasEnoughPostsToUseInFrequencyPosts": true,
     "hasEnoughTextToMakeWordcloud": true,
@@ -2647,38 +2565,21 @@
         "word": "j00z",
         "score": 43.55
       }
-    ],
-    "mostImpactPost": {
-      "type": "post",
-      "originalPoster": "Death_to_SJWs",
-      "url": "https://www.reddit.com//r/conspiratard/comments/348opr/obama_wants_to_start_a_race_war_to_bring_nazism/",
-      "medias": [
-        "http://shoebat.com/2014/12/09/obama-wants-start-race-war-bring-nazism-america/"
-      ],
-      "content": "Obama Wants To Start A Race War To Bring Nazism To America",
-      "creationDate": 1430281456,
-      "topic": "conspiratard",
-      "title": "Obama Wants To Start A Race War To Bring Nazism To America",
-      "complement": {
-        "redditScore": 0
-      },
-      "id": "death-to-sjws",
-      "source": "reddit",
-      "character": "Death_to_SJWs",
-      "postUID": 4383,
-      "impact": 1
-    }
+    ]
   },
   {
     "slug": "dinah-silverstein",
-    "biography": "Persona fictive probablement créée par Goldberg, utilisant un nom à consonance juive. Ce personnage s'inscrit dans sa stratégie consistant à créer des identités juives tout en maintenant simultanément des comptes antisémites, afin de fabriquer des conflits artificiels entre communautés en ligne.",
+    "biography": "Dinah Silverstein est un personnage fictif créé par Joshua Ryne Goldberg. Présentée comme une militante des droits humains canadienne, elle publiait des tribunes en faveur de lois contre les discours haineux. Ce faux profil servait à caricaturer et manipuler les débats progressistes sur la liberté d’expression et les droits humains.",
     "mostViralContent": "",
     "displayName": "Dinah Silverstein",
-    "aliases": ["Dinah Silverstein"],
+    "aliases": [
+      "Dinah Silverstein"
+    ],
     "isJoshua": true,
     "fictionOrImpersonation": "impersonation",
     "platform": [],
     "thematic": "Extrême gauche",
+    "thematicGroup": "Social justice",
     "career": "Blogueur / Chroniqueur",
     "genre": "féminin",
     "polarisation": "droite",
@@ -2694,7 +2595,9 @@
         "virality": "",
         "mediaCoverage": "",
         "linkType": "destinataire",
-        "platforms": ["times-of-israel"]
+        "platforms": [
+          "times-of-israel"
+        ]
       }
     ],
     "biography-250": null,
@@ -2705,14 +2608,17 @@
   },
   {
     "slug": "dr-shlomo-goldstein",
-    "biography": "Caricature antisémite probablement créée par Goldberg, utilisant ironiquement un nom juif malgré son propre héritage juif. Il pourrait faire référence à Shlomo Goldstein, une victime de l’Holocauste mentionnée dans les résultats de recherche.",
+    "biography": "Dr. Shlomo Goldstein est un personnage parodique créé par Joshua Ryne Goldberg sous le pseudonyme Michael Slay. Incarnation grotesque de stéréotypes antisémites, ce faux \"docteur juif\" servait à piéger et amplifier les discours néonazis en ligne, en se faisant passer pour la caricature délirante que ces milieux promeuvent.",
     "mostViralContent": "",
     "displayName": "Dr Shlomo Goldstein",
-    "aliases": ["Dr_Shlomo_Goldstein"],
+    "aliases": [
+      "Dr_Shlomo_Goldstein"
+    ],
     "isJoshua": true,
     "fictionOrImpersonation": "fiction",
     "platform": [],
     "thematic": "Nationaliste radical pro-Israël",
+    "thematicGroup": "Nationalists",
     "career": "",
     "genre": "masculin",
     "polarisation": "droite",
@@ -2721,7 +2627,9 @@
     "links": [],
     "biography-250": null,
     "posts": [],
-    "sources": ["reddit"],
+    "sources": [
+      "reddit"
+    ],
     "totalPosts": 33,
     "hasEnoughPostsToUseInFrequencyPosts": false,
     "hasEnoughTextToMakeWordcloud": false,
@@ -2926,36 +2834,22 @@
         "word": "lawyah",
         "score": 33.33
       }
-    ],
-    "mostImpactPost": {
-      "type": "comment",
-      "originalPoster": "Dr_Shlomo_Goldstein",
-      "url": "https://www.reddit.com//r/worldpolitics/comments/2gcjr9/european_voters_risk_giving_their_countries_a_bad/ckhwj77/",
-      "content": "Oy vey!  You have democracy, but only if you vote the way that WE want you to, goyim!",
-      "creationDate": 1410696456,
-      "topic": "worldpolitics",
-      "title": "European voters risk giving their countries a bad name by electing far-right politicians, the leader of the World Jewish Congress warned Saturday ahead of a major rally against anti-Semitism.",
-      "medias": [],
-      "complement": {
-        "redditScore": 1
-      },
-      "id": "dr-shlomo-goldstein",
-      "source": "reddit",
-      "character": "Dr_Shlomo_Goldstein",
-      "postUID": 4947,
-      "impact": 1
-    }
+    ]
   },
   {
     "slug": "ryoko-tamada",
-    "biography": "Pseudonyme à consonance japonaise probablement utilisé par Goldberg pour infiltrer les communautés de fans d'anime et de culture japonaise. Conformément à sa stratégie d'adopter diverses identités culturelles, ce persona lui permettait de s'intégrer dans les discussions liées à l'anime et aux mangas.",
+    "biography": "Ryoko Tamada, alias DreamerRyoko, est une voix provocante et engagée sur Twitter. Elle milite activement pour la liberté d’expression, s’oppose aux lois sur le “hate speech”, et critique la gauche occidentale, les politiques migratoires et le politiquement correct. Son ton acerbe mêle ironie, sarcasme et convictions tranchées.",
     "mostViralContent": "",
     "displayName": "Ryoko Tamada",
-    "aliases": ["DreamerRyoko", "RyokoTamada"],
+    "aliases": [
+      "DreamerRyoko",
+      "RyokoTamada"
+    ],
     "isJoshua": true,
     "fictionOrImpersonation": "fiction",
     "platform": [],
     "thematic": "Contradicteur libertarien",
+    "thematicGroup": "Libertarians",
     "career": "Blogueur / Chroniqueur",
     "genre": "féminin",
     "polarisation": "droite",
@@ -2971,7 +2865,10 @@
         "virality": "Couverture partielle",
         "mediaCoverage": "Moyenne",
         "linkType": "destinataire",
-        "platforms": ["twitter", "e-mail"]
+        "platforms": [
+          "twitter",
+          "e-mail"
+        ]
       },
       {
         "type": "outgoing",
@@ -2982,7 +2879,9 @@
         "virality": "",
         "mediaCoverage": "",
         "linkType": "destinataire",
-        "platforms": ["e-mail"]
+        "platforms": [
+          "e-mail"
+        ]
       },
       {
         "type": "outgoing",
@@ -2993,7 +2892,9 @@
         "virality": "",
         "mediaCoverage": "",
         "linkType": "destinataire",
-        "platforms": ["twitter"]
+        "platforms": [
+          "twitter"
+        ]
       },
       {
         "type": "outgoing",
@@ -3004,7 +2905,9 @@
         "virality": "",
         "mediaCoverage": "",
         "linkType": "destinataire",
-        "platforms": ["twitter"]
+        "platforms": [
+          "twitter"
+        ]
       },
       {
         "type": "outgoing",
@@ -3015,12 +2918,16 @@
         "virality": "",
         "mediaCoverage": "",
         "linkType": "destinataire",
-        "platforms": ["twitter"]
+        "platforms": [
+          "twitter"
+        ]
       }
     ],
     "biography-250": "﻿Ryoko Tamada est une jeune Japonaise souffrant de dépression, qui rêve de partir vivre aux États-Unis. En ligne, elle adopte une identité plus combative sous le pseudonyme DreamerRyoko sur Twitter. Là, elle devient une figure controversée, passionnée par la défense de la liberté d'expression et farouchement opposée à toute forme de censure, qu’elle associe aux législations sur le « discours de haine ».\nSa lutte pour la liberté d'expression semble être une extension de ses propres désirs d'émancipation et de quête d'une existence plus libre à l'étranger. Elle critique vigoureusement les mouvements progressistes et les groupes des droits de l’homme, qu'elle accuse de vouloir imposer une vision autoritaire de la société. Ses tweets, souvent incisifs et provocateurs, ciblent fréquemment les politiques occidentales, notamment en Europe et aux États-Unis, ainsi que des institutions internationales comme l’ONU.\nCette tension entre ses luttes personnelles et ses prises de position publiques crée un contraste frappant : derrière son ton acerbe et polémique se cache une jeune femme en proie à des sentiments d'isolement, de mal-être, et à une aspiration profonde de trouver un endroit où elle pourrait se sentir libre et comprise. Son rêve américain devient alors une métaphore de cette quête d’évasion, mais aussi un paradoxe, puisqu’elle critique précisément les sociétés vers lesquelles elle souhaite s'exiler.\nEn ligne, DreamerRyoko engage souvent des débats houleux avec des personnalités médiatiques et des commentateurs politiques, utilisant sa plateforme comme un exutoire à sa frustration. Pourtant, en dehors de ce personnage public, Ryoko demeure une jeune femme vulnérable, cherchant à échapper à sa réalité oppressante et à bâtir une nouvelle vie ailleurs.",
     "posts": [],
-    "sources": ["twitter"],
+    "sources": [
+      "twitter"
+    ],
     "totalPosts": 1674,
     "hasEnoughPostsToUseInFrequencyPosts": true,
     "hasEnoughTextToMakeWordcloud": true,
@@ -3225,36 +3132,21 @@
         "word": "arrested",
         "score": 22.95
       }
-    ],
-    "mostImpactPost": {
-      "type": "tweet",
-      "creationDate": 1423382350,
-      "url": "https://twitter.com/DreamerRyoko/status/564347696786702339",
-      "medias": [],
-      "title": "\"RT @d0v0ib: 最近宅配で送り状が濡れて文字見えないから確認したいって不審電話相次いでるみたいなので。写真は試しにヤマト運輸の伝票を30秒水に浸してタオルでごしごし拭いたもの。伝票はカーボン複写だから水に強いよ。連絡先聞きたがる電話にはご注意を。 http://t.co…\"",
-      "content": "\"RT @d0v0ib: 最近宅配で送り状が濡れて文字見えないから確認したいって不審電話相次いでるみたいなので。写真は試しにヤマト運輸の伝票を30秒水に浸してタオルでごしごし拭いたもの。伝票はカーボン複写だから水に強いよ。連絡先聞きたがる電話にはご注意を。 http://t.co…\"",
-      "originalPoster": "@d0v0ib",
-      "complement": {
-        "retwitt": 65225,
-        "tweetType": "ReTweet"
-      },
-      "id": "dreamerryoko",
-      "source": "twitter",
-      "character": "DreamerRyoko",
-      "postUID": 5684,
-      "impact": 65225
-    }
+    ]
   },
   {
     "slug": "emily-americana",
-    "biography": "Persona féminine nationaliste créée par Goldberg, probablement pour diffuser des opinions conservatrices ou patriotiques. Ce compte s'inscrivait dans son réseau d'identités politiquement divergentes, lui permettant de manipuler des conversations sur des sujets américains sensibles.",
+    "biography": "Emily Americana est une persona féminine nationaliste créée par Joshua Goldberg pour diffuser des opinions conservatrices ou exagérément patriotiques. Utilisée dans son réseau d’identités idéologiquement divergentes, elle servait à manipuler des débats sensibles américains, en provoquant, polarisant ou discréditant les discours via des interventions volontairement outrancières ou absurdes.",
     "mostViralContent": "",
     "displayName": "Emily Americana",
-    "aliases": ["Emily_Americana"],
+    "aliases": [
+      "Emily_Americana"
+    ],
     "isJoshua": true,
     "fictionOrImpersonation": "fiction",
     "platform": [],
     "thematic": "Contradicteur libertarien",
+    "thematicGroup": "Libertarians",
     "career": "",
     "genre": "féminin",
     "polarisation": "gauche",
@@ -3270,7 +3162,9 @@
         "virality": "",
         "mediaCoverage": "",
         "linkType": "destinataire",
-        "platforms": ["reddit"]
+        "platforms": [
+          "reddit"
+        ]
       },
       {
         "type": "outgoing",
@@ -3281,7 +3175,9 @@
         "virality": "",
         "mediaCoverage": "",
         "linkType": "destinataire",
-        "platforms": ["reddit"]
+        "platforms": [
+          "reddit"
+        ]
       },
       {
         "type": "outgoing",
@@ -3292,7 +3188,9 @@
         "virality": "",
         "mediaCoverage": "",
         "linkType": "destinataire",
-        "platforms": ["reddit"]
+        "platforms": [
+          "reddit"
+        ]
       },
       {
         "type": "outgoing",
@@ -3303,12 +3201,16 @@
         "virality": "",
         "mediaCoverage": "",
         "linkType": "destinataire",
-        "platforms": ["reddit"]
+        "platforms": [
+          "reddit"
+        ]
       }
     ],
     "biography-250": null,
     "posts": [],
-    "sources": ["reddit"],
+    "sources": [
+      "reddit"
+    ],
     "totalPosts": 1043,
     "hasEnoughPostsToUseInFrequencyPosts": true,
     "hasEnoughTextToMakeWordcloud": true,
@@ -3513,38 +3415,21 @@
         "word": "farright",
         "score": 30.58
       }
-    ],
-    "mostImpactPost": {
-      "type": "post",
-      "originalPoster": "Emily_Americana",
-      "url": "https://www.reddit.com//r/worldnews/comments/3k4yfq/germany_says_can_take_500000_refugees_a_year_in/",
-      "medias": [
-        "http://news.yahoo.com/germany-says-500-000-refugees-near-future-083143404.html"
-      ],
-      "content": "Germany says can take 500,000 refugees a year in near future",
-      "creationDate": 1441743510,
-      "topic": "worldnews",
-      "title": "Germany says can take 500,000 refugees a year in near future",
-      "complement": {
-        "redditScore": 0
-      },
-      "id": "emily-americana",
-      "source": "reddit",
-      "character": "Emily_Americana",
-      "postUID": 6654,
-      "impact": 1
-    }
+    ]
   },
   {
     "slug": "emily-goldstein",
-    "biography": "Persona fictive partageant le nom de famille de Joshua, prétendant être une féministe juive. Ce personnage publiait du contenu inflammatoire supposément d'un point de vue juif tandis que Goldberg opérait simultanément des comptes antisémites.",
+    "biography": "Emily Goldstein est un pseudonyme fictif utilisé par Joshua Goldberg, un troll internet accusé de multiples opérations de désinformation. En 2015, il publie un faux article provocateur sur Thought Catalog prônant l’« extinction des blancs ». Elon Musk le déterre en octobre 2024, relançant le débat sur la manipulation et la satire.",
     "mostViralContent": "",
     "displayName": "Emily Goldstein",
-    "aliases": ["emily-goldstein"],
+    "aliases": [
+      "emily-goldstein"
+    ],
     "isJoshua": true,
     "fictionOrImpersonation": "impersonation",
     "platform": [],
     "thematic": "Extrême gauche",
+    "thematicGroup": "Social justice",
     "career": "Blogueur / Chroniqueur",
     "genre": "féminin",
     "polarisation": "droite",
@@ -3560,7 +3445,9 @@
         "virality": "Mentionné indirectement dans des affaires",
         "mediaCoverage": "Très forte",
         "linkType": "destinataire",
-        "platforms": ["twitter"]
+        "platforms": [
+          "twitter"
+        ]
       },
       {
         "type": "outgoing",
@@ -3570,8 +3457,10 @@
         "mediaImpact": "",
         "virality": "",
         "mediaCoverage": "",
-        "linkType": "",
-        "platforms": ["thoughtcatalog"]
+        "linkType": "destinataire",
+        "platforms": [
+          "thoughtcatalog"
+        ]
       },
       {
         "type": "outgoing",
@@ -3582,7 +3471,9 @@
         "virality": "",
         "mediaCoverage": "",
         "linkType": "",
-        "platforms": ["thoughtcatalog"]
+        "platforms": [
+          "thoughtcatalog"
+        ]
       },
       {
         "type": "outgoing",
@@ -3593,7 +3484,9 @@
         "virality": "",
         "mediaCoverage": "",
         "linkType": "",
-        "platforms": ["thoughtcatalog"]
+        "platforms": [
+          "thoughtcatalog"
+        ]
       },
       {
         "type": "outgoing",
@@ -3604,7 +3497,9 @@
         "virality": "",
         "mediaCoverage": "",
         "linkType": "",
-        "platforms": ["thoughtcatalog"]
+        "platforms": [
+          "thoughtcatalog"
+        ]
       },
       {
         "type": "outgoing",
@@ -3615,12 +3510,16 @@
         "virality": "",
         "mediaCoverage": "",
         "linkType": "",
-        "platforms": ["thoughtcatalog"]
+        "platforms": [
+          "thoughtcatalog"
+        ]
       }
     ],
     "biography-250": null,
     "posts": [],
-    "sources": ["thoughtcatalog"],
+    "sources": [
+      "thoughtcatalog"
+    ],
     "totalPosts": 1,
     "hasEnoughPostsToUseInFrequencyPosts": false,
     "hasEnoughTextToMakeWordcloud": false,
@@ -3825,35 +3724,21 @@
         "word": "reins",
         "score": 11.11
       }
-    ],
-    "mostImpactPost": {
-      "type": "post",
-      "url": "https://thoughtcatalog.com/emily-goldstein/2015/05/get-rid-of-white-people/",
-      "creationDate": 1432649027,
-      "content": "One of the more common memes that I’ve seen white supremacists spread around recently has been “diversity is a code word for white genocide”. The concept here is that diversity is only promoted in white nations, and that the end goal is to eliminate white people altogether by flooding all white countries with non-white people until there are no white people left. Well, guess what, white supremacists? That’s exactly right. Diversity IS about getting rid of white people, and that’s a good thing.\nFirst off, I am a white person myself, so allow me to get that out of the way. I’m extremely glad that the white race is dying, and you should be too. White people do not have a right to exist. Period. That may sound like a bold statement, but it’s entirely true. Any white person with even the faintest knowledge of history should curse themselves every single day for being white. Throughout all of recorded history, whites have engaged in oppression, genocide, colonialism, imperialism, and just plain evil on a massive scale. White people have denied every other race the right to exist, and have – at some point in history – oppressed every single race on the planet.\nWhy, then, should whites now be allowed to live in peace when whites have historically been the world’s #1 source of conflict and oppression? Whiteness is racism. Period. Whiteness is the source of all oppression in the world. Whiteness is racism, sexism, homophobia, transphobia, ableism, anti-Semitism, Islamophobia, and heteropatriarchal capitalism. Eliminate whiteness and you eliminate every single form of oppression that the world currently faces. No white people means no oppression. White people are like a cancer and oppression is a symptom of the cancer. Cut out the cancer altogether – with the cancer being white people – and you get rid of all of the oppression which white people cause.\nI have dedicated my life to fighting racism, and I have determined – based on all available evidence – that the only way to really eliminate racism is to eliminate whiteness. Whiteness is the ocean from which racism flows. Get rid of whiteness and you get rid of racism. Despite what white supremacists often claim, white people do not have a “culture”. White “culture” consists of nothing more than oppression, genocide, and the disenfranchisement of minorities. White “culture” is racism and nothing more. When white supremacists talk about “white culture”, what they’re really talking about is racism. Over the course of history, white people have built a massive empire based entirely on the hard work of oppressed and disenfranchised minority groups. But guess what, white people? That empire is finally coming to an end now, and its demise is music to my hears. To quote the great anti-racist activist Tim Wise: “Do you hear it? The sound of your empire dying? Your nation, as you knew it, ending, permanently? Because I do, and the sound of its demise is beautiful.”\nDescendants of Holocaust survivors can personally attest to the evil that white people are capable of when they hold the reins of power. Thankfully, whites won’t be holding the reins of power for much longer. When white people die out, so will racism, sexism, queerphobia, and all other forms of oppression. The only way to eliminate racism, white privilege, and white supremacy is to eliminate whiteness altogether. When I teach my students about human rights, critical race theory, and the role of whites in worldwide oppression, my white students often ask me how they can “atone” for the evils of whiteness and how they can make up for centuries of white oppression. And I tell them: you can do that by not having any children and ensuring that the white race does not live to oppress anyone ever again in the future.\nThankfully, white birthrates are indeed very low, while the birthrates of minorities are much, MUCH higher. Within our lifetimes, whites will be a minority in a significant number of formerly white countries, including the US, the UK, France, Germany, Australia, Canada, and New Zealand, to name just a few. To white supremacists yearning for the days when whites could rape and pillage the world with impunity, this is incredibly frightening. To people on the right side of history, however, this looks like progress. Whites are finally getting their just desserts – and it’s about time. I sincerely hope that, when the white power structure finally comes crashing down, whites will receive no mercy from the minority groups that whites have spent centuries oppressing. We certainly don’t deserve any mercy or kindness, as we have given nothing of the sort to others.\nWhites should also know that, when they do become a minority in formerly white countries, they will NOT be receiving affirmative action or any of the other benefits meant to assist the minorities that whites have historically oppressed. Why? Because whites don’t deserve those benefits. It’s as simple as that. One can look to South Africa, where whites are only about 8.4% of the population, but blacks continue to receive affirmative action because blacks in South Africa have historically been disenfranchised by whites. The same thing will happen when whites become a minority in North America, Europe, and Oceania, because whites have historically oppressed minorities in all three of those continents. Not to mention, why should whites receive any kind of benefits when the ultimate goal is to get rid of whites altogether? Finally, laws against hate speech will serve to prevent whites from complaining about this, as any white person who complains will be arrested, given a long prison sentence, and made an example of for the rest of the remaining white population. Speech that attempts to justify the white power structure and perpetuate white oppression of minorities is not freedom of speech, and it has absolutely no place in modern society.\nAs white people, we all need to recognize that we no longer have a place in the world. This world now belongs to the minorities that us whites have spent centuries oppressing, and there is absolutely nothing that any pathetic white supremacists can do about it. In order for a better world to be created, white people need to be exterminated. Period. It’s as simple as that. We should simply be thankful that our death will be accomplished through mass immigration and declining birthrates. When whites have exterminated other races, it wasn’t nearly so peaceful – it was done through violent genocide. But other races are not as evil as whites are, and it’s important to remember that. The world belongs to minorities now, and they will make a much better, more peaceful world with what they’re given. Only when white people have ceased to exist will a peaceful and progressive society – free of racism and hatred – be possible. The only way to eliminate white privilege, white oppression, white racism, and the oppressive white power structure is to eliminate white people altogether.\nSo, yes, white supremacists: diversity is indeed white genocide. And white genocide is exactly what the world needs more than anything else.",
-      "title": "Yes, Diversity Is About Getting Rid Of White People (And That’s A Good Thing) - Thought.is",
-      "medias": [
-        "https://archive.is/OYZ1b/db0fe8633236109109a195f61f1cdff282e12df1.webp"
-      ],
-      "topic": "Yes, Diversity Is About Getting Rid Of White People (And That’s A Good Thing)",
-      "originalPoster": "emily_goldstein",
-      "id": "emily-goldstein",
-      "source": "thoughtcatalog",
-      "character": "emily-goldstein",
-      "postUID": 7697,
-      "impact": 1
-    }
+    ]
   },
   {
     "slug": "europe-hates-niggers",
-    "biography": "Pseudonyme raciste extrême créé par Goldberg pour propager du contenu haineux ciblant les personnes noires. Ce compte illustre sa tendance à créer des personas exprimant des opinions racistes virulentes tout en gérant simultanément des comptes se présentant comme issus des communautés ciblées.",
+    "biography": "Créé par Joshua Goldberg, ce persona extrémiste incarnait un \"Européen blanc raciste\" caricatural, destiné à faire passer les nationalistes européens pour des monstres. Via ce compte, Goldberg diffusait des discours haineux sur Reddit et 4chan pour piéger ou discréditer l’extrême droite, illustrant sa stratégie de trolling idéologique radical​",
     "mostViralContent": "",
     "displayName": "Europe Hates Niggers",
-    "aliases": ["Europe_Hates_Niggers"],
+    "aliases": [
+      "Europe_Hates_Niggers"
+    ],
     "isJoshua": true,
     "fictionOrImpersonation": "fiction",
     "platform": [],
     "thematic": "Néo-nazi",
+    "thematicGroup": "Nationalists",
     "career": "",
     "genre": "masculin",
     "polarisation": "droite",
@@ -3862,7 +3747,9 @@
     "links": [],
     "biography-250": null,
     "posts": [],
-    "sources": ["reddit"],
+    "sources": [
+      "reddit"
+    ],
     "totalPosts": 25,
     "hasEnoughPostsToUseInFrequencyPosts": false,
     "hasEnoughTextToMakeWordcloud": false,
@@ -4067,38 +3954,21 @@
         "word": "nationalist",
         "score": 37.5
       }
-    ],
-    "mostImpactPost": {
-      "type": "post",
-      "url": "https://web.archive.org/web/20150912124344/https://www.reddit.com/user/Europe_Hates_Niggers",
-      "title": "Greek PM makes final bid to prevent Radical Left SYRIZA from seizing power",
-      "content": "Golden Dawn will eventually reign supreme in Greece, and it will be the spark that ignites the nationalist revolution all over Europe.",
-      "originalPoster": "Europe_Hates_Niggers",
-      "creationDate": 1419739058,
-      "topic": "worldpolitics",
-      "medias": [
-        "https://web.archive.org/web/20170205064823/http://news.xinhuanet.com/english/europe/europe/2014-12/28/c_133882542.htm"
-      ],
-      "complement": {
-        "redditScore": [-2]
-      },
-      "id": "europe-hates-niggers",
-      "source": "reddit",
-      "character": "Europe_Hates_Niggers",
-      "postUID": 7698,
-      "impact": 1
-    }
+    ]
   },
   {
     "slug": "european-88",
-    "biography": "Persona nationaliste blanche créée par Goldberg, le \"88\" faisant référence au code néo-nazi pour \"Heil Hitler\". Ce compte infiltrait les communautés d'extrême-droite pendant que Goldberg gérait également des personas de gauche et de minorités.",
+    "biography": "Persona nationaliste blanche créée par Goldberg, le \"88\" fait référence au code néo-nazi pour \"Heil Hitler\". À 14 ans, il infiltre les communautés d’extrême-droite avec ce compte tout en manipulant aussi des personas de gauche et de minorités, exposant les contradictions et tensions idéologiques en ligne pour semer le chaos.",
     "mostViralContent": "",
     "displayName": "European 88",
-    "aliases": ["European88"],
+    "aliases": [
+      "European88"
+    ],
     "isJoshua": true,
     "fictionOrImpersonation": "fiction",
     "platform": [],
     "thematic": "Néo-nazi",
+    "thematicGroup": "Nationalists",
     "career": "",
     "genre": "masculin",
     "polarisation": "droite",
@@ -4113,14 +3983,17 @@
   },
   {
     "slug": "flappy-brd",
-    "biography": "Pseudonyme probable de Goldberg possiblement lié aux communautés de jeux vidéo, faisant référence au jeu Flappy Bird avec une orthographe altérée. Goldberg utilisait souvent des références culturelles populaires dans ses noms d'utilisateur pour attirer l'attention dans différentes communautés en ligne.",
+    "biography": "Flappy-BRD est l’un des nombreux alias créés par Joshua Goldberg, utilisé sur Reddit et 4chan. Ce persona participait à ses campagnes de manipulation en ligne, jouant différents rôles idéologiques pour semer la confusion. Comme d'autres identités fictives, Flappy-BRD servait à exacerber les conflits politiques et à piéger les extrêmes​",
     "mostViralContent": "",
     "displayName": "Flappy BRD",
-    "aliases": ["FlappyBRD"],
+    "aliases": [
+      "FlappyBRD"
+    ],
     "isJoshua": true,
     "fictionOrImpersonation": "fiction",
     "platform": [],
     "thematic": "Extrême gauche",
+    "thematicGroup": "Social justice",
     "career": "",
     "genre": "masculin",
     "polarisation": "droite",
@@ -4129,7 +4002,9 @@
     "links": [],
     "biography-250": null,
     "posts": [],
-    "sources": ["reddit"],
+    "sources": [
+      "reddit"
+    ],
     "totalPosts": 6,
     "hasEnoughPostsToUseInFrequencyPosts": false,
     "hasEnoughTextToMakeWordcloud": false,
@@ -4334,38 +4209,21 @@
         "word": "germany",
         "score": 75.0
       }
-    ],
-    "mostImpactPost": {
-      "type": "post",
-      "originalPoster": "FlappyBRD",
-      "url": "https://www.reddit.com//r/internetdrama/comments/udupdo/i_am_michael_slay_the_incredibly_strange/",
-      "medias": [
-        "https://medium.com/@MoonMetropolis/i-am-michael-slay-the-incredibly-strange-incredibly-true-story-of-how-someone-with-the-last-name-e310d37c47d3"
-      ],
-      "content": "I Am Michael Slay: The Incredibly Strange, Incredibly True Story of How Someone with the Last Name Goldberg Became a Writer on the Most Popular Neo-Nazi Website by Joshua Goldberg (a.k.a. /u/European88)",
-      "creationDate": 1651151600,
-      "topic": "internetdrama",
-      "title": "I Am Michael Slay: The Incredibly Strange, Incredibly True Story of How Someone with the Last Name Goldberg Became a Writer on the Most Popular Neo-Nazi Website by Joshua Goldberg (a.k.a. /u/European88)",
-      "complement": {
-        "redditScore": 34
-      },
-      "id": "flappybrd",
-      "source": "reddit",
-      "character": "FlappyBRD",
-      "postUID": 7723,
-      "impact": 1
-    }
+    ]
   },
   {
     "slug": "gas-the-kikes",
-    "biography": "Persona violemment antisémite créée par Goldberg, qui est lui-même juif. Ce compte extrême publiait des discours haineux pendant que Goldberg opérait simultanément des comptes s'identifiant comme juifs, lui permettant de fabriquer et manipuler des conflits.",
+    "biography": "Goldberg créait des aliases aux noms volontairement abjects pour infiltrer et parodier les discours néonazis. Il utilisait ces identités pour provoquer, amplifier des débats haineux, ou se répondre à lui-même avec d'autres comptes. Ce théâtre idéologique toxique visait à décrédibiliser toutes les positions, même les plus extrêmes qu’il mimait.",
     "mostViralContent": "",
     "displayName": "Gas the Kikes",
-    "aliases": ["Gas-the-kikes"],
+    "aliases": [
+      "Gas-the-kikes"
+    ],
     "isJoshua": true,
     "fictionOrImpersonation": "fiction",
     "platform": [],
     "thematic": "Néo-nazi",
+    "thematicGroup": "Nationalists",
     "career": "",
     "genre": "masculin",
     "polarisation": "droite",
@@ -4374,7 +4232,9 @@
     "links": [],
     "biography-250": null,
     "posts": [],
-    "sources": ["reddit"],
+    "sources": [
+      "reddit"
+    ],
     "totalPosts": 100,
     "hasEnoughPostsToUseInFrequencyPosts": true,
     "hasEnoughTextToMakeWordcloud": true,
@@ -4392,6 +4252,10 @@
         "score": 240.0
       },
       {
+        "word": "jews",
+        "score": 210.0
+      },
+      {
         "word": "australian",
         "score": 210.0
       },
@@ -4400,24 +4264,12 @@
         "score": 210.0
       },
       {
-        "word": "jews",
-        "score": 210.0
-      },
-      {
-        "word": "israel",
-        "score": 180.0
-      },
-      {
         "word": "white",
         "score": 180.0
       },
       {
-        "word": "australia",
-        "score": 150.0
-      },
-      {
-        "word": "ebola",
-        "score": 150.0
+        "word": "israel",
+        "score": 180.0
       },
       {
         "word": "youtubecom",
@@ -4428,23 +4280,27 @@
         "score": 150.0
       },
       {
-        "word": "women",
-        "score": 120.0
+        "word": "ebola",
+        "score": 150.0
       },
       {
-        "word": "holocaust",
-        "score": 120.0
-      },
-      {
-        "word": "parliament",
-        "score": 120.0
+        "word": "australia",
+        "score": 150.0
       },
       {
         "word": "people",
         "score": 120.0
       },
       {
-        "word": "diversity",
+        "word": "muslims",
+        "score": 120.0
+      },
+      {
+        "word": "palestinian",
+        "score": 120.0
+      },
+      {
+        "word": "parliament",
         "score": 120.0
       },
       {
@@ -4456,12 +4312,48 @@
         "score": 120.0
       },
       {
-        "word": "palestinian",
+        "word": "women",
         "score": 120.0
       },
       {
-        "word": "muslims",
+        "word": "holocaust",
         "score": 120.0
+      },
+      {
+        "word": "diversity",
+        "score": 120.0
+      },
+      {
+        "word": "muslim",
+        "score": 90.0
+      },
+      {
+        "word": "pol",
+        "score": 90.0
+      },
+      {
+        "word": "oy",
+        "score": 90.0
+      },
+      {
+        "word": "vey",
+        "score": 90.0
+      },
+      {
+        "word": "kikes",
+        "score": 90.0
+      },
+      {
+        "word": "presstvir",
+        "score": 90.0
+      },
+      {
+        "word": "newsyahoocom",
+        "score": 90.0
+      },
+      {
+        "word": "le",
+        "score": 90.0
       },
       {
         "word": "wars",
@@ -4477,10 +4369,6 @@
       },
       {
         "word": "federal",
-        "score": 90.0
-      },
-      {
-        "word": "muslim",
         "score": 90.0
       },
       {
@@ -4512,10 +4400,6 @@
         "score": 90.0
       },
       {
-        "word": "pol",
-        "score": 90.0
-      },
-      {
         "word": "brussels",
         "score": 90.0
       },
@@ -4524,15 +4408,7 @@
         "score": 90.0
       },
       {
-        "word": "newsyahoocom",
-        "score": 90.0
-      },
-      {
         "word": "fbi",
-        "score": 90.0
-      },
-      {
-        "word": "kikes",
         "score": 90.0
       },
       {
@@ -4544,73 +4420,40 @@
         "score": 90.0
       },
       {
-        "word": "oy",
-        "score": 90.0
-      },
-      {
-        "word": "vey",
-        "score": 90.0
-      },
-      {
-        "word": "le",
-        "score": 90.0
-      },
-      {
-        "word": "presstvir",
-        "score": 90.0
-      },
-      {
-        "word": "jew",
+        "word": "antiwhite",
         "score": 60.0
       },
       {
-        "word": "adam",
+        "word": "cultural",
         "score": 60.0
       },
       {
-        "word": "kokesh",
+        "word": "school",
         "score": 60.0
       },
       {
-        "word": "vegas",
+        "word": "dailymailcouk",
         "score": 60.0
       },
       {
-        "word": "cop",
+        "word": "kike",
         "score": 60.0
       }
-    ],
-    "mostImpactPost": {
-      "type": "post",
-      "url": "https://web.archive.org/web/20140622174917/http://www.reddit.com/user/Gas-the-Kikes?count=50&after=t3_2811tk",
-      "title": "Jew Adam Kokesh defends Vegas cop killers (rawstory.com)",
-      "content": "Jew Adam Kokesh defends Vegas cop killers (rawstory.com)",
-      "originalPoster": "Gas-the-Kikes",
-      "creationDate": 1402628333,
-      "topic": "/r/WhiteRights",
-      "medias": [
-        "https://web.archive.org/web/20140622174917/http://www.rawstory.com/rs/2014/06/12/libertarian-host-who-inspired-vegas-killers-they-were-victims-murdering-cops-saves-lives/"
-      ],
-      "complement": {
-        "redditScore": [2]
-      },
-      "id": "gas-the-kikes",
-      "source": "reddit",
-      "character": "Gas-the-kikes",
-      "postUID": 7729,
-      "impact": 1
-    }
+    ]
   },
   {
     "slug": "hadiyo-elmi",
-    "biography": "Persona probablement créée pour se faire passer pour une personne d'origine somalienne ou est-africaine. Goldberg créait fréquemment des identités issues de minorités ethniques pour infiltrer diverses communautés culturelles tout en alimentant des tensions intercommunautaires.",
+    "biography": "Hadiyo Elmi était un faux compte Twitter créé par Joshua Goldberg, se présentant comme une militante somalienne prônant l’extermination des blancs. Cette persona servait à piéger et provoquer les nationalistes blancs et européens. L’objectif de Goldberg : caricaturer les extrêmes idéologiques pour semer le chaos en ligne​",
     "mostViralContent": "",
     "displayName": "Hadiyo Elmi",
-    "aliases": ["Hadiyo Elmi"],
+    "aliases": [
+      "Hadiyo Elmi"
+    ],
     "isJoshua": true,
     "fictionOrImpersonation": "fiction",
     "platform": [],
     "thematic": "Extrême gauche",
+    "thematicGroup": "Social justice",
     "career": "Militante",
     "genre": "féminin",
     "polarisation": "droite",
@@ -4626,7 +4469,9 @@
         "virality": "",
         "mediaCoverage": "",
         "linkType": "destinataire",
-        "platforms": ["twitter"]
+        "platforms": [
+          "twitter"
+        ]
       },
       {
         "type": "outgoing",
@@ -4637,7 +4482,9 @@
         "virality": "",
         "mediaCoverage": "",
         "linkType": "destinataire",
-        "platforms": ["twitter"]
+        "platforms": [
+          "twitter"
+        ]
       },
       {
         "type": "outgoing",
@@ -4648,7 +4495,9 @@
         "virality": "",
         "mediaCoverage": "",
         "linkType": "destinataire",
-        "platforms": ["twitter"]
+        "platforms": [
+          "twitter"
+        ]
       }
     ],
     "biography-250": null,
@@ -4659,14 +4508,17 @@
   },
   {
     "slug": "id-c9uafs7u",
-    "biography": "Identifiant numérique associé aux activités en ligne de Joshua Goldberg. Cette signature technique a aidé les enquêteurs à connecter plusieurs personas à Goldberg, révélant l'étendue de son réseau élaboré de fausses identités.",
+    "biography": "ID utilisé par Joshua Goldberg sur 4chan entre décembre 2014 et août 2015, principalement avec un drapeau jamaïcain pour brouiller les pistes. Il y postait comme \"OP\" (auteur de thread), sous des alias comme \"Australi Witness\", incitant à des actions violentes, des manipulations idéologiques et du chaos ciblé via l’identité anonyme.",
     "mostViralContent": "",
     "displayName": "ID:C9Uafs7U",
-    "aliases": ["ID:c9Uafs7U"],
+    "aliases": [
+      "ID:c9Uafs7U"
+    ],
     "isJoshua": true,
     "fictionOrImpersonation": "fiction",
     "platform": [],
     "thematic": "Néo-nazi",
+    "thematicGroup": "Nationalists",
     "career": "",
     "genre": "masculin",
     "polarisation": "gauche",
@@ -4675,7 +4527,9 @@
     "links": [],
     "biography-250": null,
     "posts": [],
-    "sources": ["4plebs"],
+    "sources": [
+      "4plebs"
+    ],
     "totalPosts": 309,
     "hasEnoughPostsToUseInFrequencyPosts": true,
     "hasEnoughTextToMakeWordcloud": true,
@@ -4880,34 +4734,21 @@
         "word": "laws",
         "score": 76.74
       }
-    ],
-    "mostImpactPost": {
-      "complement": {},
-      "type": "post",
-      "originalPoster": "ID:rrwkDKxb",
-      "url": "https://archive.4plebs.org/pol/thread/45075429/#45075429",
-      "creationDate": 1431433193,
-      "content": "Check out this roofucker talking about how the US needs to outlaw \"hate speech\", /pol/.\n\nhttp://thoughtcatalog.com/tanya-cohen/2015/05/hammer-down-on-hate-speech/",
-      "title": "/pol/ - Politically Incorrect » Thread #45075429",
-      "medias": ["https://i.4pcdn.org/pol/1422332501616s.jpg"],
-      "topic": "",
-      "id": "id-c9uafs7u",
-      "source": "4plebs",
-      "character": "ID:c9Uafs7U",
-      "postUID": 7829,
-      "impact": 1
-    }
+    ]
   },
   {
     "slug": "island-angel",
-    "biography": "Persona présentée comme originaire d'une région insulaire, possiblement du Pacifique ou des Caraïbes. Ce personnage s'inscrit dans la stratégie de Goldberg d'adopter des identités diverses géographiquement pour manipuler les conversations sur des sujets internationaux et culturels spécifiques.",
+    "biography": "Persona créée par Joshua Goldberg se présentant comme une femme habitant à Palau, Micronésie. Utilisé pour commenter sur Reddit avec un ton bienveillant et naïf, ce personnage jouait un rôle dans ses manipulations multicouches, servant de contrepoint pacifique à ses comptes plus extrémistes",
     "mostViralContent": "",
     "displayName": "Island Angel",
-    "aliases": ["Island_Angel"],
+    "aliases": [
+      "Island_Angel"
+    ],
     "isJoshua": true,
     "fictionOrImpersonation": "fiction",
     "platform": [],
     "thematic": "Contradicteur intellectuel",
+    "thematicGroup": "Antisystem",
     "career": "",
     "genre": "masculin",
     "polarisation": "gauche",
@@ -4916,7 +4757,9 @@
     "links": [],
     "biography-250": null,
     "posts": [],
-    "sources": ["reddit"],
+    "sources": [
+      "reddit"
+    ],
     "totalPosts": 86,
     "hasEnoughPostsToUseInFrequencyPosts": true,
     "hasEnoughTextToMakeWordcloud": true,
@@ -5121,36 +4964,21 @@
         "word": "abuse",
         "score": 33.33
       }
-    ],
-    "mostImpactPost": {
-      "type": "post",
-      "originalPoster": "Island_Angel",
-      "url": "https://www.reddit.com//r/fatlogic/comments/1w6u0j/this_is_weaponsgrade_fat_logic_right_here/",
-      "medias": ["http://i.imgur.com/uvPOsul.jpg"],
-      "content": "This is Weapons-Grade Fat Logic Right Here",
-      "creationDate": 1390739512,
-      "topic": "fatlogic",
-      "title": "This is Weapons-Grade Fat Logic Right Here",
-      "complement": {
-        "redditScore": 234
-      },
-      "id": "island-angel",
-      "source": "reddit",
-      "character": "Island_Angel",
-      "postUID": 8138,
-      "impact": 1
-    }
+    ]
   },
   {
     "slug": "real-joshua-goldberg",
-    "biography": "Pseudonyme que Goldberg aurait pu utiliser pour se représenter véritablement en ligne, créant un contraste avec ses nombreuses identités fictives et potentiellement pour se construire un alibi.",
+    "biography": "Depuis qu'il est sorti de prison le 1er Avril 2024, Joshua Goldberg signe ses articles sous son vrai nom. Les sujets abordés sont souvent autobiographiques et relèvent parfois de l'investigation. Cela ne l'empêche cependant pas de créer d'autres avatars fictionnels en parallèle.",
     "mostViralContent": "",
     "displayName": "Joshua Goldberg (Real)",
-    "aliases": ["Joshua Goldberg"],
+    "aliases": [
+      "Joshua Goldberg"
+    ],
     "isJoshua": true,
     "fictionOrImpersonation": "fiction",
     "platform": [],
     "thematic": "Agent du chaos nihiliste",
+    "thematicGroup": "Antisystem",
     "career": "",
     "genre": "masculin",
     "polarisation": "droite",
@@ -5166,7 +4994,9 @@
         "virality": "Scandale médiatisé, retrait d’articles",
         "mediaCoverage": "Forte",
         "linkType": "destinataire",
-        "platforms": ["times-of-israel"]
+        "platforms": [
+          "times-of-israel"
+        ]
       },
       {
         "type": "outgoing",
@@ -5177,7 +5007,9 @@
         "virality": "Couverture modérée",
         "mediaCoverage": "Moyenne",
         "linkType": "destinateur",
-        "platforms": ["twitter"]
+        "platforms": [
+          "twitter"
+        ]
       },
       {
         "type": "outgoing",
@@ -5188,7 +5020,10 @@
         "virality": "Articles dans médias mainstream",
         "mediaCoverage": "Forte",
         "linkType": "destinataire",
-        "platforms": ["twitter", "facebook"]
+        "platforms": [
+          "twitter",
+          "facebook"
+        ]
       },
       {
         "type": "outgoing",
@@ -5199,7 +5034,9 @@
         "virality": "Grande couverture médiatique",
         "mediaCoverage": "Forte",
         "linkType": "destinateur",
-        "platforms": ["twitter"]
+        "platforms": [
+          "twitter"
+        ]
       },
       {
         "type": "outgoing",
@@ -5210,7 +5047,11 @@
         "virality": "",
         "mediaCoverage": "",
         "linkType": "destinateur",
-        "platforms": ["twitter", "facebook", "e-mail"]
+        "platforms": [
+          "twitter",
+          "facebook",
+          "e-mail"
+        ]
       },
       {
         "type": "outgoing",
@@ -5221,7 +5062,9 @@
         "virality": "Modérément viral",
         "mediaCoverage": "Moyenne",
         "linkType": "destinataire",
-        "platforms": ["facebook"]
+        "platforms": [
+          "facebook"
+        ]
       },
       {
         "type": "outgoing",
@@ -5232,7 +5075,9 @@
         "virality": "5K RTs, niche Alt-Right",
         "mediaCoverage": "Faible",
         "linkType": "destinataire",
-        "platforms": ["reddit"]
+        "platforms": [
+          "reddit"
+        ]
       },
       {
         "type": "outgoing",
@@ -5243,7 +5088,9 @@
         "virality": "Ciblage par faux comptes",
         "mediaCoverage": "Modérée",
         "linkType": "destinataire",
-        "platforms": ["twitter"]
+        "platforms": [
+          "twitter"
+        ]
       },
       {
         "type": "outgoing",
@@ -5254,7 +5101,9 @@
         "virality": "",
         "mediaCoverage": "",
         "linkType": "destinataire",
-        "platforms": ["sluthate"]
+        "platforms": [
+          "sluthate"
+        ]
       },
       {
         "type": "outgoing",
@@ -5265,7 +5114,10 @@
         "virality": "",
         "mediaCoverage": "",
         "linkType": "destinataire",
-        "platforms": ["e-mail", "stormfront"]
+        "platforms": [
+          "e-mail",
+          "stormfront"
+        ]
       },
       {
         "type": "outgoing",
@@ -5276,7 +5128,9 @@
         "virality": "",
         "mediaCoverage": "",
         "linkType": "destinataire",
-        "platforms": ["twitter"]
+        "platforms": [
+          "twitter"
+        ]
       },
       {
         "type": "outgoing",
@@ -5287,7 +5141,9 @@
         "virality": "",
         "mediaCoverage": "",
         "linkType": "",
-        "platforms": ["sluthate"]
+        "platforms": [
+          "sluthate"
+        ]
       }
     ],
     "biography-250": null,
@@ -5298,14 +5154,17 @@
   },
   {
     "slug": "fake-joshua-goldberg",
-    "biography": "Nom d’utilisateur probable servant de méta-commentaire où Goldberg prétendait que d’autres comptes ne le représentaient pas vraiment, créant ainsi une confusion délibérée sur sa véritable identité.",
+    "biography": "Joshua utilisait parfois son vrai nom pour signer des articles sérieux, abordant la liberté d’expression ou les dérives sociétales. Il brouillait ainsi les frontières entre ses personas trolls et ses positions réelles, jouant sur l’ambiguïté et la connotation juive de son nom pour piéger antisémites et progressistes à la fois.",
     "mostViralContent": "",
     "displayName": "Joshua Goldberg (Fake)",
-    "aliases": ["joshua-goldberg"],
+    "aliases": [
+      "joshua-goldberg"
+    ],
     "isJoshua": true,
     "fictionOrImpersonation": "fiction",
     "platform": [],
     "thematic": "Libertarien absolutiste de la liberté d’expression",
+    "thematicGroup": "Antisystem",
     "career": "",
     "genre": "masculin",
     "polarisation": "droite",
@@ -5314,7 +5173,9 @@
     "links": [],
     "biography-250": null,
     "posts": [],
-    "sources": ["thoughtcatalog"],
+    "sources": [
+      "thoughtcatalog"
+    ],
     "totalPosts": 10,
     "hasEnoughPostsToUseInFrequencyPosts": false,
     "hasEnoughTextToMakeWordcloud": true,
@@ -5519,48 +5380,21 @@
         "word": "countries",
         "score": 14.67
       }
-    ],
-    "mostImpactPost": {
-      "type": "post",
-      "url": "https://thoughtcatalog.com/joshua-goldberg/2014/12/when-social-justice-warriors-attack-one-tumblr-users-experience/",
-      "creationDate": 1417784623,
-      "content": " SJWs do not realize is that they are single-handedly cultivating a generation of fascists. The more extreme the left becomes, the more right-wing and reactionary people will become as a result. One lasting legacy (among others) of the Soviet Union is its deceptive distortion of language – dressing up ugliness with innocuous and nice-sounding terms, as predicted by George Orwell in his seminal and much-quoted work Nineteen Eighty-Four. For example, if someone says that they’re for “human rights”, that means that they’re for Stalinist thought control, hardcore government authoritarianism, and international warmongering. “Human rights activists” are, in actuality, a vile, twisted, and extremely dangerous plague upon humanity. So, too, are the self-proclaimed supporters of “social justice” (who are, of course, often the same people). “Social justice” blogging is most associated with Tumblr, a blogging platform started in February 2007 which is now among the most visited sites on the Internet. “Social justice” bloggers are notoriously zealous and exceptionally nasty people, which has led to the coining of the ironic term “social justice warrior”, or SJW for short.\n\nSJWs – almost all of whom are white, upper-middle-class college students – picture themselves as persecuted, oppressed crusaders for peace and equality. But, upon any level of inspection, this claim immediately falls apart. I have been on the Internet since I was a small child and I have perused some of the most extreme and disturbing corners of the web. I have had personal encounters with every manner of vile cretin – the sorts of people who would make even Charles Manson himself blush. With that said, never have I encountered anyone who was so giddy about their hatred than the people who make up the SJW community. These are people who, on a regular basis, call for violence and genocide against “oppressors”, whether it’s white people, heterosexual people, thin people, or just anyone who even slightly disagrees with them.\n\nOne favorite tactic that SJWs use to quash all opposition is doxxing – they will publish the personal information (real name, job, phone number, address, and so forth) of anyone that they deem to have committed an act of thoughtcrime, then they will usually encourage people to commit acts of violence against that person in real life and will do their best to have that person fired from wherever they work at. One individual who has personally experienced a wave of harassment and doxxing from legions of feral SJWs is a popular right-wing Tumblr blogger who goes by the screen name of Communismkills. I spoke to Communismkills about her experiences with SJWs. This article should not be seen as an endorsement of anything that Communismkills says. Rather, it exists simply to provide an example of just how nasty, vile, and hateful the online “social justice” crusade truly is.\n\nA writer for various political websites which she’s asked me not to mention by name, Ashley Rae Goldenberg started the Tumblr blog Communismkills in 2011. In a manner that I’ve written about many times before, Ashley’s blog was made popular by people voicing their anger at her and attempting to censor her. Censors always greatly increase exposure and sympathy for the people and things that they aim to censor, and Ashley’s blog was certainly no exception. Ashley is no stranger to being harassed by rabid social justice fanatics, having experienced some obsessive stalking from one particular SJW in 2011. It should also be noted that /pol/ (the Nazi-filled 4chan imageboard with the unofficial motto “gas the kikes, race war now”) has a complicated love-hate relationship with the Jewish Zionist Communismkills, and has been known to talk about her on a regular basis, as she is no stranger to online fights. What’s happening to her right now, however, is on an entirely different level than anything she’s ever experienced in the past.\n\nIt all started when Ashley posted a limerick about the recent shooting of Michael Brown in Ferguson, Missouri: “There once was a thug named Brown / Who bum-rushed a cop with a frown / Six bullets later / He met his creator / Then his homies burnt down the town”. Funny? Perhaps not. But, however distasteful this poem may have been, it couldn’t possibly hold a candle to the reaction that SJWs would give to it. The sustained harassment campaign against Ashley for this poem – which, as of this writing, is ongoing – was kicked off by two SJW bloggers known as agalaxtical and slutsonlyclub, who posted Ashley’s personal information and encouraged other users to burn her house down.\n\nAfter that, Ashley began to face a non-stop barrage of doxxing, harassment, abuse, and threats. In the name of “social justice”, Tumblr users proceeded to post Ashley’s Facebook, her mother’s Facebook, her work information, her mother’s work information, her parents’ home address, her school information, and her phone number. Numerous users have threatened to murder her and to burn down her house. They have also bombarded her university’s Facebook page in the hopes of getting her expelled. As of right now, Ashley tells me, she cannot even have her phone on due to the sheer volume of calls that she is receiving. The threats have not only been sent to Ashley, but to her mother as well. Here, for example, is a message sent to Ashley’s mother on Facebook:\n\nHundreds of thousands of posts have been made about Ashley, with many of them being gruesome threats calling for Ashley and/or her mother (who had no role in any of this) to be raped, burned, tortured, and/or murdered. And why do they do this, you might ask? The answer is simple: they do it for social justice, peace on Earth, equality, and harmony. After all, what could possibly be more just and righteous than sending gory death threats to aging mothers? Isn’t that what “social justice” is all about?\n\nThe answer to that question is no. No, this is not what “social justice” is all about in the least. But it IS, however, what SJW-ism is all about. Like the far-right that they claim to be so staunchly opposed to, the far-left is based entirely around hate. Humans are perpetual morons who always need a bad guy. To neo-Nazis, the bad guys are Jews, “degenerates”, and non-whites. To SJWs, the bad guys are people like Communismkills: not only is she a white person who isn’t self-flagellating, but she’s also a woman who doesn’t see herself as a victim of some evil patriarchal conspiracy. To an SJW, that’s heresy: all white people are evil and all women are victims. If a woman doesn’t think that she’s a victim, then she has “internalized misogyny” and she just doesn’t know any better, so she needs SJWs to speak on her behalf.  Likewise, if a black person doesn’t tow the SJW line exactly, then they will be immediately labeled an “Uncle Tom” or “house nigger” by the extremely patronizing SJWs who see minorities as nothing more than political props and tools and who view all races as monoliths with intrinsic characteristics (which, ironically, is the absolute definition of racism).\n\nAll victim frameworks work upon single “oppressors”, and an “us vs. them” mentality is a very simple way to justify ideological dichotomy. The “social justice” movement is not at all about social justice, but about relentlessly bullying anyone who does not subscribe to their Stalinist ideology. Stormfront is often held up as an example of “online hate”, but it must be noted that the white supremacists on Stormfront do not participate in organized harassment campaigns, do not send gruesome rape and death threats to people, do not regularly call for violence, and do not engage in doxxing. Compared to the people who claim to be on “the right side of history” and crusaders for “social justice”, Stormfront is a bastion of kindness and civility. What does that say about you, SJWs, when you make neo-Nazis look positively civilized by comparison?\n\nAshley’s experience is not the least bit unusual in the world of online “social justice” – many, many more like her have experienced relentless bullying, abuse, intimidation, doxxing, threats, and even real, physical violence just for saying or doing something that upset the SJW hivemind. What separates SJWs from common sociopathic bullies is that SJWs genuinely believe that what they are doing is helping to advance society and to turn the world into a more loving, equal place. They abuse and threaten people with the full approval of their own consciences, completely secure in their belief that what they are doing is the good and righteous thing. A villain who sincerely believes that they are a hero is perhaps the worst kind of villain there is. To quote C.S. Lewis: “Of all tyrannies, a tyranny sincerely exercised for the good of its victims may be the most oppressive. It would be better to live under robber barons than under omnipotent moral busybodies. The robber baron’s cruelty may sometimes sleep, his cupidity may at some point be satiated; but those who torment us for our own good will torment us without end for they do so with the approval of their own conscience.”\n\nI asked Ashley if she had anything to say about SJWs and this was her response: “Social justice warriors love to whine about how they support ‘safe spaces’, and yet, the moment someone disagrees with them, it’s a witch hunt. Post their personal information, threaten their mother, call for arson, demand rape, everything they claim to be against. Imagine if the tables were turned here. Imagine if one of those social justice bloggers who wrote ‘kill whitey’ had his employer contacted. You know that would never happen, since it’s politically correct to want to kill whitey, but imagine it. There would be outrage. ‘How dare you! This is freedom of speech!’ Yet, if the messages I receive are any indication, these people don’t believe in freedom of speech at all; they actually believe threatening someone and their family is a ‘consequence’ of having an opinion that doesn’t fall in line. They truly believe one thing: your freedom–and ‘safe zone’–ends where my feelings begin.”\n\nShe couldn’t possibly be more right. Like “human rights”, “social justice” is a very toxic and very dangerously authoritarian ideology that advocates the exact opposite of what its namesake describes.  Make no mistake: social justice warriors are not crusaders for “social justice”. They are the biggest enemies of true social justice that currently exist in our society, and they need to be stamped out before they do even greater harm.\n\nFinally, what SJWs do not realize is that they are single-handedly cultivating a generation of fascists. The more extreme the left becomes, the more right-wing and reactionary people will become as a result.  It happened in the 1980s as a response to the left being overwhelmed with hippies and it will happen again in the future as a response to the left being overwhelmed with SJWs – only, this time, the right-wing will be far more extreme than the likes of Ronald Reagan. SJWs are paving the way for a future dominated by far-right extremists. These so-called advocates of “social justice” are the best gift that neo-Nazis could have possibly asked for: the most extreme and unpleasant aspects of the far-left amplified for all the world to see. The more absurd and outrageous SJWs become, the more the far-right gains support and sympathy.  If SJWs think that they’re “oppressed” right now… well, they had better be prepared for the future that they’re helping to create.",
-      "title": "How Social Justice Warriors Are Creating An Entire Generation Of Fascists | Thought Catalog",
-      "medias": [
-        "https://thoughtcatalog.com/wp-content/uploads/2014/12/4087289013_2566f4cdf7_o.jpg?w=1280",
-        "https://thoughtcatalog.com/wp-content/uploads/2014/12/4087289013_2566f4cdf7_o.jpg?w=1140",
-        "https://thoughtcatalog.com/wp-content/uploads/2014/12/7fch3ow.jpg",
-        "https://thoughtcatalog.com/wp-content/uploads/2014/12/xcbjzbr.jpg",
-        "https://thoughtcatalog.com/wp-content/uploads/2014/12/1417251052508.png",
-        "https://thoughtcatalog.com/wp-content/uploads/2014/12/communismkills.png?w=786",
-        "https://thoughtcatalog.com/wp-content/uploads/2014/12/1417305654490.png",
-        "https://thoughtcatalog.com/wp-content/uploads/2014/12/10819070_860744907310334_1776695851_n.jpg",
-        "https://thoughtcatalog.com/wp-content/uploads/2014/12/communismkills-post.png",
-        "https://thoughtcatalog.com/wp-content/uploads/2014/12/communismkills-post-2.png",
-        "https://thoughtcatalog.com/wp-content/uploads/2014/12/10562974_860103674041124_2331662913631779051_n.png",
-        "https://thoughtcatalog.com/wp-content/uploads/2014/12/0kdqxtb.png",
-        "https://thoughtcatalog.com/wp-content/uploads/2014/12/tyzu0zg.png",
-        "https://thoughtcatalog.com/wp-content/uploads/2014/12/sokod0a.jpg?w=786"
-      ],
-      "topic": "How Social Justice Warriors Are Creating An Entire Generation Of Fascists",
-      "originalPoster": "joshua_goldberg",
-      "id": "joshua-goldberg",
-      "source": "thoughtcatalog",
-      "character": "joshua-goldberg",
-      "postUID": 8224,
-      "impact": 1
-    }
+    ]
   },
   {
     "slug": "kill-all-pakis",
-    "biography": "Persona raciste ciblant les Pakistanais, créée pour répandre des discours haineux. Ce compte publiait du contenu extrémiste pendant que Goldberg opérait simultanément des personas prétendant avoir des identités sud-asiatiques.",
+    "biography": "Alias néo-nazi extrême créé par Goldberg dans sa stratégie de troll. Son nom volontairement choquant visait à infiltrer et parodier les discours racistes les plus virulents. Ce compte visait à exacerber les tensions raciales en ligne et à exposer l’absurdité des discours suprémacistes",
     "mostViralContent": "",
     "displayName": "Kill All Pakis",
-    "aliases": ["Kill_All_Pakis"],
+    "aliases": [
+      "Kill_All_Pakis"
+    ],
     "isJoshua": true,
     "fictionOrImpersonation": "fiction",
     "platform": [],
     "thematic": "Néo-nazi",
+    "thematicGroup": "Nationalists",
     "career": "",
     "genre": "masculin",
     "polarisation": "droite",
@@ -5569,7 +5403,9 @@
     "links": [],
     "biography-250": null,
     "posts": [],
-    "sources": ["reddit"],
+    "sources": [
+      "reddit"
+    ],
     "totalPosts": 14,
     "hasEnoughPostsToUseInFrequencyPosts": false,
     "hasEnoughTextToMakeWordcloud": false,
@@ -5774,38 +5610,21 @@
         "word": "army",
         "score": 42.86
       }
-    ],
-    "mostImpactPost": {
-      "type": "post",
-      "originalPoster": "Kill_All_Pakis",
-      "url": "https://www.reddit.com//r/conspiracy/comments/294wr3/australia_jewish_supremacists_seek_to_criminalize/",
-      "medias": [
-        "http://davidduke.com/australia-jewish-supremacists-seek-to-criminalize-efforts-to-boycott-of-israel/"
-      ],
-      "content": "Australia: Jewish Supremacists Seek to Criminalize Efforts to Boycott Israel",
-      "creationDate": 1403773340,
-      "topic": "conspiracy",
-      "title": "Australia: Jewish Supremacists Seek to Criminalize Efforts to Boycott Israel",
-      "complement": {
-        "redditScore": 8
-      },
-      "id": "kill-all-pakis",
-      "source": "reddit",
-      "character": "Kill_All_Pakis",
-      "postUID": 8234,
-      "impact": 1
-    }
+    ]
   },
   {
     "slug": "kill-all-sjws",
-    "biography": "Persona extrémiste anti-progressiste similaire à \"death-to-sjws\", créée par Goldberg pour diffuser un contenu violent ciblant les militants de la justice sociale. Ce compte illustre sa stratégie de créer des identités exprimant des opinions politiques radicalement opposées.",
+    "biography": "Identité utilisée pour attaquer les progressistes et « Social Justice Warriors » dans une caricature grossière du gamer ou du troll anti-woke. Goldberg s’en servait pour provoquer la gauche et attiser les conflits avec l’extrême-droite, tout en se répondant parfois à lui-même via d'autres comptes",
     "mostViralContent": "",
     "displayName": "Kill All SJWs",
-    "aliases": ["Kill_All_SJWs"],
+    "aliases": [
+      "Kill_All_SJWs"
+    ],
     "isJoshua": true,
     "fictionOrImpersonation": "fiction",
     "platform": [],
     "thematic": "Extrême droite",
+    "thematicGroup": "Nationalists",
     "career": "",
     "genre": "masculin",
     "polarisation": "droite",
@@ -5814,7 +5633,9 @@
     "links": [],
     "biography-250": null,
     "posts": [],
-    "sources": ["reddit"],
+    "sources": [
+      "reddit"
+    ],
     "totalPosts": 37,
     "hasEnoughPostsToUseInFrequencyPosts": false,
     "hasEnoughTextToMakeWordcloud": false,
@@ -6019,36 +5840,21 @@
         "word": "allowed",
         "score": 54.55
       }
-    ],
-    "mostImpactPost": {
-      "type": "post",
-      "originalPoster": "Kill_All_SJWs",
-      "url": "https://www.reddit.com//r/worldnews/comments/1z5q7o/child_obesity_looms_large_with_13_of_european/",
-      "medias": ["http://rt.com/news/child-obesity-teenagers-overweight-615/"],
-      "content": "Child obesity looms large, with 1/3 of European teenagers overweight",
-      "creationDate": 1393567133,
-      "topic": "worldnews",
-      "title": "Child obesity looms large, with 1/3 of European teenagers overweight",
-      "complement": {
-        "redditScore": 0
-      },
-      "id": "kill-all-sjws",
-      "source": "reddit",
-      "character": "Kill_All_SJWs",
-      "postUID": 8248,
-      "impact": 1
-    }
+    ]
   },
   {
     "slug": "le-cancer-kin",
-    "biography": "Pseudonyme probablement satirique ciblant la communauté \"otherkin\" (personnes s'identifiant comme non-humaines) ou le concept d'\"kin\" sur Tumblr. Ce compte s'inscrit dans la tendance de Goldberg à se moquer de diverses communautés en ligne avec des identités provocatrices.",
+    "biography": "Persona grotesque parodiant la culture Tumblr, probablement inspiré des discours autour des « otherkin » et des identités marginales. Joshua Goldberg s’en servait pour tourner en dérision les identités de genre et les communautés queer en ligne, tout en jouant sur la confusion idéologique de ses lecteurs.",
     "mostViralContent": "",
     "displayName": "Le Cancer Kin",
-    "aliases": ["Le_Cancer-kin"],
+    "aliases": [
+      "Le_Cancer-kin"
+    ],
     "isJoshua": true,
     "fictionOrImpersonation": "fiction",
     "platform": [],
     "thematic": "Néo-nazi",
+    "thematicGroup": "Nationalists",
     "career": "",
     "genre": "masculin",
     "polarisation": "droite",
@@ -6057,7 +5863,9 @@
     "links": [],
     "biography-250": null,
     "posts": [],
-    "sources": ["reddit"],
+    "sources": [
+      "reddit"
+    ],
     "totalPosts": 65,
     "hasEnoughPostsToUseInFrequencyPosts": true,
     "hasEnoughTextToMakeWordcloud": false,
@@ -6262,38 +6070,24 @@
         "word": "pol",
         "score": 75.0
       }
-    ],
-    "mostImpactPost": {
-      "type": "post",
-      "originalPoster": "Le_Cancer-kin",
-      "title": "British teacher found dead in Qatar 'was sexually assaulted, stabbed, burned and then her body dumped in the desert'",
-      "content": "British teacher found dead in Qatar 'was sexually assaulted, stabbed, burned and then her body dumped in the desert'",
-      "url": "https://www.reddit.com/r/worldnews/comments/1xege2/british_teacher_found_dead_in_qatar_was_sexually/",
-      "medias": [
-        "https://b.thumbs.redditmedia.com/KErQoq37Hhlp0Eunn_IdHzuWV2qHTxXu2c2OQI5vj9w.jpg"
-      ],
-      "creationDate": 1391910493,
-      "topic": "r/worldnews",
-      "complement": {
-        "redditScore": 55
-      },
-      "id": "le-cancer-kin",
-      "source": "reddit",
-      "character": "Le_Cancer-kin",
-      "postUID": 8285,
-      "impact": 1
-    }
+    ]
   },
   {
     "slug": "madotsuki-the-dreamer",
-    "biography": "Utilisateur actif sur Wikipédia en septembre 2015, principalement impliqué dans l'édition de pages liées à des films indépendants, souvent d'horreur ou controversés. Il s'agit principalement d'ajouts ou de modifications mineures sur des contenus cinématographiques spécialisés​",
+    "biography": "Utilisateur actif sur Wikipédia et IMDB en septembre 2015, principalement impliqué dans l'édition de pages liées à des films indépendants, souvent d'horreur ou controversés. Il s'agit principalement d'ajouts ou de modifications mineures sur des contenus cinématographiques spécialisés​",
     "mostViralContent": "",
     "displayName": "Madotsuki The Dreamer",
-    "aliases": ["Madotsuki_the_Dreamer", "madotsuki-the-dreamer"],
+    "aliases": [
+      "Madotsuki_the_Dreamer",
+      "madotsuki-the-dreamer"
+    ],
     "isJoshua": true,
     "fictionOrImpersonation": "fiction",
-    "platform": ["wikipedia"],
+    "platform": [
+      "wikipedia"
+    ],
     "thematic": "Cinéma",
+    "thematicGroup": "Culture",
     "career": "Critique de cinéma",
     "genre": "féminin",
     "polarisation": "droite",
@@ -6302,7 +6096,11 @@
     "links": [],
     "biography-250": null,
     "posts": [],
-    "sources": ["filmboards", "imdb", "wikipedia"],
+    "sources": [
+      "filmboards",
+      "imdb",
+      "wikipedia"
+    ],
     "totalPosts": 2953,
     "hasEnoughPostsToUseInFrequencyPosts": true,
     "hasEnoughTextToMakeWordcloud": true,
@@ -6428,11 +6226,11 @@
         "score": 21.95
       },
       {
-        "word": "section",
+        "word": "22",
         "score": 18.29
       },
       {
-        "word": "22",
+        "word": "section",
         "score": 18.29
       },
       {
@@ -6442,6 +6240,18 @@
       {
         "word": "original",
         "score": 18.29
+      },
+      {
+        "word": "rising",
+        "score": 14.63
+      },
+      {
+        "word": "added",
+        "score": 14.63
+      },
+      {
+        "word": "level",
+        "score": 14.63
       },
       {
         "word": "september",
@@ -6494,49 +6304,22 @@
       {
         "word": "starring",
         "score": 14.63
-      },
-      {
-        "word": "run",
-        "score": 14.63
-      },
-      {
-        "word": "kill",
-        "score": 14.63
-      },
-      {
-        "word": "waco",
-        "score": 14.63
       }
-    ],
-    "mostImpactPost": {
-      "complement": {
-        "replies": 8
-      },
-      "type": "comment",
-      "originalPoster": "dntbreathe",
-      "url": "https://filmboards.com/board/p/327350/",
-      "creationDate": 1393445820,
-      "content": "Bangladeshis are complaining that it's historically inaccurate and mass-voted 1/10 ratings for it as part of a pathetic online campaign against the film.  99% of them probably haven't even seen it.  See: http://en.wikipedia.org/wiki/Gunday#Public_reaction_in_Bangladesh.",
-      "title": "filmboards.com - #1 on bottom 100?",
-      "medias": [],
-      "topic": "Gunday : #1 on bottom 100?",
-      "id": "madotsuki-the-dreamer",
-      "source": "filmboards",
-      "character": "Madotsuki_the_Dreamer",
-      "postUID": 8873,
-      "impact": 8
-    }
+    ]
   },
   {
     "slug": "may-may-poster",
-    "biography": "Persona probablement utilisée par Goldberg dans les communautés de mèmes en ligne. \"May-may\" est une prononciation déformée intentionnelle de \"meme\", suggérant que ce compte visait à infiltrer les espaces dédiés à l'humour internet et à la culture des mèmes.",
+    "biography": "Persona Twitter et 4chan utilisé pour la guerre de mèmes. Derrière un ton troll ironique, Goldberg laissait une adresse mail (maymayposter@gmail.com), coordonnant des projets avec d’autres avatars. Il exploitait ce compte dans des pièges narratifs où ses personas extrêmes interagissaient, alimentant des récits auto-référencés à fort potentiel de viralité.",
     "mostViralContent": "",
     "displayName": "May May Poster",
-    "aliases": ["MayMayPoster"],
+    "aliases": [
+      "MayMayPoster"
+    ],
     "isJoshua": true,
     "fictionOrImpersonation": "fiction",
     "platform": [],
     "thematic": "Néo-nazi",
+    "thematicGroup": "Nationalists",
     "career": "Propagandiste",
     "genre": "féminin",
     "polarisation": "droite",
@@ -6545,7 +6328,10 @@
     "links": [],
     "biography-250": null,
     "posts": [],
-    "sources": ["Adult Swim", "reddit"],
+    "sources": [
+      "Adult Swim",
+      "reddit"
+    ],
     "totalPosts": 19,
     "hasEnoughPostsToUseInFrequencyPosts": false,
     "hasEnoughTextToMakeWordcloud": false,
@@ -6711,73 +6497,60 @@
         "score": 100.0
       },
       {
-        "word": "httpswebarchiveorgweb20150924144508httpswwwchangeorgpthegovernmentitstimetoclassfeminismasaterroristgroup",
+        "word": "israels",
         "score": 50.0
       },
       {
-        "word": "httpswebarchiveorgweb20150924144508httpswwwyoutubecomwatchvjkebtzg1zqk",
+        "word": "red",
         "score": 50.0
       },
       {
-        "word": "gay",
+        "word": "cross",
         "score": 50.0
       },
       {
-        "word": "rainbows",
+        "word": "rejecting",
         "score": 50.0
       },
       {
-        "word": "profile",
+        "word": "ethiopian",
         "score": 50.0
       },
       {
-        "word": "picture",
+        "word": "blood",
         "score": 50.0
       },
       {
-        "word": "impressing",
+        "word": "thedailybeastcom",
         "score": 50.0
       },
       {
-        "word": "trendy",
+        "word": "84",
         "score": 50.0
       },
       {
-        "word": "follow",
+        "word": "mps",
         "score": 50.0
       },
       {
-        "word": "herd",
+        "word": "elected",
         "score": 50.0
       }
-    ],
-    "mostImpactPost": {
-      "type": "post",
-      "creationDate": 1441418040,
-      "medias": [
-        "(Le%20reste)%20Formatage%20-%20Database%20(1)%20867c708924214c0ab1bc794b899c0381/05092015-feminists.png"
-      ],
-      "title": "https://web.archive.org/web/20150924144508/https://www.change.org/p/the-government-its-time-to-class-feminism-as-a-terrorist-group\n \nhttps://web.archive.org/web/20150924144508/https://www.youtube.com/watch?v=JkEBtZG1zqk",
-      "content": "https://web.archive.org/web/20150924144508/https://www.change.org/p/the-government-its-time-to-class-feminism-as-a-terrorist-group\n \nhttps://web.archive.org/web/20150924144508/https://www.youtube.com/watch?v=JkEBtZG1zqk",
-      "originalPoster": "MayMayPoster",
-      "url": "https://web.archive.org/web/20151003055612/http://boards.adultswim.com/t5/Babbling/10k-Sign-Label-Feminism-a-Terrorist-Group-Petition/m-p/71508367#M9994330",
-      "id": "maymayposter",
-      "source": "Adult Swim",
-      "character": "MayMayPoster",
-      "postUID": 11303,
-      "impact": 1
-    }
+    ]
   },
   {
     "slug": "metacanadian-420",
-    "biography": "Persona probablement utilisée sur les forums canadiens, avec une référence au cannabis (420). Ce pseudonyme suggère une infiltration des communautés politiques canadiennes en ligne, particulièrement celles ayant une orientation conservatrice comme r/metacanada sur Reddit.",
+    "biography": "Metacanadian_420 est une parodie de Canadien stoner de droite, utilisée par Goldberg pour infiltrer des subreddits conservateurs nord-américains. Le nom moque le ton conspirationniste de certains forums et jouait sur la caricature d’un nationalisme fumeux et anti-woke. Il faisait partie de ses personas à visée satirique​",
     "mostViralContent": "",
     "displayName": "Metacanadian 420",
-    "aliases": ["metacanadian_420"],
+    "aliases": [
+      "metacanadian_420"
+    ],
     "isJoshua": true,
     "fictionOrImpersonation": "fiction",
     "platform": [],
     "thematic": "Extrême gauche",
+    "thematicGroup": "Social justice",
     "career": "Commentateur",
     "genre": "masculin",
     "polarisation": "droite",
@@ -6786,7 +6559,9 @@
     "links": [],
     "biography-250": null,
     "posts": [],
-    "sources": ["reddit"],
+    "sources": [
+      "reddit"
+    ],
     "totalPosts": 312,
     "hasEnoughPostsToUseInFrequencyPosts": true,
     "hasEnoughTextToMakeWordcloud": true,
@@ -6991,29 +6766,11 @@
         "word": "sweden",
         "score": 20.39
       }
-    ],
-    "mostImpactPost": {
-      "type": "post",
-      "originalPoster": "metacanadian_420",
-      "url": "https://www.reddit.com//r/KotakuInAction/comments/3jm9yc/brianna_wu_and_her_friends_are_still_trying_to/",
-      "medias": ["https://archive.is/2EGTN"],
-      "content": "Brianna Wu and her friends are still trying to push the \"Samus is transgender\" meme. According to Tanya Cohen on Feministing, Brianna Wu is \"publicly challenging the toxic bigotry, whiteness, and cisheteropatriarchy that dominates all aspects of Western culture.\"",
-      "creationDate": 1441374344,
-      "topic": "KotakuInAction",
-      "title": "Brianna Wu and her friends are still trying to push the \"Samus is transgender\" meme. According to Tanya Cohen on Feministing, Brianna Wu is \"publicly challenging the toxic bigotry, whiteness, and cisheteropatriarchy that dominates all aspects of Western culture.\"",
-      "complement": {
-        "redditScore": 220
-      },
-      "id": "metacanadian-420",
-      "source": "reddit",
-      "character": "metacanadian_420",
-      "postUID": 11322,
-      "impact": 1
-    }
+    ]
   },
   {
     "slug": "metropolis-forever",
-    "biography": "Persona possiblement liée à \"moon-metropolis\", montrant un intérêt pour les thèmes urbains ou de science-fiction. Goldberg a pu utiliser ce compte pour participer à des discussions sur l'urbanisme, les métropoles modernes ou les représentations fictives de villes futuristes.",
+    "biography": "Pseudo utilisé sur AnimeSuki, Bluelight et IMDb, associé à un persona discret amateur de cinéma japonais, notamment érotique. Goldberg l’utilisait pour ancrer sa présence dans des communautés sincères, tout en brouillant les pistes dans ses mails à des journalistes. Moins extrême, ce masque servait d'interface culturelle crédible.",
     "mostViralContent": "",
     "displayName": "Metropolis Forever",
     "aliases": [
@@ -7024,8 +6781,11 @@
     ],
     "isJoshua": true,
     "fictionOrImpersonation": "fiction",
-    "platform": ["wikipedia"],
+    "platform": [
+      "wikipedia"
+    ],
     "thematic": "Contradicteur libertarien",
+    "thematicGroup": "Libertarians",
     "career": "Commentateur",
     "genre": "masculin",
     "polarisation": "gauche",
@@ -7041,7 +6801,9 @@
         "virality": "Trollé sous faux nom",
         "mediaCoverage": "Modérée",
         "linkType": "destinataire",
-        "platforms": ["e-mail"]
+        "platforms": [
+          "e-mail"
+        ]
       },
       {
         "type": "outgoing",
@@ -7052,7 +6814,11 @@
         "virality": "Présent dans les médias",
         "mediaCoverage": "Forte",
         "linkType": "destinataire",
-        "platforms": ["twitter", "e-mail", "the-west-australian"]
+        "platforms": [
+          "twitter",
+          "e-mail",
+          "the-west-australian"
+        ]
       },
       {
         "type": "outgoing",
@@ -7063,7 +6829,9 @@
         "virality": "Enquête médiatique modérée",
         "mediaCoverage": "Moyenne",
         "linkType": "destinataire",
-        "platforms": ["e-mail"]
+        "platforms": [
+          "e-mail"
+        ]
       },
       {
         "type": "outgoing",
@@ -7074,7 +6842,9 @@
         "virality": "",
         "mediaCoverage": "",
         "linkType": "destinataire",
-        "platforms": ["reddit"]
+        "platforms": [
+          "reddit"
+        ]
       },
       {
         "type": "outgoing",
@@ -7085,7 +6855,9 @@
         "virality": "",
         "mediaCoverage": "",
         "linkType": "destinataire",
-        "platforms": ["twitter"]
+        "platforms": [
+          "twitter"
+        ]
       },
       {
         "type": "outgoing",
@@ -7096,7 +6868,9 @@
         "virality": "",
         "mediaCoverage": "",
         "linkType": "destinataire",
-        "platforms": ["twitter"]
+        "platforms": [
+          "twitter"
+        ]
       },
       {
         "type": "outgoing",
@@ -7107,22 +6881,24 @@
         "virality": "",
         "mediaCoverage": "",
         "linkType": "destinataire",
-        "platforms": ["reddit"]
+        "platforms": [
+          "reddit"
+        ]
       }
     ],
     "biography-250": null,
     "posts": [],
     "sources": [
-      "deviantart",
-      "digitpress",
-      "criterion",
-      "Mail",
       "animesuki",
-      "bluwiki",
-      "tezukainenglish",
+      "digitpress",
       "badmovies",
+      "criterion",
+      "ytmnd",
       "bluelight",
-      "ytmnd"
+      "Mail",
+      "deviantart",
+      "tezukainenglish",
+      "bluwiki"
     ],
     "totalPosts": 1075,
     "hasEnoughPostsToUseInFrequencyPosts": true,
@@ -7221,23 +6997,23 @@
         "score": 33.85
       },
       {
-        "word": "article",
-        "score": 33.85
-      },
-      {
         "word": "tezuka",
         "score": 33.85
       },
       {
-        "word": "watch",
-        "score": 33.08
+        "word": "article",
+        "score": 33.85
       },
       {
         "word": "shows",
         "score": 33.08
       },
       {
-        "word": "bad",
+        "word": "watch",
+        "score": 33.08
+      },
+      {
+        "word": "game",
         "score": 32.31
       },
       {
@@ -7249,7 +7025,7 @@
         "score": 32.31
       },
       {
-        "word": "game",
+        "word": "bad",
         "score": 32.31
       },
       {
@@ -7273,16 +7049,12 @@
         "score": 30.0
       },
       {
-        "word": "picture",
-        "score": 28.46
-      },
-      {
         "word": "called",
         "score": 28.46
       },
       {
-        "word": "smile",
-        "score": 26.92
+        "word": "picture",
+        "score": 28.46
       },
       {
         "word": "life",
@@ -7301,11 +7073,15 @@
         "score": 26.92
       },
       {
+        "word": "smile",
+        "score": 26.92
+      },
+      {
         "word": "american",
         "score": 26.15
       },
       {
-        "word": "release",
+        "word": "violent",
         "score": 25.38
       },
       {
@@ -7313,7 +7089,7 @@
         "score": 25.38
       },
       {
-        "word": "violent",
+        "word": "release",
         "score": 25.38
       },
       {
@@ -7325,39 +7101,26 @@
         "score": 24.62
       },
       {
-        "word": "school",
+        "word": "site",
         "score": 24.62
       }
-    ],
-    "mostImpactPost": {
-      "type": "comment",
-      "originalPoster": "Metropolisforever",
-      "url": "https://www.badmovies.org/forum/index.php?action=printpage;topic=121488.0;images",
-      "topic": "Name That Movie - Pictures",
-      "title": "Print Page - Name That Movie - Pictures ",
-      "complement": {
-        "index": 400
-      },
-      "creationDate": 1227034189,
-      "content": "Yes, that is correct. :teddyr:",
-      "medias": [],
-      "id": "metropolisforever",
-      "source": "badmovies",
-      "character": "Metropolisforever",
-      "postUID": 11763,
-      "impact": 400
-    }
+    ]
   },
   {
     "slug": "michael-slay",
-    "biography": "Persona masculine probablement créée par Goldberg pour diffuser des opinions provocatrices. Le nom évocateur de violence (\"slay\" signifiant \"tuer\") s'inscrit dans sa stratégie de créer des identités agressives pour inciter à des réactions émotionnelles en ligne.",
+    "biography": "Goldberg s’est fait passer pour Michael Slay, auteur fictif d’extrême droite sur The Daily Stormer. Il gérait des subreddits néo-nazis, exprimant des idées racistes extrêmes pour piéger et discréditer les suprémacistes. Le nom évocateur de violence (\"slay\" signifiant \"tuer\") renforçait la caricature agressive de ce persona toxique.",
     "mostViralContent": "",
     "displayName": "Michael Slay",
-    "aliases": ["michaelslay", "Michael Slay", "European88"],
+    "aliases": [
+      "michaelslay",
+      "Michael Slay",
+      "European88"
+    ],
     "isJoshua": true,
     "fictionOrImpersonation": "fiction",
     "platform": [],
     "thematic": "Néo-nazi",
+    "thematicGroup": "Nationalists",
     "career": "Blogueur / Chroniqueur",
     "genre": "masculin",
     "polarisation": "gauche",
@@ -7373,7 +7136,9 @@
         "virality": "10K RTs / Articles niche",
         "mediaCoverage": "Modérée",
         "linkType": "destinataire",
-        "platforms": ["dailystormer"]
+        "platforms": [
+          "dailystormer"
+        ]
       },
       {
         "type": "outgoing",
@@ -7384,7 +7149,9 @@
         "virality": "Publication sur site néo-nazi influent",
         "mediaCoverage": "Faible",
         "linkType": "destinataire",
-        "platforms": ["dailystormer"]
+        "platforms": [
+          "dailystormer"
+        ]
       },
       {
         "type": "outgoing",
@@ -7395,7 +7162,10 @@
         "virality": "",
         "mediaCoverage": "",
         "linkType": "destinataire",
-        "platforms": ["stormfront", "dailystormer"]
+        "platforms": [
+          "stormfront",
+          "dailystormer"
+        ]
       },
       {
         "type": "outgoing",
@@ -7406,7 +7176,10 @@
         "virality": "",
         "mediaCoverage": "",
         "linkType": "destinataire",
-        "platforms": ["stormfront", "dailystormer"]
+        "platforms": [
+          "stormfront",
+          "dailystormer"
+        ]
       },
       {
         "type": "outgoing",
@@ -7417,7 +7190,10 @@
         "virality": "",
         "mediaCoverage": "",
         "linkType": "destinataire",
-        "platforms": ["stormfront", "dailystormer"]
+        "platforms": [
+          "stormfront",
+          "dailystormer"
+        ]
       },
       {
         "type": "outgoing",
@@ -7428,7 +7204,10 @@
         "virality": "",
         "mediaCoverage": "",
         "linkType": "destinataire",
-        "platforms": ["stormfront", "dailystormer"]
+        "platforms": [
+          "stormfront",
+          "dailystormer"
+        ]
       },
       {
         "type": "outgoing",
@@ -7439,7 +7218,10 @@
         "virality": "",
         "mediaCoverage": "",
         "linkType": "destinataire",
-        "platforms": ["stormfront", "dailystormer"]
+        "platforms": [
+          "stormfront",
+          "dailystormer"
+        ]
       },
       {
         "type": "outgoing",
@@ -7450,12 +7232,18 @@
         "virality": "",
         "mediaCoverage": "",
         "linkType": "destinataire",
-        "platforms": ["dailystormer"]
+        "platforms": [
+          "dailystormer"
+        ]
       }
     ],
     "biography-250": null,
     "posts": [],
-    "sources": ["medium", "reddit", "dailystormer"],
+    "sources": [
+      "medium",
+      "reddit",
+      "dailystormer"
+    ],
     "totalPosts": 64,
     "hasEnoughPostsToUseInFrequencyPosts": true,
     "hasEnoughTextToMakeWordcloud": true,
@@ -7593,11 +7381,11 @@
         "score": 49.41
       },
       {
-        "word": "world",
+        "word": "stand",
         "score": 47.65
       },
       {
-        "word": "stand",
+        "word": "world",
         "score": 47.65
       },
       {
@@ -7617,11 +7405,11 @@
         "score": 45.88
       },
       {
-        "word": "children",
+        "word": "cole",
         "score": 44.12
       },
       {
-        "word": "cole",
+        "word": "children",
         "score": 44.12
       },
       {
@@ -7649,47 +7437,32 @@
         "score": 44.12
       },
       {
-        "word": "good",
+        "word": "christian",
         "score": 42.35
       },
       {
-        "word": "christian",
+        "word": "good",
         "score": 42.35
       },
       {
         "word": "british",
         "score": 40.59
       }
-    ],
-    "mostImpactPost": {
-      "type": "post",
-      "url": "https://archive.is/tGuiP",
-      "creationDate": 1441300679,
-      "content": "It’s been all over the news lately, and it’s something that every European is talking about: thousands and thousands of inferior mud-blooded subhumans have been flooding into Europe by the boat loads. Eager for welfare money to spend on drugs, White women to rape, tourists to mug, and buildings to bomb in the name of their goat-fucking prophet, these primal, feral nigger savages have become like a cockroach infestation on the once-great European continent. Except they are much, much worse than cockroaches. Cockroaches can be easily dealt with, and they damage they cause is relatively minimal. The nigger virus, however, is much more destructive. Cockroaches only destroy houses, but niggers destroy entire nations — and, if we let them, these primitive apes will destroy the entire world.\nHow do we deal with cockroaches, one might ask? Well, we don’t welcome them in. We don’t argue with them or try to reason with them either. We exterminate them. When you encounter a parasite, you eliminate it. Why, then, shouldn’t Europe exterminate the vermin flooding into the continent from third-world garbage cans? If we exterminate termites because they destroy the foundations of our houses, why shouldn’t we also exterminate niggers, who destroy the foundations of our societies? Niggers have proven time and time again that they are nothing more than an absolute scourge on human civilization. One can take a look at these well-sourced facts about niggers if they aren’t well-versed in the dangerous nature of the nigger plague. Niggers are a savage, feral, primitive, violent, and unfathomably destructive breed of vermin. In any area they inhabit, crime goes up tremendously. When they become the majority, their surroundings become a third-world dump just like Africa. One need look no further than parts of the US where niggers are the majority — places like Detroit and Ferguson are virtually indistinguishable from the ape dwellings in Africa. In Europe, too, niggers have proven themselves to be the worst vermin imaginable. Thanks to an infestation of niggers from Somalia, the once-Swedish city of Malmö is now one of the most dangerous cities in the world, with weekly shootings, stabbings, arson attacks, and grenade bombings. Recently, a feral nigger from Eritrea stabbed two humans to death in an IKEA store in Stockholm. The more niggers there are in Europe, the more these attacks will continue to happen.\nIn Israel, niggers are treated like the vile cockroaches that they are. Niggers in Israel are locked up in concentration camps, forcibly sterilized, and then shipped off to White nations like Sweden and Australia. That’s because Israel knows very well how destructive niggers are, and they know how niggers destroy cities and eventually nations. If you ask me, Israel isn’t nearly harsh enough on niggers. Niggers shouldn’t just be sterilized and deported. Niggers should be exterminated altogether. Every single worthless nigger needs to be rounded up into cattle cars, shipped off to gas chambers, and slaughtered like cattle. The only possible use for niggers would be to conduct medical experiments on them. We can’t experiment on humans because our ethics prevent us from conducting experiments that cause significant pain. But, since niggers aren’t human, we can cause as much pain as we want. We can cut open pregnant niggers, we can chop up nigger babies, we can inject nigger children with all sorts of unstable chemicals — hell, we can do whatever we want to these subhuman beasts. And, by conducting medical experiments on niggers, we can obtain medical knowledge that will ultimately be useful in providing medical assistance for humans. Not only that, but it would also be a lot of fun to do. Could there be anything more satisfying than the helpless screams of a nigger child as it’s torn apart by human doctors? I certainly can’t imagine anything more enjoyable. If Europe had any sense, it would be slaughtering niggers en masse, keeping only a few alive to conduct medical experiments on (and then killing those niggers once they’re no longer useful).\nEuropean man, do you want your once-great continent to become a third-world cesspool like Africa? Do you want your race, your heritage, and your nation to be replaced with primitive apes who rape your women and burn down your cities? Do you want to be beheaded in the streets by the feral monkeys that your tax dollars feed and clothe? If not, then you have not only the right, but the DUTY to engage in violence against these parasitic nigger savages. The only way to stop the infiltration of Europe is to use lethal force on unarmed civilians. That means shooting children and women, as the African infiltrators will hide behind their women and their children. You need to start killing niggers, and you need to start doing it right now. You need to indiscriminately slaughter niggers, whether they’re muscular nigger men or little nigger babies. You need to blow up nigger churches, shoot up nigger preschools, and burn down refugee centers. You need to butcher newborn African babies in hospitals, and you need to stomp on nigger babies right in front of their parents. You need to take guns into mosques and kill every single worthless goat-fucking nigger and sandnigger you can. You need to cut open pregnant niggers, rip their fetuses out, and stick their fetuses on pikes all over the border as a warning to other niggers about what awaits them. You need to get a flamethrower and burn niggers alive at the refugee centers. Kill niggers of all ages, from little nigger babies to little nigger old ladies. Remember: niggers are not human beings, and the life of a nigger has no more value than the life of a flea or a tick. If you do not exterminate these worthless apes, they WILL exterminate you.\nThese vermin need to be exterminated before they exterminate Europe.\nIt’s time for a Final Solution to the nigger problem, Europe. The only way to deal with these filthy subhuman beasts is to slaughter every single one of them like the worthless vermin that they are. The only good nigger is a dead one. So, what are you waiting for? You have nothing left to lose, European man. Go out right now and get this Final Solution started. Do you want your mother to be raped and beheaded by niggers while you die in a suicide bombing? Do you want Europe to become the new Somalia? Or do you want to be a martyr for White Europeans around the world as a bold, courageous man who stood up and fought against the subhuman invasion? Your governments have betrayed you. The only thing left for you to do is to FIGHT BACK against this nigger plague — fight back before it’s too late! Get guns, get knives, get bombs — get whatever you can — and go kill some niggers. Do it while you still can, White European man. Kill these subhuman chimps before they kill you, your family, and your entire continent.",
-      "title": "Europe Needs a Final Solution to the Nigger Problem - Medium",
-      "medias": [
-        "https://archive.is/tGuiP/135929b63578e0cd475f0357c0ca61d1adbef8a2.jpeg",
-        "https://archive.is/tGuiP/e634dbb7e1d45c055765b81bf1cc15df2328b82a.jpeg"
-      ],
-      "topic": "Europe Needs a Final Solution to the Nigger Problem",
-      "originalPoster": "michaelslay",
-      "id": "michaelslay",
-      "source": "medium",
-      "character": "michaelslay",
-      "postUID": 12709,
-      "impact": 1
-    }
+    ]
   },
   {
     "slug": "micronesia-gal",
-    "biography": "Persona créée par Goldberg se faisant passer pour une femme de Micronésie. Cette identité fictive lui permettait de publier du contenu supposément issu d'une perspective sous-représentée tout en opérant de nombreuses personas aux origines contradictoires.",
+    "biography": "Fausse insulaire micronésienne, utilisée par Goldberg pour évoquer l'obésité dans le Pacifique et stigmatiser l'Amérique. Compte paradoxal, il mêlait statistiques réelles et discours provocateurs. Ce persona, se voulant “exotique”, permettait à Goldberg de détourner les codes du témoignage pour injecter des tensions raciales ou moqueries “soft”​",
     "mostViralContent": "",
     "displayName": "Micronesia Gal",
-    "aliases": ["Micronesia_Gal"],
+    "aliases": [
+      "Micronesia_Gal"
+    ],
     "isJoshua": true,
     "fictionOrImpersonation": "fiction",
     "platform": [],
     "thematic": "Otaku",
+    "thematicGroup": "Culture",
     "career": "",
     "genre": "féminin",
     "polarisation": "gauche",
@@ -7698,7 +7471,9 @@
     "links": [],
     "biography-250": null,
     "posts": [],
-    "sources": ["reddit"],
+    "sources": [
+      "reddit"
+    ],
     "totalPosts": 1,
     "hasEnoughPostsToUseInFrequencyPosts": false,
     "hasEnoughTextToMakeWordcloud": false,
@@ -7903,38 +7678,24 @@
         "word": "wikipedia",
         "score": 42.86
       }
-    ],
-    "mostImpactPost": {
-      "type": "post",
-      "originalPoster": "Micronesia_Gal",
-      "url": "https://www.reddit.com//r/fatpeoplestories/comments/1nrqs7/fat_logic_in_my_country_is_out_of_control_so_i/",
-      "medias": [
-        "https://www.reddit.com/r/fatpeoplestories/comments/1nrqs7/fat_logic_in_my_country_is_out_of_control_so_i/"
-      ],
-      "content": "If you're reading this, chances are that you're American.  I understand that there are plenty of hambeasts in America, but you don't know what a real Planet of the Hambeasts is until you've lived in the Federated States of Micronesia, my home.  How high is the obesity rate here?  91.1% of the population is overweight.  Only Nauru, with 94.5% of its population being overweight, ranks higher.  Why is obesity so rampant in Pacific countries like mine?  Well, there are many reasons.  [This Wikipedia article](https://en.wikipedia.org/wiki/Obesity_in_the_Pacific) outlines a few:\n\n>Reasons for this issue include mining operations that have left not much arable land; as a result, much of the local diet is of processed, imported food such as Spam or corned beef, rather than fresh fish, fruit and vegetables. In addition, cultural factors have been blamed, such as associating a large body size with wealth and power, or changing ways of living, with children leading more sedentary lives.\n\nFat logic takes on a whole new dimension here.  Being fat is not a source of shame like it is in most of the world.  No, being a hambeast is actually a source of *pride* for many people here.  Unthinkable, right?  Well, it *should* be.  That's why, as a skinny Micronesian who makes an effort to eat right and exercise, I felt like I needed to take it upon myself to fight obesity among the local populace.  I work in a school here in Weno (the FSM's most populated island) and most of my class is obese.  There is nobody telling them that this is a bad thing, or how to be healthier.  I saw this as a problem, even if nobody else did.  So, I decided to tackle this problem head-on by introducing a health class.  When I first proposed the idea, people weren't really sure what to expect.  I explained to them that it would be about how to be - yep, you guessed it - healthy.  And what's the biggest health problem here?  Obesity, so that's what I figured I would devote most of my health class time to.  First off, I had to explain to my kids just how dangerous it is to be fat.  It's not cool, it doesn't make you strong (quite the opposite, in fact), and it definitely isn't something that you should be proud of.  It's something that's toxic to your health.  Now, keep in mind that the FSM is not a very rich country.  Many of my kids rely on cheap processed junk food to survive.  I was fortunate enough to be born into a fairly wealthy family, so I have enough money to buy quality food.  Understanding that my kids would need access to this quality food too in order to do what I was asking them to, I began bringing in fruits and vegetables to hand out to them in class and also taught them various ways of how to obtain it on their own.  Within mere days, I became the most popular teacher around and had students begging to sign up for my class.  After getting my kids hooked on healthy food, it was time to teach them how to exercise.  Obviously, your average person here doesn't have access to gyms or fancy exercise equipment, but who needs that for exercise?  All you need are some arms and some will.  And that's exactly what my class had.  Starting with push-ups, I began having my kids exercise in class and encouraged them to do so at home as well.  Within a few weeks, they had made real progress in slimming down - even if it was small progress.  Many of my kids are now small (by Micronesian standards) and, although they still have quite a ways to go before they're truly healthy, I couldn't be happier for them.  They've even starting spreading what they've learned to other people.  I have the most rewarding job anyone could possibly ask for, and I hope to continue fighting obesity in my Planet of the Hambeasts country the best that I can.",
-      "creationDate": 1380949350,
-      "topic": "fatpeoplestories",
-      "title": "Fat Logic in My Country is Out of Control, So I Decided to Combat It Head-On",
-      "complement": {
-        "redditScore": 883
-      },
-      "id": "micronesia-gal",
-      "source": "reddit",
-      "character": "Micronesia_Gal",
-      "postUID": 12773,
-      "impact": 1
-    }
+    ]
   },
   {
     "slug": "moon-metropolis",
-    "biography": "Utilisateur de Twitter, actif en 2015, impliqué dans des débats polémiques sur des sujets comme l'immigration, la censure et la liberté d’expression. Il adopte souvent un ton provocateur, abordant aussi des thèmes politiques sensibles comme l'immigration, Israël, et la liberté d'expression avec des positions souvent sarcastiques ou critiques​",
+    "biography": "Persona central de Goldberg, actif sur Twitter, Reddit, Medium, Disqus et Wrong Planet (site communautaire autiste). Défenseur ironique de la liberté d’expression, il critiquait ses propres autres personas comme Tanya Cohen. Son ton oscillait entre sarcasme et érudition, organisant des dialogues idéologiques circulaires entre ses identités pour semer le doute.",
     "mostViralContent": "",
     "displayName": "Moon Metropolis",
-    "aliases": ["MoonMetropolis", "moonmetropolis"],
+    "aliases": [
+      "MoonMetropolis",
+      "moonmetropolis"
+    ],
     "isJoshua": true,
     "fictionOrImpersonation": "fiction",
-    "platform": ["wikipedia"],
+    "platform": [
+      "wikipedia"
+    ],
     "thematic": "Contradicteur libertarien",
+    "thematicGroup": "Libertarians",
     "career": "",
     "genre": "masculin",
     "polarisation": "gauche",
@@ -7950,7 +7711,9 @@
         "virality": "Fort engagement Reddit / Twitter",
         "mediaCoverage": "Forte",
         "linkType": "destinataire",
-        "platforms": ["twitter"]
+        "platforms": [
+          "twitter"
+        ]
       },
       {
         "type": "outgoing",
@@ -7961,7 +7724,9 @@
         "virality": "10K RTs",
         "mediaCoverage": "Modérée",
         "linkType": "destinataire",
-        "platforms": ["twitter"]
+        "platforms": [
+          "twitter"
+        ]
       },
       {
         "type": "outgoing",
@@ -7972,7 +7737,9 @@
         "virality": "",
         "mediaCoverage": "",
         "linkType": "destinateur",
-        "platforms": ["twitter"]
+        "platforms": [
+          "twitter"
+        ]
       },
       {
         "type": "outgoing",
@@ -7983,7 +7750,9 @@
         "virality": "",
         "mediaCoverage": "",
         "linkType": "destinateur",
-        "platforms": ["twitter"]
+        "platforms": [
+          "twitter"
+        ]
       },
       {
         "type": "outgoing",
@@ -7994,7 +7763,9 @@
         "virality": "Couverture internationale",
         "mediaCoverage": "Forte",
         "linkType": "destinataire",
-        "platforms": ["e-mail"]
+        "platforms": [
+          "e-mail"
+        ]
       },
       {
         "type": "outgoing",
@@ -8005,7 +7776,9 @@
         "virality": "Influent dans niche extrême-droite",
         "mediaCoverage": "Faible",
         "linkType": "destinataire",
-        "platforms": ["twitter"]
+        "platforms": [
+          "twitter"
+        ]
       },
       {
         "type": "outgoing",
@@ -8016,7 +7789,9 @@
         "virality": "Article niche",
         "mediaCoverage": "Modérée",
         "linkType": "destinataire",
-        "platforms": ["e-mail"]
+        "platforms": [
+          "e-mail"
+        ]
       },
       {
         "type": "outgoing",
@@ -8027,7 +7802,9 @@
         "virality": "Publication niche",
         "mediaCoverage": "Modérée",
         "linkType": "destinataire",
-        "platforms": ["e-mail"]
+        "platforms": [
+          "e-mail"
+        ]
       },
       {
         "type": "outgoing",
@@ -8038,7 +7815,10 @@
         "virality": "Couverture dans des journaux nationaux",
         "mediaCoverage": "Forte",
         "linkType": "destinataire",
-        "platforms": ["e-mail", "twitter"]
+        "platforms": [
+          "e-mail",
+          "twitter"
+        ]
       },
       {
         "type": "outgoing",
@@ -8049,7 +7829,9 @@
         "virality": "Menace en ligne",
         "mediaCoverage": "Forte",
         "linkType": "destinataire",
-        "platforms": ["e-mail"]
+        "platforms": [
+          "e-mail"
+        ]
       },
       {
         "type": "outgoing",
@@ -8060,7 +7842,10 @@
         "virality": "Relation de proximité, influence directe",
         "mediaCoverage": "Moyenne",
         "linkType": "destinataire",
-        "platforms": ["e-mail", "twitter"]
+        "platforms": [
+          "e-mail",
+          "twitter"
+        ]
       },
       {
         "type": "outgoing",
@@ -8071,7 +7856,9 @@
         "virality": "",
         "mediaCoverage": "",
         "linkType": "destinataire",
-        "platforms": ["reddit"]
+        "platforms": [
+          "reddit"
+        ]
       },
       {
         "type": "outgoing",
@@ -8082,7 +7869,9 @@
         "virality": "",
         "mediaCoverage": "",
         "linkType": "destinataire",
-        "platforms": ["twitter"]
+        "platforms": [
+          "twitter"
+        ]
       },
       {
         "type": "outgoing",
@@ -8093,7 +7882,9 @@
         "virality": "",
         "mediaCoverage": "",
         "linkType": "destinataire",
-        "platforms": ["twitter"]
+        "platforms": [
+          "twitter"
+        ]
       },
       {
         "type": "outgoing",
@@ -8104,7 +7895,9 @@
         "virality": "",
         "mediaCoverage": "",
         "linkType": "destinataire",
-        "platforms": ["reddit"]
+        "platforms": [
+          "reddit"
+        ]
       },
       {
         "type": "outgoing",
@@ -8115,7 +7908,9 @@
         "virality": "",
         "mediaCoverage": "",
         "linkType": "destinataire",
-        "platforms": ["thoughtcatalog"]
+        "platforms": [
+          "thoughtcatalog"
+        ]
       },
       {
         "type": "outgoing",
@@ -8125,8 +7920,10 @@
         "mediaImpact": "",
         "virality": "",
         "mediaCoverage": "",
-        "linkType": "destinataire",
-        "platforms": ["twitter"]
+        "linkType": "destinateur",
+        "platforms": [
+          "twitter"
+        ]
       },
       {
         "type": "outgoing",
@@ -8137,30 +7934,34 @@
         "virality": "",
         "mediaCoverage": "",
         "linkType": "destinataire",
-        "platforms": ["breitbart"]
+        "platforms": [
+          "breitbart"
+        ]
       },
       {
         "type": "outgoing",
-        "target": "alec-baldwin",
+        "target": "adam-baldwin",
         "isDirect": "indirect",
         "relationType": "Allié",
         "mediaImpact": "",
         "virality": "",
         "mediaCoverage": "",
         "linkType": "destinataire",
-        "platforms": ["twitter"]
+        "platforms": [
+          "twitter"
+        ]
       }
     ],
     "biography-250": null,
     "posts": [],
     "sources": [
-      "disqus",
-      "wrong-planet",
-      "reddit",
-      "lastfm",
-      "medium",
       "wordpress",
-      "twitter"
+      "twitter",
+      "wrong-planet",
+      "medium",
+      "lastfm",
+      "reddit",
+      "disqus"
     ],
     "totalPosts": 24403,
     "hasEnoughPostsToUseInFrequencyPosts": true,
@@ -8271,11 +8072,11 @@
         "score": 34.5
       },
       {
-        "word": "isis",
+        "word": "pretty",
         "score": 33.74
       },
       {
-        "word": "pretty",
+        "word": "isis",
         "score": 33.74
       },
       {
@@ -8366,36 +8167,21 @@
         "word": "violence",
         "score": 24.69
       }
-    ],
-    "mostImpactPost": {
-      "type": "tweet",
-      "creationDate": 1415250455,
-      "url": "https://twitter.com/MoonMetropolis/status/530240057052237824",
-      "medias": [],
-      "title": "\"RT @fucktyler: Hahahahahahahaha How The Fuck Is Cyber Bullying Real Hahahaha Nigga Just Walk Away From The Screen Like Nigga Close Your Eye…\"",
-      "content": "\"RT @fucktyler: Hahahahahahahaha How The Fuck Is Cyber Bullying Real Hahahaha Nigga Just Walk Away From The Screen Like Nigga Close Your Eye…\"",
-      "originalPoster": "@fucktyler",
-      "complement": {
-        "retwitt": 414417,
-        "tweetType": "ReTweet"
-      },
-      "id": "moonmetropolis",
-      "source": "twitter",
-      "character": "MoonMetropolis",
-      "postUID": 23486,
-      "impact": 414417
-    }
+    ]
   },
   {
     "slug": "mouthful-of-grandpa",
-    "biography": "Pseudonyme délibérément provocateur et absurde créé par Goldberg. Ce type de nom d'utilisateur grotesque servait à attirer l'attention dans les forums en ligne et à développer une présence distinctive dans certaines communautés internet.",
+    "biography": "Persona grotesque actif sur Reddit, utilisé dans des sous-forums NSFW et humoristiques. Avec un ton absurde et grivois, ce compte masquait l’intention stratégique de Goldberg : créer des digressions chaotiques et dévier l’attention des internautes de ses opérations idéologiques, en insérant une banalité toxique au cœur de discussions sérieuses.",
     "mostViralContent": "",
     "displayName": "Mouthful of Grandpa",
-    "aliases": ["Mouthful_of_Grandpa"],
+    "aliases": [
+      "Mouthful_of_Grandpa"
+    ],
     "isJoshua": true,
     "fictionOrImpersonation": "fiction",
     "platform": [],
     "thematic": "Extrême droite",
+    "thematicGroup": "Nationalists",
     "career": "",
     "genre": "masculin",
     "polarisation": "droite",
@@ -8404,7 +8190,9 @@
     "links": [],
     "biography-250": null,
     "posts": [],
-    "sources": ["reddit"],
+    "sources": [
+      "reddit"
+    ],
     "totalPosts": 351,
     "hasEnoughPostsToUseInFrequencyPosts": true,
     "hasEnoughTextToMakeWordcloud": true,
@@ -8609,38 +8397,23 @@
         "word": "comments",
         "score": 35.71
       }
-    ],
-    "mostImpactPost": {
-      "type": "post",
-      "originalPoster": "Mouthful_of_Grandpa",
-      "url": "https://www.reddit.com//r/SubredditDrama/comments/2jur0e/massive_antieuropeantiamerica_slapfight_in/",
-      "medias": [
-        "https://www.reddit.com/r/SubredditDrama/comments/2jur0e/massive_antieuropeantiamerica_slapfight_in/"
-      ],
-      "content": "/u/Emily_Americana is not shy about revealing how much she hates Europeans.  This has caused drama in the past, but never to this extent.  The drama has spanned multiple subs and multiple users.\n\nhttp://np.reddit.com/r/SRSsucks/comments/2jhasq/srster_in_ranarchism_on_the_internet/\n\nhttp://np.reddit.com/r/ShitAmericansSay/comments/2jjki0/you_have_to_understand_that_outside_of_the_us/\n\nhttp://np.reddit.com/r/ShitAmericansSay/comments/2jlnx5/europe_is_a_cancerous_tumor_on_the_asshole_of/\n\nhttp://np.reddit.com/r/Shitstatistssay/comments/2jll21/europeans_on_rsrssucks_get_super_upset_when/\n\nhttp://np.reddit.com/r/Shitstatistssay/comments/2jli09/subreddit_where_europeans_make_fun_of_americans/\n\nhttp://np.reddit.com/r/Shitstatistssay/comments/2jnvem/europeans_brigaded_a_discussion_to_attack/\n\nhttp://np.reddit.com/r/SRSsucks/comments/2jm10t/we_started_reuropeinaction_yesterdaystop_by_and/\n\nhttp://np.reddit.com/r/Shitstatistssay/comments/2jnxgk/a_european_sent_me_this_message_after_i/\n\nhttp://np.reddit.com/r/EuropeInAction/comments/2jnxjh/a_european_sent_me_this_message_after_i/\n\nhttp://np.reddit.com/r/ShitAmericansSay/comments/2jpqs4/a_european_sent_me_this_message_after_i/\n\nhttp://np.reddit.com/r/EuropeInAction/comments/2jn3j2/not_sure_about_yall_but_i_wanna_make_my_stance/\n\nhttp://np.reddit.com/r/Shitstatistssay/comments/2jvenm/rshitamericanssay_circlejerks_about_how/",
-      "creationDate": 1413861125,
-      "topic": "SubredditDrama",
-      "title": "Massive anti-Europe/anti-America slapfight in /r/SRSsucks; /r/ShitAmericansSay and /r/ShitStatistsSay brigade while new sub /r/EuropeInAction gets created (and brigaded); a death threat is sent to one of the slap-fighters",
-      "complement": {
-        "redditScore": 76
-      },
-      "id": "mouthful-of-grandpa",
-      "source": "reddit",
-      "character": "Mouthful_of_Grandpa",
-      "postUID": 37177,
-      "impact": 1
-    }
+    ]
   },
   {
     "slug": "naruto-2-0",
-    "biography": "Persona liée à l'anime créée par Goldberg pour cibler les fans de Naruto. Ce compte infiltrait les communautés d'anime tout en maintenant le schéma de Goldberg d'établir une présence dans divers groupes d'intérêt.",
+    "biography": "Alias Reddit précoce de Goldberg, actif dès l’adolescence. Il l’utilisait pour modifier des articles Wikipédia liés au gore japonais et à l’animation extrême. Ce pseudo marque l’entrée de Goldberg dans l’influence culturelle en ligne, testant ses premières stratégies de provocation déguisée via des plateformes d’archives grand public.",
     "mostViralContent": "",
     "displayName": "Naruto 2 0",
-    "aliases": ["naruto-2-0"],
+    "aliases": [
+      "naruto-2-0"
+    ],
     "isJoshua": true,
     "fictionOrImpersonation": "fiction",
-    "platform": ["wikipedia"],
+    "platform": [
+      "wikipedia"
+    ],
     "thematic": "Provocateur extrême",
+    "thematicGroup": "Antisystem",
     "career": "",
     "genre": "masculin",
     "polarisation": "gauche",
@@ -8649,7 +8422,9 @@
     "links": [],
     "biography-250": null,
     "posts": [],
-    "sources": ["wikipedia"],
+    "sources": [
+      "wikipedia"
+    ],
     "totalPosts": 82,
     "hasEnoughPostsToUseInFrequencyPosts": true,
     "hasEnoughTextToMakeWordcloud": false,
@@ -8854,36 +8629,21 @@
         "word": "cares",
         "score": 75.0
       }
-    ],
-    "mostImpactPost": {
-      "type": "post",
-      "originalPoster": null,
-      "url": "https://en.wikipedia.org/w/index.php?title=Template:Dedicated_consoles&diff=prev&oldid=286569627",
-      "creationDate": 1240878253,
-      "content": "Jesus Christ, you just can't win.",
-      "title": "Template:Dedicated consoles",
-      "medias": [],
-      "topic": "page_Template:Dedicated consoles",
-      "complement": {
-        "comment": "Jesus Christ, you just can't win."
-      },
-      "id": "naruto-2-0",
-      "source": "wikipedia",
-      "character": "naruto-2-0",
-      "postUID": 37528,
-      "impact": 1
-    }
+    ]
   },
   {
     "slug": "nuke-europe",
-    "biography": "Persona extrémiste exprimant des sentiments anti-européens violents. Ce compte s'inscrit dans la stratégie de Goldberg de créer des identités prônant la destruction de régions entières ou de populations, alimentant ainsi des tensions internationales.",
+    "biography": "Persona anti-européenne, utilisée par Goldberg pour parodier les discours ultra-patriotes américains et les tensions transatlantiques. Il l’activait en opposition à ses avatars néonazis pour créer de faux débats violents entre \"Américains dégénérés\" et \"Européens fascistes\", instrumentalisant la haine mutuelle pour amplifier la polarisation en ligne",
     "mostViralContent": "",
     "displayName": "Nuke Europe",
-    "aliases": ["Nuke_Europe"],
+    "aliases": [
+      "Nuke_Europe"
+    ],
     "isJoshua": true,
     "fictionOrImpersonation": "fiction",
     "platform": [],
     "thematic": "Extrême droite",
+    "thematicGroup": "Nationalists",
     "career": "Propagandiste",
     "genre": "masculin",
     "polarisation": "droite",
@@ -8892,7 +8652,9 @@
     "links": [],
     "biography-250": null,
     "posts": [],
-    "sources": ["reddit"],
+    "sources": [
+      "reddit"
+    ],
     "totalPosts": 754,
     "hasEnoughPostsToUseInFrequencyPosts": true,
     "hasEnoughTextToMakeWordcloud": true,
@@ -9097,36 +8859,22 @@
         "word": "expression",
         "score": 16.59
       }
-    ],
-    "mostImpactPost": {
-      "type": "post",
-      "originalPoster": "Nuke_Europe",
-      "url": "https://www.reddit.com//r/ass/comments/3i6xtk/riding_a_bike/",
-      "medias": ["http://i.imgur.com/kvym9WY.jpg"],
-      "content": "Riding a bike",
-      "creationDate": 1440417583,
-      "topic": "ass",
-      "title": "Riding a bike",
-      "complement": {
-        "redditScore": 81
-      },
-      "id": "nuke-europe",
-      "source": "reddit",
-      "character": "Nuke_Europe",
-      "postUID": 37610,
-      "impact": 1
-    }
+    ]
   },
   {
     "slug": "pineapple-10",
-    "biography": "Pseudonyme apparemment inoffensif probablement utilisé par Goldberg dans des communautés en ligne moins politisées. Ces identités plus neutres lui permettaient d'établir une crédibilité dans divers espaces en ligne avant d'introduire du contenu plus controversé.",
+    "biography": "Pineapple-10 est le pseudonyme YouTube de Joshua Goldberg dédié aux films d’animation japonaise, notamment ceux d’Osamu Tezuka. Contrairement à ses personas trolls, ce compte adoptait un ton sérieux et passionné. Il montrait la face cinéphile et otaku de Goldberg, cherchant à être reconnu dans des cercles culturels spécialisés et sincères.",
     "mostViralContent": "",
     "displayName": "Pineapple 10",
-    "aliases": ["pineapple69", "pineapple10"],
+    "aliases": [
+      "pineapple69",
+      "pineapple10"
+    ],
     "isJoshua": true,
     "fictionOrImpersonation": "fiction",
     "platform": [],
     "thematic": "Otaku",
+    "thematicGroup": "Culture",
     "career": "Youtubeur",
     "genre": "masculin",
     "polarisation": "gauche",
@@ -9135,7 +8883,9 @@
     "links": [],
     "biography-250": null,
     "posts": [],
-    "sources": ["youtube"],
+    "sources": [
+      "youtube"
+    ],
     "totalPosts": 52,
     "hasEnoughPostsToUseInFrequencyPosts": true,
     "hasEnoughTextToMakeWordcloud": false,
@@ -9340,38 +9090,23 @@
         "word": "story",
         "score": 11.32
       }
-    ],
-    "mostImpactPost": {
-      "type": "video",
-      "originalPoster": "pineapple10",
-      "url": "https://www.youtube.com/watch?v=ZqIwpT-kcGo",
-      "creationDate": 1195787226,
-      "content": "Osamu Tezuka's Broken Down Film.",
-      "title": "Broken Down Film (1985)",
-      "medias": ["https://i.ytimg.com/vi/ZqIwpT-kcGo/hqdefault.jpg"],
-      "topic": "Uploaded",
-      "complement": {
-        "views": 1675,
-        "like": 16,
-        "duration": 342
-      },
-      "id": "pineapple10",
-      "source": "youtube",
-      "character": "pineapple10",
-      "postUID": 38364,
-      "impact": 1
-    }
+    ]
   },
   {
     "slug": "the-old-jacobite-2",
-    "biography": "Persona probablement créée par Goldberg se référant aux partisans historiques de Jacques II d'Angleterre. Ce pseudonyme suggère un intérêt pour le traditionalisme, le monarchisme ou certaines formes de conservatisme historique, correspondant à son habitude d'adopter diverses positions politiques.",
+    "biography": "Persona utilisée par Goldberg sur Wikipédia, où il modifiait des pages liées à l’histoire britannique et aux traditions monarchistes. Le nom évoque les partisans des Stuart exilés. Ce compte, moins extrême, servait à infiltrer des milieux conservateurs historiques tout en brouillant son image idéologique réelle.",
     "mostViralContent": "",
     "displayName": "The Old Jacobite 2",
-    "aliases": ["theoldjacobite2"],
+    "aliases": [
+      "theoldjacobite2"
+    ],
     "isJoshua": true,
     "fictionOrImpersonation": "fiction",
-    "platform": ["wikipedia"],
+    "platform": [
+      "wikipedia"
+    ],
     "thematic": "Cinéma",
+    "thematicGroup": "Culture",
     "career": "Critique de cinéma",
     "genre": "féminin",
     "polarisation": "gauche",
@@ -9380,7 +9115,9 @@
     "links": [],
     "biography-250": null,
     "posts": [],
-    "sources": ["wikipedia"],
+    "sources": [
+      "wikipedia"
+    ],
     "totalPosts": 5,
     "hasEnoughPostsToUseInFrequencyPosts": false,
     "hasEnoughTextToMakeWordcloud": false,
@@ -9469,36 +9206,22 @@
         "word": "578347260",
         "score": 100.0
       }
-    ],
-    "mostImpactPost": {
-      "type": "post",
-      "originalPoster": null,
-      "url": "https://en.wikipedia.org/w/index.php?title=I_Will_Walk_Like_a_Crazy_Horse&diff=prev&oldid=578380882",
-      "creationDate": 1382512574,
-      "content": "Undid revision 578378002 by [[Special:Contributions/Sulfurboy|Sulfurboy]] ([[User talk:Sulfurboy|talk]])",
-      "title": "I Will Walk Like a Crazy Horse",
-      "medias": [],
-      "topic": "page_I Will Walk Like a Crazy Horse",
-      "complement": {
-        "comment": "Undid revision 578378002 by [[Special:Contributions/Sulfurboy|Sulfurboy]] ([[User talk:Sulfurboy|talk]])"
-      },
-      "id": "theoldjacobite2",
-      "source": "wikipedia",
-      "character": "theoldjacobite2",
-      "postUID": 38416,
-      "impact": 1
-    }
+    ]
   },
   {
     "slug": "wake-up-white-man",
-    "biography": "Persona nationaliste blanche créée par Goldberg pour diffuser des contenus suprémacistes. Ce pseudonyme directement provocateur s'inscrit dans sa stratégie d'infiltration des communautés d'extrême-droite tout en opérant simultanément des comptes aux idéologies opposées.",
+    "biography": "Persona raciste et alarmiste, conçu par Goldberg pour caricaturer l’extrême droite blanche. Actif sur Reddit et Stormfront, ce compte relayait des messages xénophobes outranciers, tout en interagissant avec d’autres de ses avatars opposés. Il servait à amplifier les divisions idéologiques et à piéger les discours suprémacistes dans leur propre rhétorique.",
     "mostViralContent": "",
     "displayName": "Wake Up White Man",
-    "aliases": ["WakeUpWhiteMan", "Wake_Up_White_Man"],
+    "aliases": [
+      "WakeUpWhiteMan",
+      "Wake_Up_White_Man"
+    ],
     "isJoshua": true,
     "fictionOrImpersonation": "fiction",
     "platform": [],
     "thematic": "Néo-nazi",
+    "thematicGroup": "Nationalists",
     "career": "Propagandiste",
     "genre": "féminin",
     "polarisation": "droite",
@@ -9507,7 +9230,11 @@
     "links": [],
     "biography-250": "« Wake Up White Man est un alias suprémaciste incitant à la haine sur des forums néonazis. Il propage l'idée du \"grand remplacement\" et encourage la radicalisation. »",
     "posts": [],
-    "sources": ["vnn", "stormfront", "reddit"],
+    "sources": [
+      "stormfront",
+      "reddit",
+      "vnn"
+    ],
     "totalPosts": 886,
     "hasEnoughPostsToUseInFrequencyPosts": true,
     "hasEnoughTextToMakeWordcloud": true,
@@ -9569,11 +9296,11 @@
         "score": 86.11
       },
       {
-        "word": "online",
+        "word": "oy",
         "score": 83.33
       },
       {
-        "word": "oy",
+        "word": "online",
         "score": 83.33
       },
       {
@@ -9605,11 +9332,11 @@
         "score": 68.06
       },
       {
-        "word": "free",
+        "word": "man",
         "score": 66.67
       },
       {
-        "word": "man",
+        "word": "free",
         "score": 66.67
       },
       {
@@ -9625,11 +9352,11 @@
         "score": 61.11
       },
       {
-        "word": "race",
+        "word": "world",
         "score": 59.72
       },
       {
-        "word": "world",
+        "word": "race",
         "score": 59.72
       },
       {
@@ -9673,6 +9400,10 @@
         "score": 48.61
       },
       {
+        "word": "dawn",
+        "score": 47.22
+      },
+      {
         "word": "sweden",
         "score": 47.22
       },
@@ -9681,23 +9412,11 @@
         "score": 47.22
       },
       {
-        "word": "dawn",
-        "score": 47.22
-      },
-      {
         "word": "parasites",
         "score": 45.83
       },
       {
-        "word": "racism",
-        "score": 45.83
-      },
-      {
         "word": "filthy",
-        "score": 45.83
-      },
-      {
-        "word": "black",
         "score": 45.83
       },
       {
@@ -9709,42 +9428,35 @@
         "score": 45.83
       },
       {
+        "word": "racism",
+        "score": 45.83
+      },
+      {
+        "word": "black",
+        "score": 45.83
+      },
+      {
         "word": "media",
         "score": 44.44
       }
-    ],
-    "mostImpactPost": {
-      "complement": {
-        "index": "1"
-      },
-      "type": "comment",
-      "url": "https://www.stormfront.org/forum/t1047568/",
-      "creationDate": 1403128740,
-      "content": "They Can't - Fighting Antisemitism Online\n\nThey Can't | Facebook\n\nThey Can't (@TheyCantHate) | Twitter\n\n\"They Can't\" is an operation designed to shut down criticisms of Jewry by having people report things en masse.\n\nOf course, for the most part, this operation is clearly a scam for donations. Their actual censorship power is weak, to say the least. Simply looking at their list, it's clear that they uploaded 90%+ of the videos; they then mix in legitimate criticisms of Jewry in an attempt to get them censored as well.\n\n\n\nNo one is really uploading YouTube videos about \"slitting throats of reptilian Jews\" and so on.\n\nThe best course of action is as follows:\n\n1. Report their Facebook page for \"copyright violations\" to get it taken down. Without their Facebook page, they won't be able to group report.\n\n2. Screenshot anything (see the picture above for a good example). This is the answer to taking them down.\n\n3. Save all videos that they flag; skip \"nordland\", \"slit the throats\", etc.\n\n4. Contact prominent anti-Jew bloggers to see if we can get any of them to expose this.\n\n5. Continue to flood them with BS on their report page. This is more or less futile, but it still creates problems for them. Don't send them hate speech or threats or anything like that, as it only makes them seem like martyrs. Just send them stupid crap.\n\nTogether, we can take this Jewish censorship operation down.",
-      "title": "Call to Action: Expose Jewish Scam and Stop Jewish Censorship Online - Stormfront",
-      "medias": [
-        "http://i.imgur.com/bIM1ywj.png",
-        "https://www.stormfront.org/forum/images/smilies/beerchug.gif"
-      ],
-      "topic": "Call to Action: Expose Jewish Scam and Stop Jewish Censorship Online",
-      "originalPoster": "WakeUpWhiteMan",
-      "id": "wakeupwhiteman",
-      "source": "stormfront",
-      "character": "WakeUpWhiteMan",
-      "postUID": 38421,
-      "impact": 1
-    }
+    ]
   },
   {
     "slug": "tanya-cohen",
-    "biography": "Activiste fictive pour les droits humains, présentée comme australienne et ayant travaillé avec Amnesty International et d'autres organisations de droits humains. Elle est surtout connue pour ses prises de position très fortes contre le discours haineux et en faveur d'une régulation stricte de la liberté d’expression aux États-Unis​",
+    "biography": "Activiste fictive anti-libre expression, publiée sur Thought Catalog, Feministing et Daily Kos. Créée par Goldberg pour parodier la gauche autoritaire, elle prônait une censure morale extrême. Tanya était régulièrement critiquée par MoonMetropolis, dans un jeu d’échecs idéologique où Goldberg se répondait à lui-même sous différents masques.",
     "mostViralContent": "",
     "displayName": "Tanya Cohen",
-    "aliases": ["xTanyaCohenx", "tanya-cohen", "TanyaCohen1", "Dreambug"],
+    "aliases": [
+      "xTanyaCohenx",
+      "tanya-cohen",
+      "TanyaCohen1",
+      "Dreambug"
+    ],
     "isJoshua": true,
     "fictionOrImpersonation": "fiction",
     "platform": [],
     "thematic": "Extrême gauche",
+    "thematicGroup": "Social justice",
     "career": "Blogueuse politique",
     "genre": "masculin",
     "polarisation": "gauche",
@@ -9760,7 +9472,9 @@
         "virality": "",
         "mediaCoverage": "",
         "linkType": "destinataire",
-        "platforms": ["twitter"]
+        "platforms": [
+          "twitter"
+        ]
       },
       {
         "type": "outgoing",
@@ -9771,7 +9485,9 @@
         "virality": "Confusion médiatique",
         "mediaCoverage": "Modérée",
         "linkType": "destinataire",
-        "platforms": ["thoughtcatalog"]
+        "platforms": [
+          "thoughtcatalog"
+        ]
       },
       {
         "type": "outgoing",
@@ -9782,7 +9498,9 @@
         "virality": "",
         "mediaCoverage": "",
         "linkType": "destinataire",
-        "platforms": ["twitter"]
+        "platforms": [
+          "twitter"
+        ]
       },
       {
         "type": "outgoing",
@@ -9793,7 +9511,9 @@
         "virality": "",
         "mediaCoverage": "",
         "linkType": "destinataire",
-        "platforms": ["daily-kos"]
+        "platforms": [
+          "daily-kos"
+        ]
       },
       {
         "type": "outgoing",
@@ -9804,12 +9524,19 @@
         "virality": "",
         "mediaCoverage": "",
         "linkType": "destinateur",
-        "platforms": ["techdirt"]
+        "platforms": [
+          "techdirt"
+        ]
       }
     ],
     "biography-250": "Tanya Cohen, militante en ligne pour une réglementation des discours haineux. Vraie activiste ou alias fictif créé pour polariser le débat ? Ses textes défendent des lois anti-haine inspirées de l'Australie/Canada, suscitant de vives controverses.",
     "posts": [],
-    "sources": ["dailykos", "twitter", "reddit", "thoughtcatalog"],
+    "sources": [
+      "reddit",
+      "thoughtcatalog",
+      "dailykos",
+      "twitter"
+    ],
     "totalPosts": 803,
     "hasEnoughPostsToUseInFrequencyPosts": true,
     "hasEnoughTextToMakeWordcloud": true,
@@ -9903,27 +9630,27 @@
         "score": 25.55
       },
       {
-        "word": "australian",
-        "score": 24.57
-      },
-      {
         "word": "country",
         "score": 24.57
       },
       {
-        "word": "protect",
-        "score": 24.09
+        "word": "australian",
+        "score": 24.57
       },
       {
         "word": "government",
         "score": 24.09
       },
       {
-        "word": "absolutely",
-        "score": 23.84
+        "word": "protect",
+        "score": 24.09
       },
       {
         "word": "united",
+        "score": 23.84
+      },
+      {
+        "word": "absolutely",
         "score": 23.84
       },
       {
@@ -9951,19 +9678,19 @@
         "score": 19.22
       },
       {
-        "word": "white",
-        "score": 18.73
-      },
-      {
         "word": "forms",
         "score": 18.73
       },
       {
-        "word": "civilized",
-        "score": 18.0
+        "word": "white",
+        "score": 18.73
       },
       {
         "word": "states",
+        "score": 18.0
+      },
+      {
+        "word": "civilized",
         "score": 18.0
       },
       {
@@ -9983,19 +9710,19 @@
         "score": 16.3
       },
       {
-        "word": "public",
-        "score": 16.06
-      },
-      {
         "word": "groups",
         "score": 16.06
       },
       {
-        "word": "australians",
-        "score": 15.57
+        "word": "public",
+        "score": 16.06
       },
       {
         "word": "rightwing",
+        "score": 15.57
+      },
+      {
+        "word": "australians",
         "score": 15.57
       },
       {
@@ -10014,29 +9741,11 @@
         "word": "civil",
         "score": 13.87
       }
-    ],
-    "mostImpactPost": {
-      "type": "tweet",
-      "creationDate": 1426523932,
-      "url": "https://twitter.com/xTanyaCohenx/status/577524446698811393",
-      "medias": [],
-      "title": "\"RT @billshortenmp: The Abbott Govt said people had a right to be bigots, SHARE this if you think  Australians should be free from racism ht…\"",
-      "content": "\"RT @billshortenmp: The Abbott Govt said people had a right to be bigots, SHARE this if you think  Australians should be free from racism ht…\"",
-      "originalPoster": "@billshortenmp",
-      "complement": {
-        "retwitt": 933,
-        "tweetType": "ReTweet"
-      },
-      "id": "xtanyacohenx",
-      "source": "twitter",
-      "character": "xTanyaCohenx",
-      "postUID": 39540,
-      "impact": 933
-    }
+    ]
   },
   {
     "slug": "alice-pooley",
-    "biography": "Figure médiatique ou personnalité en ligne possiblement ciblée par les personas de Goldberg. En l'absence d'informations détaillées, il est probable qu'elle ait été impliquée dans des controverses en ligne orchestrées ou amplifiées par Goldberg.",
+    "biography": "Journaliste contactée par Joshua Goldberg via l’un de ses avatars, dans une tentative de manipulation médiatique. Il espérait qu’elle relaie des fausses informations élaborées dans ses opérations de désinformation. Son rôle illustre comment Goldberg tentait d’utiliser des figures médiatiques crédibles pour amplifier ses récits fictifs.",
     "mostViralContent": "",
     "displayName": "Alice Pooley",
     "aliases": [],
@@ -10044,6 +9753,7 @@
     "fictionOrImpersonation": "fiction",
     "platform": [],
     "thematic": "Journalisme",
+    "thematicGroup": "",
     "career": "Journaliste",
     "genre": "masculin",
     "polarisation": "droite",
@@ -10058,7 +9768,7 @@
   },
   {
     "slug": "andrew-anglin",
-    "biography": "Fondateur du site néo-nazi The Daily Stormer. Goldberg aurait interagi avec le contenu d’Anglin ou imité ses partisans à travers ses multiples identités en ligne.",
+    "biography": "Fondateur du site néo-nazi The Daily Stormer. Goldberg a écrit pour ce site sous le pseudonyme \"Michael Slay\". Il imitait ou caricaturait les idées d’Anglin tout en les ridiculisant de l’intérieur, participant à leur amplification et leur discrédit simultané.",
     "mostViralContent": "",
     "displayName": "Andrew Anglin",
     "aliases": [],
@@ -10066,6 +9776,7 @@
     "fictionOrImpersonation": "fiction",
     "platform": [],
     "thematic": "Néo-nazi",
+    "thematicGroup": "",
     "career": "Influenceur Alt-Right / Troll",
     "genre": "masculin",
     "polarisation": "droite",
@@ -10080,7 +9791,7 @@
   },
   {
     "slug": "ben-garrison",
-    "biography": "Caricaturiste politique dont les œuvres ont été fréquemment modifiées par des trolls pour inclure du contenu antisémite. Garrison a probablement été ciblé par les personas de Goldberg ou a vu son travail manipulé dans le cadre de la campagne de Goldberg.",
+    "biography": "Caricaturiste politique dont les œuvres ont été fréquemment détournées par des trolls pour les rendre antisémites. Goldberg a utilisé ou référencé ces détournements dans ses propres provocations. Il exploitait l’image de Garrison pour illustrer les conflits idéologiques qu’il voulait exacerber.",
     "mostViralContent": "",
     "displayName": "Ben Garrison",
     "aliases": [],
@@ -10088,6 +9799,7 @@
     "fictionOrImpersonation": "impersonation",
     "platform": [],
     "thematic": "Caricature politique",
+    "thematicGroup": "",
     "career": "Caricaturiste politique Alt-Right",
     "genre": "masculin",
     "polarisation": "droite",
@@ -10102,7 +9814,7 @@
   },
   {
     "slug": "bindi-cole",
-    "biography": "Artiste ou personnalité publique australienne qui aurait pu être ciblée par la persona \"australi-witness\" de Goldberg. Les personnalités australiennes étaient particulièrement visées par cette identité se présentant comme un extrémiste basé en Australie.",
+    "biography": "Artiste australienne visée par le persona \"Michael Slay\". Goldberg a écrit des textes haineux contre elle sur des plateformes néonazies. Elle faisait partie des figures australiennes qu’il ciblait pour incarner des ennemis symboliques de ses personas extrémistes.",
     "mostViralContent": "",
     "displayName": "Bindi Cole",
     "aliases": [],
@@ -10110,6 +9822,7 @@
     "fictionOrImpersonation": "fiction",
     "platform": [],
     "thematic": "Identité",
+    "thematicGroup": "",
     "career": "Artiste / Militante anti-racisme",
     "genre": "masculin",
     "polarisation": "droite",
@@ -10124,7 +9837,7 @@
   },
   {
     "slug": "bill-leak",
-    "biography": "Caricaturiste australien connu pour ses dessins controversés, potentiellement ciblé par les personas de Goldberg ou mentionné dans ses publications provocatrices. Leak était connu pour ses caricatures politiques qui généraient des débats houleux en Australie.",
+    "biography": "Caricaturiste australien controversé. Goldberg, via \"Australi Witness\", l’a cité ou menacé dans ses contenus provocateurs. Sa notoriété en Australie en faisait une cible naturelle pour les faux comptes extrémistes que Goldberg animait en se faisant passer pour islamiste.",
     "mostViralContent": "",
     "displayName": "Bill Leak",
     "aliases": [],
@@ -10132,6 +9845,7 @@
     "fictionOrImpersonation": "fiction",
     "platform": [],
     "thematic": "Caricature",
+    "thematicGroup": "",
     "career": "Caricaturiste conservateur",
     "genre": "féminin",
     "polarisation": "droite",
@@ -10146,7 +9860,7 @@
   },
   {
     "slug": "caitlin-roper",
-    "biography": "Militante féministe australienne qui aurait pu être ciblée par les personas misogynes de Goldberg. En tant que figure publique défendant des causes progressistes, elle correspond au profil des activistes régulièrement harcelés par ses diverses identités en ligne.",
+    "biography": "​Joshua Goldberg a usurpé l'identité de la militante féministe australienne Caitlin Roper en créant un faux compte Twitter à son nom. Sous cette fausse identité, il a publié des messages diffamatoires et misogynes, notamment à l'encontre des personnes transgenres. Cette usurpation faisait partie de ses multiples tentatives de manipulation et de provocation en ligne visant des figures publiques engagées. ​",
     "mostViralContent": "",
     "displayName": "Caitlin Roper",
     "aliases": [],
@@ -10154,6 +9868,7 @@
     "fictionOrImpersonation": "impersonation",
     "platform": [],
     "thematic": "Féminisme",
+    "thematicGroup": "",
     "career": "Activiste féministe",
     "genre": "féminin",
     "polarisation": "droite",
@@ -10168,7 +9883,7 @@
   },
   {
     "slug": "chiara-zaffino",
-    "biography": "Personnalité potentiellement liée aux controverses générées par Goldberg, possiblement ciblée par ses personas d'extrême-droite ou de gauche radicale. Le manque d'informations spécifiques suggère un rôle périphérique dans l'affaire.",
+    "biography": "Journaliste que Goldberg a contactée par e-mail sous l’un de ses faux profils pour tenter de la manipuler. Il espérait qu’elle diffuse de fausses informations qu’il avait fabriquées. Elle illustre les tactiques de Goldberg consistant à piéger des figures médiatiques crédibles dans ses campagnes de désinformation.",
     "mostViralContent": "",
     "displayName": "Chiara Zaffino",
     "aliases": [],
@@ -10176,6 +9891,7 @@
     "fictionOrImpersonation": "fiction",
     "platform": [],
     "thematic": "Journalisme",
+    "thematicGroup": "",
     "career": "Journaliste",
     "genre": "féminin",
     "polarisation": "droite",
@@ -10190,7 +9906,7 @@
   },
   {
     "slug": "cyndi-lavrenci",
-    "biography": "Figure possiblement impliquée dans les débats en ligne manipulés par Goldberg. Elle aurait pu être ciblée par ses personas ou avoir interagi avec eux sans connaître leur véritable nature.",
+    "biography": "Comme d’autres journalistes, elle a été ciblée par Joshua Goldberg, qui lui a envoyé des messages sous une fausse identité pour l’inciter à relayer de fausses informations. Cette tentative de manipulation médiatique faisait partie d’un schéma récurrent dans ses stratégies de désinformation décentralisées et multi-personas.",
     "mostViralContent": "",
     "displayName": "Cyndi Lavrenci",
     "aliases": [],
@@ -10198,6 +9914,7 @@
     "fictionOrImpersonation": "fiction",
     "platform": [],
     "thematic": "Journalisme",
+    "thematicGroup": "",
     "career": "Journaliste",
     "genre": "féminin",
     "polarisation": "droite",
@@ -10212,7 +9929,7 @@
   },
   {
     "slug": "elise-potaka",
-    "biography": "Journaliste australienne qui aurait pu couvrir les activités de \"australi-witness\" ou d'autres personas de Goldberg. Les journalistes qui enquêtaient sur l'extrémisme en ligne étaient souvent confrontés à ses multiples identités fictives.",
+    "biography": "Journaliste australienne ayant joué un rôle clé dans l'identification de Joshua Goldberg. Avec Luke McMahon, elle a remonté la piste du persona \"Australi Witness\", contribuant à révéler sa véritable identité. Leur enquête a été relayée par les forces de l’ordre australiennes, puis par le FBI.",
     "mostViralContent": "",
     "displayName": "Elise Potaka",
     "aliases": [],
@@ -10220,6 +9937,7 @@
     "fictionOrImpersonation": "impersonation",
     "platform": [],
     "thematic": "Journalisme",
+    "thematicGroup": "",
     "career": "Journaliste",
     "genre": "féminin",
     "polarisation": "gauche",
@@ -10242,6 +9960,7 @@
     "fictionOrImpersonation": "fiction",
     "platform": [],
     "thematic": "Terrorisme",
+    "thematicGroup": "",
     "career": "Terroriste jihadiste",
     "genre": "féminin",
     "polarisation": "gauche",
@@ -10256,7 +9975,7 @@
   },
   {
     "slug": "grant-taylor",
-    "biography": "Personnalité possiblement liée aux investigations sur Goldberg ou ciblée par ses personas. Sans information spécifique, il est difficile de déterminer son rôle précis dans l'affaire.",
+    "biography": "Journaliste australien contacté par Goldberg, qui lui a fourni des éléments sur ses faux comptes djihadistes, notamment l'usurpation de Junaid Thorne. Taylor a publié un article basé sur ces informations, sans savoir qu’elles venaient d’un imposteur. Goldberg s’en servait pour valider ses fictions via des médias crédibles​",
     "mostViralContent": "",
     "displayName": "Grant Taylor",
     "aliases": [],
@@ -10264,6 +9983,7 @@
     "fictionOrImpersonation": "fiction",
     "platform": [],
     "thematic": "Journalisme",
+    "thematicGroup": "",
     "career": "Journaliste",
     "genre": "masculin",
     "polarisation": "gauche",
@@ -10278,7 +9998,7 @@
   },
   {
     "slug": "jilian-c-york",
-    "biography": "Militante pour la liberté d'expression et les droits numériques qui aurait pu être ciblée par les personas de Goldberg ou avoir commenté ses activités. Son travail sur les libertés en ligne l'aurait mise en contact avec des controverses liées à ses fausses identités.",
+    "biography": "Militante américaine pour la liberté d’expression. Goldberg l’a contactée sous diverses fausses identités (dont Ryoko, MetropolisForever, MayMayPoster) pour tenter de la manipuler. Elle a détecté l’arnaque, mais a été la cible d’une campagne insidieuse d’influence et d’usurpation identitaire. Un exemple documenté de sa stratégie de manipulation des journalistes critiques.",
     "mostViralContent": "",
     "displayName": "Jilian C. York",
     "aliases": [],
@@ -10286,6 +10006,7 @@
     "fictionOrImpersonation": "fiction",
     "platform": [],
     "thematic": "Liberté d’expression",
+    "thematicGroup": "",
     "career": "Activiste / Journaliste",
     "genre": "masculin",
     "polarisation": "gauche",
@@ -10300,7 +10021,7 @@
   },
   {
     "slug": "jim-berry-fbi",
-    "biography": "Agent du FBI potentiellement impliqué dans l'enquête sur Joshua Goldberg. Berry a peut-être travaillé à relier les nombreuses personas en ligne de Goldberg ou à constituer le dossier qui a conduit à son arrestation pour des charges liées au terrorisme.",
+    "biography": "Agent du FBI ayant interrogé Joshua Goldberg lors de son arrestation en septembre 2015. Il figure explicitement dans la transcription officielle de l’interrogatoire, où il questionne Goldberg sur ses personas en ligne, ses motivations et ses intentions concernant les plans d'attentat.",
     "mostViralContent": "",
     "displayName": "Jim Berry (FBI)",
     "aliases": [],
@@ -10308,6 +10029,7 @@
     "fictionOrImpersonation": "fiction",
     "platform": [],
     "thematic": "Agent",
+    "thematicGroup": "",
     "career": "Autorité (FBI)",
     "genre": "féminin",
     "polarisation": "droite",
@@ -10322,7 +10044,7 @@
   },
   {
     "slug": "junaid-thorne",
-    "biography": "Prédicateur musulman australien controversé qui aurait pu être mentionné par la persona \"australi-witness\" de Goldberg. Les figures musulmanes australiennes étaient souvent référencées dans ses publications se faisant passer pour un sympathisant djihadiste.",
+    "biography": "Prédicateur musulman australien dont l'identité a été usurpée par Joshua Goldberg. Ce dernier a créé un faux compte à son nom, qu’il a fait interagir avec d’autres de ses avatars djihadistes. Ces échanges ont ensuite été transmis à des journalistes dans une campagne délibérée de désinformation.",
     "mostViralContent": "",
     "displayName": "Junaid Thorne",
     "aliases": [],
@@ -10330,6 +10052,7 @@
     "fictionOrImpersonation": "impersonation",
     "platform": [],
     "thematic": "Radicalisme",
+    "thematicGroup": "",
     "career": "Prédicateur radical islamiste",
     "genre": "masculin",
     "polarisation": "gauche",
@@ -10352,6 +10075,7 @@
     "fictionOrImpersonation": "impersonation",
     "platform": [],
     "thematic": "Droit",
+    "thematicGroup": "",
     "career": "Avocat / Victime de trolling",
     "genre": "masculin",
     "polarisation": "gauche",
@@ -10374,6 +10098,7 @@
     "fictionOrImpersonation": "fiction",
     "platform": [],
     "thematic": "Agent",
+    "thematicGroup": "",
     "career": "Autorité (FBI)",
     "genre": "féminin",
     "polarisation": "gauche",
@@ -10396,6 +10121,7 @@
     "fictionOrImpersonation": "fiction",
     "platform": [],
     "thematic": "caricature",
+    "thematicGroup": "",
     "career": "Caricaturiste politique",
     "genre": "féminin",
     "polarisation": "droite",
@@ -10418,6 +10144,7 @@
     "fictionOrImpersonation": "fiction",
     "platform": [],
     "thematic": "Justice",
+    "thematicGroup": "",
     "career": "Journaliste",
     "genre": "féminin",
     "polarisation": "droite",
@@ -10433,7 +10160,9 @@
         "virality": "",
         "mediaCoverage": "",
         "linkType": "",
-        "platforms": ["twitter"]
+        "platforms": [
+          "twitter"
+        ]
       },
       {
         "type": "outgoing",
@@ -10444,7 +10173,9 @@
         "virality": "",
         "mediaCoverage": "",
         "linkType": "destinataire",
-        "platforms": ["twitter"]
+        "platforms": [
+          "twitter"
+        ]
       }
     ],
     "biography-250": null,
@@ -10463,6 +10194,7 @@
     "fictionOrImpersonation": "fiction",
     "platform": [],
     "thematic": "Inclusion",
+    "thematicGroup": "",
     "career": "Activiste / Cible de trolling",
     "genre": "féminin",
     "polarisation": "droite",
@@ -10485,6 +10217,7 @@
     "fictionOrImpersonation": "fiction",
     "platform": [],
     "thematic": "Désinformation",
+    "thematicGroup": "",
     "career": "Journaliste (BBC)",
     "genre": "féminin",
     "polarisation": "droite",
@@ -10499,7 +10232,7 @@
   },
   {
     "slug": "milo-yiannopoulos",
-    "biography": "Controversé et associé à l’extrême droite, il aurait pu être une source d’inspiration ou une cible des différentes personas de Goldberg.",
+    "biography": "Écrivain et polémiste britannique, connu pour ses prises de position d’extrême droite et son rôle dans la controverse Gamergate. Goldberg l’a utilisé comme levier médiatique en lui transmettant de fausses informations, notamment sur Shaun King. Bien qu’il le méprisait, il le considérait comme un “clown utile” pour semer le chaos.",
     "mostViralContent": "",
     "displayName": "Milo Yiannopoulos",
     "aliases": [],
@@ -10507,6 +10240,7 @@
     "fictionOrImpersonation": "fiction",
     "platform": [],
     "thematic": "Controverse",
+    "thematicGroup": "",
     "career": "Influenceur Alt-Right / Journaliste",
     "genre": "féminin",
     "polarisation": "gauche",
@@ -10529,6 +10263,7 @@
     "fictionOrImpersonation": "fiction",
     "platform": [],
     "thematic": "Terrorisme",
+    "thematicGroup": "",
     "career": "Terroriste jihadiste",
     "genre": "masculin",
     "polarisation": "droite",
@@ -10543,14 +10278,15 @@
   },
   {
     "slug": "nikki",
-    "biography": "Personne réelle ou pseudonyme avec lequel Goldberg aurait interagi. L'absence d'informations plus précises suggère un rôle mineur dans l'affaire ou un pseudonyme incomplet mentionné dans les investigations.",
+    "biography": "Personne réelle avec qui Joshua Goldberg a entretenu des échanges personnels en ligne. Il l’a citée dans ses correspondances comme soutien potentiel, notamment lors de sa défense. Elle apparaît dans son récit comme une figure bienveillante, impliquée malgré elle dans les événements ayant mené à son arrestation en confirmant l'identité de Goldberg à Mc Mahon.",
     "mostViralContent": "",
     "displayName": "Nikki",
     "aliases": [],
     "isJoshua": false,
     "fictionOrImpersonation": "fiction",
     "platform": [],
-    "thematic": "",
+    "thematic": "--",
+    "thematicGroup": "",
     "career": "Amie Joshua",
     "genre": "masculin",
     "polarisation": "droite",
@@ -10573,6 +10309,7 @@
     "fictionOrImpersonation": "fiction",
     "platform": [],
     "thematic": "Islamophobie",
+    "thematicGroup": "",
     "career": "Activiste anti-islam / Journaliste",
     "genre": "masculin",
     "polarisation": "droite",
@@ -10587,7 +10324,7 @@
   },
   {
     "slug": "peter-wallace",
-    "biography": "Figure potentiellement liée aux enquêtes sur les activités en ligne de Goldberg ou ciblée par ses personas. Sans informations spécifiques, son rôle exact dans l'affaire reste indéterminé.",
+    "biography": "Journaliste que Goldberg a tenté de manipuler par e-mail, en lui envoyant de fausses informations sous une identité fictive. Comme pour d'autres journalistes, son objectif était de faire relayer ses narratifs fabriqués dans des médias crédibles. Wallace illustre la tactique de Goldberg visant à piéger la presse.",
     "mostViralContent": "",
     "displayName": "Peter Wallace",
     "aliases": [],
@@ -10595,6 +10332,7 @@
     "fictionOrImpersonation": "fiction",
     "platform": [],
     "thematic": "Journalisme",
+    "thematicGroup": "",
     "career": "Journaliste",
     "genre": "masculin",
     "polarisation": "gauche",
@@ -10609,7 +10347,7 @@
   },
   {
     "slug": "rita-katz",
-    "biography": "Directrice du SITE Intelligence Group, spécialisé dans le suivi des activités extrémistes en ligne. Elle aurait pu surveiller ou signaler les actions de Goldberg sous \"Australi Witness\".",
+    "biography": "Directrice du SITE Intelligence Group, spécialisée dans le suivi des réseaux djihadistes. En 2015, elle a identifié le compte \"Australi Witness\" comme un cadre influent de l'État islamique — sans savoir qu’il s’agissait en réalité de Joshua Goldberg. Son évaluation a involontairement renforcé la crédibilité publique de ce persona fictif.",
     "mostViralContent": "",
     "displayName": "Rita Katz",
     "aliases": [],
@@ -10617,6 +10355,7 @@
     "fictionOrImpersonation": "fiction",
     "platform": [],
     "thematic": "Contre-terrorisme",
+    "thematicGroup": "",
     "career": "Analyste renseignement / SITE",
     "genre": "masculin",
     "polarisation": "gauche",
@@ -10631,7 +10370,7 @@
   },
   {
     "slug": "rita-panahi",
-    "biography": "Commentatrice australienne conservatrice d'origine iranienne qui aurait pu être mentionnée ou ciblée par les personas islamophobes ou islamistes de Goldberg. Sa position publique sur des sujets controversés en faisait une cible potentielle.",
+    "biography": "Commentatrice australienne conservatrice. Joshua Goldberg l’a directement contactée sous de fausses identités pour tenter de lui transmettre des informations fictives à publier. Cette tentative s’inscrivait dans sa stratégie de manipulation médiatique, visant à piéger des figures publiques polarisantes pour amplifier ses narratifs extrémistes sous couvert de crédibilité journalistique.",
     "mostViralContent": "",
     "displayName": "Rita Panahi",
     "aliases": [],
@@ -10639,6 +10378,7 @@
     "fictionOrImpersonation": "fiction",
     "platform": [],
     "thematic": "Conservatisme",
+    "thematicGroup": "",
     "career": "Journaliste conservatrice",
     "genre": "masculin",
     "polarisation": "droite",
@@ -10653,7 +10393,7 @@
   },
   {
     "slug": "shaun-king",
-    "biography": "Activiste des droits civiques et écrivain potentiellement ciblé par les personas racistes de Goldberg. Ce dernier attaquait souvent des personnalités progressistes et afro-américaines en ligne.",
+    "biography": "Militant des droits civiques visé par Goldberg, qui a diffusé des photos pour nourrir le mythe qu’il n’était “pas vraiment noir”. Goldberg a relayé ces documents sur /pol/ et les a fait circuler jusqu’à Milo Yiannopoulos dans le but de provoquer une polémique raciale médiatisée​.",
     "mostViralContent": "",
     "displayName": "Shaun King",
     "aliases": [],
@@ -10661,6 +10401,7 @@
     "fictionOrImpersonation": "fiction",
     "platform": [],
     "thematic": "Black Lives Matter",
+    "thematicGroup": "",
     "career": "Journaliste / Activiste ",
     "genre": "masculin",
     "polarisation": "gauche",
@@ -10675,7 +10416,7 @@
   },
   {
     "slug": "tom-minear",
-    "biography": "Journaliste australien qui aurait pu couvrir les activités de \"australi-witness\" ou d'autres personas de Goldberg. Les journalistes australiens étaient particulièrement concernés par ses fausses identités prétendant être basées en Australie.",
+    "biography": "Journaliste australien qui a couvert les activités de \"australi-witness\" ou d'autres personas de Goldberg. Les journalistes australiens étaient particulièrement concernés par ses fausses identités prétendant être basées en Australie.",
     "mostViralContent": "",
     "displayName": "Tom Minear",
     "aliases": [],
@@ -10683,6 +10424,7 @@
     "fictionOrImpersonation": "fiction",
     "platform": [],
     "thematic": "Politique",
+    "thematicGroup": "",
     "career": "Journaliste",
     "genre": "masculin",
     "polarisation": "droite",
@@ -10697,7 +10439,7 @@
   },
   {
     "slug": "weev-andrew-auernheimer",
-    "biography": "Hacker néo-nazi qui a pu avoir des interactions avec les personas suprémacistes blanches de Goldberg ou influencé ses techniques de trolling. Les activités de trolling de haut profil d'Auernheimer étaient parallèles à certaines méthodes de Goldberg.",
+    "biography": "Hacker néo-nazi qui a eu des interactions avec les personas suprémacistes blanches de Goldberg ou influencé ses techniques de trolling. Les activités de trolling de haut profil d'Auernheimer étaient parallèles à certaines méthodes de Goldberg.",
     "mostViralContent": "",
     "displayName": "Weev (Andrew Auernheimer)",
     "aliases": [],
@@ -10705,6 +10447,7 @@
     "fictionOrImpersonation": "fiction",
     "platform": [],
     "thematic": "Néo-nazi",
+    "thematicGroup": "",
     "career": "Hacker / Troll ",
     "genre": "masculin",
     "polarisation": "droite",
@@ -10719,7 +10462,7 @@
   },
   {
     "slug": "elon-musk",
-    "biography": "Figure publique majeure que Goldberg aurait pu mentionner ou cibler dans ses publications sous diverses identités. Les personnalités médiatiques de premier plan étaient souvent référencées dans ses provocations pour attirer l'attention.",
+    "biography": "PDG de Tesla et X (ex-Twitter), Elon Musk a partagé en octobre 2024 un ancien article troll de Joshua Goldberg, signé “Emily Goldstein”. Malgré les avertissements, Musk n’a pas supprimé le post. Ce geste a donné une seconde vie au canular et illustré la viralité persistante des récits de Goldberg​.",
     "mostViralContent": "",
     "displayName": "Elon Musk",
     "aliases": [],
@@ -10727,6 +10470,7 @@
     "fictionOrImpersonation": "fiction",
     "platform": [],
     "thematic": "Néo-nazi",
+    "thematicGroup": "",
     "career": "Entrepreneur",
     "genre": "féminin",
     "polarisation": "gauche",
@@ -10741,7 +10485,7 @@
   },
   {
     "slug": "dean-saxton",
-    "biography": "Personnalité possiblement liée aux investigations sur Goldberg ou mentionnée dans ses publications. L'absence d'informations spécifiques suggère un rôle périphérique dans l'affaire.",
+    "biography": "Figure religieuse controversée que Goldberg a impersonnée dans ses opérations en ligne. En se faisant passer pour lui, il cherchait à piéger des cibles ou provoquer des réactions médiatiques. Ce type d’usurpation faisait partie de sa stratégie plus large de chaos narratif et de confusion idéologique.",
     "mostViralContent": "",
     "displayName": "dean-saxton",
     "aliases": [],
@@ -10749,6 +10493,7 @@
     "fictionOrImpersonation": "impersonation",
     "platform": [],
     "thematic": "Modérateur",
+    "thematicGroup": "",
     "career": "Reddit Moderator",
     "genre": "masculin",
     "polarisation": "gauche",
@@ -10763,7 +10508,7 @@
   },
   {
     "slug": "fbi-as-wilayaks",
-    "biography": "Désigne une possible opération du FBI se faisant passer pour un groupe affilié à l’État islamique pour enquêter sur Goldberg, ce qui a conduit à son arrestation pour des accusations liées au terrorisme.",
+    "biography": "Désigne une opération du FBI se faisant passer pour un groupe affilié à l’État islamique pour enquêter sur Goldberg, ce qui a conduit à son arrestation pour des accusations liées au terrorisme.",
     "mostViralContent": "",
     "displayName": "FBI as wilayahks",
     "aliases": [],
@@ -10771,6 +10516,7 @@
     "fictionOrImpersonation": "fiction",
     "platform": [],
     "thematic": "Agent double",
+    "thematicGroup": "",
     "career": "Autorité (FBI) / Alias en ligne",
     "genre": "masculin",
     "polarisation": "gauche",
@@ -10785,7 +10531,7 @@
   },
   {
     "slug": "afp-federal-agent-as-mohamadmo7",
-    "biography": "Agent de la police fédérale australienne qui aurait utilisé une identité en ligne pour enquêter sur \"Australi Witness\", dans le cadre d’une coopération internationale.",
+    "biography": "Agent de la police fédérale australienne qui a utilisé une identité en ligne pour enquêter sur \"Australi Witness\", dans le cadre d’une coopération internationale.",
     "mostViralContent": "",
     "displayName": "AFP Federal Agent as mohamadmo7",
     "aliases": [],
@@ -10793,6 +10539,7 @@
     "fictionOrImpersonation": "fiction",
     "platform": [],
     "thematic": "Agent double",
+    "thematicGroup": "",
     "career": "Autorité (AFP) / Alias en ligne",
     "genre": "masculin",
     "polarisation": "gauche",
@@ -10807,7 +10554,7 @@
   },
   {
     "slug": "nathan-sykes",
-    "biography": "Individu potentiellement lié aux communautés extrémistes infiltrées par Goldberg ou ciblé par ses personas. Sans information complémentaire, son rôle exact reste indéterminé.",
+    "biography": "Collaborateur du Daily Stormer identifié comme auteur sous pseudonymes (dont \"Hamish Patton\"). Goldberg reconnaît avoir écrit en parallèle avec lui sur le site, parfois sous le nom \"Michael Slay\". Sykes est indirectement lié à Goldberg par leurs attaques coordonnées contre des figures comme Mariam Veiszadeh​",
     "mostViralContent": "",
     "displayName": "Nathan Sykes",
     "aliases": [],
@@ -10815,6 +10562,7 @@
     "fictionOrImpersonation": "fiction",
     "platform": [],
     "thematic": "Néo-nazi",
+    "thematicGroup": "",
     "career": "Journaliste",
     "genre": "masculin",
     "polarisation": "gauche",
@@ -10829,7 +10577,7 @@
   },
   {
     "slug": "naomi-wolf",
-    "biography": "Auteure et activiste féministe américaine qui aurait pu être ciblée par les personas anti-féministes de Goldberg. Les figures féministes proéminentes étaient souvent visées par ses identités misogynes.",
+    "biography": "Auteure et militante féministe américaine. Elle a été piégée par Joshua Goldberg après avoir violemment réagi à un article antisémite signé “Josh Bornstein”, sans savoir qu’il s’agissait d’un canular. Son erreur, suivie d’excuses, illustre l’impact des manipulations médiatiques de Goldberg sur des figures publiques crédibles.",
     "mostViralContent": "",
     "displayName": "Naomi Wolf",
     "aliases": [],
@@ -10837,6 +10585,7 @@
     "fictionOrImpersonation": "fiction",
     "platform": [],
     "thematic": "Libertés civiles",
+    "thematicGroup": "",
     "career": "Auteure",
     "genre": "masculin",
     "polarisation": "gauche",
@@ -10852,7 +10601,9 @@
         "virality": "",
         "mediaCoverage": "",
         "linkType": "destinataire",
-        "platforms": ["twitter"]
+        "platforms": [
+          "twitter"
+        ]
       }
     ],
     "biography-250": null,
@@ -10863,7 +10614,7 @@
   },
   {
     "slug": "chris-lavergne",
-    "biography": "Personnalité possiblement liée à Thought Catalog, où la persona \"Tanya Cohen\" de Goldberg a publié des articles controversés. Il aurait pu être impliqué dans la publication ou la découverte de ces contenus fictifs.",
+    "biography": "Éditeur chez Thought Catalog. Il a publié les articles de Goldberg sous son vrai nom puis ceux de “Tanya Cohen”, sans réaliser qu’il s’agissait de la même personne. Bien qu’il ait rapidement soupçonné la supercherie, il a continué à publier Goldberg, illustrant les dérives éditoriales de l’ère numérique​.",
     "mostViralContent": "",
     "displayName": "Chris Lavergne (Thought Catalog)",
     "aliases": [],
@@ -10871,6 +10622,7 @@
     "fictionOrImpersonation": "fiction",
     "platform": [],
     "thematic": "Culture",
+    "thematicGroup": "",
     "career": "Média en ligne",
     "genre": "féminin",
     "polarisation": "gauche",
@@ -10885,7 +10637,7 @@
   },
   {
     "slug": "mike-masnick",
-    "biography": "Fondateur de Techdirt, site couvrant les questions de technologie et de libertés numériques, qui aurait pu analyser ou signaler les activités de Goldberg. Son travail sur les comportements en ligne l'aurait mis en contact avec cette affaire.",
+    "biography": "Fondateur de Techdirt, il a publié un article décrivant Tanya Cohen (persona de Goldberg) comme une satire brillante. Bien qu’il n’ait pas été manipulé, il a analysé l’affaire avec justesse, soulignant comment Goldberg montait des récits absurdes crédibles pour tester les limites de la perception publique​",
     "mostViralContent": "",
     "displayName": "Mike Masnick (Techdirt)",
     "aliases": [],
@@ -10893,6 +10645,7 @@
     "fictionOrImpersonation": "fiction",
     "platform": [],
     "thematic": "Technologie",
+    "thematicGroup": "",
     "career": "Journaliste",
     "genre": "féminin",
     "polarisation": "gauche",
@@ -10907,7 +10660,7 @@
   },
   {
     "slug": "tanya-gersh",
-    "biography": "Personnalité juive potentiellement ciblée par les personas antisémites de Goldberg. Les individus juifs étaient souvent visés par ses identités néo-nazies malgré son propre héritage juif.",
+    "biography": "Agent immobilier juive américaine harcelée par The Daily Stormer dans une affaire retentissante. Bien que non directement ciblée par Goldberg, elle fut victime du site où il écrivait sous le nom \"Michael Slay\". L’affaire Gersh-Tanya représente l’effondrement médiatique du Daily Stormer, auquel Goldberg a contribué indirectement.",
     "mostViralContent": "",
     "displayName": "Tanya Gersh ",
     "aliases": [],
@@ -10915,6 +10668,7 @@
     "fictionOrImpersonation": "fiction",
     "platform": [],
     "thematic": "Harcèlement",
+    "thematicGroup": "",
     "career": "Agente Immobilière",
     "genre": "féminin",
     "polarisation": "droite",
@@ -10929,8 +10683,12 @@
         "mediaImpact": "",
         "virality": "",
         "mediaCoverage": "",
-        "linkType": "destinateur",
-        "platforms": ["dailystormer", "e-mail", "twitter"]
+        "linkType": "",
+        "platforms": [
+          "dailystormer",
+          "e-mail",
+          "twitter"
+        ]
       }
     ],
     "biography-250": null,
@@ -10941,7 +10699,7 @@
   },
   {
     "slug": "steve-bannon",
-    "biography": "Figure politique d'extrême-droite américaine dont les positions auraient pu être imitées ou exagérées par les personas conservatrices de Goldberg. Les personnalités politiques polarisantes servaient souvent d'inspiration à ses fausses identités.",
+    "biography": "Figure politique américaine d’extrême droite et ancien directeur de Breitbart News. Bien qu’il n’ait pas interagi directement avec Goldberg, son média a publié un article de Milo Yiannopoulos sur Shaun King basé sur une manipulation orchestrée par Goldberg. Il incarne le type de structure que Goldberg exploitait à distance.",
     "mostViralContent": "",
     "displayName": "Steve Bannon",
     "aliases": [],
@@ -10949,6 +10707,7 @@
     "fictionOrImpersonation": "fiction",
     "platform": [],
     "thematic": "Néo-nazi",
+    "thematicGroup": "",
     "career": "Politicien",
     "genre": "masculin",
     "polarisation": "gauche",
@@ -10962,15 +10721,16 @@
     "totalPosts": 0
   },
   {
-    "slug": "alec-baldwin",
-    "biography": "Célébrité américaine que Goldberg aurait pu mentionner ou cibler dans ses publications sous diverses identités. Les personnalités médiatiques étaient souvent référencées dans ses provocations pour susciter des réactions.",
+    "slug": "adam-baldwin",
+    "biography": "Acteur américain, connu pour son rôle dans Firefly et pour avoir lancé le hashtag #GamerGate. Bien qu’il n’interagisse pas directement avec Goldberg, il a déclenché un mouvement que ce dernier a exploité via ses personas opposés (féministes et gamers) pour semer le chaos en ligne, notamment dans les forums et sous-reddits.",
     "mostViralContent": "",
-    "displayName": "Alec Baldwin",
+    "displayName": "Adam Baldwin",
     "aliases": [],
     "isJoshua": false,
     "fictionOrImpersonation": "fiction",
     "platform": [],
     "thematic": "Divertissement",
+    "thematicGroup": "",
     "career": "Acteur",
     "genre": "masculin",
     "polarisation": "droite",
@@ -10985,7 +10745,7 @@
   },
   {
     "slug": "nancy-goldstein",
-    "biography": "Possible parente de Joshua Goldberg ou personne partageant son nom de famille qu'il aurait pu mentionner ou dont il aurait pu usurper l'identité. Le partage du nom de famille suggère un lien potentiel exploité dans ses manipulations en ligne.",
+    "biography": "Journaliste américaine contactée par Joshua Goldberg, qui a tenté de la manipuler par e-mail via ses fausses identités, notamment féministes ou progressistes. Elle faisait partie de ses cibles privilégiées parmi les journalistes critiques, dans sa stratégie visant à infiltrer les milieux médiatiques pour diffuser ses récits fictifs.",
     "mostViralContent": "",
     "displayName": "Nancy Goldstein",
     "aliases": [],
@@ -10993,6 +10753,7 @@
     "fictionOrImpersonation": "fiction",
     "platform": [],
     "thematic": "Politique",
+    "thematicGroup": "",
     "career": "Journaliste",
     "genre": "féminin",
     "polarisation": "gauche",
@@ -11015,6 +10776,7 @@
     "fictionOrImpersonation": "",
     "platform": [],
     "thematic": "Économie",
+    "thematicGroup": "",
     "career": "Journaliste",
     "genre": "masculin",
     "polarisation": "droite",
