@@ -10,31 +10,6 @@ import {
   INPUT_ACTIONS,
 } from "./navigationConstants";
 
-// Utility function to export JSON data as downloadable file
-const exportJsonFile = (data, filename) => {
-  // Convert data to formatted JSON string
-  const jsonString = JSON.stringify(data, null, 2);
-
-  // Create a blob with JSON content
-  const blob = new Blob([jsonString], { type: "application/json" });
-
-  // Create URL for the blob
-  const url = URL.createObjectURL(blob);
-
-  // Create a <a> element for download
-  const link = document.createElement("a");
-  link.href = url;
-  link.download = filename;
-
-  // Add element to DOM, click it, then remove it
-  document.body.appendChild(link);
-  link.click();
-  document.body.removeChild(link);
-
-  // Release the URL
-  URL.revokeObjectURL(url);
-};
-
 // Simplified UI component for flight mode only
 export const DebugNavigationUI = ({ graphRef }) => {
   // const { camera } = useThree(); // This hook can't be used here
@@ -49,40 +24,6 @@ export const DebugNavigationUI = ({ graphRef }) => {
   const [timeBeforeAutoOrbit, setTimeBeforeAutoOrbit] = useState(null);
   const [accelerationFactor, setAccelerationFactor] = useState(1);
   const [cameraSpeed, setCameraSpeed] = useState(0);
-
-  // Function to export spatialized data
-  const handleExportData = () => {
-    // 1. Export nodes and links with most recent positions
-    if (graphRef && graphRef.current && graphRef.current.getNodesPositions) {
-      // Use getNodesPositions method from graph to get most recent positions
-      const spatializedNodes = graphRef.current.getNodesPositions();
-
-      const spatializedNodesAndLinks = {
-        nodes: spatializedNodes,
-        links:
-          graphRef.current.graphData?.links?.map((link) => ({
-            source:
-              typeof link.source === "object" ? link.source.id : link.source,
-            target:
-              typeof link.target === "object" ? link.target.id : link.target,
-            value: link.value || 1,
-          })) || [],
-      };
-
-      console.log(
-        "Exporting spatialized_nodes_and_links.json with",
-        spatializedNodesAndLinks.nodes.length,
-        "nodes"
-      );
-      exportJsonFile(
-        spatializedNodesAndLinks,
-        "spatialized_nodes_and_links.json"
-      );
-    }
-
-    // Show confirmation message
-    alert("Data export complete!");
-  };
 
   // Listen to animation state exposed by camera controller and update positions
   useEffect(() => {
@@ -434,29 +375,6 @@ export const DebugNavigationUI = ({ graphRef }) => {
             </>
           )}
         </div>
-      )}
-
-      {/* Spatial data export button */}
-      {showExportButton && (
-        <button
-          onClick={handleExportData}
-          style={{
-            marginTop: "15px",
-            backgroundColor: "#4CAF50",
-            color: "white",
-            border: "none",
-            padding: "8px 12px",
-            textAlign: "center",
-            textDecoration: "none",
-            display: "inline-block",
-            fontSize: "14px",
-            borderRadius: "4px",
-            cursor: "pointer",
-            width: "100%",
-          }}
-        >
-          Export Spatialized Data
-        </button>
       )}
     </div>
   );

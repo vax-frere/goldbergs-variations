@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from "react";
+import { getImagePath } from "../utils/assetLoader";
 
 const BackgroundCanvas = () => {
   const canvasRef = useRef(null);
@@ -9,13 +10,13 @@ const BackgroundCanvas = () => {
   useEffect(() => {
     // Liste des SVG à utiliser
     const svgPaths = [
-      "/img/star-1.svg",
-      "/img/star-2.svg",
-      "/img/star-3.svg",
-      "/img/star-4.svg",
-      "/img/star-5.svg",
-      "/img/star-6.svg",
-    ];
+      "star-1.svg",
+      "star-2.svg",
+      "star-3.svg",
+      "star-4.svg",
+      "star-5.svg",
+      "star-6.svg",
+    ].map(getImagePath);
 
     // Préchargement des images SVG
     const loadedImages = [];

@@ -5,6 +5,7 @@ import CustomText from "../../../components/CustomText";
 import SvgPath from "../../../components/SvgPath";
 import NodeHoverEffect from "./NodeHoverEffect";
 import useGameStore from "../../../store";
+import useAssets from "../../../hooks/useAssets";
 
 /**
  * Composant AdvancedNode - Version améliorée des nœuds pour le mode avancé
@@ -13,6 +14,7 @@ const AdvancedNode = memo(({ node, isActive = false }) => {
   const [svgError, setSvgError] = useState(false);
   const [showEffect, setShowEffect] = useState(false);
   const [effectKey, setEffectKey] = useState(0);
+  const assets = useAssets();
 
   // Vérifier si le nœud a déjà été visité
   const isNodeVisited = useGameStore((state) =>
@@ -53,34 +55,45 @@ const AdvancedNode = memo(({ node, isActive = false }) => {
     }
   }, [isActive]);
 
-  // Déterminer le chemin vers le fichier SVG à utiliser
-  const svgPath = useMemo(() => {
+  // Déterminer le nom du fichier SVG à utiliser
+  const svgFileName = useMemo(() => {
     if (svgError) {
-      return `/img/default.svg`;
+      return "default.svg";
     }
 
+    // Personnages spéciaux dans /characters
     if (node.name?.toLowerCase().includes("fbi")) {
-      return `/img/fbi.svg`;
+      return "characters/fbi.svg";
     }
 
     if (isClusterMaster || node.isJoshua === true) {
-      return `/img/character.svg`;
+      return "characters/character.svg";
     }
 
     if (node.type === "character") {
-      return `/img/journalist.svg`;
+      return "characters/journalist.svg";
     }
 
+    // Plateformes dans /platforms
     if (isPlatform && node.name) {
-      return `/img/${node.name}.svg`;
+      return `platforms/${node.name.toLowerCase()}.svg`;
     }
 
+    // Fallback dans /img
     const iconValue = node.icon || node.name || node.type || "default";
-    const fileName = iconValue.endsWith(".svg")
-      ? iconValue
-      : `${iconValue}.svg`;
-    return `/img/${fileName}`;
+    return iconValue.endsWith(".svg") ? iconValue : `${iconValue}.svg`;
   }, [node, svgError, isClusterMaster, isPlatform]);
+
+  // Ajouter un useEffect pour logger quand le composant SvgPath a une erreur
+  useEffect(() => {
+    if (svgError) {
+      console.warn("[AdvancedNode] SVG loading error for:", {
+        nodeName: node.name,
+        nodeType: node.type,
+        svgFileName,
+      });
+    }
+  }, [svgError, node, svgFileName]);
 
   // Taille finale de l'icône
   const iconFinalSize = iconSize * (isClusterMaster ? 3 : 1.5);
@@ -91,11 +104,19 @@ const AdvancedNode = memo(({ node, isActive = false }) => {
       <Billboard>
         <group scale={[iconFinalSize, iconFinalSize, 1]}>
           <SvgPath
-            svgPath={svgPath}
+            svgPath={svgFileName}
             color="#ffffff"
             opacity={nodeStyle.opacity}
             lineWidth={1.5}
-            onError={() => setSvgError(true)}
+            onError={(error) => {
+              console.error("[AdvancedNode] SVG loading error:", {
+                svgFileName,
+                error,
+                nodeName: node.name,
+                nodeType: node.type,
+              });
+              setSvgError(true);
+            }}
             size={1.0}
           />
         </group>
@@ -123,11 +144,8 @@ const AdvancedNode = memo(({ node, isActive = false }) => {
       {showEffect && (
         <NodeHoverEffect
           key={effectKey}
-          position={[0, 0, 0]}
-          active={true}
-          size={isClusterMaster ? 6 : 4}
-          color={[1, 1, 1]}
-          opacity={nodeStyle.opacity * 0.8}
+          size={size}
+          isClusterMaster={isClusterMaster}
         />
       )}
     </group>

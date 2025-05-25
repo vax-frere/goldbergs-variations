@@ -22,21 +22,53 @@ export const ASSET_PATHS = {
 export const SVG_FILES = [
   // Personnages et éléments principaux
   "joshua-goldberg.svg",
-  "character.svg",
-  "journalist.svg",
+  "thug.svg",
+  "heart-1.svg",
+  "heart-2.svg",
+  "heart-3.svg",
+
+  // Characters
+  "characters/character.svg",
+  "characters/journalist.svg",
+  "characters/fbi.svg",
 
   // Interface utilisateur
   "default.svg",
   "hud.svg",
 
   // Plateformes et réseaux sociaux
-  "facebook.svg",
-  "twitter.svg",
-  "reddit.svg",
-  "youtube.svg",
-  "wikipedia.svg",
-  "wordpress.svg",
-  "medium.svg",
+  "platforms/4chan.svg",
+  "platforms/4plebs.svg",
+  "platforms/8chan.svg",
+  "platforms/adult-swim.svg",
+  "platforms/adultswim.svg",
+  "platforms/anime-news-network.svg",
+  "platforms/animesuki.svg",
+  "platforms/bluelight.svg",
+  "platforms/dailykos.svg",
+  "platforms/dailystormer.svg",
+  "platforms/deviantart.svg",
+  "platforms/disqus.svg",
+  "platforms/e-mail.svg",
+  "platforms/email.svg",
+  "platforms/facebook.svg",
+  "platforms/feministing.svg",
+  "platforms/filmboard.svg",
+  "platforms/imdb.svg",
+  "platforms/lastfm.svg",
+  "platforms/medium.svg",
+  "platforms/reddit.svg",
+  "platforms/stormfront.svg",
+  "platforms/surespot.svg",
+  "platforms/techdirt.svg",
+  "platforms/thoughtcatalog.svg",
+  "platforms/times-of-israel.svg",
+  "platforms/tough-catalog.svg",
+  "platforms/toughcatalog.svg",
+  "platforms/twitter.svg",
+  "platforms/wikipedia.svg",
+  "platforms/wordpress.svg",
+  "platforms/youtube.svg",
 ];
 
 // Liste des images PNG et autres formats à charger
@@ -118,7 +150,7 @@ export function getImageTextures() {
  */
 export function getCharacterTextures() {
   return CHARACTER_IMAGES.map((file) => ({
-    id: `character_${file}`, // Préfixe pour éviter les conflits
+    id: file,
     url: getImagePath(`characters/${file}`),
   }));
 }

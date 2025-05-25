@@ -3,7 +3,6 @@ import { Billboard } from "@react-three/drei";
 import * as THREE from "three";
 import { SVGLoader } from "three/examples/jsm/loaders/SVGLoader";
 import useAssets from "../hooks/useAssets";
-import { useFrame } from "@react-three/fiber";
 
 /**
  * Component to display SVG paths directly in 3D as outlines (no fill)
@@ -43,48 +42,6 @@ const SvgPath = ({
   // Utiliser notre service d'assets centralisé
   const assets = useAssets();
 
-  // Cache local pour les données SVG (puisque getCustomData n'est pas disponible)
-  // Utiliser un Map statique partagé entre tous les composants SvgPath
-  const svgCache = useMemo(() => new Map(), []);
-
-  // Essayer de charger le SVG par défaut si nécessaire
-  const tryLoadDefault = (errorMessage) => {
-    console.warn(`${errorMessage} - Utilisation du SVG par défaut`);
-
-    // Ne pas essayer de charger le SVG par défaut si c'est déjà celui qu'on essaie de charger
-    if (svgPath.includes("default.svg")) {
-      setError(new Error("Échec du chargement du SVG par défaut"));
-      setIsLoading(false);
-      return;
-    }
-
-    const defaultSvgPath = "/img/default.svg";
-    const loader = new SVGLoader();
-
-    loader.load(
-      defaultSvgPath,
-      (data) => {
-        if (data.paths && data.paths.length > 0) {
-          processSvgData(data);
-        } else {
-          setError(
-            new Error("Le SVG par défaut ne contient pas de chemins valides")
-          );
-          setIsLoading(false);
-        }
-      },
-      undefined,
-      (defaultError) => {
-        console.error(
-          "Erreur lors du chargement du SVG par défaut:",
-          defaultError
-        );
-        setError(defaultError);
-        setIsLoading(false);
-      }
-    );
-  };
-
   // Fonction pour traiter les données SVG et calculer les dimensions
   const processSvgData = (data) => {
     try {
@@ -110,12 +67,6 @@ const SvgPath = ({
         aspectRatio,
       };
 
-      // Mettre en cache les données localement
-      svgCache.set(svgPath, {
-        data: data,
-        dimensions: dimensionsData,
-      });
-
       setSvgData(data);
       setDimensions(dimensionsData);
       setIsLoading(false);
@@ -132,47 +83,115 @@ const SvgPath = ({
     setIsLoading(true);
     setError(null);
 
-    // Vérifier si les données SVG sont déjà dans notre cache local
-    if (svgCache.has(svgPath)) {
-      console.log(`Utilisation du cache pour SVG: ${svgPath}`);
-      const cached = svgCache.get(svgPath);
-      setSvgData(cached.data);
-      setDimensions(cached.dimensions);
-      setIsLoading(false);
-      return;
-    }
+    // Fonction asynchrone pour charger et traiter le SVG
+    const loadSvg = async () => {
+      // On garde le chemin complet comme identifiant
+      const svgFileName = svgPath;
+      console.log("[SvgPath] Tentative de chargement du SVG:", {
+        svgPath,
+        svgFileName,
+      });
 
-    console.log(`Chargement SVG depuis: ${svgPath}`);
+      // Récupérer le SVG depuis l'AssetManager
+      const svgTexture = assets.getTexture(svgFileName);
+      console.log("[SvgPath] Texture trouvée dans l'AssetManager:", {
+        svgFileName,
+        found: !!svgTexture,
+        textureSource: svgTexture?.source?.data?.src,
+      });
 
-    // Charger et parser le SVG
-    fetch(svgPath)
-      .then((response) => {
-        if (!response.ok) {
-          throw new Error(`Erreur HTTP: ${response.status}`);
-        }
-        return response.text();
-      })
-      .then((svgText) => {
-        const loader = new SVGLoader();
+      const loader = new SVGLoader();
+
+      if (svgTexture) {
         try {
+          console.log(
+            "[SvgPath] Tentative de fetch du SVG:",
+            svgTexture.source.data.src
+          );
+          const response = await fetch(svgTexture.source.data.src);
+          console.log("[SvgPath] Réponse du fetch:", {
+            ok: response.ok,
+            status: response.status,
+            statusText: response.statusText,
+          });
+
+          const svgText = await response.text();
+          console.log(
+            "[SvgPath] Contenu SVG reçu:",
+            svgText.substring(0, 100) + "..."
+          );
+
           const data = loader.parse(svgText);
-          // Vérifier que le SVG contient des chemins valides
+          console.log("[SvgPath] SVG parsé:", {
+            hasData: !!data,
+            pathsCount: data?.paths?.length,
+          });
+
           if (data.paths && data.paths.length > 0) {
             processSvgData(data);
+            return; // Succès, on sort de la fonction
           } else {
-            throw new Error("Le SVG ne contient pas de chemins valides");
+            console.warn(
+              "[SvgPath] Le SVG ne contient pas de chemins:",
+              svgFileName
+            );
           }
         } catch (parseError) {
-          console.error(`Erreur de parsing SVG: ${svgPath}`, parseError);
+          console.error("[SvgPath] Erreur de parsing SVG:", {
+            svgPath,
+            error: parseError.message,
+            stack: parseError.stack,
+          });
           if (onError) onError(parseError);
-          tryLoadDefault(`Erreur lors du parsing du SVG ${svgPath}`);
         }
-      })
-      .catch((fetchError) => {
-        console.error(`Erreur de chargement SVG: ${svgPath}`, fetchError);
-        if (onError) onError(fetchError);
-        tryLoadDefault(`Erreur lors du chargement du SVG ${svgPath}`);
-      });
+      }
+
+      // Si on arrive ici, on essaie le SVG par défaut
+      if (svgFileName !== "default.svg") {
+        console.log("[SvgPath] Tentative de chargement du SVG par défaut");
+        const defaultTexture = assets.getTexture("default.svg");
+        console.log("[SvgPath] Texture par défaut trouvée:", {
+          found: !!defaultTexture,
+          textureSource: defaultTexture?.source?.data?.src,
+        });
+
+        if (defaultTexture) {
+          try {
+            const defaultResponse = await fetch(defaultTexture.source.data.src);
+            console.log("[SvgPath] Réponse du fetch par défaut:", {
+              ok: defaultResponse.ok,
+              status: defaultResponse.status,
+            });
+
+            const defaultSvgText = await defaultResponse.text();
+            const defaultData = loader.parse(defaultSvgText);
+            console.log("[SvgPath] SVG par défaut parsé:", {
+              hasData: !!defaultData,
+              pathsCount: defaultData?.paths?.length,
+            });
+
+            if (defaultData.paths && defaultData.paths.length > 0) {
+              processSvgData(defaultData);
+              return;
+            }
+          } catch (defaultError) {
+            console.error("[SvgPath] Erreur avec le SVG par défaut:", {
+              error: defaultError.message,
+              stack: defaultError.stack,
+            });
+          }
+        }
+      }
+
+      // Si on arrive ici, même le SVG par défaut n'a pas pu être chargé
+      console.error("[SvgPath] Échec total du chargement des SVGs");
+      setError(new Error("Impossible de charger le SVG"));
+      setIsLoading(false);
+      if (onError) onError(new Error("Impossible de charger le SVG"));
+    };
+
+    // Appeler la fonction asynchrone
+    loadSvg();
   }, [svgPath, assets.isReady, onError]);
 
   // Create a material for the lines
@@ -246,7 +265,7 @@ const SvgPath = ({
   });
 
   // Render the SVG
-  const svgContent = (
+  const content = (
     <group
       ref={groupRef}
       position={position}
@@ -257,8 +276,7 @@ const SvgPath = ({
     </group>
   );
 
-  // Use Billboard if needed
-  return isBillboard ? <Billboard>{svgContent}</Billboard> : svgContent;
+  return isBillboard ? <Billboard>{content}</Billboard> : content;
 };
 
 export default SvgPath;

@@ -1,4 +1,5 @@
 import * as THREE from "three";
+import { getImagePath } from "../../../../../utils/assetLoader";
 
 /**
  * AdvancedMode component - Renders node as a SVG icon
@@ -15,7 +16,7 @@ export class AdvancedMode {
     try {
       const textureLoader = new THREE.TextureLoader();
       textureLoader.load(
-        `/img/${svgPath}`,
+        getImagePath(svgPath),
         (texture) => {
           texture.minFilter = THREE.LinearFilter;
           texture.magFilter = THREE.LinearFilter;

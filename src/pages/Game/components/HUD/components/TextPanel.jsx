@@ -146,7 +146,7 @@ const TextPanel = memo(() => {
     }
 
     // Vérifier si l'image existe dans l'AssetManager
-    const imageId = `character_${currentSlug}.png`;
+    const imageId = `${currentSlug}.png`;
     const texture = assets.getTexture(imageId);
     const exists = texture !== null && texture !== undefined;
 
@@ -175,7 +175,7 @@ const TextPanel = memo(() => {
   const getCharacterImageUrl = () => {
     if (characterImageExists && currentSlug) {
       // Récupérer la texture depuis l'AssetManager
-      const imageId = `character_${currentSlug}.png`;
+      const imageId = `${currentSlug}.png`;
       const texture = assets.getTexture(imageId);
 
       if (texture && texture.image) {
