@@ -80,7 +80,7 @@ const Footer = () => {
               color: "#f5f5f5",
               boxShadow: 24,
               p: 4,
-              borderRadius: 2,
+              borderRadius: 0,
               outline: "none",
               maxHeight: "80vh",
               overflow: "auto",

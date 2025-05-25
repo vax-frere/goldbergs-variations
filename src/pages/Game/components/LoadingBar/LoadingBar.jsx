@@ -1,5 +1,5 @@
 import React, { memo } from "react";
-import PreloaderBackground from "./PreloaderBackground";
+import ManyFaces from "../../../../components/ManyFaces";
 
 /**
  * Composant pour afficher une barre de chargement minimaliste
@@ -30,7 +30,7 @@ const LoadingBar = memo(({ progress, message, stage, totalStages }) => {
         gap: "15px",
       }}
     >
-      <PreloaderBackground />
+      <ManyFaces />
       <div
         style={{
           width: "100px",

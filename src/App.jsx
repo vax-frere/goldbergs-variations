@@ -5,6 +5,7 @@ import CssBaseline from "@mui/material/CssBaseline";
 
 import theme from "./theme";
 import Home from "./pages/Home";
+import Intro from "./pages/Intro";
 import Controls from "./pages/Controls";
 import Game from "./pages/Game/Game";
 import ExportForceGraphPage from "./pages/ExportForceGraphPage/ExportForceGraphPage";
@@ -23,6 +24,7 @@ function App() {
       <AnimatePresence mode="wait">
         <Routes location={location} key={location.pathname}>
           <Route path="/" element={<Home />} />
+          <Route path="/intro" element={<Intro />} />
           <Route path="/controls" element={<Controls />} />
           <Route path="/game" element={<Game />} />
           <Route

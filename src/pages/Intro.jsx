@@ -8,19 +8,19 @@ import PageTransition, {
   pageVariants,
 } from "../components/PageTransition";
 import { getSoundPath } from "../utils/assetLoader";
+import BoldText from "../components/BoldText";
 import VibButton from "../components/VibButton";
-import ManyFaces from "../components/ManyFaces";
 
-const Home = () => {
+const Intro = () => {
   const navigate = useNavigate();
   const [playSwitchSound] = useSound(getSoundPath("switch-on.mp3"), {
     volume: 0.5,
   });
 
-  const handleEnterClick = () => {
+  const handleContinueClick = () => {
     playSwitchSound();
     setTimeout(() => {
-      navigate("/intro");
+      navigate("/controls");
     }, 300);
   };
 
@@ -41,49 +41,47 @@ const Home = () => {
                 display: "flex",
                 flexDirection: "column",
                 alignItems: "center",
-                gap: 2,
+                gap: 4,
                 textAlign: "center",
+                py: 4,
               }}
             >
               <motion.div variants={pageVariants} className="motion-div">
-                <Box sx={{ mb: 4 }}>
-                  <ManyFaces size="160px" />
-                </Box>
-              </motion.div>
-
-              <motion.div variants={pageVariants} className="motion-div">
                 <Typography
-                  variant="h1"
+                  variant="h3"
                   component="h1"
                   sx={{
-                    mb: -1.5,
+                    mb: 3,
                     fontWeight: 500,
                     letterSpacing: "-0.5px",
                   }}
                 >
-                  Goldberg's Variations
+                  Introduction
                 </Typography>
-              </motion.div>
-
-              <motion.div variants={pageVariants} className="motion-div">
                 <Typography
-                  variant="h5"
-                  component="h2"
+                  variant="body1"
+                  paragraph
                   sx={{
+                    lineHeight: 1.7,
+                    maxWidth: "800px",
+                    opacity: 0.85,
                     fontWeight: 300,
-                    fontStyle: "italic",
-                    opacity: 0.4,
-                    mb: 4,
-                    letterSpacing: "0.5px",
+                    letterSpacing: "0.3px",
+                    textAlign: "center",
+                    mx: "auto",
                   }}
                 >
-                  A journey inside Joshua Ryne Goldberg's Mind
+                  <BoldText text="From <b>40,000</b> posts (2006-2015), this work unfolds a narrative <b>galaxy of extremist</b>, <b>whimsical</b>, or <b>impersonated</b> characters. Inspired by <b>Lombardi</b>, this <b>data visualization</b> maps political <b>obsessions</b> and geek culture. It simulates a fragmented mind experiencing the world as a simulation, unveiling a digital <b>Joker</b> confronting the Internet's contradictions." />
                 </Typography>
               </motion.div>
 
               <motion.div variants={pageVariants} className="motion-div">
-                <VibButton onClick={handleEnterClick} width={180} height={45}>
-                  Enter
+                <VibButton
+                  onClick={handleContinueClick}
+                  width={180}
+                  height={45}
+                >
+                  Continue
                 </VibButton>
               </motion.div>
             </Box>
@@ -94,4 +92,4 @@ const Home = () => {
   );
 };
 
-export default Home;
+export default Intro;

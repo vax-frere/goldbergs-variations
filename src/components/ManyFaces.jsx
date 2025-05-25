@@ -1,6 +1,6 @@
 import React, { useState, useEffect, memo } from "react";
 import { styled } from "@mui/material/styles";
-import { getImagePath } from "../../../../utils/assetLoader";
+import { getImagePath } from "../utils/assetLoader";
 
 // Styles
 const Container = styled("div")({
@@ -11,11 +11,11 @@ const Container = styled("div")({
   pointerEvents: "none",
 });
 
-const ImageWrapper = styled("div")({
+const ImageWrapper = styled("div")(({ size }) => ({
   position: "relative",
-  width: "100px",
-  height: "100px",
-});
+  width: size,
+  height: size,
+}));
 
 const Image = styled("img")({
   position: "absolute",
@@ -27,7 +27,7 @@ const Image = styled("img")({
   transition: "opacity 0.15s ease-in-out",
 });
 
-const PreloaderBackground = memo(() => {
+const ManyFaces = memo(({ size = "100px" }) => {
   const [activeIndex, setActiveIndex] = useState(Math.floor(Math.random() * 8));
   const [prevIndex, setPrevIndex] = useState(null);
 
@@ -44,7 +44,7 @@ const PreloaderBackground = memo(() => {
 
   return (
     <Container>
-      <ImageWrapper>
+      <ImageWrapper size={size}>
         {Array.from({ length: 8 }, (_, i) => (
           <Image
             key={i}
@@ -60,4 +60,4 @@ const PreloaderBackground = memo(() => {
   );
 });
 
-export default PreloaderBackground;
+export default ManyFaces;

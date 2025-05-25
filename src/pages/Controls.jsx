@@ -1,5 +1,5 @@
 import { useNavigate } from "react-router-dom";
-import { Typography, Button, Box, Container, Grid } from "@mui/material";
+import { Typography, Box, Container, Grid } from "@mui/material";
 import { motion } from "framer-motion";
 import useSound from "use-sound";
 import Navbar from "../components/Navbar";
@@ -8,6 +8,7 @@ import PageTransition, {
   pageVariants,
 } from "../components/PageTransition";
 import { getImagePath, getSoundPath } from "../utils/assetLoader";
+import VibButton from "../components/VibButton";
 
 const Controls = () => {
   const navigate = useNavigate();
@@ -119,18 +120,9 @@ const Controls = () => {
               </motion.div>
 
               <motion.div variants={pageVariants} className="motion-div">
-                <Button
-                  size="large"
-                  onClick={handleExploreClick}
-                  sx={{
-                    mt: 1,
-                    px: 4,
-                    py: 1.2,
-                    fontWeight: 400,
-                  }}
-                >
+                <VibButton onClick={handleExploreClick} width={180} height={45}>
                   Let's explore
-                </Button>
+                </VibButton>
               </motion.div>
             </Box>
           </motion.div>
