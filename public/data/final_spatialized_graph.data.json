@@ -3472,7 +3472,8 @@
       "value": 1.5,
       "type": "character_platform_connection",
       "isDirect": "Direct",
-      "relationType": "Présence"
+      "relationType": "Présence",
+      "thematicGroup": "Libertarians"
     },
     {
       "source": "4krapsucks_2",
@@ -3480,7 +3481,8 @@
       "value": 1.5,
       "type": "character_platform_connection",
       "isDirect": "Direct",
-      "relationType": "Présence"
+      "relationType": "Présence",
+      "thematicGroup": "Libertarians"
     },
     {
       "source": "66-177-73-91_4",
@@ -3488,7 +3490,8 @@
       "value": 1.5,
       "type": "character_platform_connection",
       "isDirect": "Direct",
-      "relationType": "Présence"
+      "relationType": "Présence",
+      "thematicGroup": "Antisystem"
     },
     {
       "source": "76-106-245-93_6",
@@ -3496,7 +3499,8 @@
       "value": 1.5,
       "type": "character_platform_connection",
       "isDirect": "Direct",
-      "relationType": "Présence"
+      "relationType": "Présence",
+      "thematicGroup": "Antisystem"
     },
     {
       "source": "amina-blackberry_8",
@@ -3504,7 +3508,8 @@
       "value": 1.5,
       "type": "character_platform_connection",
       "isDirect": "Direct",
-      "relationType": "Présence"
+      "relationType": "Présence",
+      "thematicGroup": "Conservatives"
     },
     {
       "source": "amina-blackberry_8",
@@ -3512,7 +3517,8 @@
       "value": 1.5,
       "type": "character_platform_connection",
       "isDirect": "Direct",
-      "relationType": "Présence"
+      "relationType": "Présence",
+      "thematicGroup": "Conservatives"
     },
     {
       "source": "michael-slay_11",
@@ -3520,7 +3526,8 @@
       "value": 1.5,
       "type": "character_platform_connection",
       "isDirect": "Direct",
-      "relationType": "Présence"
+      "relationType": "Présence",
+      "thematicGroup": "Nationalists"
     },
     {
       "source": "michael-slay_11",
@@ -3528,7 +3535,8 @@
       "value": 1.5,
       "type": "character_platform_connection",
       "isDirect": "Direct",
-      "relationType": "Présence"
+      "relationType": "Présence",
+      "thematicGroup": "Nationalists"
     },
     {
       "source": "michael-slay_11",
@@ -3536,7 +3544,8 @@
       "value": 1.5,
       "type": "character_platform_connection",
       "isDirect": "Direct",
-      "relationType": "Présence"
+      "relationType": "Présence",
+      "thematicGroup": "Nationalists"
     },
     {
       "source": "amina-blackberry_8",
@@ -3549,9 +3558,8 @@
       "virality": "",
       "mediaCoverage": "",
       "linkType": "destinataire",
-      "platforms": [
-        "twitter"
-      ]
+      "platforms": ["twitter"],
+      "thematicGroup": "Conservatives"
     },
     {
       "source": "platform_twitter_9",
@@ -3564,9 +3572,8 @@
       "virality": "",
       "mediaCoverage": "",
       "linkType": "destinataire",
-      "platforms": [
-        "twitter"
-      ]
+      "platforms": ["twitter"],
+      "thematicGroup": ""
     },
     {
       "source": "amina-blackberry_8",
@@ -3579,9 +3586,8 @@
       "virality": "",
       "mediaCoverage": "",
       "linkType": "destinataire",
-      "platforms": [
-        "twitter"
-      ]
+      "platforms": ["twitter"],
+      "thematicGroup": "Conservatives"
     },
     {
       "source": "platform_twitter_9",
@@ -3594,9 +3600,8 @@
       "virality": "",
       "mediaCoverage": "",
       "linkType": "destinataire",
-      "platforms": [
-        "twitter"
-      ]
+      "platforms": ["twitter"],
+      "thematicGroup": ""
     },
     {
       "source": "australi-witness_15",
@@ -3604,7 +3609,8 @@
       "value": 1.5,
       "type": "character_platform_connection",
       "isDirect": "Direct",
-      "relationType": "Présence"
+      "relationType": "Présence",
+      "thematicGroup": "Religious"
     },
     {
       "source": "australi-witness_15",
@@ -3612,7 +3618,8 @@
       "value": 1.5,
       "type": "character_platform_connection",
       "isDirect": "Direct",
-      "relationType": "Présence"
+      "relationType": "Présence",
+      "thematicGroup": "Religious"
     },
     {
       "source": "australi-witness_15",
@@ -3620,7 +3627,8 @@
       "value": 1.5,
       "type": "character_platform_connection",
       "isDirect": "Direct",
-      "relationType": "Présence"
+      "relationType": "Présence",
+      "thematicGroup": "Religious"
     },
     {
       "source": "australi-witness_15",
@@ -3628,7 +3636,8 @@
       "value": 1.5,
       "type": "character_platform_connection",
       "isDirect": "Direct",
-      "relationType": "Présence"
+      "relationType": "Présence",
+      "thematicGroup": "Religious"
     },
     {
       "source": "australi-witness_15",
@@ -3636,7 +3645,8 @@
       "value": 1.5,
       "type": "character_platform_connection",
       "isDirect": "Direct",
-      "relationType": "Présence"
+      "relationType": "Présence",
+      "thematicGroup": "Religious"
     },
     {
       "source": "amina-blackberry_8",
@@ -3649,9 +3659,8 @@
       "virality": "",
       "mediaCoverage": "",
       "linkType": "destinataire",
-      "platforms": [
-        "twitter"
-      ]
+      "platforms": ["twitter"],
+      "thematicGroup": "Conservatives"
     },
     {
       "source": "platform_twitter_9",
@@ -3664,9 +3673,8 @@
       "virality": "",
       "mediaCoverage": "",
       "linkType": "destinataire",
-      "platforms": [
-        "twitter"
-      ]
+      "platforms": ["twitter"],
+      "thematicGroup": ""
     },
     {
       "source": "aryan-heights_20",
@@ -3674,7 +3682,8 @@
       "value": 1.5,
       "type": "character_platform_connection",
       "isDirect": "Direct",
-      "relationType": "Présence"
+      "relationType": "Présence",
+      "thematicGroup": "Nationalists"
     },
     {
       "source": "australi-witness_22",
@@ -3682,7 +3691,8 @@
       "value": 1.5,
       "type": "character_platform_connection",
       "isDirect": "Direct",
-      "relationType": "Présence"
+      "relationType": "Présence",
+      "thematicGroup": "Religious"
     },
     {
       "source": "australi-witness_22",
@@ -3690,7 +3700,8 @@
       "value": 1.5,
       "type": "character_platform_connection",
       "isDirect": "Direct",
-      "relationType": "Présence"
+      "relationType": "Présence",
+      "thematicGroup": "Religious"
     },
     {
       "source": "australi-witness_22",
@@ -3698,7 +3709,8 @@
       "value": 1.5,
       "type": "character_platform_connection",
       "isDirect": "Direct",
-      "relationType": "Présence"
+      "relationType": "Présence",
+      "thematicGroup": "Religious"
     },
     {
       "source": "australi-witness_22",
@@ -3706,7 +3718,8 @@
       "value": 1.5,
       "type": "character_platform_connection",
       "isDirect": "Direct",
-      "relationType": "Présence"
+      "relationType": "Présence",
+      "thematicGroup": "Religious"
     },
     {
       "source": "australi-witness_22",
@@ -3714,7 +3727,8 @@
       "value": 1.5,
       "type": "character_platform_connection",
       "isDirect": "Direct",
-      "relationType": "Présence"
+      "relationType": "Présence",
+      "thematicGroup": "Religious"
     },
     {
       "source": "australi-witness_22",
@@ -3727,9 +3741,8 @@
       "virality": "50K+ RTs / Médias majeurs",
       "mediaCoverage": "Très forte",
       "linkType": "destinataire",
-      "platforms": [
-        "twitter"
-      ]
+      "platforms": ["twitter"],
+      "thematicGroup": "Religious"
     },
     {
       "source": "platform_twitter_26",
@@ -3742,9 +3755,8 @@
       "virality": "50K+ RTs / Médias majeurs",
       "mediaCoverage": "Très forte",
       "linkType": "destinataire",
-      "platforms": [
-        "twitter"
-      ]
+      "platforms": ["twitter"],
+      "thematicGroup": ""
     },
     {
       "source": "australi-witness_22",
@@ -3757,9 +3769,8 @@
       "virality": "50K+ RTs / Médias internationaux",
       "mediaCoverage": "Très forte",
       "linkType": "destinataire",
-      "platforms": [
-        "twitter"
-      ]
+      "platforms": ["twitter"],
+      "thematicGroup": "Religious"
     },
     {
       "source": "platform_twitter_26",
@@ -3772,9 +3783,8 @@
       "virality": "50K+ RTs / Médias internationaux",
       "mediaCoverage": "Très forte",
       "linkType": "destinataire",
-      "platforms": [
-        "twitter"
-      ]
+      "platforms": ["twitter"],
+      "thematicGroup": ""
     },
     {
       "source": "australi-witness_22",
@@ -3787,9 +3797,8 @@
       "virality": "Modérément repris dans les médias",
       "mediaCoverage": "Moyenne",
       "linkType": "destinataire",
-      "platforms": [
-        "twitter"
-      ]
+      "platforms": ["twitter"],
+      "thematicGroup": "Religious"
     },
     {
       "source": "platform_twitter_26",
@@ -3802,9 +3811,8 @@
       "virality": "Modérément repris dans les médias",
       "mediaCoverage": "Moyenne",
       "linkType": "destinataire",
-      "platforms": [
-        "twitter"
-      ]
+      "platforms": ["twitter"],
+      "thematicGroup": ""
     },
     {
       "source": "australi-witness_22",
@@ -3817,9 +3825,8 @@
       "virality": "",
       "mediaCoverage": "",
       "linkType": "destinateur",
-      "platforms": [
-        "twitter"
-      ]
+      "platforms": ["twitter"],
+      "thematicGroup": "Religious"
     },
     {
       "source": "platform_twitter_26",
@@ -3832,9 +3839,8 @@
       "virality": "",
       "mediaCoverage": "",
       "linkType": "destinateur",
-      "platforms": [
-        "twitter"
-      ]
+      "platforms": ["twitter"],
+      "thematicGroup": ""
     },
     {
       "source": "australi-witness_22",
@@ -3847,9 +3853,8 @@
       "virality": "Traqué publiquement",
       "mediaCoverage": "Forte",
       "linkType": "destinateur",
-      "platforms": [
-        "twitter"
-      ]
+      "platforms": ["twitter"],
+      "thematicGroup": "Religious"
     },
     {
       "source": "platform_twitter_26",
@@ -3862,9 +3867,8 @@
       "virality": "Traqué publiquement",
       "mediaCoverage": "Forte",
       "linkType": "destinateur",
-      "platforms": [
-        "twitter"
-      ]
+      "platforms": ["twitter"],
+      "thematicGroup": ""
     },
     {
       "source": "australi-witness_22",
@@ -3877,9 +3881,8 @@
       "virality": "Modérément viral",
       "mediaCoverage": "Faible",
       "linkType": "destinataire",
-      "platforms": [
-        "twitter"
-      ]
+      "platforms": ["twitter"],
+      "thematicGroup": "Religious"
     },
     {
       "source": "platform_twitter_26",
@@ -3892,9 +3895,8 @@
       "virality": "Modérément viral",
       "mediaCoverage": "Faible",
       "linkType": "destinataire",
-      "platforms": [
-        "twitter"
-      ]
+      "platforms": ["twitter"],
+      "thematicGroup": ""
     },
     {
       "source": "australi-witness_22",
@@ -3907,9 +3909,8 @@
       "virality": "Quelques mentions dans les médias",
       "mediaCoverage": "Modérée",
       "linkType": "destinataire",
-      "platforms": [
-        "twitter"
-      ]
+      "platforms": ["twitter"],
+      "thematicGroup": "Religious"
     },
     {
       "source": "platform_twitter_26",
@@ -3922,9 +3923,8 @@
       "virality": "Quelques mentions dans les médias",
       "mediaCoverage": "Modérée",
       "linkType": "destinataire",
-      "platforms": [
-        "twitter"
-      ]
+      "platforms": ["twitter"],
+      "thematicGroup": ""
     },
     {
       "source": "australi-witness_22",
@@ -3937,9 +3937,8 @@
       "virality": "Caricatures attaquées en ligne",
       "mediaCoverage": "Moyenne",
       "linkType": "destinataire",
-      "platforms": [
-        "twitter"
-      ]
+      "platforms": ["twitter"],
+      "thematicGroup": "Religious"
     },
     {
       "source": "platform_twitter_26",
@@ -3952,9 +3951,8 @@
       "virality": "Caricatures attaquées en ligne",
       "mediaCoverage": "Moyenne",
       "linkType": "destinataire",
-      "platforms": [
-        "twitter"
-      ]
+      "platforms": ["twitter"],
+      "thematicGroup": ""
     },
     {
       "source": "australi-witness_22",
@@ -3967,9 +3965,8 @@
       "virality": "Fort impact sur les enquêtes",
       "mediaCoverage": "Très forte",
       "linkType": "destinataire",
-      "platforms": [
-        "twitter"
-      ]
+      "platforms": ["twitter"],
+      "thematicGroup": "Religious"
     },
     {
       "source": "platform_twitter_26",
@@ -3982,9 +3979,8 @@
       "virality": "Fort impact sur les enquêtes",
       "mediaCoverage": "Très forte",
       "linkType": "destinataire",
-      "platforms": [
-        "twitter"
-      ]
+      "platforms": ["twitter"],
+      "thematicGroup": ""
     },
     {
       "source": "australi-witness_22",
@@ -3997,9 +3993,8 @@
       "virality": "",
       "mediaCoverage": "",
       "linkType": "destinateur",
-      "platforms": [
-        "surespot"
-      ]
+      "platforms": ["surespot"],
+      "thematicGroup": "Religious"
     },
     {
       "source": "platform_surespot_24",
@@ -4012,9 +4007,8 @@
       "virality": "",
       "mediaCoverage": "",
       "linkType": "destinateur",
-      "platforms": [
-        "surespot"
-      ]
+      "platforms": ["surespot"],
+      "thematicGroup": ""
     },
     {
       "source": "australi-witness_22",
@@ -4027,9 +4021,8 @@
       "virality": "",
       "mediaCoverage": "",
       "linkType": "destinateur",
-      "platforms": [
-        "surespot"
-      ]
+      "platforms": ["surespot"],
+      "thematicGroup": "Religious"
     },
     {
       "source": "platform_surespot_24",
@@ -4042,9 +4035,8 @@
       "virality": "",
       "mediaCoverage": "",
       "linkType": "destinateur",
-      "platforms": [
-        "surespot"
-      ]
+      "platforms": ["surespot"],
+      "thematicGroup": ""
     },
     {
       "source": "michael-slay_39",
@@ -4052,7 +4044,8 @@
       "value": 1.5,
       "type": "character_platform_connection",
       "isDirect": "Direct",
-      "relationType": "Présence"
+      "relationType": "Présence",
+      "thematicGroup": "Nationalists"
     },
     {
       "source": "michael-slay_39",
@@ -4060,7 +4053,8 @@
       "value": 1.5,
       "type": "character_platform_connection",
       "isDirect": "Direct",
-      "relationType": "Présence"
+      "relationType": "Présence",
+      "thematicGroup": "Nationalists"
     },
     {
       "source": "michael-slay_39",
@@ -4068,7 +4062,8 @@
       "value": 1.5,
       "type": "character_platform_connection",
       "isDirect": "Direct",
-      "relationType": "Présence"
+      "relationType": "Présence",
+      "thematicGroup": "Nationalists"
     },
     {
       "source": "australi-witness_22",
@@ -4081,9 +4076,8 @@
       "virality": "",
       "mediaCoverage": "",
       "linkType": "destinataire",
-      "platforms": [
-        "twitter"
-      ]
+      "platforms": ["twitter"],
+      "thematicGroup": "Religious"
     },
     {
       "source": "platform_twitter_26",
@@ -4096,9 +4090,8 @@
       "virality": "",
       "mediaCoverage": "",
       "linkType": "destinataire",
-      "platforms": [
-        "twitter"
-      ]
+      "platforms": ["twitter"],
+      "thematicGroup": ""
     },
     {
       "source": "australi-witness_22",
@@ -4111,9 +4104,8 @@
       "virality": "",
       "mediaCoverage": "",
       "linkType": "",
-      "platforms": [
-        "surespot"
-      ]
+      "platforms": ["surespot"],
+      "thematicGroup": "Religious"
     },
     {
       "source": "platform_surespot_24",
@@ -4126,9 +4118,8 @@
       "virality": "",
       "mediaCoverage": "",
       "linkType": "",
-      "platforms": [
-        "surespot"
-      ]
+      "platforms": ["surespot"],
+      "thematicGroup": ""
     },
     {
       "source": "blaze-it-flaggot_44",
@@ -4136,7 +4127,8 @@
       "value": 1.5,
       "type": "character_platform_connection",
       "isDirect": "Direct",
-      "relationType": "Présence"
+      "relationType": "Présence",
+      "thematicGroup": "Culture"
     },
     {
       "source": "bw-anime-fan_46",
@@ -4144,7 +4136,8 @@
       "value": 1.5,
       "type": "character_platform_connection",
       "isDirect": "Direct",
-      "relationType": "Présence"
+      "relationType": "Présence",
+      "thematicGroup": "Nationalists"
     },
     {
       "source": "chuck-e-jesus_48",
@@ -4152,7 +4145,8 @@
       "value": 1.5,
       "type": "character_platform_connection",
       "isDirect": "Direct",
-      "relationType": "Présence"
+      "relationType": "Présence",
+      "thematicGroup": "Libertarians"
     },
     {
       "source": "death-to-sjws_50",
@@ -4160,7 +4154,8 @@
       "value": 1.5,
       "type": "character_platform_connection",
       "isDirect": "Direct",
-      "relationType": "Présence"
+      "relationType": "Présence",
+      "thematicGroup": "Nationalists"
     },
     {
       "source": "michael-slay_53",
@@ -4168,7 +4163,8 @@
       "value": 1.5,
       "type": "character_platform_connection",
       "isDirect": "Direct",
-      "relationType": "Présence"
+      "relationType": "Présence",
+      "thematicGroup": "Nationalists"
     },
     {
       "source": "michael-slay_53",
@@ -4176,7 +4172,8 @@
       "value": 1.5,
       "type": "character_platform_connection",
       "isDirect": "Direct",
-      "relationType": "Présence"
+      "relationType": "Présence",
+      "thematicGroup": "Nationalists"
     },
     {
       "source": "michael-slay_53",
@@ -4184,7 +4181,8 @@
       "value": 1.5,
       "type": "character_platform_connection",
       "isDirect": "Direct",
-      "relationType": "Présence"
+      "relationType": "Présence",
+      "thematicGroup": "Nationalists"
     },
     {
       "source": "dinah-silverstein_52",
@@ -4197,9 +4195,8 @@
       "virality": "",
       "mediaCoverage": "",
       "linkType": "destinataire",
-      "platforms": [
-        "times-of-israel"
-      ]
+      "platforms": ["times-of-israel"],
+      "thematicGroup": "Social justice"
     },
     {
       "source": "platform_times-of-israel_57",
@@ -4212,9 +4209,8 @@
       "virality": "",
       "mediaCoverage": "",
       "linkType": "destinataire",
-      "platforms": [
-        "times-of-israel"
-      ]
+      "platforms": ["times-of-israel"],
+      "thematicGroup": ""
     },
     {
       "source": "dr-shlomo-goldstein_58",
@@ -4222,7 +4218,8 @@
       "value": 1.5,
       "type": "character_platform_connection",
       "isDirect": "Direct",
-      "relationType": "Présence"
+      "relationType": "Présence",
+      "thematicGroup": "Nationalists"
     },
     {
       "source": "ryoko-tamada_60",
@@ -4230,7 +4227,8 @@
       "value": 1.5,
       "type": "character_platform_connection",
       "isDirect": "Direct",
-      "relationType": "Présence"
+      "relationType": "Présence",
+      "thematicGroup": "Libertarians"
     },
     {
       "source": "ryoko-tamada_60",
@@ -4243,10 +4241,9 @@
       "virality": "Couverture partielle",
       "mediaCoverage": "Moyenne",
       "linkType": "destinataire",
-      "platforms": [
-        "twitter",
-        "e-mail"
-      ]
+      "platforms": ["twitter",
+        "e-mail"],
+      "thematicGroup": "Libertarians"
     },
     {
       "source": "platform_twitter_61",
@@ -4259,10 +4256,9 @@
       "virality": "Couverture partielle",
       "mediaCoverage": "Moyenne",
       "linkType": "destinataire",
-      "platforms": [
-        "twitter",
-        "e-mail"
-      ]
+      "platforms": ["twitter",
+        "e-mail"],
+      "thematicGroup": ""
     },
     {
       "source": "ryoko-tamada_60",
@@ -4275,10 +4271,9 @@
       "virality": "Couverture partielle",
       "mediaCoverage": "Moyenne",
       "linkType": "destinataire",
-      "platforms": [
-        "twitter",
-        "e-mail"
-      ]
+      "platforms": ["twitter",
+        "e-mail"],
+      "thematicGroup": "Libertarians"
     },
     {
       "source": "platform_e-mail_63",
@@ -4291,10 +4286,9 @@
       "virality": "Couverture partielle",
       "mediaCoverage": "Moyenne",
       "linkType": "destinataire",
-      "platforms": [
-        "twitter",
-        "e-mail"
-      ]
+      "platforms": ["twitter",
+        "e-mail"],
+      "thematicGroup": ""
     },
     {
       "source": "ryoko-tamada_60",
@@ -4307,9 +4301,8 @@
       "virality": "",
       "mediaCoverage": "",
       "linkType": "destinataire",
-      "platforms": [
-        "e-mail"
-      ]
+      "platforms": ["e-mail"],
+      "thematicGroup": "Libertarians"
     },
     {
       "source": "platform_e-mail_63",
@@ -4322,9 +4315,8 @@
       "virality": "",
       "mediaCoverage": "",
       "linkType": "destinataire",
-      "platforms": [
-        "e-mail"
-      ]
+      "platforms": ["e-mail"],
+      "thematicGroup": ""
     },
     {
       "source": "ryoko-tamada_60",
@@ -4337,9 +4329,8 @@
       "virality": "",
       "mediaCoverage": "",
       "linkType": "destinataire",
-      "platforms": [
-        "twitter"
-      ]
+      "platforms": ["twitter"],
+      "thematicGroup": "Libertarians"
     },
     {
       "source": "platform_twitter_61",
@@ -4352,9 +4343,8 @@
       "virality": "",
       "mediaCoverage": "",
       "linkType": "destinataire",
-      "platforms": [
-        "twitter"
-      ]
+      "platforms": ["twitter"],
+      "thematicGroup": ""
     },
     {
       "source": "tanya-cohen_66",
@@ -4362,7 +4352,8 @@
       "value": 1.5,
       "type": "character_platform_connection",
       "isDirect": "Direct",
-      "relationType": "Présence"
+      "relationType": "Présence",
+      "thematicGroup": "Social justice"
     },
     {
       "source": "tanya-cohen_66",
@@ -4370,7 +4361,8 @@
       "value": 1.5,
       "type": "character_platform_connection",
       "isDirect": "Direct",
-      "relationType": "Présence"
+      "relationType": "Présence",
+      "thematicGroup": "Social justice"
     },
     {
       "source": "tanya-cohen_66",
@@ -4378,7 +4370,8 @@
       "value": 1.5,
       "type": "character_platform_connection",
       "isDirect": "Direct",
-      "relationType": "Présence"
+      "relationType": "Présence",
+      "thematicGroup": "Social justice"
     },
     {
       "source": "tanya-cohen_66",
@@ -4386,7 +4379,8 @@
       "value": 1.5,
       "type": "character_platform_connection",
       "isDirect": "Direct",
-      "relationType": "Présence"
+      "relationType": "Présence",
+      "thematicGroup": "Social justice"
     },
     {
       "source": "ryoko-tamada_60",
@@ -4399,9 +4393,8 @@
       "virality": "",
       "mediaCoverage": "",
       "linkType": "destinataire",
-      "platforms": [
-        "twitter"
-      ]
+      "platforms": ["twitter"],
+      "thematicGroup": "Libertarians"
     },
     {
       "source": "platform_twitter_61",
@@ -4414,9 +4407,8 @@
       "virality": "",
       "mediaCoverage": "",
       "linkType": "destinataire",
-      "platforms": [
-        "twitter"
-      ]
+      "platforms": ["twitter"],
+      "thematicGroup": ""
     },
     {
       "source": "moon-metropolis_70",
@@ -4424,7 +4416,8 @@
       "value": 1.5,
       "type": "character_platform_connection",
       "isDirect": "Direct",
-      "relationType": "Présence"
+      "relationType": "Présence",
+      "thematicGroup": "Libertarians"
     },
     {
       "source": "moon-metropolis_70",
@@ -4432,7 +4425,8 @@
       "value": 1.5,
       "type": "character_platform_connection",
       "isDirect": "Direct",
-      "relationType": "Présence"
+      "relationType": "Présence",
+      "thematicGroup": "Libertarians"
     },
     {
       "source": "moon-metropolis_70",
@@ -4440,7 +4434,8 @@
       "value": 1.5,
       "type": "character_platform_connection",
       "isDirect": "Direct",
-      "relationType": "Présence"
+      "relationType": "Présence",
+      "thematicGroup": "Libertarians"
     },
     {
       "source": "moon-metropolis_70",
@@ -4448,7 +4443,8 @@
       "value": 1.5,
       "type": "character_platform_connection",
       "isDirect": "Direct",
-      "relationType": "Présence"
+      "relationType": "Présence",
+      "thematicGroup": "Libertarians"
     },
     {
       "source": "moon-metropolis_70",
@@ -4456,7 +4452,8 @@
       "value": 1.5,
       "type": "character_platform_connection",
       "isDirect": "Direct",
-      "relationType": "Présence"
+      "relationType": "Présence",
+      "thematicGroup": "Libertarians"
     },
     {
       "source": "moon-metropolis_70",
@@ -4464,7 +4461,8 @@
       "value": 1.5,
       "type": "character_platform_connection",
       "isDirect": "Direct",
-      "relationType": "Présence"
+      "relationType": "Présence",
+      "thematicGroup": "Libertarians"
     },
     {
       "source": "moon-metropolis_70",
@@ -4472,7 +4470,8 @@
       "value": 1.5,
       "type": "character_platform_connection",
       "isDirect": "Direct",
-      "relationType": "Présence"
+      "relationType": "Présence",
+      "thematicGroup": "Libertarians"
     },
     {
       "source": "ryoko-tamada_60",
@@ -4485,9 +4484,8 @@
       "virality": "",
       "mediaCoverage": "",
       "linkType": "destinataire",
-      "platforms": [
-        "twitter"
-      ]
+      "platforms": ["twitter"],
+      "thematicGroup": "Libertarians"
     },
     {
       "source": "platform_twitter_61",
@@ -4500,9 +4498,8 @@
       "virality": "",
       "mediaCoverage": "",
       "linkType": "destinataire",
-      "platforms": [
-        "twitter"
-      ]
+      "platforms": ["twitter"],
+      "thematicGroup": ""
     },
     {
       "source": "emily-americana_76",
@@ -4510,7 +4507,8 @@
       "value": 1.5,
       "type": "character_platform_connection",
       "isDirect": "Direct",
-      "relationType": "Présence"
+      "relationType": "Présence",
+      "thematicGroup": "Libertarians"
     },
     {
       "source": "michael-slay_78",
@@ -4518,7 +4516,8 @@
       "value": 1.5,
       "type": "character_platform_connection",
       "isDirect": "Direct",
-      "relationType": "Présence"
+      "relationType": "Présence",
+      "thematicGroup": "Nationalists"
     },
     {
       "source": "michael-slay_78",
@@ -4526,7 +4525,8 @@
       "value": 1.5,
       "type": "character_platform_connection",
       "isDirect": "Direct",
-      "relationType": "Présence"
+      "relationType": "Présence",
+      "thematicGroup": "Nationalists"
     },
     {
       "source": "michael-slay_78",
@@ -4534,7 +4534,8 @@
       "value": 1.5,
       "type": "character_platform_connection",
       "isDirect": "Direct",
-      "relationType": "Présence"
+      "relationType": "Présence",
+      "thematicGroup": "Nationalists"
     },
     {
       "source": "emily-americana_76",
@@ -4547,9 +4548,8 @@
       "virality": "",
       "mediaCoverage": "",
       "linkType": "destinataire",
-      "platforms": [
-        "reddit"
-      ]
+      "platforms": ["reddit"],
+      "thematicGroup": "Libertarians"
     },
     {
       "source": "platform_reddit_77",
@@ -4562,9 +4562,8 @@
       "virality": "",
       "mediaCoverage": "",
       "linkType": "destinataire",
-      "platforms": [
-        "reddit"
-      ]
+      "platforms": ["reddit"],
+      "thematicGroup": ""
     },
     {
       "source": "emily-americana_76",
@@ -4577,9 +4576,8 @@
       "virality": "",
       "mediaCoverage": "",
       "linkType": "destinataire",
-      "platforms": [
-        "reddit"
-      ]
+      "platforms": ["reddit"],
+      "thematicGroup": "Libertarians"
     },
     {
       "source": "platform_reddit_77",
@@ -4592,9 +4590,8 @@
       "virality": "",
       "mediaCoverage": "",
       "linkType": "destinataire",
-      "platforms": [
-        "reddit"
-      ]
+      "platforms": ["reddit"],
+      "thematicGroup": ""
     },
     {
       "source": "moon-metropolis_82",
@@ -4602,7 +4599,8 @@
       "value": 1.5,
       "type": "character_platform_connection",
       "isDirect": "Direct",
-      "relationType": "Présence"
+      "relationType": "Présence",
+      "thematicGroup": "Libertarians"
     },
     {
       "source": "moon-metropolis_82",
@@ -4610,7 +4608,8 @@
       "value": 1.5,
       "type": "character_platform_connection",
       "isDirect": "Direct",
-      "relationType": "Présence"
+      "relationType": "Présence",
+      "thematicGroup": "Libertarians"
     },
     {
       "source": "moon-metropolis_82",
@@ -4618,7 +4617,8 @@
       "value": 1.5,
       "type": "character_platform_connection",
       "isDirect": "Direct",
-      "relationType": "Présence"
+      "relationType": "Présence",
+      "thematicGroup": "Libertarians"
     },
     {
       "source": "moon-metropolis_82",
@@ -4626,7 +4626,8 @@
       "value": 1.5,
       "type": "character_platform_connection",
       "isDirect": "Direct",
-      "relationType": "Présence"
+      "relationType": "Présence",
+      "thematicGroup": "Libertarians"
     },
     {
       "source": "moon-metropolis_82",
@@ -4634,7 +4635,8 @@
       "value": 1.5,
       "type": "character_platform_connection",
       "isDirect": "Direct",
-      "relationType": "Présence"
+      "relationType": "Présence",
+      "thematicGroup": "Libertarians"
     },
     {
       "source": "moon-metropolis_82",
@@ -4642,7 +4644,8 @@
       "value": 1.5,
       "type": "character_platform_connection",
       "isDirect": "Direct",
-      "relationType": "Présence"
+      "relationType": "Présence",
+      "thematicGroup": "Libertarians"
     },
     {
       "source": "moon-metropolis_82",
@@ -4650,7 +4653,8 @@
       "value": 1.5,
       "type": "character_platform_connection",
       "isDirect": "Direct",
-      "relationType": "Présence"
+      "relationType": "Présence",
+      "thematicGroup": "Libertarians"
     },
     {
       "source": "emily-americana_76",
@@ -4663,9 +4667,8 @@
       "virality": "",
       "mediaCoverage": "",
       "linkType": "destinataire",
-      "platforms": [
-        "reddit"
-      ]
+      "platforms": ["reddit"],
+      "thematicGroup": "Libertarians"
     },
     {
       "source": "platform_reddit_77",
@@ -4678,9 +4681,8 @@
       "virality": "",
       "mediaCoverage": "",
       "linkType": "destinataire",
-      "platforms": [
-        "reddit"
-      ]
+      "platforms": ["reddit"],
+      "thematicGroup": ""
     },
     {
       "source": "death-to-sjws_88",
@@ -4688,7 +4690,8 @@
       "value": 1.5,
       "type": "character_platform_connection",
       "isDirect": "Direct",
-      "relationType": "Présence"
+      "relationType": "Présence",
+      "thematicGroup": "Nationalists"
     },
     {
       "source": "emily-americana_76",
@@ -4701,9 +4704,8 @@
       "virality": "",
       "mediaCoverage": "",
       "linkType": "destinataire",
-      "platforms": [
-        "reddit"
-      ]
+      "platforms": ["reddit"],
+      "thematicGroup": "Libertarians"
     },
     {
       "source": "platform_reddit_77",
@@ -4716,9 +4718,8 @@
       "virality": "",
       "mediaCoverage": "",
       "linkType": "destinataire",
-      "platforms": [
-        "reddit"
-      ]
+      "platforms": ["reddit"],
+      "thematicGroup": ""
     },
     {
       "source": "emily-goldstein_89",
@@ -4726,7 +4727,8 @@
       "value": 1.5,
       "type": "character_platform_connection",
       "isDirect": "Direct",
-      "relationType": "Présence"
+      "relationType": "Présence",
+      "thematicGroup": "Social justice"
     },
     {
       "source": "emily-goldstein_89",
@@ -4739,9 +4741,8 @@
       "virality": "Mentionné indirectement dans des affaires",
       "mediaCoverage": "Très forte",
       "linkType": "destinataire",
-      "platforms": [
-        "twitter"
-      ]
+      "platforms": ["twitter"],
+      "thematicGroup": "Social justice"
     },
     {
       "source": "platform_twitter_92",
@@ -4754,9 +4755,8 @@
       "virality": "Mentionné indirectement dans des affaires",
       "mediaCoverage": "Très forte",
       "linkType": "destinataire",
-      "platforms": [
-        "twitter"
-      ]
+      "platforms": ["twitter"],
+      "thematicGroup": ""
     },
     {
       "source": "emily-goldstein_89",
@@ -4769,9 +4769,8 @@
       "virality": "",
       "mediaCoverage": "",
       "linkType": "",
-      "platforms": [
-        "thoughtcatalog"
-      ]
+      "platforms": ["thoughtcatalog"],
+      "thematicGroup": "Social justice"
     },
     {
       "source": "platform_thoughtcatalog_90",
@@ -4784,9 +4783,8 @@
       "virality": "",
       "mediaCoverage": "",
       "linkType": "",
-      "platforms": [
-        "thoughtcatalog"
-      ]
+      "platforms": ["thoughtcatalog"],
+      "thematicGroup": ""
     },
     {
       "source": "tanya-cohen_94",
@@ -4794,7 +4792,8 @@
       "value": 1.5,
       "type": "character_platform_connection",
       "isDirect": "Direct",
-      "relationType": "Présence"
+      "relationType": "Présence",
+      "thematicGroup": "Social justice"
     },
     {
       "source": "tanya-cohen_94",
@@ -4802,7 +4801,8 @@
       "value": 1.5,
       "type": "character_platform_connection",
       "isDirect": "Direct",
-      "relationType": "Présence"
+      "relationType": "Présence",
+      "thematicGroup": "Social justice"
     },
     {
       "source": "tanya-cohen_94",
@@ -4810,7 +4810,8 @@
       "value": 1.5,
       "type": "character_platform_connection",
       "isDirect": "Direct",
-      "relationType": "Présence"
+      "relationType": "Présence",
+      "thematicGroup": "Social justice"
     },
     {
       "source": "tanya-cohen_94",
@@ -4818,7 +4819,8 @@
       "value": 1.5,
       "type": "character_platform_connection",
       "isDirect": "Direct",
-      "relationType": "Présence"
+      "relationType": "Présence",
+      "thematicGroup": "Social justice"
     },
     {
       "source": "emily-goldstein_89",
@@ -4831,9 +4833,8 @@
       "virality": "",
       "mediaCoverage": "",
       "linkType": "",
-      "platforms": [
-        "thoughtcatalog"
-      ]
+      "platforms": ["thoughtcatalog"],
+      "thematicGroup": "Social justice"
     },
     {
       "source": "platform_thoughtcatalog_90",
@@ -4846,9 +4847,8 @@
       "virality": "",
       "mediaCoverage": "",
       "linkType": "",
-      "platforms": [
-        "thoughtcatalog"
-      ]
+      "platforms": ["thoughtcatalog"],
+      "thematicGroup": ""
     },
     {
       "source": "michael-slay_97",
@@ -4856,7 +4856,8 @@
       "value": 1.5,
       "type": "character_platform_connection",
       "isDirect": "Direct",
-      "relationType": "Présence"
+      "relationType": "Présence",
+      "thematicGroup": "Nationalists"
     },
     {
       "source": "michael-slay_97",
@@ -4864,7 +4865,8 @@
       "value": 1.5,
       "type": "character_platform_connection",
       "isDirect": "Direct",
-      "relationType": "Présence"
+      "relationType": "Présence",
+      "thematicGroup": "Nationalists"
     },
     {
       "source": "michael-slay_97",
@@ -4872,7 +4874,8 @@
       "value": 1.5,
       "type": "character_platform_connection",
       "isDirect": "Direct",
-      "relationType": "Présence"
+      "relationType": "Présence",
+      "thematicGroup": "Nationalists"
     },
     {
       "source": "emily-goldstein_89",
@@ -4885,9 +4888,8 @@
       "virality": "",
       "mediaCoverage": "",
       "linkType": "",
-      "platforms": [
-        "thoughtcatalog"
-      ]
+      "platforms": ["thoughtcatalog"],
+      "thematicGroup": "Social justice"
     },
     {
       "source": "platform_thoughtcatalog_90",
@@ -4900,9 +4902,8 @@
       "virality": "",
       "mediaCoverage": "",
       "linkType": "",
-      "platforms": [
-        "thoughtcatalog"
-      ]
+      "platforms": ["thoughtcatalog"],
+      "thematicGroup": ""
     },
     {
       "source": "emily-goldstein_89",
@@ -4915,9 +4916,8 @@
       "virality": "",
       "mediaCoverage": "",
       "linkType": "",
-      "platforms": [
-        "thoughtcatalog"
-      ]
+      "platforms": ["thoughtcatalog"],
+      "thematicGroup": "Social justice"
     },
     {
       "source": "platform_thoughtcatalog_90",
@@ -4930,9 +4930,8 @@
       "virality": "",
       "mediaCoverage": "",
       "linkType": "",
-      "platforms": [
-        "thoughtcatalog"
-      ]
+      "platforms": ["thoughtcatalog"],
+      "thematicGroup": ""
     },
     {
       "source": "emily-goldstein_89",
@@ -4945,9 +4944,8 @@
       "virality": "",
       "mediaCoverage": "",
       "linkType": "",
-      "platforms": [
-        "thoughtcatalog"
-      ]
+      "platforms": ["thoughtcatalog"],
+      "thematicGroup": "Social justice"
     },
     {
       "source": "platform_thoughtcatalog_90",
@@ -4960,9 +4958,8 @@
       "virality": "",
       "mediaCoverage": "",
       "linkType": "",
-      "platforms": [
-        "thoughtcatalog"
-      ]
+      "platforms": ["thoughtcatalog"],
+      "thematicGroup": ""
     },
     {
       "source": "europe-hates-niggers_102",
@@ -4970,7 +4967,8 @@
       "value": 1.5,
       "type": "character_platform_connection",
       "isDirect": "Direct",
-      "relationType": "Présence"
+      "relationType": "Présence",
+      "thematicGroup": "Nationalists"
     },
     {
       "source": "flappy-brd_104",
@@ -4978,7 +4976,8 @@
       "value": 1.5,
       "type": "character_platform_connection",
       "isDirect": "Direct",
-      "relationType": "Présence"
+      "relationType": "Présence",
+      "thematicGroup": "Social justice"
     },
     {
       "source": "gas-the-kikes_106",
@@ -4986,7 +4985,8 @@
       "value": 1.5,
       "type": "character_platform_connection",
       "isDirect": "Direct",
-      "relationType": "Présence"
+      "relationType": "Présence",
+      "thematicGroup": "Nationalists"
     },
     {
       "source": "michael-slay_109",
@@ -4994,7 +4994,8 @@
       "value": 1.5,
       "type": "character_platform_connection",
       "isDirect": "Direct",
-      "relationType": "Présence"
+      "relationType": "Présence",
+      "thematicGroup": "Nationalists"
     },
     {
       "source": "michael-slay_109",
@@ -5002,7 +5003,8 @@
       "value": 1.5,
       "type": "character_platform_connection",
       "isDirect": "Direct",
-      "relationType": "Présence"
+      "relationType": "Présence",
+      "thematicGroup": "Nationalists"
     },
     {
       "source": "michael-slay_109",
@@ -5010,7 +5012,8 @@
       "value": 1.5,
       "type": "character_platform_connection",
       "isDirect": "Direct",
-      "relationType": "Présence"
+      "relationType": "Présence",
+      "thematicGroup": "Nationalists"
     },
     {
       "source": "hadiyo-elmi_108",
@@ -5023,9 +5026,8 @@
       "virality": "",
       "mediaCoverage": "",
       "linkType": "destinataire",
-      "platforms": [
-        "twitter"
-      ]
+      "platforms": ["twitter"],
+      "thematicGroup": "Social justice"
     },
     {
       "source": "platform_twitter_113",
@@ -5038,9 +5040,8 @@
       "virality": "",
       "mediaCoverage": "",
       "linkType": "destinataire",
-      "platforms": [
-        "twitter"
-      ]
+      "platforms": ["twitter"],
+      "thematicGroup": ""
     },
     {
       "source": "hadiyo-elmi_108",
@@ -5053,9 +5054,8 @@
       "virality": "",
       "mediaCoverage": "",
       "linkType": "destinataire",
-      "platforms": [
-        "twitter"
-      ]
+      "platforms": ["twitter"],
+      "thematicGroup": "Social justice"
     },
     {
       "source": "platform_twitter_113",
@@ -5068,9 +5068,8 @@
       "virality": "",
       "mediaCoverage": "",
       "linkType": "destinataire",
-      "platforms": [
-        "twitter"
-      ]
+      "platforms": ["twitter"],
+      "thematicGroup": ""
     },
     {
       "source": "hadiyo-elmi_108",
@@ -5083,9 +5082,8 @@
       "virality": "",
       "mediaCoverage": "",
       "linkType": "destinataire",
-      "platforms": [
-        "twitter"
-      ]
+      "platforms": ["twitter"],
+      "thematicGroup": "Social justice"
     },
     {
       "source": "platform_twitter_113",
@@ -5098,9 +5096,8 @@
       "virality": "",
       "mediaCoverage": "",
       "linkType": "destinataire",
-      "platforms": [
-        "twitter"
-      ]
+      "platforms": ["twitter"],
+      "thematicGroup": ""
     },
     {
       "source": "id-c9uafs7u_116",
@@ -5108,7 +5105,8 @@
       "value": 1.5,
       "type": "character_platform_connection",
       "isDirect": "Direct",
-      "relationType": "Présence"
+      "relationType": "Présence",
+      "thematicGroup": "Nationalists"
     },
     {
       "source": "island-angel_118",
@@ -5116,7 +5114,8 @@
       "value": 1.5,
       "type": "character_platform_connection",
       "isDirect": "Direct",
-      "relationType": "Présence"
+      "relationType": "Présence",
+      "thematicGroup": "Antisystem"
     },
     {
       "source": "real-joshua-goldberg_120",
@@ -5129,9 +5128,8 @@
       "virality": "Scandale médiatisé, retrait d’articles",
       "mediaCoverage": "Forte",
       "linkType": "destinataire",
-      "platforms": [
-        "times-of-israel"
-      ]
+      "platforms": ["times-of-israel"],
+      "thematicGroup": "Antisystem"
     },
     {
       "source": "platform_times-of-israel_122",
@@ -5144,9 +5142,8 @@
       "virality": "Scandale médiatisé, retrait d’articles",
       "mediaCoverage": "Forte",
       "linkType": "destinataire",
-      "platforms": [
-        "times-of-israel"
-      ]
+      "platforms": ["times-of-israel"],
+      "thematicGroup": ""
     },
     {
       "source": "real-joshua-goldberg_120",
@@ -5159,9 +5156,8 @@
       "virality": "Couverture modérée",
       "mediaCoverage": "Moyenne",
       "linkType": "destinateur",
-      "platforms": [
-        "twitter"
-      ]
+      "platforms": ["twitter"],
+      "thematicGroup": "Antisystem"
     },
     {
       "source": "platform_twitter_124",
@@ -5174,9 +5170,8 @@
       "virality": "Couverture modérée",
       "mediaCoverage": "Moyenne",
       "linkType": "destinateur",
-      "platforms": [
-        "twitter"
-      ]
+      "platforms": ["twitter"],
+      "thematicGroup": ""
     },
     {
       "source": "real-joshua-goldberg_120",
@@ -5189,10 +5184,9 @@
       "virality": "Articles dans médias mainstream",
       "mediaCoverage": "Forte",
       "linkType": "destinataire",
-      "platforms": [
-        "twitter",
-        "facebook"
-      ]
+      "platforms": ["twitter",
+        "facebook"],
+      "thematicGroup": "Antisystem"
     },
     {
       "source": "platform_twitter_124",
@@ -5205,10 +5199,9 @@
       "virality": "Articles dans médias mainstream",
       "mediaCoverage": "Forte",
       "linkType": "destinataire",
-      "platforms": [
-        "twitter",
-        "facebook"
-      ]
+      "platforms": ["twitter",
+        "facebook"],
+      "thematicGroup": ""
     },
     {
       "source": "real-joshua-goldberg_120",
@@ -5221,10 +5214,9 @@
       "virality": "Articles dans médias mainstream",
       "mediaCoverage": "Forte",
       "linkType": "destinataire",
-      "platforms": [
-        "twitter",
-        "facebook"
-      ]
+      "platforms": ["twitter",
+        "facebook"],
+      "thematicGroup": "Antisystem"
     },
     {
       "source": "platform_facebook_126",
@@ -5237,10 +5229,9 @@
       "virality": "Articles dans médias mainstream",
       "mediaCoverage": "Forte",
       "linkType": "destinataire",
-      "platforms": [
-        "twitter",
-        "facebook"
-      ]
+      "platforms": ["twitter",
+        "facebook"],
+      "thematicGroup": ""
     },
     {
       "source": "real-joshua-goldberg_120",
@@ -5253,9 +5244,8 @@
       "virality": "Grande couverture médiatique",
       "mediaCoverage": "Forte",
       "linkType": "destinateur",
-      "platforms": [
-        "twitter"
-      ]
+      "platforms": ["twitter"],
+      "thematicGroup": "Antisystem"
     },
     {
       "source": "platform_twitter_124",
@@ -5268,9 +5258,8 @@
       "virality": "Grande couverture médiatique",
       "mediaCoverage": "Forte",
       "linkType": "destinateur",
-      "platforms": [
-        "twitter"
-      ]
+      "platforms": ["twitter"],
+      "thematicGroup": ""
     },
     {
       "source": "real-joshua-goldberg_120",
@@ -5283,11 +5272,10 @@
       "virality": "",
       "mediaCoverage": "",
       "linkType": "destinateur",
-      "platforms": [
-        "twitter",
+      "platforms": ["twitter",
         "facebook",
-        "e-mail"
-      ]
+        "e-mail"],
+      "thematicGroup": "Antisystem"
     },
     {
       "source": "platform_twitter_124",
@@ -5300,11 +5288,10 @@
       "virality": "",
       "mediaCoverage": "",
       "linkType": "destinateur",
-      "platforms": [
-        "twitter",
+      "platforms": ["twitter",
         "facebook",
-        "e-mail"
-      ]
+        "e-mail"],
+      "thematicGroup": ""
     },
     {
       "source": "real-joshua-goldberg_120",
@@ -5317,11 +5304,10 @@
       "virality": "",
       "mediaCoverage": "",
       "linkType": "destinateur",
-      "platforms": [
-        "twitter",
+      "platforms": ["twitter",
         "facebook",
-        "e-mail"
-      ]
+        "e-mail"],
+      "thematicGroup": "Antisystem"
     },
     {
       "source": "platform_facebook_126",
@@ -5334,11 +5320,10 @@
       "virality": "",
       "mediaCoverage": "",
       "linkType": "destinateur",
-      "platforms": [
-        "twitter",
+      "platforms": ["twitter",
         "facebook",
-        "e-mail"
-      ]
+        "e-mail"],
+      "thematicGroup": ""
     },
     {
       "source": "real-joshua-goldberg_120",
@@ -5351,11 +5336,10 @@
       "virality": "",
       "mediaCoverage": "",
       "linkType": "destinateur",
-      "platforms": [
-        "twitter",
+      "platforms": ["twitter",
         "facebook",
-        "e-mail"
-      ]
+        "e-mail"],
+      "thematicGroup": "Antisystem"
     },
     {
       "source": "platform_e-mail_129",
@@ -5368,11 +5352,10 @@
       "virality": "",
       "mediaCoverage": "",
       "linkType": "destinateur",
-      "platforms": [
-        "twitter",
+      "platforms": ["twitter",
         "facebook",
-        "e-mail"
-      ]
+        "e-mail"],
+      "thematicGroup": ""
     },
     {
       "source": "real-joshua-goldberg_120",
@@ -5385,9 +5368,8 @@
       "virality": "Modérément viral",
       "mediaCoverage": "Moyenne",
       "linkType": "destinataire",
-      "platforms": [
-        "facebook"
-      ]
+      "platforms": ["facebook"],
+      "thematicGroup": "Antisystem"
     },
     {
       "source": "platform_facebook_126",
@@ -5400,9 +5382,8 @@
       "virality": "Modérément viral",
       "mediaCoverage": "Moyenne",
       "linkType": "destinataire",
-      "platforms": [
-        "facebook"
-      ]
+      "platforms": ["facebook"],
+      "thematicGroup": ""
     },
     {
       "source": "real-joshua-goldberg_120",
@@ -5415,9 +5396,8 @@
       "virality": "5K RTs, niche Alt-Right",
       "mediaCoverage": "Faible",
       "linkType": "destinataire",
-      "platforms": [
-        "reddit"
-      ]
+      "platforms": ["reddit"],
+      "thematicGroup": "Antisystem"
     },
     {
       "source": "platform_reddit_132",
@@ -5430,9 +5410,8 @@
       "virality": "5K RTs, niche Alt-Right",
       "mediaCoverage": "Faible",
       "linkType": "destinataire",
-      "platforms": [
-        "reddit"
-      ]
+      "platforms": ["reddit"],
+      "thematicGroup": ""
     },
     {
       "source": "real-joshua-goldberg_120",
@@ -5445,9 +5424,8 @@
       "virality": "Ciblage par faux comptes",
       "mediaCoverage": "Modérée",
       "linkType": "destinataire",
-      "platforms": [
-        "twitter"
-      ]
+      "platforms": ["twitter"],
+      "thematicGroup": "Antisystem"
     },
     {
       "source": "platform_twitter_124",
@@ -5460,9 +5438,8 @@
       "virality": "Ciblage par faux comptes",
       "mediaCoverage": "Modérée",
       "linkType": "destinataire",
-      "platforms": [
-        "twitter"
-      ]
+      "platforms": ["twitter"],
+      "thematicGroup": ""
     },
     {
       "source": "real-joshua-goldberg_120",
@@ -5475,9 +5452,8 @@
       "virality": "",
       "mediaCoverage": "",
       "linkType": "destinataire",
-      "platforms": [
-        "sluthate"
-      ]
+      "platforms": ["sluthate"],
+      "thematicGroup": "Antisystem"
     },
     {
       "source": "platform_sluthate_135",
@@ -5490,9 +5466,8 @@
       "virality": "",
       "mediaCoverage": "",
       "linkType": "destinataire",
-      "platforms": [
-        "sluthate"
-      ]
+      "platforms": ["sluthate"],
+      "thematicGroup": ""
     },
     {
       "source": "real-joshua-goldberg_120",
@@ -5505,10 +5480,9 @@
       "virality": "",
       "mediaCoverage": "",
       "linkType": "destinataire",
-      "platforms": [
-        "e-mail",
-        "stormfront"
-      ]
+      "platforms": ["e-mail",
+        "stormfront"],
+      "thematicGroup": "Antisystem"
     },
     {
       "source": "platform_e-mail_129",
@@ -5521,10 +5495,9 @@
       "virality": "",
       "mediaCoverage": "",
       "linkType": "destinataire",
-      "platforms": [
-        "e-mail",
-        "stormfront"
-      ]
+      "platforms": ["e-mail",
+        "stormfront"],
+      "thematicGroup": ""
     },
     {
       "source": "real-joshua-goldberg_120",
@@ -5537,10 +5510,9 @@
       "virality": "",
       "mediaCoverage": "",
       "linkType": "destinataire",
-      "platforms": [
-        "e-mail",
-        "stormfront"
-      ]
+      "platforms": ["e-mail",
+        "stormfront"],
+      "thematicGroup": "Antisystem"
     },
     {
       "source": "platform_stormfront_137",
@@ -5553,10 +5525,9 @@
       "virality": "",
       "mediaCoverage": "",
       "linkType": "destinataire",
-      "platforms": [
-        "e-mail",
-        "stormfront"
-      ]
+      "platforms": ["e-mail",
+        "stormfront"],
+      "thematicGroup": ""
     },
     {
       "source": "real-joshua-goldberg_120",
@@ -5569,9 +5540,8 @@
       "virality": "",
       "mediaCoverage": "",
       "linkType": "destinataire",
-      "platforms": [
-        "twitter"
-      ]
+      "platforms": ["twitter"],
+      "thematicGroup": "Antisystem"
     },
     {
       "source": "platform_twitter_124",
@@ -5584,9 +5554,8 @@
       "virality": "",
       "mediaCoverage": "",
       "linkType": "destinataire",
-      "platforms": [
-        "twitter"
-      ]
+      "platforms": ["twitter"],
+      "thematicGroup": ""
     },
     {
       "source": "real-joshua-goldberg_120",
@@ -5599,9 +5568,8 @@
       "virality": "",
       "mediaCoverage": "",
       "linkType": "",
-      "platforms": [
-        "sluthate"
-      ]
+      "platforms": ["sluthate"],
+      "thematicGroup": "Antisystem"
     },
     {
       "source": "platform_sluthate_135",
@@ -5614,9 +5582,8 @@
       "virality": "",
       "mediaCoverage": "",
       "linkType": "",
-      "platforms": [
-        "sluthate"
-      ]
+      "platforms": ["sluthate"],
+      "thematicGroup": ""
     },
     {
       "source": "fake-joshua-goldberg_140",
@@ -5624,7 +5591,8 @@
       "value": 1.5,
       "type": "character_platform_connection",
       "isDirect": "Direct",
-      "relationType": "Présence"
+      "relationType": "Présence",
+      "thematicGroup": "Antisystem"
     },
     {
       "source": "kill-all-pakis_142",
@@ -5632,7 +5600,8 @@
       "value": 1.5,
       "type": "character_platform_connection",
       "isDirect": "Direct",
-      "relationType": "Présence"
+      "relationType": "Présence",
+      "thematicGroup": "Nationalists"
     },
     {
       "source": "kill-all-sjws_144",
@@ -5640,7 +5609,8 @@
       "value": 1.5,
       "type": "character_platform_connection",
       "isDirect": "Direct",
-      "relationType": "Présence"
+      "relationType": "Présence",
+      "thematicGroup": "Nationalists"
     },
     {
       "source": "le-cancer-kin_146",
@@ -5648,7 +5618,8 @@
       "value": 1.5,
       "type": "character_platform_connection",
       "isDirect": "Direct",
-      "relationType": "Présence"
+      "relationType": "Présence",
+      "thematicGroup": "Nationalists"
     },
     {
       "source": "madotsuki-the-dreamer_148",
@@ -5656,7 +5627,8 @@
       "value": 1.5,
       "type": "character_platform_connection",
       "isDirect": "Direct",
-      "relationType": "Présence"
+      "relationType": "Présence",
+      "thematicGroup": "Culture"
     },
     {
       "source": "madotsuki-the-dreamer_148",
@@ -5664,7 +5636,8 @@
       "value": 1.5,
       "type": "character_platform_connection",
       "isDirect": "Direct",
-      "relationType": "Présence"
+      "relationType": "Présence",
+      "thematicGroup": "Culture"
     },
     {
       "source": "madotsuki-the-dreamer_148",
@@ -5672,7 +5645,8 @@
       "value": 1.5,
       "type": "character_platform_connection",
       "isDirect": "Direct",
-      "relationType": "Présence"
+      "relationType": "Présence",
+      "thematicGroup": "Culture"
     },
     {
       "source": "may-may-poster_152",
@@ -5680,7 +5654,8 @@
       "value": 1.5,
       "type": "character_platform_connection",
       "isDirect": "Direct",
-      "relationType": "Présence"
+      "relationType": "Présence",
+      "thematicGroup": "Nationalists"
     },
     {
       "source": "may-may-poster_152",
@@ -5688,7 +5663,8 @@
       "value": 1.5,
       "type": "character_platform_connection",
       "isDirect": "Direct",
-      "relationType": "Présence"
+      "relationType": "Présence",
+      "thematicGroup": "Nationalists"
     },
     {
       "source": "metacanadian-420_155",
@@ -5696,7 +5672,8 @@
       "value": 1.5,
       "type": "character_platform_connection",
       "isDirect": "Direct",
-      "relationType": "Présence"
+      "relationType": "Présence",
+      "thematicGroup": "Social justice"
     },
     {
       "source": "metropolis-forever_157",
@@ -5704,7 +5681,8 @@
       "value": 1.5,
       "type": "character_platform_connection",
       "isDirect": "Direct",
-      "relationType": "Présence"
+      "relationType": "Présence",
+      "thematicGroup": "Libertarians"
     },
     {
       "source": "metropolis-forever_157",
@@ -5712,7 +5690,8 @@
       "value": 1.5,
       "type": "character_platform_connection",
       "isDirect": "Direct",
-      "relationType": "Présence"
+      "relationType": "Présence",
+      "thematicGroup": "Libertarians"
     },
     {
       "source": "metropolis-forever_157",
@@ -5720,7 +5699,8 @@
       "value": 1.5,
       "type": "character_platform_connection",
       "isDirect": "Direct",
-      "relationType": "Présence"
+      "relationType": "Présence",
+      "thematicGroup": "Libertarians"
     },
     {
       "source": "metropolis-forever_157",
@@ -5728,7 +5708,8 @@
       "value": 1.5,
       "type": "character_platform_connection",
       "isDirect": "Direct",
-      "relationType": "Présence"
+      "relationType": "Présence",
+      "thematicGroup": "Libertarians"
     },
     {
       "source": "metropolis-forever_157",
@@ -5736,7 +5717,8 @@
       "value": 1.5,
       "type": "character_platform_connection",
       "isDirect": "Direct",
-      "relationType": "Présence"
+      "relationType": "Présence",
+      "thematicGroup": "Libertarians"
     },
     {
       "source": "metropolis-forever_157",
@@ -5744,7 +5726,8 @@
       "value": 1.5,
       "type": "character_platform_connection",
       "isDirect": "Direct",
-      "relationType": "Présence"
+      "relationType": "Présence",
+      "thematicGroup": "Libertarians"
     },
     {
       "source": "metropolis-forever_157",
@@ -5752,7 +5735,8 @@
       "value": 1.5,
       "type": "character_platform_connection",
       "isDirect": "Direct",
-      "relationType": "Présence"
+      "relationType": "Présence",
+      "thematicGroup": "Libertarians"
     },
     {
       "source": "metropolis-forever_157",
@@ -5760,7 +5744,8 @@
       "value": 1.5,
       "type": "character_platform_connection",
       "isDirect": "Direct",
-      "relationType": "Présence"
+      "relationType": "Présence",
+      "thematicGroup": "Libertarians"
     },
     {
       "source": "metropolis-forever_157",
@@ -5768,7 +5753,8 @@
       "value": 1.5,
       "type": "character_platform_connection",
       "isDirect": "Direct",
-      "relationType": "Présence"
+      "relationType": "Présence",
+      "thematicGroup": "Libertarians"
     },
     {
       "source": "metropolis-forever_157",
@@ -5776,7 +5762,8 @@
       "value": 1.5,
       "type": "character_platform_connection",
       "isDirect": "Direct",
-      "relationType": "Présence"
+      "relationType": "Présence",
+      "thematicGroup": "Libertarians"
     },
     {
       "source": "metropolis-forever_157",
@@ -5789,9 +5776,8 @@
       "virality": "Trollé sous faux nom",
       "mediaCoverage": "Modérée",
       "linkType": "destinataire",
-      "platforms": [
-        "e-mail"
-      ]
+      "platforms": ["e-mail"],
+      "thematicGroup": "Libertarians"
     },
     {
       "source": "platform_e-mail_169",
@@ -5804,9 +5790,8 @@
       "virality": "Trollé sous faux nom",
       "mediaCoverage": "Modérée",
       "linkType": "destinataire",
-      "platforms": [
-        "e-mail"
-      ]
+      "platforms": ["e-mail"],
+      "thematicGroup": ""
     },
     {
       "source": "metropolis-forever_157",
@@ -5819,11 +5804,10 @@
       "virality": "Présent dans les médias",
       "mediaCoverage": "Forte",
       "linkType": "destinataire",
-      "platforms": [
-        "twitter",
+      "platforms": ["twitter",
         "e-mail",
-        "the-west-australian"
-      ]
+        "the-west-australian"],
+      "thematicGroup": "Libertarians"
     },
     {
       "source": "platform_twitter_171",
@@ -5836,11 +5820,10 @@
       "virality": "Présent dans les médias",
       "mediaCoverage": "Forte",
       "linkType": "destinataire",
-      "platforms": [
-        "twitter",
+      "platforms": ["twitter",
         "e-mail",
-        "the-west-australian"
-      ]
+        "the-west-australian"],
+      "thematicGroup": ""
     },
     {
       "source": "metropolis-forever_157",
@@ -5853,11 +5836,10 @@
       "virality": "Présent dans les médias",
       "mediaCoverage": "Forte",
       "linkType": "destinataire",
-      "platforms": [
-        "twitter",
+      "platforms": ["twitter",
         "e-mail",
-        "the-west-australian"
-      ]
+        "the-west-australian"],
+      "thematicGroup": "Libertarians"
     },
     {
       "source": "platform_e-mail_169",
@@ -5870,11 +5852,10 @@
       "virality": "Présent dans les médias",
       "mediaCoverage": "Forte",
       "linkType": "destinataire",
-      "platforms": [
-        "twitter",
+      "platforms": ["twitter",
         "e-mail",
-        "the-west-australian"
-      ]
+        "the-west-australian"],
+      "thematicGroup": ""
     },
     {
       "source": "metropolis-forever_157",
@@ -5887,11 +5868,10 @@
       "virality": "Présent dans les médias",
       "mediaCoverage": "Forte",
       "linkType": "destinataire",
-      "platforms": [
-        "twitter",
+      "platforms": ["twitter",
         "e-mail",
-        "the-west-australian"
-      ]
+        "the-west-australian"],
+      "thematicGroup": "Libertarians"
     },
     {
       "source": "platform_the-west-australian_172",
@@ -5904,11 +5884,10 @@
       "virality": "Présent dans les médias",
       "mediaCoverage": "Forte",
       "linkType": "destinataire",
-      "platforms": [
-        "twitter",
+      "platforms": ["twitter",
         "e-mail",
-        "the-west-australian"
-      ]
+        "the-west-australian"],
+      "thematicGroup": ""
     },
     {
       "source": "metropolis-forever_157",
@@ -5921,9 +5900,8 @@
       "virality": "Enquête médiatique modérée",
       "mediaCoverage": "Moyenne",
       "linkType": "destinataire",
-      "platforms": [
-        "e-mail"
-      ]
+      "platforms": ["e-mail"],
+      "thematicGroup": "Libertarians"
     },
     {
       "source": "platform_e-mail_169",
@@ -5936,9 +5914,8 @@
       "virality": "Enquête médiatique modérée",
       "mediaCoverage": "Moyenne",
       "linkType": "destinataire",
-      "platforms": [
-        "e-mail"
-      ]
+      "platforms": ["e-mail"],
+      "thematicGroup": ""
     },
     {
       "source": "emily-americana_174",
@@ -5946,7 +5923,8 @@
       "value": 1.5,
       "type": "character_platform_connection",
       "isDirect": "Direct",
-      "relationType": "Présence"
+      "relationType": "Présence",
+      "thematicGroup": "Libertarians"
     },
     {
       "source": "metropolis-forever_157",
@@ -5959,9 +5937,8 @@
       "virality": "",
       "mediaCoverage": "",
       "linkType": "destinataire",
-      "platforms": [
-        "reddit"
-      ]
+      "platforms": ["reddit"],
+      "thematicGroup": "Libertarians"
     },
     {
       "source": "platform_reddit_175",
@@ -5974,9 +5951,8 @@
       "virality": "",
       "mediaCoverage": "",
       "linkType": "destinataire",
-      "platforms": [
-        "reddit"
-      ]
+      "platforms": ["reddit"],
+      "thematicGroup": ""
     },
     {
       "source": "tanya-cohen_176",
@@ -5984,7 +5960,8 @@
       "value": 1.5,
       "type": "character_platform_connection",
       "isDirect": "Direct",
-      "relationType": "Présence"
+      "relationType": "Présence",
+      "thematicGroup": "Social justice"
     },
     {
       "source": "tanya-cohen_176",
@@ -5992,7 +5969,8 @@
       "value": 1.5,
       "type": "character_platform_connection",
       "isDirect": "Direct",
-      "relationType": "Présence"
+      "relationType": "Présence",
+      "thematicGroup": "Social justice"
     },
     {
       "source": "tanya-cohen_176",
@@ -6000,7 +5978,8 @@
       "value": 1.5,
       "type": "character_platform_connection",
       "isDirect": "Direct",
-      "relationType": "Présence"
+      "relationType": "Présence",
+      "thematicGroup": "Social justice"
     },
     {
       "source": "tanya-cohen_176",
@@ -6008,7 +5987,8 @@
       "value": 1.5,
       "type": "character_platform_connection",
       "isDirect": "Direct",
-      "relationType": "Présence"
+      "relationType": "Présence",
+      "thematicGroup": "Social justice"
     },
     {
       "source": "metropolis-forever_157",
@@ -6021,9 +6001,8 @@
       "virality": "",
       "mediaCoverage": "",
       "linkType": "destinataire",
-      "platforms": [
-        "twitter"
-      ]
+      "platforms": ["twitter"],
+      "thematicGroup": "Libertarians"
     },
     {
       "source": "platform_twitter_171",
@@ -6036,9 +6015,8 @@
       "virality": "",
       "mediaCoverage": "",
       "linkType": "destinataire",
-      "platforms": [
-        "twitter"
-      ]
+      "platforms": ["twitter"],
+      "thematicGroup": ""
     },
     {
       "source": "amina-blackberry_179",
@@ -6046,7 +6024,8 @@
       "value": 1.5,
       "type": "character_platform_connection",
       "isDirect": "Direct",
-      "relationType": "Présence"
+      "relationType": "Présence",
+      "thematicGroup": "Conservatives"
     },
     {
       "source": "amina-blackberry_179",
@@ -6054,7 +6033,8 @@
       "value": 1.5,
       "type": "character_platform_connection",
       "isDirect": "Direct",
-      "relationType": "Présence"
+      "relationType": "Présence",
+      "thematicGroup": "Conservatives"
     },
     {
       "source": "metropolis-forever_157",
@@ -6067,9 +6047,8 @@
       "virality": "",
       "mediaCoverage": "",
       "linkType": "destinataire",
-      "platforms": [
-        "twitter"
-      ]
+      "platforms": ["twitter"],
+      "thematicGroup": "Libertarians"
     },
     {
       "source": "platform_twitter_171",
@@ -6082,9 +6061,8 @@
       "virality": "",
       "mediaCoverage": "",
       "linkType": "destinataire",
-      "platforms": [
-        "twitter"
-      ]
+      "platforms": ["twitter"],
+      "thematicGroup": ""
     },
     {
       "source": "death-to-sjws_180",
@@ -6092,7 +6070,8 @@
       "value": 1.5,
       "type": "character_platform_connection",
       "isDirect": "Direct",
-      "relationType": "Présence"
+      "relationType": "Présence",
+      "thematicGroup": "Nationalists"
     },
     {
       "source": "metropolis-forever_157",
@@ -6105,9 +6084,8 @@
       "virality": "",
       "mediaCoverage": "",
       "linkType": "destinataire",
-      "platforms": [
-        "reddit"
-      ]
+      "platforms": ["reddit"],
+      "thematicGroup": "Libertarians"
     },
     {
       "source": "platform_reddit_175",
@@ -6120,9 +6098,8 @@
       "virality": "",
       "mediaCoverage": "",
       "linkType": "destinataire",
-      "platforms": [
-        "reddit"
-      ]
+      "platforms": ["reddit"],
+      "thematicGroup": ""
     },
     {
       "source": "michael-slay_181",
@@ -6130,7 +6107,8 @@
       "value": 1.5,
       "type": "character_platform_connection",
       "isDirect": "Direct",
-      "relationType": "Présence"
+      "relationType": "Présence",
+      "thematicGroup": "Nationalists"
     },
     {
       "source": "michael-slay_181",
@@ -6138,7 +6116,8 @@
       "value": 1.5,
       "type": "character_platform_connection",
       "isDirect": "Direct",
-      "relationType": "Présence"
+      "relationType": "Présence",
+      "thematicGroup": "Nationalists"
     },
     {
       "source": "michael-slay_181",
@@ -6146,7 +6125,8 @@
       "value": 1.5,
       "type": "character_platform_connection",
       "isDirect": "Direct",
-      "relationType": "Présence"
+      "relationType": "Présence",
+      "thematicGroup": "Nationalists"
     },
     {
       "source": "michael-slay_181",
@@ -6159,9 +6139,8 @@
       "virality": "10K RTs / Articles niche",
       "mediaCoverage": "Modérée",
       "linkType": "destinataire",
-      "platforms": [
-        "dailystormer"
-      ]
+      "platforms": ["dailystormer"],
+      "thematicGroup": "Nationalists"
     },
     {
       "source": "platform_dailystormer_184",
@@ -6174,9 +6153,8 @@
       "virality": "10K RTs / Articles niche",
       "mediaCoverage": "Modérée",
       "linkType": "destinataire",
-      "platforms": [
-        "dailystormer"
-      ]
+      "platforms": ["dailystormer"],
+      "thematicGroup": ""
     },
     {
       "source": "michael-slay_181",
@@ -6189,9 +6167,8 @@
       "virality": "Publication sur site néo-nazi influent",
       "mediaCoverage": "Faible",
       "linkType": "destinataire",
-      "platforms": [
-        "dailystormer"
-      ]
+      "platforms": ["dailystormer"],
+      "thematicGroup": "Nationalists"
     },
     {
       "source": "platform_dailystormer_184",
@@ -6204,9 +6181,8 @@
       "virality": "Publication sur site néo-nazi influent",
       "mediaCoverage": "Faible",
       "linkType": "destinataire",
-      "platforms": [
-        "dailystormer"
-      ]
+      "platforms": ["dailystormer"],
+      "thematicGroup": ""
     },
     {
       "source": "michael-slay_181",
@@ -6219,10 +6195,9 @@
       "virality": "",
       "mediaCoverage": "",
       "linkType": "destinataire",
-      "platforms": [
-        "stormfront",
-        "dailystormer"
-      ]
+      "platforms": ["stormfront",
+        "dailystormer"],
+      "thematicGroup": "Nationalists"
     },
     {
       "source": "platform_stormfront_188",
@@ -6235,10 +6210,9 @@
       "virality": "",
       "mediaCoverage": "",
       "linkType": "destinataire",
-      "platforms": [
-        "stormfront",
-        "dailystormer"
-      ]
+      "platforms": ["stormfront",
+        "dailystormer"],
+      "thematicGroup": ""
     },
     {
       "source": "michael-slay_181",
@@ -6251,10 +6225,9 @@
       "virality": "",
       "mediaCoverage": "",
       "linkType": "destinataire",
-      "platforms": [
-        "stormfront",
-        "dailystormer"
-      ]
+      "platforms": ["stormfront",
+        "dailystormer"],
+      "thematicGroup": "Nationalists"
     },
     {
       "source": "platform_dailystormer_184",
@@ -6267,10 +6240,9 @@
       "virality": "",
       "mediaCoverage": "",
       "linkType": "destinataire",
-      "platforms": [
-        "stormfront",
-        "dailystormer"
-      ]
+      "platforms": ["stormfront",
+        "dailystormer"],
+      "thematicGroup": ""
     },
     {
       "source": "tanya-cohen_189",
@@ -6278,7 +6250,8 @@
       "value": 1.5,
       "type": "character_platform_connection",
       "isDirect": "Direct",
-      "relationType": "Présence"
+      "relationType": "Présence",
+      "thematicGroup": "Social justice"
     },
     {
       "source": "tanya-cohen_189",
@@ -6286,7 +6259,8 @@
       "value": 1.5,
       "type": "character_platform_connection",
       "isDirect": "Direct",
-      "relationType": "Présence"
+      "relationType": "Présence",
+      "thematicGroup": "Social justice"
     },
     {
       "source": "tanya-cohen_189",
@@ -6294,7 +6268,8 @@
       "value": 1.5,
       "type": "character_platform_connection",
       "isDirect": "Direct",
-      "relationType": "Présence"
+      "relationType": "Présence",
+      "thematicGroup": "Social justice"
     },
     {
       "source": "tanya-cohen_189",
@@ -6302,7 +6277,8 @@
       "value": 1.5,
       "type": "character_platform_connection",
       "isDirect": "Direct",
-      "relationType": "Présence"
+      "relationType": "Présence",
+      "thematicGroup": "Social justice"
     },
     {
       "source": "michael-slay_181",
@@ -6315,10 +6291,9 @@
       "virality": "",
       "mediaCoverage": "",
       "linkType": "destinataire",
-      "platforms": [
-        "stormfront",
-        "dailystormer"
-      ]
+      "platforms": ["stormfront",
+        "dailystormer"],
+      "thematicGroup": "Nationalists"
     },
     {
       "source": "platform_stormfront_188",
@@ -6331,10 +6306,9 @@
       "virality": "",
       "mediaCoverage": "",
       "linkType": "destinataire",
-      "platforms": [
-        "stormfront",
-        "dailystormer"
-      ]
+      "platforms": ["stormfront",
+        "dailystormer"],
+      "thematicGroup": ""
     },
     {
       "source": "michael-slay_181",
@@ -6347,10 +6321,9 @@
       "virality": "",
       "mediaCoverage": "",
       "linkType": "destinataire",
-      "platforms": [
-        "stormfront",
-        "dailystormer"
-      ]
+      "platforms": ["stormfront",
+        "dailystormer"],
+      "thematicGroup": "Nationalists"
     },
     {
       "source": "platform_dailystormer_184",
@@ -6363,10 +6336,9 @@
       "virality": "",
       "mediaCoverage": "",
       "linkType": "destinataire",
-      "platforms": [
-        "stormfront",
-        "dailystormer"
-      ]
+      "platforms": ["stormfront",
+        "dailystormer"],
+      "thematicGroup": ""
     },
     {
       "source": "emily-americana_193",
@@ -6374,7 +6346,8 @@
       "value": 1.5,
       "type": "character_platform_connection",
       "isDirect": "Direct",
-      "relationType": "Présence"
+      "relationType": "Présence",
+      "thematicGroup": "Libertarians"
     },
     {
       "source": "michael-slay_181",
@@ -6387,10 +6360,9 @@
       "virality": "",
       "mediaCoverage": "",
       "linkType": "destinataire",
-      "platforms": [
-        "stormfront",
-        "dailystormer"
-      ]
+      "platforms": ["stormfront",
+        "dailystormer"],
+      "thematicGroup": "Nationalists"
     },
     {
       "source": "platform_stormfront_188",
@@ -6403,10 +6375,9 @@
       "virality": "",
       "mediaCoverage": "",
       "linkType": "destinataire",
-      "platforms": [
-        "stormfront",
-        "dailystormer"
-      ]
+      "platforms": ["stormfront",
+        "dailystormer"],
+      "thematicGroup": ""
     },
     {
       "source": "michael-slay_181",
@@ -6419,10 +6390,9 @@
       "virality": "",
       "mediaCoverage": "",
       "linkType": "destinataire",
-      "platforms": [
-        "stormfront",
-        "dailystormer"
-      ]
+      "platforms": ["stormfront",
+        "dailystormer"],
+      "thematicGroup": "Nationalists"
     },
     {
       "source": "platform_dailystormer_184",
@@ -6435,10 +6405,9 @@
       "virality": "",
       "mediaCoverage": "",
       "linkType": "destinataire",
-      "platforms": [
-        "stormfront",
-        "dailystormer"
-      ]
+      "platforms": ["stormfront",
+        "dailystormer"],
+      "thematicGroup": ""
     },
     {
       "source": "nuke-europe_194",
@@ -6446,7 +6415,8 @@
       "value": 1.5,
       "type": "character_platform_connection",
       "isDirect": "Direct",
-      "relationType": "Présence"
+      "relationType": "Présence",
+      "thematicGroup": "Nationalists"
     },
     {
       "source": "michael-slay_181",
@@ -6459,10 +6429,9 @@
       "virality": "",
       "mediaCoverage": "",
       "linkType": "destinataire",
-      "platforms": [
-        "stormfront",
-        "dailystormer"
-      ]
+      "platforms": ["stormfront",
+        "dailystormer"],
+      "thematicGroup": "Nationalists"
     },
     {
       "source": "platform_stormfront_188",
@@ -6475,10 +6444,9 @@
       "virality": "",
       "mediaCoverage": "",
       "linkType": "destinataire",
-      "platforms": [
-        "stormfront",
-        "dailystormer"
-      ]
+      "platforms": ["stormfront",
+        "dailystormer"],
+      "thematicGroup": ""
     },
     {
       "source": "michael-slay_181",
@@ -6491,10 +6459,9 @@
       "virality": "",
       "mediaCoverage": "",
       "linkType": "destinataire",
-      "platforms": [
-        "stormfront",
-        "dailystormer"
-      ]
+      "platforms": ["stormfront",
+        "dailystormer"],
+      "thematicGroup": "Nationalists"
     },
     {
       "source": "platform_dailystormer_184",
@@ -6507,10 +6474,9 @@
       "virality": "",
       "mediaCoverage": "",
       "linkType": "destinataire",
-      "platforms": [
-        "stormfront",
-        "dailystormer"
-      ]
+      "platforms": ["stormfront",
+        "dailystormer"],
+      "thematicGroup": ""
     },
     {
       "source": "australi-witness_195",
@@ -6518,7 +6484,8 @@
       "value": 1.5,
       "type": "character_platform_connection",
       "isDirect": "Direct",
-      "relationType": "Présence"
+      "relationType": "Présence",
+      "thematicGroup": "Religious"
     },
     {
       "source": "australi-witness_195",
@@ -6526,7 +6493,8 @@
       "value": 1.5,
       "type": "character_platform_connection",
       "isDirect": "Direct",
-      "relationType": "Présence"
+      "relationType": "Présence",
+      "thematicGroup": "Religious"
     },
     {
       "source": "australi-witness_195",
@@ -6534,7 +6502,8 @@
       "value": 1.5,
       "type": "character_platform_connection",
       "isDirect": "Direct",
-      "relationType": "Présence"
+      "relationType": "Présence",
+      "thematicGroup": "Religious"
     },
     {
       "source": "australi-witness_195",
@@ -6542,7 +6511,8 @@
       "value": 1.5,
       "type": "character_platform_connection",
       "isDirect": "Direct",
-      "relationType": "Présence"
+      "relationType": "Présence",
+      "thematicGroup": "Religious"
     },
     {
       "source": "australi-witness_195",
@@ -6550,7 +6520,8 @@
       "value": 1.5,
       "type": "character_platform_connection",
       "isDirect": "Direct",
-      "relationType": "Présence"
+      "relationType": "Présence",
+      "thematicGroup": "Religious"
     },
     {
       "source": "michael-slay_181",
@@ -6563,10 +6534,9 @@
       "virality": "",
       "mediaCoverage": "",
       "linkType": "destinataire",
-      "platforms": [
-        "stormfront",
-        "dailystormer"
-      ]
+      "platforms": ["stormfront",
+        "dailystormer"],
+      "thematicGroup": "Nationalists"
     },
     {
       "source": "platform_stormfront_188",
@@ -6579,10 +6549,9 @@
       "virality": "",
       "mediaCoverage": "",
       "linkType": "destinataire",
-      "platforms": [
-        "stormfront",
-        "dailystormer"
-      ]
+      "platforms": ["stormfront",
+        "dailystormer"],
+      "thematicGroup": ""
     },
     {
       "source": "michael-slay_181",
@@ -6595,10 +6564,9 @@
       "virality": "",
       "mediaCoverage": "",
       "linkType": "destinataire",
-      "platforms": [
-        "stormfront",
-        "dailystormer"
-      ]
+      "platforms": ["stormfront",
+        "dailystormer"],
+      "thematicGroup": "Nationalists"
     },
     {
       "source": "platform_dailystormer_184",
@@ -6611,10 +6579,9 @@
       "virality": "",
       "mediaCoverage": "",
       "linkType": "destinataire",
-      "platforms": [
-        "stormfront",
-        "dailystormer"
-      ]
+      "platforms": ["stormfront",
+        "dailystormer"],
+      "thematicGroup": ""
     },
     {
       "source": "australi-witness_195",
@@ -6622,7 +6589,8 @@
       "value": 1.5,
       "type": "character_platform_connection",
       "isDirect": "Direct",
-      "relationType": "Présence"
+      "relationType": "Présence",
+      "thematicGroup": "Religious"
     },
     {
       "source": "australi-witness_195",
@@ -6630,7 +6598,8 @@
       "value": 1.5,
       "type": "character_platform_connection",
       "isDirect": "Direct",
-      "relationType": "Présence"
+      "relationType": "Présence",
+      "thematicGroup": "Religious"
     },
     {
       "source": "australi-witness_195",
@@ -6638,7 +6607,8 @@
       "value": 1.5,
       "type": "character_platform_connection",
       "isDirect": "Direct",
-      "relationType": "Présence"
+      "relationType": "Présence",
+      "thematicGroup": "Religious"
     },
     {
       "source": "australi-witness_195",
@@ -6646,7 +6616,8 @@
       "value": 1.5,
       "type": "character_platform_connection",
       "isDirect": "Direct",
-      "relationType": "Présence"
+      "relationType": "Présence",
+      "thematicGroup": "Religious"
     },
     {
       "source": "australi-witness_195",
@@ -6654,7 +6625,8 @@
       "value": 1.5,
       "type": "character_platform_connection",
       "isDirect": "Direct",
-      "relationType": "Présence"
+      "relationType": "Présence",
+      "thematicGroup": "Religious"
     },
     {
       "source": "michael-slay_181",
@@ -6667,9 +6639,8 @@
       "virality": "",
       "mediaCoverage": "",
       "linkType": "destinataire",
-      "platforms": [
-        "dailystormer"
-      ]
+      "platforms": ["dailystormer"],
+      "thematicGroup": "Nationalists"
     },
     {
       "source": "platform_dailystormer_184",
@@ -6682,9 +6653,8 @@
       "virality": "",
       "mediaCoverage": "",
       "linkType": "destinataire",
-      "platforms": [
-        "dailystormer"
-      ]
+      "platforms": ["dailystormer"],
+      "thematicGroup": ""
     },
     {
       "source": "micronesia-gal_201",
@@ -6692,7 +6662,8 @@
       "value": 1.5,
       "type": "character_platform_connection",
       "isDirect": "Direct",
-      "relationType": "Présence"
+      "relationType": "Présence",
+      "thematicGroup": "Culture"
     },
     {
       "source": "moon-metropolis_203",
@@ -6700,7 +6671,8 @@
       "value": 1.5,
       "type": "character_platform_connection",
       "isDirect": "Direct",
-      "relationType": "Présence"
+      "relationType": "Présence",
+      "thematicGroup": "Libertarians"
     },
     {
       "source": "moon-metropolis_203",
@@ -6708,7 +6680,8 @@
       "value": 1.5,
       "type": "character_platform_connection",
       "isDirect": "Direct",
-      "relationType": "Présence"
+      "relationType": "Présence",
+      "thematicGroup": "Libertarians"
     },
     {
       "source": "moon-metropolis_203",
@@ -6716,7 +6689,8 @@
       "value": 1.5,
       "type": "character_platform_connection",
       "isDirect": "Direct",
-      "relationType": "Présence"
+      "relationType": "Présence",
+      "thematicGroup": "Libertarians"
     },
     {
       "source": "moon-metropolis_203",
@@ -6724,7 +6698,8 @@
       "value": 1.5,
       "type": "character_platform_connection",
       "isDirect": "Direct",
-      "relationType": "Présence"
+      "relationType": "Présence",
+      "thematicGroup": "Libertarians"
     },
     {
       "source": "moon-metropolis_203",
@@ -6732,7 +6707,8 @@
       "value": 1.5,
       "type": "character_platform_connection",
       "isDirect": "Direct",
-      "relationType": "Présence"
+      "relationType": "Présence",
+      "thematicGroup": "Libertarians"
     },
     {
       "source": "moon-metropolis_203",
@@ -6740,7 +6716,8 @@
       "value": 1.5,
       "type": "character_platform_connection",
       "isDirect": "Direct",
-      "relationType": "Présence"
+      "relationType": "Présence",
+      "thematicGroup": "Libertarians"
     },
     {
       "source": "moon-metropolis_203",
@@ -6748,7 +6725,8 @@
       "value": 1.5,
       "type": "character_platform_connection",
       "isDirect": "Direct",
-      "relationType": "Présence"
+      "relationType": "Présence",
+      "thematicGroup": "Libertarians"
     },
     {
       "source": "moon-metropolis_203",
@@ -6761,9 +6739,8 @@
       "virality": "Fort engagement Reddit / Twitter",
       "mediaCoverage": "Forte",
       "linkType": "destinataire",
-      "platforms": [
-        "twitter"
-      ]
+      "platforms": ["twitter"],
+      "thematicGroup": "Libertarians"
     },
     {
       "source": "platform_twitter_210",
@@ -6776,9 +6753,8 @@
       "virality": "Fort engagement Reddit / Twitter",
       "mediaCoverage": "Forte",
       "linkType": "destinataire",
-      "platforms": [
-        "twitter"
-      ]
+      "platforms": ["twitter"],
+      "thematicGroup": ""
     },
     {
       "source": "moon-metropolis_203",
@@ -6791,9 +6767,8 @@
       "virality": "10K RTs",
       "mediaCoverage": "Modérée",
       "linkType": "destinataire",
-      "platforms": [
-        "twitter"
-      ]
+      "platforms": ["twitter"],
+      "thematicGroup": "Libertarians"
     },
     {
       "source": "platform_twitter_210",
@@ -6806,9 +6781,8 @@
       "virality": "10K RTs",
       "mediaCoverage": "Modérée",
       "linkType": "destinataire",
-      "platforms": [
-        "twitter"
-      ]
+      "platforms": ["twitter"],
+      "thematicGroup": ""
     },
     {
       "source": "moon-metropolis_203",
@@ -6821,9 +6795,8 @@
       "virality": "",
       "mediaCoverage": "",
       "linkType": "destinateur",
-      "platforms": [
-        "twitter"
-      ]
+      "platforms": ["twitter"],
+      "thematicGroup": "Libertarians"
     },
     {
       "source": "platform_twitter_210",
@@ -6836,9 +6809,8 @@
       "virality": "",
       "mediaCoverage": "",
       "linkType": "destinateur",
-      "platforms": [
-        "twitter"
-      ]
+      "platforms": ["twitter"],
+      "thematicGroup": ""
     },
     {
       "source": "moon-metropolis_203",
@@ -6851,9 +6823,8 @@
       "virality": "",
       "mediaCoverage": "",
       "linkType": "destinateur",
-      "platforms": [
-        "twitter"
-      ]
+      "platforms": ["twitter"],
+      "thematicGroup": "Libertarians"
     },
     {
       "source": "platform_twitter_210",
@@ -6866,9 +6837,8 @@
       "virality": "",
       "mediaCoverage": "",
       "linkType": "destinateur",
-      "platforms": [
-        "twitter"
-      ]
+      "platforms": ["twitter"],
+      "thematicGroup": ""
     },
     {
       "source": "moon-metropolis_203",
@@ -6881,9 +6851,8 @@
       "virality": "Couverture internationale",
       "mediaCoverage": "Forte",
       "linkType": "destinataire",
-      "platforms": [
-        "e-mail"
-      ]
+      "platforms": ["e-mail"],
+      "thematicGroup": "Libertarians"
     },
     {
       "source": "platform_e-mail_216",
@@ -6896,9 +6865,8 @@
       "virality": "Couverture internationale",
       "mediaCoverage": "Forte",
       "linkType": "destinataire",
-      "platforms": [
-        "e-mail"
-      ]
+      "platforms": ["e-mail"],
+      "thematicGroup": ""
     },
     {
       "source": "moon-metropolis_203",
@@ -6911,9 +6879,8 @@
       "virality": "Influent dans niche extrême-droite",
       "mediaCoverage": "Faible",
       "linkType": "destinataire",
-      "platforms": [
-        "twitter"
-      ]
+      "platforms": ["twitter"],
+      "thematicGroup": "Libertarians"
     },
     {
       "source": "platform_twitter_210",
@@ -6926,9 +6893,8 @@
       "virality": "Influent dans niche extrême-droite",
       "mediaCoverage": "Faible",
       "linkType": "destinataire",
-      "platforms": [
-        "twitter"
-      ]
+      "platforms": ["twitter"],
+      "thematicGroup": ""
     },
     {
       "source": "moon-metropolis_203",
@@ -6941,9 +6907,8 @@
       "virality": "Article niche",
       "mediaCoverage": "Modérée",
       "linkType": "destinataire",
-      "platforms": [
-        "e-mail"
-      ]
+      "platforms": ["e-mail"],
+      "thematicGroup": "Libertarians"
     },
     {
       "source": "platform_e-mail_216",
@@ -6956,9 +6921,8 @@
       "virality": "Article niche",
       "mediaCoverage": "Modérée",
       "linkType": "destinataire",
-      "platforms": [
-        "e-mail"
-      ]
+      "platforms": ["e-mail"],
+      "thematicGroup": ""
     },
     {
       "source": "moon-metropolis_203",
@@ -6971,9 +6935,8 @@
       "virality": "Publication niche",
       "mediaCoverage": "Modérée",
       "linkType": "destinataire",
-      "platforms": [
-        "e-mail"
-      ]
+      "platforms": ["e-mail"],
+      "thematicGroup": "Libertarians"
     },
     {
       "source": "platform_e-mail_216",
@@ -6986,9 +6949,8 @@
       "virality": "Publication niche",
       "mediaCoverage": "Modérée",
       "linkType": "destinataire",
-      "platforms": [
-        "e-mail"
-      ]
+      "platforms": ["e-mail"],
+      "thematicGroup": ""
     },
     {
       "source": "moon-metropolis_203",
@@ -7001,10 +6963,9 @@
       "virality": "Couverture dans des journaux nationaux",
       "mediaCoverage": "Forte",
       "linkType": "destinataire",
-      "platforms": [
-        "e-mail",
-        "twitter"
-      ]
+      "platforms": ["e-mail",
+        "twitter"],
+      "thematicGroup": "Libertarians"
     },
     {
       "source": "platform_e-mail_216",
@@ -7017,10 +6978,9 @@
       "virality": "Couverture dans des journaux nationaux",
       "mediaCoverage": "Forte",
       "linkType": "destinataire",
-      "platforms": [
-        "e-mail",
-        "twitter"
-      ]
+      "platforms": ["e-mail",
+        "twitter"],
+      "thematicGroup": ""
     },
     {
       "source": "moon-metropolis_203",
@@ -7033,10 +6993,9 @@
       "virality": "Couverture dans des journaux nationaux",
       "mediaCoverage": "Forte",
       "linkType": "destinataire",
-      "platforms": [
-        "e-mail",
-        "twitter"
-      ]
+      "platforms": ["e-mail",
+        "twitter"],
+      "thematicGroup": "Libertarians"
     },
     {
       "source": "platform_twitter_210",
@@ -7049,10 +7008,9 @@
       "virality": "Couverture dans des journaux nationaux",
       "mediaCoverage": "Forte",
       "linkType": "destinataire",
-      "platforms": [
-        "e-mail",
-        "twitter"
-      ]
+      "platforms": ["e-mail",
+        "twitter"],
+      "thematicGroup": ""
     },
     {
       "source": "moon-metropolis_203",
@@ -7065,9 +7023,8 @@
       "virality": "Menace en ligne",
       "mediaCoverage": "Forte",
       "linkType": "destinataire",
-      "platforms": [
-        "e-mail"
-      ]
+      "platforms": ["e-mail"],
+      "thematicGroup": "Libertarians"
     },
     {
       "source": "platform_e-mail_216",
@@ -7080,9 +7037,8 @@
       "virality": "Menace en ligne",
       "mediaCoverage": "Forte",
       "linkType": "destinataire",
-      "platforms": [
-        "e-mail"
-      ]
+      "platforms": ["e-mail"],
+      "thematicGroup": ""
     },
     {
       "source": "moon-metropolis_203",
@@ -7095,10 +7051,9 @@
       "virality": "Relation de proximité, influence directe",
       "mediaCoverage": "Moyenne",
       "linkType": "destinataire",
-      "platforms": [
-        "e-mail",
-        "twitter"
-      ]
+      "platforms": ["e-mail",
+        "twitter"],
+      "thematicGroup": "Libertarians"
     },
     {
       "source": "platform_e-mail_216",
@@ -7111,10 +7066,9 @@
       "virality": "Relation de proximité, influence directe",
       "mediaCoverage": "Moyenne",
       "linkType": "destinataire",
-      "platforms": [
-        "e-mail",
-        "twitter"
-      ]
+      "platforms": ["e-mail",
+        "twitter"],
+      "thematicGroup": ""
     },
     {
       "source": "moon-metropolis_203",
@@ -7127,10 +7081,9 @@
       "virality": "Relation de proximité, influence directe",
       "mediaCoverage": "Moyenne",
       "linkType": "destinataire",
-      "platforms": [
-        "e-mail",
-        "twitter"
-      ]
+      "platforms": ["e-mail",
+        "twitter"],
+      "thematicGroup": "Libertarians"
     },
     {
       "source": "platform_twitter_210",
@@ -7143,10 +7096,9 @@
       "virality": "Relation de proximité, influence directe",
       "mediaCoverage": "Moyenne",
       "linkType": "destinataire",
-      "platforms": [
-        "e-mail",
-        "twitter"
-      ]
+      "platforms": ["e-mail",
+        "twitter"],
+      "thematicGroup": ""
     },
     {
       "source": "emily-americana_223",
@@ -7154,7 +7106,8 @@
       "value": 1.5,
       "type": "character_platform_connection",
       "isDirect": "Direct",
-      "relationType": "Présence"
+      "relationType": "Présence",
+      "thematicGroup": "Libertarians"
     },
     {
       "source": "moon-metropolis_203",
@@ -7167,9 +7120,8 @@
       "virality": "",
       "mediaCoverage": "",
       "linkType": "destinataire",
-      "platforms": [
-        "reddit"
-      ]
+      "platforms": ["reddit"],
+      "thematicGroup": "Libertarians"
     },
     {
       "source": "platform_reddit_206",
@@ -7182,9 +7134,8 @@
       "virality": "",
       "mediaCoverage": "",
       "linkType": "destinataire",
-      "platforms": [
-        "reddit"
-      ]
+      "platforms": ["reddit"],
+      "thematicGroup": ""
     },
     {
       "source": "tanya-cohen_224",
@@ -7192,7 +7143,8 @@
       "value": 1.5,
       "type": "character_platform_connection",
       "isDirect": "Direct",
-      "relationType": "Présence"
+      "relationType": "Présence",
+      "thematicGroup": "Social justice"
     },
     {
       "source": "tanya-cohen_224",
@@ -7200,7 +7152,8 @@
       "value": 1.5,
       "type": "character_platform_connection",
       "isDirect": "Direct",
-      "relationType": "Présence"
+      "relationType": "Présence",
+      "thematicGroup": "Social justice"
     },
     {
       "source": "tanya-cohen_224",
@@ -7208,7 +7161,8 @@
       "value": 1.5,
       "type": "character_platform_connection",
       "isDirect": "Direct",
-      "relationType": "Présence"
+      "relationType": "Présence",
+      "thematicGroup": "Social justice"
     },
     {
       "source": "tanya-cohen_224",
@@ -7216,7 +7170,8 @@
       "value": 1.5,
       "type": "character_platform_connection",
       "isDirect": "Direct",
-      "relationType": "Présence"
+      "relationType": "Présence",
+      "thematicGroup": "Social justice"
     },
     {
       "source": "moon-metropolis_203",
@@ -7229,9 +7184,8 @@
       "virality": "",
       "mediaCoverage": "",
       "linkType": "destinataire",
-      "platforms": [
-        "twitter"
-      ]
+      "platforms": ["twitter"],
+      "thematicGroup": "Libertarians"
     },
     {
       "source": "platform_twitter_210",
@@ -7244,9 +7198,8 @@
       "virality": "",
       "mediaCoverage": "",
       "linkType": "destinataire",
-      "platforms": [
-        "twitter"
-      ]
+      "platforms": ["twitter"],
+      "thematicGroup": ""
     },
     {
       "source": "amina-blackberry_227",
@@ -7254,7 +7207,8 @@
       "value": 1.5,
       "type": "character_platform_connection",
       "isDirect": "Direct",
-      "relationType": "Présence"
+      "relationType": "Présence",
+      "thematicGroup": "Conservatives"
     },
     {
       "source": "amina-blackberry_227",
@@ -7262,7 +7216,8 @@
       "value": 1.5,
       "type": "character_platform_connection",
       "isDirect": "Direct",
-      "relationType": "Présence"
+      "relationType": "Présence",
+      "thematicGroup": "Conservatives"
     },
     {
       "source": "moon-metropolis_203",
@@ -7275,9 +7230,8 @@
       "virality": "",
       "mediaCoverage": "",
       "linkType": "destinataire",
-      "platforms": [
-        "twitter"
-      ]
+      "platforms": ["twitter"],
+      "thematicGroup": "Libertarians"
     },
     {
       "source": "platform_twitter_210",
@@ -7290,9 +7244,8 @@
       "virality": "",
       "mediaCoverage": "",
       "linkType": "destinataire",
-      "platforms": [
-        "twitter"
-      ]
+      "platforms": ["twitter"],
+      "thematicGroup": ""
     },
     {
       "source": "death-to-sjws_228",
@@ -7300,7 +7253,8 @@
       "value": 1.5,
       "type": "character_platform_connection",
       "isDirect": "Direct",
-      "relationType": "Présence"
+      "relationType": "Présence",
+      "thematicGroup": "Nationalists"
     },
     {
       "source": "moon-metropolis_203",
@@ -7313,9 +7267,8 @@
       "virality": "",
       "mediaCoverage": "",
       "linkType": "destinataire",
-      "platforms": [
-        "reddit"
-      ]
+      "platforms": ["reddit"],
+      "thematicGroup": "Libertarians"
     },
     {
       "source": "platform_reddit_206",
@@ -7328,9 +7281,8 @@
       "virality": "",
       "mediaCoverage": "",
       "linkType": "destinataire",
-      "platforms": [
-        "reddit"
-      ]
+      "platforms": ["reddit"],
+      "thematicGroup": ""
     },
     {
       "source": "moon-metropolis_203",
@@ -7343,9 +7295,8 @@
       "virality": "",
       "mediaCoverage": "",
       "linkType": "destinataire",
-      "platforms": [
-        "thoughtcatalog"
-      ]
+      "platforms": ["thoughtcatalog"],
+      "thematicGroup": "Libertarians"
     },
     {
       "source": "platform_thoughtcatalog_226",
@@ -7358,9 +7309,8 @@
       "virality": "",
       "mediaCoverage": "",
       "linkType": "destinataire",
-      "platforms": [
-        "thoughtcatalog"
-      ]
+      "platforms": ["thoughtcatalog"],
+      "thematicGroup": ""
     },
     {
       "source": "moon-metropolis_203",
@@ -7373,9 +7323,8 @@
       "virality": "",
       "mediaCoverage": "",
       "linkType": "destinataire",
-      "platforms": [
-        "twitter"
-      ]
+      "platforms": ["twitter"],
+      "thematicGroup": "Libertarians"
     },
     {
       "source": "platform_twitter_210",
@@ -7388,9 +7337,8 @@
       "virality": "",
       "mediaCoverage": "",
       "linkType": "destinataire",
-      "platforms": [
-        "twitter"
-      ]
+      "platforms": ["twitter"],
+      "thematicGroup": ""
     },
     {
       "source": "moon-metropolis_203",
@@ -7403,9 +7351,8 @@
       "virality": "",
       "mediaCoverage": "",
       "linkType": "destinataire",
-      "platforms": [
-        "breitbart"
-      ]
+      "platforms": ["breitbart"],
+      "thematicGroup": "Libertarians"
     },
     {
       "source": "platform_breitbart_232",
@@ -7418,9 +7365,8 @@
       "virality": "",
       "mediaCoverage": "",
       "linkType": "destinataire",
-      "platforms": [
-        "breitbart"
-      ]
+      "platforms": ["breitbart"],
+      "thematicGroup": ""
     },
     {
       "source": "moon-metropolis_203",
@@ -7433,9 +7379,8 @@
       "virality": "",
       "mediaCoverage": "",
       "linkType": "destinataire",
-      "platforms": [
-        "twitter"
-      ]
+      "platforms": ["twitter"],
+      "thematicGroup": "Libertarians"
     },
     {
       "source": "platform_twitter_210",
@@ -7448,9 +7393,8 @@
       "virality": "",
       "mediaCoverage": "",
       "linkType": "destinataire",
-      "platforms": [
-        "twitter"
-      ]
+      "platforms": ["twitter"],
+      "thematicGroup": ""
     },
     {
       "source": "mouthful-of-grandpa_234",
@@ -7458,7 +7402,8 @@
       "value": 1.5,
       "type": "character_platform_connection",
       "isDirect": "Direct",
-      "relationType": "Présence"
+      "relationType": "Présence",
+      "thematicGroup": "Nationalists"
     },
     {
       "source": "naruto-2-0_236",
@@ -7466,7 +7411,8 @@
       "value": 1.5,
       "type": "character_platform_connection",
       "isDirect": "Direct",
-      "relationType": "Présence"
+      "relationType": "Présence",
+      "thematicGroup": "Antisystem"
     },
     {
       "source": "nuke-europe_238",
@@ -7474,7 +7420,8 @@
       "value": 1.5,
       "type": "character_platform_connection",
       "isDirect": "Direct",
-      "relationType": "Présence"
+      "relationType": "Présence",
+      "thematicGroup": "Nationalists"
     },
     {
       "source": "pineapple-10_240",
@@ -7482,7 +7429,8 @@
       "value": 1.5,
       "type": "character_platform_connection",
       "isDirect": "Direct",
-      "relationType": "Présence"
+      "relationType": "Présence",
+      "thematicGroup": "Culture"
     },
     {
       "source": "the-old-jacobite-2_242",
@@ -7490,7 +7438,8 @@
       "value": 1.5,
       "type": "character_platform_connection",
       "isDirect": "Direct",
-      "relationType": "Présence"
+      "relationType": "Présence",
+      "thematicGroup": "Culture"
     },
     {
       "source": "wake-up-white-man_244",
@@ -7498,7 +7447,8 @@
       "value": 1.5,
       "type": "character_platform_connection",
       "isDirect": "Direct",
-      "relationType": "Présence"
+      "relationType": "Présence",
+      "thematicGroup": "Nationalists"
     },
     {
       "source": "wake-up-white-man_244",
@@ -7506,7 +7456,8 @@
       "value": 1.5,
       "type": "character_platform_connection",
       "isDirect": "Direct",
-      "relationType": "Présence"
+      "relationType": "Présence",
+      "thematicGroup": "Nationalists"
     },
     {
       "source": "wake-up-white-man_244",
@@ -7514,7 +7465,8 @@
       "value": 1.5,
       "type": "character_platform_connection",
       "isDirect": "Direct",
-      "relationType": "Présence"
+      "relationType": "Présence",
+      "thematicGroup": "Nationalists"
     },
     {
       "source": "tanya-cohen_248",
@@ -7522,7 +7474,8 @@
       "value": 1.5,
       "type": "character_platform_connection",
       "isDirect": "Direct",
-      "relationType": "Présence"
+      "relationType": "Présence",
+      "thematicGroup": "Social justice"
     },
     {
       "source": "tanya-cohen_248",
@@ -7530,7 +7483,8 @@
       "value": 1.5,
       "type": "character_platform_connection",
       "isDirect": "Direct",
-      "relationType": "Présence"
+      "relationType": "Présence",
+      "thematicGroup": "Social justice"
     },
     {
       "source": "tanya-cohen_248",
@@ -7538,7 +7492,8 @@
       "value": 1.5,
       "type": "character_platform_connection",
       "isDirect": "Direct",
-      "relationType": "Présence"
+      "relationType": "Présence",
+      "thematicGroup": "Social justice"
     },
     {
       "source": "tanya-cohen_248",
@@ -7546,7 +7501,8 @@
       "value": 1.5,
       "type": "character_platform_connection",
       "isDirect": "Direct",
-      "relationType": "Présence"
+      "relationType": "Présence",
+      "thematicGroup": "Social justice"
     },
     {
       "source": "tanya-cohen_248",
@@ -7559,9 +7515,8 @@
       "virality": "",
       "mediaCoverage": "",
       "linkType": "destinataire",
-      "platforms": [
-        "twitter"
-      ]
+      "platforms": ["twitter"],
+      "thematicGroup": "Social justice"
     },
     {
       "source": "platform_twitter_250",
@@ -7574,9 +7529,8 @@
       "virality": "",
       "mediaCoverage": "",
       "linkType": "destinataire",
-      "platforms": [
-        "twitter"
-      ]
+      "platforms": ["twitter"],
+      "thematicGroup": ""
     },
     {
       "source": "tanya-cohen_248",
@@ -7589,9 +7543,8 @@
       "virality": "Confusion médiatique",
       "mediaCoverage": "Modérée",
       "linkType": "destinataire",
-      "platforms": [
-        "thoughtcatalog"
-      ]
+      "platforms": ["thoughtcatalog"],
+      "thematicGroup": "Social justice"
     },
     {
       "source": "platform_thoughtcatalog_252",
@@ -7604,9 +7557,8 @@
       "virality": "Confusion médiatique",
       "mediaCoverage": "Modérée",
       "linkType": "destinataire",
-      "platforms": [
-        "thoughtcatalog"
-      ]
+      "platforms": ["thoughtcatalog"],
+      "thematicGroup": ""
     },
     {
       "source": "michael-slay_255",
@@ -7614,7 +7566,8 @@
       "value": 1.5,
       "type": "character_platform_connection",
       "isDirect": "Direct",
-      "relationType": "Présence"
+      "relationType": "Présence",
+      "thematicGroup": "Nationalists"
     },
     {
       "source": "michael-slay_255",
@@ -7622,7 +7575,8 @@
       "value": 1.5,
       "type": "character_platform_connection",
       "isDirect": "Direct",
-      "relationType": "Présence"
+      "relationType": "Présence",
+      "thematicGroup": "Nationalists"
     },
     {
       "source": "michael-slay_255",
@@ -7630,7 +7584,8 @@
       "value": 1.5,
       "type": "character_platform_connection",
       "isDirect": "Direct",
-      "relationType": "Présence"
+      "relationType": "Présence",
+      "thematicGroup": "Nationalists"
     },
     {
       "source": "tanya-cohen_248",
@@ -7643,9 +7598,8 @@
       "virality": "",
       "mediaCoverage": "",
       "linkType": "destinataire",
-      "platforms": [
-        "twitter"
-      ]
+      "platforms": ["twitter"],
+      "thematicGroup": "Social justice"
     },
     {
       "source": "platform_twitter_250",
@@ -7658,9 +7612,8 @@
       "virality": "",
       "mediaCoverage": "",
       "linkType": "destinataire",
-      "platforms": [
-        "twitter"
-      ]
+      "platforms": ["twitter"],
+      "thematicGroup": ""
     },
     {
       "source": "tanya-cohen_248",
@@ -7673,9 +7626,8 @@
       "virality": "",
       "mediaCoverage": "",
       "linkType": "destinataire",
-      "platforms": [
-        "daily-kos"
-      ]
+      "platforms": ["daily-kos"],
+      "thematicGroup": "Social justice"
     },
     {
       "source": "platform_daily-kos_259",
@@ -7688,9 +7640,8 @@
       "virality": "",
       "mediaCoverage": "",
       "linkType": "destinataire",
-      "platforms": [
-        "daily-kos"
-      ]
+      "platforms": ["daily-kos"],
+      "thematicGroup": ""
     },
     {
       "source": "tanya-cohen_248",
@@ -7703,9 +7654,8 @@
       "virality": "",
       "mediaCoverage": "",
       "linkType": "destinateur",
-      "platforms": [
-        "techdirt"
-      ]
+      "platforms": ["techdirt"],
+      "thematicGroup": "Social justice"
     },
     {
       "source": "platform_techdirt_261",
@@ -7718,9 +7668,8 @@
       "virality": "",
       "mediaCoverage": "",
       "linkType": "destinateur",
-      "platforms": [
-        "techdirt"
-      ]
+      "platforms": ["techdirt"],
+      "thematicGroup": ""
     },
     {
       "source": "australi-witness_263",
@@ -7728,7 +7677,8 @@
       "value": 1.5,
       "type": "character_platform_connection",
       "isDirect": "Direct",
-      "relationType": "Présence"
+      "relationType": "Présence",
+      "thematicGroup": ""
     },
     {
       "source": "australi-witness_263",
@@ -7736,7 +7686,8 @@
       "value": 1.5,
       "type": "character_platform_connection",
       "isDirect": "Direct",
-      "relationType": "Présence"
+      "relationType": "Présence",
+      "thematicGroup": ""
     },
     {
       "source": "australi-witness_263",
@@ -7744,7 +7695,8 @@
       "value": 1.5,
       "type": "character_platform_connection",
       "isDirect": "Direct",
-      "relationType": "Présence"
+      "relationType": "Présence",
+      "thematicGroup": ""
     },
     {
       "source": "australi-witness_263",
@@ -7752,7 +7704,8 @@
       "value": 1.5,
       "type": "character_platform_connection",
       "isDirect": "Direct",
-      "relationType": "Présence"
+      "relationType": "Présence",
+      "thematicGroup": ""
     },
     {
       "source": "australi-witness_263",
@@ -7760,7 +7713,8 @@
       "value": 1.5,
       "type": "character_platform_connection",
       "isDirect": "Direct",
-      "relationType": "Présence"
+      "relationType": "Présence",
+      "thematicGroup": ""
     },
     {
       "source": "luke-mcmahon_262",
@@ -7773,9 +7727,8 @@
       "virality": "",
       "mediaCoverage": "",
       "linkType": "",
-      "platforms": [
-        "twitter"
-      ]
+      "platforms": ["twitter"],
+      "thematicGroup": ""
     },
     {
       "source": "platform_twitter_267",
@@ -7788,9 +7741,8 @@
       "virality": "",
       "mediaCoverage": "",
       "linkType": "",
-      "platforms": [
-        "twitter"
-      ]
+      "platforms": ["twitter"],
+      "thematicGroup": ""
     },
     {
       "source": "luke-mcmahon_262",
@@ -7803,9 +7755,8 @@
       "virality": "",
       "mediaCoverage": "",
       "linkType": "destinataire",
-      "platforms": [
-        "twitter"
-      ]
+      "platforms": ["twitter"],
+      "thematicGroup": ""
     },
     {
       "source": "platform_twitter_267",
@@ -7818,9 +7769,8 @@
       "virality": "",
       "mediaCoverage": "",
       "linkType": "destinataire",
-      "platforms": [
-        "twitter"
-      ]
+      "platforms": ["twitter"],
+      "thematicGroup": ""
     },
     {
       "source": "naomi-wolf_270",
@@ -7833,9 +7783,8 @@
       "virality": "",
       "mediaCoverage": "",
       "linkType": "destinataire",
-      "platforms": [
-        "twitter"
-      ]
+      "platforms": ["twitter"],
+      "thematicGroup": ""
     },
     {
       "source": "platform_twitter_272",
@@ -7848,9 +7797,8 @@
       "virality": "",
       "mediaCoverage": "",
       "linkType": "destinataire",
-      "platforms": [
-        "twitter"
-      ]
+      "platforms": ["twitter"],
+      "thematicGroup": ""
     },
     {
       "source": "tanya-gersh_273",
@@ -7863,11 +7811,10 @@
       "virality": "",
       "mediaCoverage": "",
       "linkType": "destinateur",
-      "platforms": [
-        "dailystormer",
+      "platforms": ["dailystormer",
         "e-mail",
-        "twitter"
-      ]
+        "twitter"],
+      "thematicGroup": ""
     },
     {
       "source": "platform_dailystormer_275",
@@ -7880,11 +7827,10 @@
       "virality": "",
       "mediaCoverage": "",
       "linkType": "destinateur",
-      "platforms": [
-        "dailystormer",
+      "platforms": ["dailystormer",
         "e-mail",
-        "twitter"
-      ]
+        "twitter"],
+      "thematicGroup": ""
     },
     {
       "source": "tanya-gersh_273",
@@ -7897,11 +7843,10 @@
       "virality": "",
       "mediaCoverage": "",
       "linkType": "destinateur",
-      "platforms": [
-        "dailystormer",
+      "platforms": ["dailystormer",
         "e-mail",
-        "twitter"
-      ]
+        "twitter"],
+      "thematicGroup": ""
     },
     {
       "source": "platform_e-mail_276",
@@ -7914,11 +7859,10 @@
       "virality": "",
       "mediaCoverage": "",
       "linkType": "destinateur",
-      "platforms": [
-        "dailystormer",
+      "platforms": ["dailystormer",
         "e-mail",
-        "twitter"
-      ]
+        "twitter"],
+      "thematicGroup": ""
     },
     {
       "source": "tanya-gersh_273",
@@ -7931,11 +7875,10 @@
       "virality": "",
       "mediaCoverage": "",
       "linkType": "destinateur",
-      "platforms": [
-        "dailystormer",
+      "platforms": ["dailystormer",
         "e-mail",
-        "twitter"
-      ]
+        "twitter"],
+      "thematicGroup": ""
     },
     {
       "source": "platform_twitter_277",
@@ -7948,11 +7891,10 @@
       "virality": "",
       "mediaCoverage": "",
       "linkType": "destinateur",
-      "platforms": [
-        "dailystormer",
+      "platforms": ["dailystormer",
         "e-mail",
-        "twitter"
-      ]
+        "twitter"],
+      "thematicGroup": ""
     }
   ]
 }
