@@ -10,7 +10,7 @@ import {
 import { motion } from "framer-motion";
 import { useState } from "react";
 import CloseIcon from "@mui/icons-material/Close";
-import { GamepadIndicator } from "../pages/Game/AdvancedCameraController/CameraIndicators";
+import { GamepadIndicator } from "../pages/Game/components/AdvancedCameraController/CameraIndicators";
 const Footer = () => {
   const [open, setOpen] = useState(false);
 
@@ -55,17 +55,6 @@ const Footer = () => {
             About this experience
           </span>
         </Typography>
-
-        {/* Séparateur vertical */}
-        <Box
-          sx={{
-            height: "12px",
-            width: "1px",
-            backgroundColor: "rgba(255, 255, 255, 0.1)",
-            margin: "0 10px",
-            display: "inline-block",
-          }}
-        />
 
         <GamepadIndicator isCompact={true} />
       </Box>
@@ -149,6 +138,8 @@ const Footer = () => {
               <br />
               <strong>Design & Development:</strong> Benjamin Vaxelaire, Frere
               Thibaud
+              <br />
+              <strong>Data scraping:</strong> Aymeric Georgin, xxx
               <br />
               <strong>Based on:</strong> Joshua Ryne Goldberg's online
               activities

@@ -1,7 +1,7 @@
 import * as THREE from "three";
 import { COLORS } from "../Node";
 
-// Tableau des districts avec leurs couleurs (même que dans ForceGraph.jsx et Game2/Graph.jsx)
+// Tableau des districts avec leurs couleurs (même que dans ForceGraph.jsx et Game/Graph.jsx)
 const DISTRICTS = [
   { text: "Libertarians", position: [500, 200, -300], color: "#c0392b" },
   { text: "Antisystem", position: [-200, 350, 200], color: "#f39c12" },
@@ -35,14 +35,18 @@ export class SimpleMode {
 
     // Fonction pour obtenir la couleur d'un district par son nom
     const getDistrictColor = (thematicGroup) => {
-      const district = DISTRICTS.find(d => d.text === thematicGroup);
+      const district = DISTRICTS.find((d) => d.text === thematicGroup);
       return district ? district.color : "#ffffff"; // Blanc par défaut
     };
 
     // Déterminer la couleur du nœud : seuls les cluster masters sont colorés
     let nodeColor = "white";
 
-    if (this.node.type === "character" && this.node.isClusterMaster && this.node.thematicGroup) {
+    if (
+      this.node.type === "character" &&
+      this.node.isClusterMaster &&
+      this.node.thematicGroup
+    ) {
       // SEULS les cluster masters utilisent les couleurs des districts
       nodeColor = getDistrictColor(this.node.thematicGroup);
     }

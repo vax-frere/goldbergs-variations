@@ -7,7 +7,6 @@ import theme from "./theme";
 import Home from "./pages/Home";
 import Controls from "./pages/Controls";
 import Game from "./pages/Game/Game";
-import Game2 from "./pages/Game2/Game";
 import ExportForceGraphPage from "./pages/ExportForceGraphPage/ExportForceGraphPage";
 import MovablePage from "./pages/MovablePage";
 import Navbar from "./components/Navbar";
@@ -25,8 +24,7 @@ function App() {
         <Routes location={location} key={location.pathname}>
           <Route path="/" element={<Home />} />
           <Route path="/controls" element={<Controls />} />
-          <Route path="/game2" element={<Game />} />
-          <Route path="/game" element={<Game2 />} />
+          <Route path="/game" element={<Game />} />
           <Route
             path="/spatialize-and-export-forcegraph"
             element={<ExportForceGraphPage />}

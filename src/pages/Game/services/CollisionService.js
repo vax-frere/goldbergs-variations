@@ -77,8 +77,12 @@ const useCollisionStore = create((set, get) => ({
     interactiveElements: {},
   },
 
-  // Point de détection devant la caméra (réutilisé pour toutes les détections)
+  // Point et boîte de détection devant la caméra
   detectionPoint: new THREE.Vector3(),
+  detectionBox: new THREE.Box3(),
+  boxCorners: Array(8)
+    .fill()
+    .map(() => new THREE.Vector3()), // Pour stocker les coins de la boîte
 
   // Objet temporaire pour stocker la direction de la caméra (évite l'allocation mémoire)
   directionVector: new THREE.Vector3(0, 0, -1),
@@ -86,9 +90,16 @@ const useCollisionStore = create((set, get) => ({
   // Paramètres de détection par défaut
   settings: {
     detectionPointDistance: 100,
-    nodeBoundingBoxSize: 20,
-    clusterBoundingBoxExpansion: 20,
-    throttleTime: 16, // ms entre les détections (environ 60fps)
+    nodeBoundingBoxSize: 30,
+    clusterBoundingBoxExpansion: 30,
+    throttleTime: 16,
+    // Paramètres de la boîte de détection
+    detectionBox: {
+      width: 20, // Largeur de la boîte
+      height: 20, // Hauteur de la boîte
+      depth: 50, // Profondeur de la boîte (longueur vers l'avant)
+      offset: 30, // Distance initiale devant le joueur
+    },
   },
 
   // Configuration des layers de collision
@@ -100,6 +111,13 @@ const useCollisionStore = create((set, get) => ({
     clusters: true,
     nodes: true,
     interactiveElements: true,
+  },
+
+  // Hystérésis pour les collisions - stocke l'état récent des détections
+  collisionHysteresis: {
+    activeClusters: new Map(),
+    hysteresisDelay: 50,
+    requiredConsistency: 1,
   },
 
   // Dernier temps de vérification pour limiter la fréquence
@@ -279,41 +297,67 @@ const useCollisionStore = create((set, get) => ({
   },
 
   /**
-   * Calcule le point de détection devant la caméra
+   * Calcule la boîte de détection devant la caméra
    * @param {THREE.Camera} camera - Caméra THREE.js
-   * @param {number} distance - Distance du point devant la caméra
-   * @returns {THREE.Vector3} - Point de détection
+   * @param {number} distance - Distance du point devant la caméra (ignoré, utilise les paramètres de la boîte)
+   * @returns {THREE.Box3} - Boîte de détection
    */
   calculateDetectionPoint: (camera, distance) => {
     const state = get();
-    const actualDistance = distance || state.settings.detectionPointDistance;
+    const { width, height, depth, offset } = state.settings.detectionBox;
 
-    // Réutiliser le vecteur directionnel pour éviter les allocations mémoire
+    // Calculer le centre de la boîte
     state.directionVector.set(0, 0, -1).applyQuaternion(camera.quaternion);
-
-    // Mettre à jour le point de détection stocké dans l'état sans créer de nouveau vecteur
-    state.detectionPoint
+    const boxCenter = state.detectionPoint
       .copy(camera.position)
-      .addScaledVector(state.directionVector, actualDistance);
+      .addScaledVector(state.directionVector, offset + depth / 2);
 
-    return state.detectionPoint;
+    // Créer les vecteurs de dimension de la boîte dans l'espace de la caméra
+    const right = new THREE.Vector3(1, 0, 0)
+      .applyQuaternion(camera.quaternion)
+      .multiplyScalar(width / 2);
+    const up = new THREE.Vector3(0, 1, 0)
+      .applyQuaternion(camera.quaternion)
+      .multiplyScalar(height / 2);
+    const forward = state.directionVector.multiplyScalar(depth / 2);
+
+    // Calculer les 8 coins de la boîte
+    const corners = state.boxCorners;
+    corners[0].copy(boxCenter).add(right).add(up).add(forward);
+    corners[1].copy(boxCenter).add(right).add(up).sub(forward);
+    corners[2].copy(boxCenter).add(right).sub(up).add(forward);
+    corners[3].copy(boxCenter).add(right).sub(up).sub(forward);
+    corners[4].copy(boxCenter).sub(right).add(up).add(forward);
+    corners[5].copy(boxCenter).sub(right).add(up).sub(forward);
+    corners[6].copy(boxCenter).sub(right).sub(up).add(forward);
+    corners[7].copy(boxCenter).sub(right).sub(up).sub(forward);
+
+    // Mettre à jour la boîte englobante
+    state.detectionBox.setFromPoints(corners);
+
+    return state.detectionBox;
   },
 
   /**
-   * Vérifie si un point est à l'intérieur d'une boîte englobante
-   * @param {THREE.Vector3} point - Point à vérifier
+   * Vérifie si une boîte englobante intersecte avec la boîte de détection
+   * @param {THREE.Vector3} point - Point ignoré, gardé pour compatibilité
    * @param {Object} box - Boîte englobante avec min et max
-   * @returns {boolean} - Vrai si le point est dans la boîte
+   * @returns {boolean} - Vrai si les boîtes se chevauchent
    */
   isPointInBoundingBox: (point, box) => {
-    return (
-      point.x >= box.min.x &&
-      point.x <= box.max.x &&
-      point.y >= box.min.y &&
-      point.y <= box.max.y &&
-      point.z >= box.min.z &&
-      point.z <= box.max.z
+    const state = get();
+    const detectionBox = state.detectionBox;
+    const targetBox = new THREE.Box3(
+      new THREE.Vector3(box.min.x, box.min.y, box.min.z),
+      new THREE.Vector3(box.max.x, box.max.y, box.max.z)
     );
+
+    // Ajouter une marge de tolérance
+    const margin = 2.0;
+    targetBox.min.subScalar(margin);
+    targetBox.max.addScalar(margin);
+
+    return detectionBox.intersectsBox(targetBox);
   },
 
   /**
@@ -362,10 +406,18 @@ const useCollisionStore = create((set, get) => ({
     }
 
     // Ajouter le layer à chaque boîte
-    const boxesWithLayers = {};
+    const boxesWithData = {};
     Object.entries(clusterBoxes).forEach(([id, box]) => {
-      boxesWithLayers[id] = {
+      // Utiliser directement le slug du cluster s'il existe dans les données
+      const clusterSlug = box.data?.clusterSlug || box.data?.slug || id;
+
+      boxesWithData[id] = {
         ...box,
+        data: {
+          ...box.data,
+          id: clusterSlug, // On utilise le slug comme identifiant principal
+          numericId: id, // On garde l'ID numérique si besoin
+        },
         layer,
       };
     });
@@ -374,13 +426,13 @@ const useCollisionStore = create((set, get) => ({
     const state = get();
     const prevBoxes = state.boundingBoxRefs.clusterBoxes;
     const prevBoxCount = Object.keys(prevBoxes).length;
-    const newBoxCount = Object.keys(boxesWithLayers).length;
+    const newBoxCount = Object.keys(boxesWithData).length;
 
     // Si le nombre de boîtes est identique, vérifier si les IDs ont changé
     if (prevBoxCount === newBoxCount && prevBoxCount > 0) {
       // Vérification rapide des clés (pour éviter les comparaisons coûteuses)
       const prevKeys = Object.keys(prevBoxes).sort().join(",");
-      const newKeys = Object.keys(boxesWithLayers).sort().join(",");
+      const newKeys = Object.keys(boxesWithData).sort().join(",");
 
       if (prevKeys === newKeys) {
         // Les boîtes sont identiques, pas besoin de mise à jour
@@ -394,13 +446,13 @@ const useCollisionStore = create((set, get) => ({
     }
 
     // Mettre à jour la référence d'abord (important)
-    state.boundingBoxRefs.clusterBoxes = boxesWithLayers;
+    state.boundingBoxRefs.clusterBoxes = boxesWithData;
 
     // Mettre à jour l'état uniquement si nécessaire
     set((state) => ({
       boundingBoxes: {
         ...state.boundingBoxes,
-        clusters: boxesWithLayers,
+        clusters: boxesWithData,
       },
     }));
 
@@ -770,6 +822,142 @@ const useCollisionStore = create((set, get) => ({
   },
 
   /**
+   * Détecte toutes les collisions actives et retourne un objet de résultats
+   * Applique une hystérésis pour éviter les détections instables
+   * @returns {Object} - Résultats des collisions par type
+   */
+  detectCollisions: () => {
+    const state = get();
+
+    // Vérifier si on peut effectuer une détection (throttling)
+    if (!state.canPerformCheck()) {
+      return null;
+    }
+
+    // Démarrer le temps de mesure
+    const startTime = performance.now();
+    const now = Date.now();
+
+    // Résultats bruts de détection pour chaque type
+    const rawResults = {
+      clusters: [],
+      nodes: [],
+      interactiveElements: [],
+      hasCollisions: false,
+    };
+
+    // Détecter les clusters actifs
+    if (
+      state.collisionEnabled.clusters &&
+      state.collisionMask & CollisionLayers.CLUSTERS
+    ) {
+      const cluster = state.findContainingCluster();
+      if (cluster) {
+        rawResults.clusters.push(cluster);
+        rawResults.hasCollisions = true;
+      }
+    }
+
+    // Détecter les nodes actifs
+    if (
+      state.collisionEnabled.nodes &&
+      state.collisionMask & CollisionLayers.NODES
+    ) {
+      const node = state.findContainingNode();
+      if (node) {
+        rawResults.nodes.push(node);
+        rawResults.hasCollisions = true;
+      }
+    }
+
+    // Détecter les éléments interactifs
+    if (
+      state.collisionEnabled.interactiveElements &&
+      state.collisionMask & CollisionLayers.INTERACTIVE
+    ) {
+      const element = state.findContainingInteractiveElement();
+      if (element) {
+        rawResults.interactiveElements.push(element);
+        rawResults.hasCollisions = true;
+      }
+    }
+
+    // Appliquer l'hystérésis aux clusters détectés
+    const hysteresisResults = {
+      clusters: [],
+      nodes: rawResults.nodes,
+      interactiveElements: rawResults.interactiveElements,
+      hasCollisions: false,
+    };
+
+    // Traiter les clusters détectés avec hystérésis
+    const { activeClusters, hysteresisDelay, requiredConsistency } =
+      state.collisionHysteresis;
+
+    // Mettre à jour les compteurs pour les clusters actuellement détectés
+    rawResults.clusters.forEach((cluster) => {
+      const clusterId = cluster.id;
+      const currentInfo = activeClusters.get(clusterId) || {
+        timestamp: now,
+        count: 0,
+        lastDistance: cluster.distance,
+      };
+
+      // Incrémenter le compteur de détections consécutives
+      currentInfo.count += 1;
+      currentInfo.timestamp = now;
+      currentInfo.lastDistance = cluster.distance;
+
+      // Mettre à jour ou ajouter à la Map
+      activeClusters.set(clusterId, currentInfo);
+
+      // Si le cluster a été détecté suffisamment de fois, l'ajouter aux résultats
+      if (currentInfo.count >= requiredConsistency) {
+        hysteresisResults.clusters.push(cluster);
+        hysteresisResults.hasCollisions = true;
+      }
+    });
+
+    // Vérifier les clusters précédemment actifs mais non détectés dans cette itération
+    activeClusters.forEach((info, clusterId) => {
+      const isCurrentlyDetected = rawResults.clusters.some(
+        (c) => c.id === clusterId
+      );
+
+      if (!isCurrentlyDetected) {
+        // Vérifier si le délai d'hystérésis est dépassé
+        if (now - info.timestamp > hysteresisDelay) {
+          // Supprimer le cluster de la liste des actifs
+          activeClusters.delete(clusterId);
+        } else {
+          // Le cluster est toujours considéré comme actif pendant le délai d'hystérésis
+          // Trouver le cluster dans la liste des clusters connus
+          const knownCluster = Object.values(state.boundingBoxes.clusters).find(
+            (box) => box.id === clusterId || box.clusterId === clusterId
+          );
+
+          if (knownCluster) {
+            // Construire un objet cluster à partir des données connues
+            const persistedCluster = {
+              id: clusterId,
+              name: knownCluster.name || `Cluster ${clusterId}`,
+              distance: info.lastDistance || 0,
+            };
+
+            hysteresisResults.clusters.push(persistedCluster);
+            hysteresisResults.hasCollisions = true;
+          }
+        }
+      }
+    });
+
+    // Mettre à jour la dernière détection sans utiliser set()
+    state.stats.lastDetectionTime = performance.now() - startTime;
+
+    return hysteresisResults;
+  },
+
+  /**
    * Vérifie si assez de temps s'est écoulé depuis la dernière vérification
    * @returns {boolean} - Vrai si on peut effectuer une nouvelle vérification
    */
@@ -829,6 +1017,29 @@ const useCollisionStore = create((set, get) => ({
           ", "
         )}] to ${combinedMask.toString(2)}`
       );
+    }
+  },
+
+  /**
+   * Désenregistre toutes les boîtes de collision des clusters
+   * Utile lors du démontage des composants pour éviter les fuites mémoire
+   */
+  unregisterClusterBoxes: () => {
+    const state = get();
+
+    // Vider les références des boîtes de clusters
+    state.boundingBoxRefs.clusterBoxes = {};
+
+    // Mettre à jour l'état
+    set((state) => ({
+      boundingBoxes: {
+        ...state.boundingBoxes,
+        clusters: {},
+      },
+    }));
+
+    if (state.debugMode) {
+      console.log("CollisionService: Unregistered all cluster boxes");
     }
   },
 }));

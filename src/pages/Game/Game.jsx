@@ -1,306 +1,272 @@
-import { useRef, useEffect, useState, useCallback } from "react";
-import { Canvas } from "@react-three/fiber";
+import { useState, useEffect, memo, useRef } from "react";
+import { Canvas, useThree } from "@react-three/fiber";
 import { Stats } from "@react-three/drei";
+import useSound from "use-sound";
+import useGameStore from "./store";
+import useAssets from "./hooks/useAssets";
+import { EffectComposer } from "@react-three/postprocessing";
+import { Bloom, ToneMapping } from "@react-three/postprocessing";
 import {
   CAMERA_FOV,
   BASE_CAMERA_DISTANCE,
   BOUNDING_SPHERE_RADIUS,
-} from "./AdvancedCameraController/navigationConstants";
+} from "./components/AdvancedCameraController/navigationConstants";
+import { getAudioState } from "./components/GameAudio";
+import HUD from "./components/HUD/HUD";
+import LoadingBar from "./components/LoadingBar/LoadingBar";
+import World from "./scenes/World/World";
+import Stars from "./components/Stars";
+import useCollisionStore, {
+  CollisionLayers,
+} from "./services/CollisionService";
+import useDebugMode from "./hooks/useDebugMode";
+import { AdvancedCameraController } from "./components/AdvancedCameraController/AdvancedCameraController";
+import GameAudio from "./components/GameAudio";
+import CollisionDebugRenderer from "./components/debug/CollisionDebugRenderer";
+import { useFrame } from "@react-three/fiber";
 
-// Importer le hook de mode debug
-import useDebugMode from "../../hooks/useDebugMode";
+// Composant pour initialiser et gérer le service de collision
+const CollisionManager = memo(() => {
+  const debug = useGameStore((state) => state.debug);
+  const setDebugMode = useCollisionStore((state) => state.setDebugMode);
+  const setCollisionMask = useCollisionStore((state) => state.setCollisionMask);
+  const detectCollisions = useCollisionStore((state) => state.detectCollisions);
+  const calculateDetectionPoint = useCollisionStore(
+    (state) => state.calculateDetectionPoint
+  );
+  const { camera } = useThree();
+  const setHoveredCluster = useGameStore((state) => state.setHoveredCluster);
+  const activeLevel = useGameStore((state) => state.activeLevel);
 
-// Importer le store pour vérifier si un cluster est actif
-import useGameStore from "./store";
-
-// Importer le nouveau service d'assets
-import useAssets from "../../hooks/useAssets";
-import { initializeAssetService } from "./services/AssetService";
-
-import GridReferences from "../../components/GridReferences";
-import Graph from "./Graph";
-import AdvancedCameraController, {
-  GamepadIndicator,
-} from "./AdvancedCameraController/AdvancedCameraController";
-import DebugNavigationUI from "./AdvancedCameraController/DebugNavigationUI";
-import {
-  EffectComposer,
-  Bloom,
-  ToneMapping,
-} from "@react-three/postprocessing";
-import Posts from "./Posts/Posts";
-import SvgPath from "./common/SvgPath";
-import InteractiveImage from "./common/InteractiveImage";
-import DistrictLabels from "./common/DistrictLabels";
-import { BlackHoleEffect } from "./common/BlackHoleEffect";
-import ShootingStars from "./common/ShootingStar";
-import Stars from "./common/Stars";
-import HUD from "./HUD/HUD";
-import TextPanel from "./common/TextPanel";
-import LoadingBar from "./common/LoadingBar";
-import useCollisionStore from "./services/CollisionService";
-import GameStateManager from "./GameStateManager";
-import GameAudio from "./common/GameAudio";
-
-// Liste des portraits interactifs de Joshua
-const INTERACTIVE_PORTRAITS = [
-  {
-    id: "joshua-center",
-    position: [0, 0, 0],
-    size: 300,
-    title: "Joshua Goldberg",
-    description:
-      "Étude sur l'identité en ligne et l'extrémisme numérique. Les travaux de Joshua Goldberg ont permis de comprendre les mécanismes de radicalisation sur les plateformes sociales.",
-    boundingBoxSize: 200,
-  },
-  // {
-  //   id: "joshua-left",
-  //   position: [-400, 100, -200],
-  //   size: 250,
-  //   title: "L'Infiltration Numérique",
-  //   description:
-  //     "Joshua Goldberg a créé de multiples personnalités en ligne pour infiltrer différentes communautés extrémistes. Cette méthode controversée a soulevé des questions éthiques importantes sur les limites de la recherche.",
-  //   boundingBoxSize: 150,
-  // },
-  // {
-  //   id: "joshua-right",
-  //   position: [400, -50, -150],
-  //   size: 220,
-  //   title: "Impact Médiatique",
-  //   description:
-  //     "L'affaire Goldberg a révélé la fragilité des écosystèmes d'information et la facilité avec laquelle un seul individu peut manipuler plusieurs communautés en ligne simultanément.",
-  //   boundingBoxSize: 180,
-  // },
-];
-
-const Game = () => {
-  const [graphData, setGraphData] = useState({ nodes: [], links: [] });
-  const [isLoading, setIsLoading] = useState(true);
-  const [gameStarted, setGameStarted] = useState(false);
-
-  // Utiliser notre hook de mode debug
-  const [debugMode, toggleDebugMode] = useDebugMode(false);
-
-  // Récupérer l'état du cluster actif depuis le store
-  const activeClusterId = useGameStore((state) => state.activeClusterId);
-
-  // Vérifier si un cluster est actif
-  const hasActiveCluster = activeClusterId !== null;
-
-  // Utiliser useRef au lieu de useState pour éviter les re-rendus
-  const graphInstanceRef = useRef(null);
-
-  // Utiliser notre nouveau hook pour les assets
-  const assets = useAssets({ autoInit: true });
-
-  // Accéder au service de collision
-  const collisionService = useCollisionStore();
-
-  // Utiliser useCallback pour stabiliser cette fonction
-  const getGraphRef = useCallback((instance) => {
-    if (instance) {
-      graphInstanceRef.current = instance;
-    }
-  }, []);
-
-  // Fonction pour charger les données et construire le graphe
+  // Initialiser le service de collision
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        setIsLoading(true);
+    setCollisionMask(CollisionLayers.CLUSTERS | CollisionLayers.NODES);
+    setDebugMode(debug);
 
-        // Utiliser le service d'assets pour charger le graphe spatialisé
-        const data = await assets.loadGraphData();
+    return () => {
+      setCollisionMask(CollisionLayers.NONE);
+      setDebugMode(false);
+    };
+  }, [setCollisionMask, setDebugMode, debug]);
 
-        // Mettre à jour l'état du graphe avec les nœuds et liens
-        setGraphData(data);
-        setIsLoading(false);
+  // Gérer les détections de collision avec setInterval
+  useEffect(() => {
+    const checkCollisions = () => {
+      // Ne pas détecter si on est dans un cluster
+      if (activeLevel?.type === "cluster") return;
 
-        // Configurer initialement le service de collision avec le mode debug
-        if (debugMode) {
-          collisionService.setDebugMode(true);
-        }
+      // Calculer le point de détection
+      calculateDetectionPoint(camera);
 
-        // Démarrer le jeu quand les données sont chargées
-        setGameStarted(true);
-      } catch (err) {
-        console.error("Erreur lors du chargement des données:", err);
-        setIsLoading(false);
+      // Détecter les collisions
+      const collisions = detectCollisions();
+      if (!collisions) return;
+
+      // Gérer les collisions avec les clusters
+      if (collisions.clusters && collisions.clusters.length > 0) {
+        const detectedCluster = collisions.clusters[0];
+        setHoveredCluster(detectedCluster.id);
+      } else {
+        setHoveredCluster(null);
       }
     };
 
-    // Ne charger les données que lorsque le service d'assets est prêt
-    if (assets.isReady) {
-      fetchData();
-    }
-  }, [assets.isReady, debugMode]); // Dépendre de l'état de préparation des assets
+    const interval = setInterval(checkCollisions, 100);
 
-  // Mettre à jour le mode debug du service de collision seulement quand il change
-  // et utiliser une référence pour éviter les mises à jour en boucle
-  const lastDebugModeRef = useRef(debugMode);
-  useEffect(() => {
-    // Ne mettre à jour que si le mode debug a vraiment changé
-    if (lastDebugModeRef.current !== debugMode) {
-      collisionService.setDebugMode(debugMode);
-      lastDebugModeRef.current = debugMode;
-    }
-  }, [debugMode]); // Dépendance stable
+    return () => {
+      clearInterval(interval);
+      setHoveredCluster(null);
+    };
+  }, [
+    camera,
+    activeLevel,
+    calculateDetectionPoint,
+    detectCollisions,
+    setHoveredCluster,
+  ]);
 
-  // Déterminer si l'application est prête à être affichée
-  // S'assurer que les assets sont chargés ET que le graphe est prêt
-  const isReady = !isLoading && assets.isReady && graphData.nodes.length > 0;
+  return null;
+});
+
+// Séparer le composant DebugStats pour n'afficher que si nécessaire
+const DebugStats = memo(() => {
+  const debug = useGameStore((state) => state.debug);
+  return debug ? <Stats /> : null;
+});
+
+// Composant pour le Canvas et ses effets
+const GameCanvas = memo(({ children }) => {
+  // Activer l'écoute de la touche P pour le debug mode
+  useDebugMode();
 
   return (
-    <div
+    <Canvas
+      shadows
       style={{
-        width: "100vw",
-        height: "100vh",
-        position: "absolute",
-        top: 0,
-        left: 0,
+        background: "#000",
+        width: "100%",
+        height: "100%",
+      }}
+      camera={{
+        position: [0, -300, BASE_CAMERA_DISTANCE * 4],
+        fov: CAMERA_FOV,
+        near: 0.1,
+        far: 1000000,
       }}
     >
-      {console.log("render")}
-      {/* Indicateur visuel du mode debug */}
-      {debugMode && (
-        <div
-          style={{
-            position: "absolute",
-            top: "10px",
-            left: "10px",
-            background: "rgba(255, 0, 0, 0.7)",
-            color: "white",
-            padding: "5px 10px",
-            borderRadius: "4px",
-            fontSize: "12px",
-            zIndex: 1000,
-          }}
-        >
-          MODE DEBUG (Appuyez sur P pour désactiver)
-        </div>
-      )}
+      {/* Systèmes du jeu */}
+      <GameAudio />
+      <AdvancedCameraController />
+      <CollisionManager />
+      <CollisionDebugRenderer />
 
-      {/* Écran de chargement si le jeu n'est pas prêt */}
-      {!isReady && (
-        <LoadingBar
-          progress={assets.progress}
-          label={
-            isLoading
-              ? "Chargement des données du graphe..."
-              : "Initialisation de la galaxie de données"
-          }
-          fullScreen={true}
+      {/* Fond étoilé */}
+      <Stars count={4000} radius={BOUNDING_SPHERE_RADIUS * 4} size={2.5} />
+
+      {/* Scène 3D */}
+      {children}
+
+      <EffectComposer>
+        <Bloom
+          intensity={0.15}
+          luminanceThreshold={0.01}
+          luminanceSmoothing={0.03}
         />
-      )}
+        <ToneMapping exposure={1.5} gamma={0.8} vignette={0.5} />
+      </EffectComposer>
+      <DebugStats />
+    </Canvas>
+  );
+});
 
-      {/* Ne montrer le contenu que lorsque tout est chargé */}
-      {isReady && (
+// Composant Game principal
+const Game = () => {
+  const activeLevel = useGameStore((state) => state.activeLevel);
+  const assets = useAssets({ autoInit: true });
+  const [gameReady, setGameReady] = useState(false);
+  const [audioProgress, setAudioProgress] = useState(0);
+  const [loadingStage, setLoadingStage] = useState(0);
+  const TOTAL_LOADING_STAGES = 3;
+  const loadStartTime = useRef(Date.now());
+  const MIN_LOADING_TIME = 3000; // 3 secondes minimum
+  const [playEnterLevelSound] = useSound("/sounds/enter-level.mp3", {
+    volume: 0.1,
+  });
+  const previousLevelRef = useRef(null);
+
+  useEffect(() => {
+    // Play sound only when changing level and not on initial mount
+    if (activeLevel && previousLevelRef.current !== activeLevel.id) {
+      playEnterLevelSound();
+    }
+    previousLevelRef.current = activeLevel?.id;
+  }, [activeLevel, playEnterLevelSound]);
+
+  // Mettre à jour les étapes de chargement
+  useEffect(() => {
+    if (loadingStage === 0 && assets.progress > 0) {
+      setLoadingStage(1); // Assets loading stage
+    } else if (loadingStage === 1 && assets.isReady) {
+      setLoadingStage(2); // Audio loading stage
+
+      // Simulation de progression audio si elle est trop rapide
+      let simulatedAudioProgress = 0;
+      const audioProgressInterval = setInterval(() => {
+        simulatedAudioProgress += 5;
+        if (simulatedAudioProgress > 100) {
+          simulatedAudioProgress = 100;
+          clearInterval(audioProgressInterval);
+        }
+        // Ne pas dépasser la progression réelle si audio est déjà prêt
+        if (!getAudioState().isInitializing) {
+          clearInterval(audioProgressInterval);
+          simulatedAudioProgress = 100;
+        }
+        setAudioProgress(simulatedAudioProgress);
+      }, 100);
+
+      return () => clearInterval(audioProgressInterval);
+    } else if (loadingStage === 2 && !getAudioState().isInitializing) {
+      setLoadingStage(3); // Initialization stage
+
+      // Calculer le temps écoulé depuis le début du chargement
+      const elapsedTime = Date.now() - loadStartTime.current;
+      const remainingTime = Math.max(0, MIN_LOADING_TIME - elapsedTime);
+
+      // Si le chargement a pris moins de 3 secondes, attendre la différence
+      setTimeout(() => {
+        setGameReady(true);
+      }, remainingTime);
+    }
+  }, [assets.progress, assets.isReady, loadingStage]);
+
+  // Combinaison simplifiée pour gérer le chargement du jeu
+  useEffect(() => {
+    if (!assets.isReady) return;
+
+    // En développement: forcer le démarrage rapide
+    if (import.meta.env.DEV) {
+      const timer = setTimeout(() => {
+        getAudioState().isInitializing = false;
+      }, 1500);
+      return () => clearTimeout(timer);
+    }
+
+    // En production, utiliser une solution plus robuste
+    const checkAudioStatus = () => {
+      if (!getAudioState().isInitializing) return;
+      setTimeout(checkAudioStatus, 100);
+    };
+
+    checkAudioStatus();
+
+    const safetyTimer = setTimeout(() => {
+      getAudioState().forceCompleteInitialization();
+    }, 5000);
+
+    return () => clearTimeout(safetyTimer);
+  }, [assets.isReady]);
+
+  // Déterminer le message de chargement approprié
+  const getLoadingMessage = () => {
+    switch (loadingStage) {
+      case 0:
+        return "initializing...";
+      case 1:
+        return `loading assets ${Math.round(assets.progress)}%`;
+      case 2:
+        return `preloading audio ${Math.round(audioProgress)}%`;
+      case 3:
+        return "starting game...";
+      default:
+        return "loading...";
+    }
+  };
+
+  return (
+    <div style={{ width: "100vw", height: "100vh", background: "#000" }}>
+      {/* Afficher la barre de chargement si le jeu n'est pas prêt */}
+      {!gameReady ? (
+        <LoadingBar
+          progress={
+            loadingStage === 1
+              ? assets.progress
+              : loadingStage === 2
+              ? audioProgress
+              : 100
+          }
+          message={getLoadingMessage()}
+          stage={loadingStage}
+          totalStages={TOTAL_LOADING_STAGES}
+        />
+      ) : (
         <>
-          {/* Gestionnaire d'état de jeu pour configurer les collisions */}
-          <GameStateManager debugMode={debugMode} />
+          <GameCanvas>
+            <World />
+          </GameCanvas>
 
-          <Canvas
-            shadows
-            style={{
-              background: "#000",
-              width: "100%",
-              height: "100%",
-            }}
-            camera={{
-              position: [0, -300, BASE_CAMERA_DISTANCE * 4],
-              fov: CAMERA_FOV,
-              near: 0.1,
-              far: 1000000,
-            }}
-          >
-            {/* Éclairage global */}
-            <ambientLight intensity={0.6} color="#ffffff" />
-            <directionalLight
-              position={[100, 100, 100]}
-              intensity={0.8}
-              color="#f0f0ff"
-            />
-
-            {/* Afficher le Graph quand le jeu a démarré */}
-            {gameStarted && (
-              <Graph
-                ref={getGraphRef}
-                graphData={graphData}
-                debugMode={debugMode}
-              />
-            )}
-
-            {/* Ajouter le composant de gestion audio */}
-            <GameAudio />
-
-            {/* Groupe des éléments spéciaux (masqués lorsqu'un cluster est actif) */}
-            {gameStarted && !hasActiveCluster && (
-              <>
-                {/* Ajouter les portraits interactifs de Joshua */}
-                {INTERACTIVE_PORTRAITS.map((portrait) => (
-                  <InteractiveImage
-                    key={portrait.id}
-                    id={portrait.id}
-                    svgPath={assets.getImagePath("joshua-goldberg.svg")}
-                    position={portrait.position}
-                    size={portrait.size}
-                    title={portrait.title}
-                    description={portrait.description}
-                    boundingBoxSize={portrait.boundingBoxSize}
-                    showBoundingBox={debugMode}
-                  />
-                ))}
-
-                {/* Afficher les catégories dans l'espace 3D */}
-                <DistrictLabels />
-
-                {/* Ajouter un trou noir animé */}
-                <BlackHoleEffect
-                  position={[450, 0, 100]}
-                  size={12}
-                  particleCount={15000}
-                  rotationSpeed={0.3}
-                  spiralTightness={3.0}
-                  rotation={[Math.PI / 4, 0, Math.PI / 6]}
-                />
-
-                {/* Ajouter des étoiles filantes en permanence */}
-                <ShootingStars count={5} />
-              </>
-            )}
-
-            {/* Champ d'étoiles en arrière-plan, visible tout le temps */}
-            <Stars count={2000} radius={3000} size={1.2} />
-
-            {/* Contrôleur de caméra et affichage des informations de navigation */}
-            <AdvancedCameraController />
-
-            {/* Post-processing pour ajouter des effets visuels */}
-            <EffectComposer>
-              <Bloom
-                intensity={0.15}
-                luminanceThreshold={0.01}
-                luminanceSmoothing={0.03}
-              />
-              <ToneMapping
-                exposure={1.5} // Augmente la luminosité générale
-                gamma={0.8} // Contraste
-                vignette={0.5} // Assombrit les bords
-              />
-            </EffectComposer>
-
-            {/* Stats pour le débogage */}
-            {debugMode && <Stats />}
-          </Canvas>
-
-          {/* Interface utilisateur pour la navigation et le HUD - déplacés en dehors du Canvas */}
-          {gameStarted && debugMode && (
-            <DebugNavigationUI graphRef={graphInstanceRef} />
-          )}
-          {gameStarted && <HUD />}
-
-          {/* Afficher le panneau de texte informatif en dehors du Canvas */}
-          {gameStarted && <TextPanel />}
+          {/* HUD principal qui contient tous les composants UI */}
+          <HUD />
         </>
       )}
     </div>

@@ -86,7 +86,13 @@ const ForceGraphComponent = forwardRef((props, ref) => {
 
   // Calculer les centroïdes et trouver les cluster masters de chaque cluster
   const clusterInfo = useMemo(() => {
-    if (!graphData?.nodes?.length) return { centroids: {}, mainPersonas: {}, clusterDistricts: {}, clusterMasters: {} };
+    if (!graphData?.nodes?.length)
+      return {
+        centroids: {},
+        mainPersonas: {},
+        clusterDistricts: {},
+        clusterMasters: {},
+      };
 
     const clusters = {};
     const centroids = {};
@@ -106,9 +112,13 @@ const ForceGraphComponent = forwardRef((props, ref) => {
         // Associer le cluster au thematicGroup du cluster master
         if (node.thematicGroup) {
           clusterDistricts[node.cluster] = node.thematicGroup;
-          console.log(`🎯 Cluster ${node.cluster} → District "${node.thematicGroup}" (Master: ${node.name})`);
+          console.log(
+            `🎯 Cluster ${node.cluster} → District "${node.thematicGroup}" (Master: ${node.name})`
+          );
         } else {
-          console.warn(`⚠️ Cluster Master ${node.name} (cluster ${node.cluster}) n'a pas de thematicGroup`);
+          console.warn(
+            `⚠️ Cluster Master ${node.name} (cluster ${node.cluster}) n'a pas de thematicGroup`
+          );
         }
       }
     });
@@ -152,27 +162,52 @@ const ForceGraphComponent = forwardRef((props, ref) => {
     // ÉTAPE 4: Vérifier que tous les clusters ont un master
     const allClusters = Object.keys(clusters);
     const clustersWithMasters = Object.keys(clusterMasters);
-    const clustersWithoutMasters = allClusters.filter(c => !clustersWithMasters.includes(c));
+    const clustersWithoutMasters = allClusters.filter(
+      (c) => !clustersWithMasters.includes(c)
+    );
 
     if (clustersWithoutMasters.length > 0) {
-      console.warn(`⚠️ ${clustersWithoutMasters.length} clusters sans cluster master:`, clustersWithoutMasters);
+      console.warn(
+        `⚠️ ${clustersWithoutMasters.length} clusters sans cluster master:`,
+        clustersWithoutMasters
+      );
     }
 
     // Debug: Afficher les associations cluster -> district
     console.log("🏛️ Associations Cluster -> District:", clusterDistricts);
-    console.log("👥 Cluster Masters par cluster:", Object.fromEntries(
-      Object.entries(clusterMasters).map(([cluster, master]) => [cluster, master.name])
-    ));
-    console.log(`📊 Total: ${Object.keys(clusterDistricts).length} clusters avec district assigné sur ${allClusters.length} clusters trouvés (41 attendus)`);
+    console.log(
+      "👥 Cluster Masters par cluster:",
+      Object.fromEntries(
+        Object.entries(clusterMasters).map(([cluster, master]) => [
+          cluster,
+          master.name,
+        ])
+      )
+    );
+    console.log(
+      `📊 Total: ${
+        Object.keys(clusterDistricts).length
+      } clusters avec district assigné sur ${
+        allClusters.length
+      } clusters trouvés (41 attendus)`
+    );
 
     // Vérification finale
     if (Object.keys(clusterMasters).length !== 41) {
-      console.warn(`⚠️ ATTENTION: ${Object.keys(clusterMasters).length} cluster masters trouvés au lieu de 41 attendus`);
+      console.warn(
+        `⚠️ ATTENTION: ${
+          Object.keys(clusterMasters).length
+        } cluster masters trouvés au lieu de 41 attendus`
+      );
 
       // Lister les cluster masters trouvés pour debug
       console.log("🔍 Cluster Masters trouvés:");
       Object.entries(clusterMasters).forEach(([cluster, master]) => {
-        console.log(`  - Cluster ${cluster}: ${master.name} (${master.thematicGroup || 'pas de thematicGroup'})`);
+        console.log(
+          `  - Cluster ${cluster}: ${master.name} (${
+            master.thematicGroup || "pas de thematicGroup"
+          })`
+        );
       });
     } else {
       console.log(`✅ Parfait: 41 cluster masters trouvés comme attendu`);
@@ -283,7 +318,9 @@ const ForceGraphComponent = forwardRef((props, ref) => {
                 delete node.fz;
               }
             });
-            console.log("🔓 Positions libérées - les nodes peuvent maintenant bouger librement");
+            console.log(
+              "🔓 Positions libérées - les nodes peuvent maintenant bouger librement"
+            );
             simulation.alpha(0.3);
             simulation.restart();
           }
@@ -306,21 +343,37 @@ const ForceGraphComponent = forwardRef((props, ref) => {
   // const nodeConnections = useMemo(() => { ... }, [displayData]);
 
   useEffect(() => {
-    console.log("🔄 useEffect déclenché, dataIsReady:", dataIsReady, "clusterMasters:", Object.keys(clusterInfo.clusterMasters || {}).length);
+    console.log(
+      "🔄 useEffect déclenché, dataIsReady:",
+      dataIsReady,
+      "clusterMasters:",
+      Object.keys(clusterInfo.clusterMasters || {}).length
+    );
 
     if (!dataIsReady) {
       console.log("❌ dataIsReady est false, arrêt de useEffect");
       return;
     }
 
-    if (!clusterInfo.clusterMasters || Object.keys(clusterInfo.clusterMasters).length === 0) {
+    if (
+      !clusterInfo.clusterMasters ||
+      Object.keys(clusterInfo.clusterMasters).length === 0
+    ) {
       console.log("❌ clusterInfo.clusterMasters vide, arrêt de useEffect");
       return;
     }
 
-    console.log("✅ dataIsReady est true, configuration du repositionnement...");
-    console.log("📊 clusterInfo.clusterMasters:", Object.keys(clusterInfo.clusterMasters || {}).length);
-    console.log("📊 clusterInfo.clusterDistricts:", Object.keys(clusterInfo.clusterDistricts || {}).length);
+    console.log(
+      "✅ dataIsReady est true, configuration du repositionnement..."
+    );
+    console.log(
+      "📊 clusterInfo.clusterMasters:",
+      Object.keys(clusterInfo.clusterMasters || {}).length
+    );
+    console.log(
+      "📊 clusterInfo.clusterDistricts:",
+      Object.keys(clusterInfo.clusterDistricts || {}).length
+    );
 
     // Reset du flag de repositionnement quand les données changent
     repositionedRef.current = false;
@@ -343,10 +396,18 @@ const ForceGraphComponent = forwardRef((props, ref) => {
       console.log("🔍 fgRef.current.d3Force:", typeof fgRef.current.d3Force);
 
       // Essayons différents noms de forces
-      const forceNames = ['simulation', 'link', 'charge', 'center', 'x', 'y', 'z'];
-      forceNames.forEach(name => {
+      const forceNames = [
+        "simulation",
+        "link",
+        "charge",
+        "center",
+        "x",
+        "y",
+        "z",
+      ];
+      forceNames.forEach((name) => {
         const force = fgRef.current.d3Force(name);
-        console.log(`🔍 d3Force("${name}"):`, force ? 'TROUVÉ' : 'undefined');
+        console.log(`🔍 d3Force("${name}"):`, force ? "TROUVÉ" : "undefined");
       });
 
       // Essayons d'accéder directement à la simulation
@@ -408,17 +469,23 @@ const ForceGraphComponent = forwardRef((props, ref) => {
 
       // Si nous n'avons pas trouvé la simulation, essayons de travailler directement avec les forces
       if (!simulation) {
-        console.log("🔄 Pas de simulation trouvée, essayons de travailler avec les forces directement...");
+        console.log(
+          "🔄 Pas de simulation trouvée, essayons de travailler avec les forces directement..."
+        );
 
         const linkForce = fgRef.current.d3Force("link");
-        if (linkForce && linkForce.links && typeof linkForce.links === 'function') {
+        if (
+          linkForce &&
+          linkForce.links &&
+          typeof linkForce.links === "function"
+        ) {
           const links = linkForce.links();
           console.log("🔍 Links trouvés:", links.length);
 
           if (links.length > 0) {
             // Extraire les nodes des links
             const nodesSet = new Set();
-            links.forEach(link => {
+            links.forEach((link) => {
               if (link.source) nodesSet.add(link.source);
               if (link.target) nodesSet.add(link.target);
             });
@@ -442,12 +509,18 @@ const ForceGraphComponent = forwardRef((props, ref) => {
                     return fgRef.current.d3Force(name) || null;
                   } else {
                     // Setter - ajouter la force via fgRef
-                    console.log(`🔧 Ajout de la force "${name}" via fgRef.current.d3Force`);
+                    console.log(
+                      `🔧 Ajout de la force "${name}" via fgRef.current.d3Force`
+                    );
                     return fgRef.current.d3Force(name, force);
                   }
-                }
+                },
               };
-              console.log("✅ Simulation factice créée avec", nodes.length, "nodes");
+              console.log(
+                "✅ Simulation factice créée avec",
+                nodes.length,
+                "nodes"
+              );
             }
           }
         }
@@ -462,24 +535,39 @@ const ForceGraphComponent = forwardRef((props, ref) => {
         }
       }
 
-      console.log("✅ Simulation D3 trouvée, nombre de nodes:", simulation.nodes().length);
-      console.log("✅ clusterInfo disponible:", Object.keys(clusterInfo.clusterMasters).length, "cluster masters");
+      console.log(
+        "✅ Simulation D3 trouvée, nombre de nodes:",
+        simulation.nodes().length
+      );
+      console.log(
+        "✅ clusterInfo disponible:",
+        Object.keys(clusterInfo.clusterMasters).length,
+        "cluster masters"
+      );
 
       // ÉTAPE 1: Repositionner immédiatement les clusters selon le thematicGroup de leur cluster master
       const repositionClustersByDistrict = () => {
         const nodes = simulation.nodes();
-        console.log("🔄 Repositionnement des clusters par district basé sur les cluster masters...");
+        console.log(
+          "🔄 Repositionnement des clusters par district basé sur les cluster masters..."
+        );
 
         // Test de la fonction getDistrictPosition
         console.log("🧪 Test des positions de districts:");
-        DISTRICTS.forEach(district => {
+        DISTRICTS.forEach((district) => {
           const pos = getDistrictPosition(district.text);
-          console.log(`  ${district.text}: [${pos.join(', ')}]`);
+          console.log(`  ${district.text}: [${pos.join(", ")}]`);
         });
 
         console.log("📊 Nodes dans la simulation:", nodes.length);
-        console.log("📊 Clusters avec masters:", Object.keys(clusterInfo.clusterMasters));
-        console.log("📊 Clusters avec districts:", Object.keys(clusterInfo.clusterDistricts));
+        console.log(
+          "📊 Clusters avec masters:",
+          Object.keys(clusterInfo.clusterMasters)
+        );
+        console.log(
+          "📊 Clusters avec districts:",
+          Object.keys(clusterInfo.clusterDistricts)
+        );
 
         // Compter les repositionnements par cluster
         const repositionedClusters = new Set();
@@ -488,22 +576,38 @@ const ForceGraphComponent = forwardRef((props, ref) => {
         nodes.forEach((node, index) => {
           // Debug pour les premiers nodes
           if (index < 5) {
-            console.log(`🔍 Node ${index}: cluster=${node.cluster}, hasMaster=${!!clusterInfo.clusterMasters[node.cluster]}, hasDistrict=${!!clusterInfo.clusterDistricts[node.cluster]}`);
+            console.log(
+              `🔍 Node ${index}: cluster=${
+                node.cluster
+              }, hasMaster=${!!clusterInfo.clusterMasters[
+                node.cluster
+              ]}, hasDistrict=${!!clusterInfo.clusterDistricts[node.cluster]}`
+            );
           }
 
           // Vérifier que le cluster a un master et un district assigné
-          if (node.cluster !== undefined &&
-              clusterInfo.clusterMasters[node.cluster] &&
-              clusterInfo.clusterDistricts[node.cluster]) {
-
+          if (
+            node.cluster !== undefined &&
+            clusterInfo.clusterMasters[node.cluster] &&
+            clusterInfo.clusterDistricts[node.cluster]
+          ) {
             const clusterMaster = clusterInfo.clusterMasters[node.cluster];
-            const clusterThematicGroup = clusterInfo.clusterDistricts[node.cluster];
+            const clusterThematicGroup =
+              clusterInfo.clusterDistricts[node.cluster];
             const districtPosition = getDistrictPosition(clusterThematicGroup);
 
             // Log seulement une fois par cluster avec informations du master
             if (!repositionedClusters.has(node.cluster)) {
-              const oldPos = `[${node.x?.toFixed(1) || 'undefined'}, ${node.y?.toFixed(1) || 'undefined'}, ${node.z?.toFixed(1) || 'undefined'}]`;
-              console.log(`📍 Cluster ${node.cluster} (Master: ${clusterMaster.name}, District: ${clusterThematicGroup}): ${oldPos} → [${districtPosition.join(', ')}]`);
+              const oldPos = `[${node.x?.toFixed(1) || "undefined"}, ${
+                node.y?.toFixed(1) || "undefined"
+              }, ${node.z?.toFixed(1) || "undefined"}]`;
+              console.log(
+                `📍 Cluster ${node.cluster} (Master: ${
+                  clusterMaster.name
+                }, District: ${clusterThematicGroup}): ${oldPos} → [${districtPosition.join(
+                  ", "
+                )}]`
+              );
               repositionedClusters.add(node.cluster);
             }
 
@@ -528,7 +632,11 @@ const ForceGraphComponent = forwardRef((props, ref) => {
             let nodeY = clusterY;
             let nodeZ = clusterZ;
 
-            if (node.offsetX !== undefined && node.offsetY !== undefined && node.offsetZ !== undefined) {
+            if (
+              node.offsetX !== undefined &&
+              node.offsetY !== undefined &&
+              node.offsetZ !== undefined
+            ) {
               // Utiliser les offsets relatifs du cluster pour la dispersion interne
               nodeX += node.offsetX * 0.2; // Réduire l'influence des offsets
               nodeY += node.offsetY * 0.2;
@@ -563,8 +671,15 @@ const ForceGraphComponent = forwardRef((props, ref) => {
             node.z = nodeZ;
 
             // Debug: Afficher le changement de position pour quelques nodes
-            if (Math.random() < 0.01) { // 1% des nodes pour éviter trop de logs
-              console.log(`🔄 Node ${node.id}: [${oldX?.toFixed(1)}, ${oldY?.toFixed(1)}, ${oldZ?.toFixed(1)}] → [${nodeX.toFixed(1)}, ${nodeY.toFixed(1)}, ${nodeZ.toFixed(1)}]`);
+            if (Math.random() < 0.01) {
+              // 1% des nodes pour éviter trop de logs
+              console.log(
+                `🔄 Node ${node.id}: [${oldX?.toFixed(1)}, ${oldY?.toFixed(
+                  1
+                )}, ${oldZ?.toFixed(1)}] → [${nodeX.toFixed(
+                  1
+                )}, ${nodeY.toFixed(1)}, ${nodeZ.toFixed(1)}]`
+              );
             }
 
             // Réinitialiser les vitesses pour éviter les mouvements erratiques
@@ -581,15 +696,25 @@ const ForceGraphComponent = forwardRef((props, ref) => {
         const totalNodes = nodes.length;
 
         console.log("✅ Repositionnement terminé");
-        console.log(`📊 Résumé: ${repositionedNodesCount}/${totalNodes} nodes repositionnés dans ${clusterList.length} clusters avec cluster master`);
-        console.log("🏛️ Districts utilisés:", Object.values(clusterInfo.clusterDistricts));
-        console.log(`🎯 Clusters repositionnés:`, Array.from(repositionedClusters).sort((a, b) => a - b));
+        console.log(
+          `📊 Résumé: ${repositionedNodesCount}/${totalNodes} nodes repositionnés dans ${clusterList.length} clusters avec cluster master`
+        );
+        console.log(
+          "🏛️ Districts utilisés:",
+          Object.values(clusterInfo.clusterDistricts)
+        );
+        console.log(
+          `🎯 Clusters repositionnés:`,
+          Array.from(repositionedClusters).sort((a, b) => a - b)
+        );
 
         // Marquer le repositionnement comme terminé
         repositionedRef.current = true;
 
         // Ne pas fixer les positions - laisser les forces personnalisées maintenir le positionnement
-        console.log("🌊 Positions repositionnées, les forces personnalisées maintiendront l'organisation par districts");
+        console.log(
+          "🌊 Positions repositionnées, les forces personnalisées maintiendront l'organisation par districts"
+        );
 
         // Redémarrer la simulation avec une énergie modérée
         simulation.alpha(0.3);
@@ -640,12 +765,14 @@ const ForceGraphComponent = forwardRef((props, ref) => {
         clusterIds.forEach((clusterId, index) => {
           // Calculer la position idéale sur la sphère pour ce cluster
           // Distribution uniforme basée sur l'index du cluster
-          const phi = Math.acos(1 - 2 * (index + 0.5) / clusterIds.length); // Angle polaire
+          const phi = Math.acos(1 - (2 * (index + 0.5)) / clusterIds.length); // Angle polaire
           const theta = Math.PI * (1 + Math.sqrt(5)) * index; // Angle azimutal (spirale dorée)
 
-          const idealX = sphereCenter.x + sphereRadius * Math.sin(phi) * Math.cos(theta);
+          const idealX =
+            sphereCenter.x + sphereRadius * Math.sin(phi) * Math.cos(theta);
           const idealY = sphereCenter.y + sphereRadius * Math.cos(phi);
-          const idealZ = sphereCenter.z + sphereRadius * Math.sin(phi) * Math.sin(theta);
+          const idealZ =
+            sphereCenter.z + sphereRadius * Math.sin(phi) * Math.sin(theta);
 
           // Appliquer la force vers la position idéale sur tous les nodes du cluster
           nodes.forEach((node) => {
@@ -664,14 +791,24 @@ const ForceGraphComponent = forwardRef((props, ref) => {
 
         // PARTIE 2: Force de séparation entre clusters de districts différents (code original)
         nodes.forEach((nodeA) => {
-          if (nodeA.cluster === undefined || !clusterInfo.clusterDistricts[nodeA.cluster]) return;
+          if (
+            nodeA.cluster === undefined ||
+            !clusterInfo.clusterDistricts[nodeA.cluster]
+          )
+            return;
 
           const clusterDistrictA = clusterInfo.clusterDistricts[nodeA.cluster];
 
           nodes.forEach((nodeB) => {
-            if (nodeA === nodeB || nodeB.cluster === undefined || !clusterInfo.clusterDistricts[nodeB.cluster]) return;
+            if (
+              nodeA === nodeB ||
+              nodeB.cluster === undefined ||
+              !clusterInfo.clusterDistricts[nodeB.cluster]
+            )
+              return;
 
-            const clusterDistrictB = clusterInfo.clusterDistricts[nodeB.cluster];
+            const clusterDistrictB =
+              clusterInfo.clusterDistricts[nodeB.cluster];
 
             // Si les clusters sont dans des districts différents, les repousser
             if (clusterDistrictA !== clusterDistrictB) {
@@ -680,8 +817,9 @@ const ForceGraphComponent = forwardRef((props, ref) => {
               const dz = nodeA.z - nodeB.z;
               const distance = Math.sqrt(dx * dx + dy * dy + dz * dz);
 
-              if (distance < 400) { // Distance minimale entre clusters de districts différents
-                const force = alpha * 0.05 * (400 - distance) / distance; // Réduit de 0.15 à 0.05
+              if (distance < 400) {
+                // Distance minimale entre clusters de districts différents
+                const force = (alpha * 0.05 * (400 - distance)) / distance; // Réduit de 0.15 à 0.05
                 const fx = dx * force;
                 const fy = dy * force;
                 const fz = dz * force;
@@ -703,7 +841,11 @@ const ForceGraphComponent = forwardRef((props, ref) => {
         const nodes = simulation.nodes();
 
         nodes.forEach((node) => {
-          if (node.cluster === undefined || !clusterInfo.clusterDistricts[node.cluster]) return;
+          if (
+            node.cluster === undefined ||
+            !clusterInfo.clusterDistricts[node.cluster]
+          )
+            return;
 
           const clusterDistrict = clusterInfo.clusterDistricts[node.cluster];
           const districtPosition = getDistrictPosition(clusterDistrict);
@@ -750,7 +892,8 @@ const ForceGraphComponent = forwardRef((props, ref) => {
 
         // Appliquer la force de cohésion
         nodes.forEach((node) => {
-          if (node.cluster === undefined || !clusterCenters[node.cluster]) return;
+          if (node.cluster === undefined || !clusterCenters[node.cluster])
+            return;
 
           const center = clusterCenters[node.cluster];
           const dx = center.x - node.x;
@@ -808,21 +951,29 @@ const ForceGraphComponent = forwardRef((props, ref) => {
 
   // Fonction pour obtenir la couleur d'un district par son nom
   const getDistrictPosition = (thematicGroup) => {
-    const district = DISTRICTS.find(d => d.text === thematicGroup);
-    return district ? district.position : [500, 0, 0]
+    const district = DISTRICTS.find((d) => d.text === thematicGroup);
+    return district ? district.position : [500, 0, 0];
   };
 
   // Fonction pour obtenir la couleur d'un district par son nom
   const getDistrictColor = (thematicGroup) => {
-    const district = DISTRICTS.find(d => d.text === thematicGroup);
+    const district = DISTRICTS.find((d) => d.text === thematicGroup);
     return district ? district.color : "#ffffff"; // Blanc par défaut
   };
 
   // Fonctions pour le rendu du graphe
   const getNodeColor = (node) => {
     // SEULS les cluster masters sont colorés par district
-    if (node.type === "character" && node.isClusterMaster && node.thematicGroup) {
-      console.log(`🎨 Cluster Master ${node.name} (${node.thematicGroup}) → ${getDistrictColor(node.thematicGroup)}`);
+    if (
+      node.type === "character" &&
+      node.isClusterMaster &&
+      node.thematicGroup
+    ) {
+      console.log(
+        `🎨 Cluster Master ${node.name} (${
+          node.thematicGroup
+        }) → ${getDistrictColor(node.thematicGroup)}`
+      );
       return getDistrictColor(node.thematicGroup);
     }
 
