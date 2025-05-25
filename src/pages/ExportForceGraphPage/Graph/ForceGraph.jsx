@@ -17,19 +17,36 @@ import { Html, Text } from "@react-three/drei";
 import * as d3 from "d3";
 // import { COLORS } from "./Node/Node"; // Non utilisé car tous les nodes sont blancs sauf cluster masters
 import * as THREE from "three";
+import { useThree } from "@react-three/fiber";
 
 // Contexte pour l'affichage d'informations UI (simplifié)
 export const ForceGraphContext = createContext(null);
 
+// Composant pour afficher les axes helper
+const AxesHelper = ({ size = 100 }) => {
+  const { scene } = useThree();
+
+  useEffect(() => {
+    const axesHelper = new THREE.AxesHelper(size);
+    scene.add(axesHelper);
+
+    return () => {
+      scene.remove(axesHelper);
+    };
+  }, [scene, size]);
+
+  return null;
+};
+
 // Tableau des districts avec leurs couleurs (même que dans Game2/Graph.jsx)
 const DISTRICTS = [
-  { text: "Libertarians", position: [500, 200, -300], color: "#c0392b" },
-  { text: "Antisystem", position: [-200, 350, 200], color: "#f39c12" },
-  { text: "Conservatives", position: [300, -200, 400], color: "#d35400" },
-  { text: "Nationalists", position: [-500, -150, -250], color: "#27ae60" },
-  { text: "Religious", position: [200, 400, 300], color: "#fff8e" },
-  { text: "Culture", position: [-300, 100, 500], color: "#3498db" },
-  { text: "Social justice", position: [-150, -350, 100], color: "#44adfff" },
+  { text: "Libertarians", position: [250, 200, -250], color: "#c0392b" },
+  { text: "Antisystem", position: [-200, 250, 0], color: "#f39c12" },
+  { text: "Conservatives", position: [250, -200, 200], color: "#d35400" },
+  { text: "Nationalists", position: [-250, -150, -250], color: "#27ae60" },
+  { text: "Religious", position: [200, 250, 150], color: "#fff8e" },
+  { text: "Culture", position: [-300, 100, 250], color: "#3498db" },
+  { text: "Social justice", position: [0, -250, 0], color: "#44adfff" },
 ];
 
 // Couleurs de clusters supprimées car tous les nodes sont blancs sauf cluster masters
@@ -582,10 +599,70 @@ const ForceGraphComponent = forwardRef((props, ref) => {
       // Appliquer le repositionnement immédiatement
       repositionClustersByDistrict();
 
-      // Force de séparation entre clusters de districts différents
+      // Force de séparation entre clusters de districts différents + distribution sphérique globale
       const districtSeparationForce = (alpha) => {
         const nodes = simulation.nodes();
+        const sphereRadius = 600; // Rayon de la sphère globale
+        const sphereCenter = { x: 0, y: 0, z: 0 }; // Centre de la sphère
 
+        // PARTIE 1: Force de distribution sphérique globale pour tous les clusters
+        // Calculer les centres de chaque cluster
+        const clusterCenters = {};
+        const clusterNodeCounts = {};
+
+        nodes.forEach((node) => {
+          if (node.cluster === undefined) return;
+
+          if (!clusterCenters[node.cluster]) {
+            clusterCenters[node.cluster] = { x: 0, y: 0, z: 0 };
+            clusterNodeCounts[node.cluster] = 0;
+          }
+
+          clusterCenters[node.cluster].x += node.x;
+          clusterCenters[node.cluster].y += node.y;
+          clusterCenters[node.cluster].z += node.z;
+          clusterNodeCounts[node.cluster]++;
+        });
+
+        // Normaliser les centres de clusters
+        Object.keys(clusterCenters).forEach((clusterId) => {
+          const center = clusterCenters[clusterId];
+          const count = clusterNodeCounts[clusterId];
+          if (count > 0) {
+            center.x /= count;
+            center.y /= count;
+            center.z /= count;
+          }
+        });
+
+        // Appliquer la force sphérique sur chaque cluster
+        const clusterIds = Object.keys(clusterCenters);
+        clusterIds.forEach((clusterId, index) => {
+          // Calculer la position idéale sur la sphère pour ce cluster
+          // Distribution uniforme basée sur l'index du cluster
+          const phi = Math.acos(1 - 2 * (index + 0.5) / clusterIds.length); // Angle polaire
+          const theta = Math.PI * (1 + Math.sqrt(5)) * index; // Angle azimutal (spirale dorée)
+
+          const idealX = sphereCenter.x + sphereRadius * Math.sin(phi) * Math.cos(theta);
+          const idealY = sphereCenter.y + sphereRadius * Math.cos(phi);
+          const idealZ = sphereCenter.z + sphereRadius * Math.sin(phi) * Math.sin(theta);
+
+          // Appliquer la force vers la position idéale sur tous les nodes du cluster
+          nodes.forEach((node) => {
+            if (node.cluster == clusterId) {
+              const dx = idealX - node.x;
+              const dy = idealY - node.y;
+              const dz = idealZ - node.z;
+
+              const sphereForce = alpha * 0.01; // Force modérée vers la sphère
+              node.vx += dx * sphereForce;
+              node.vy += dy * sphereForce;
+              node.vz += dz * sphereForce;
+            }
+          });
+        });
+
+        // PARTIE 2: Force de séparation entre clusters de districts différents (code original)
         nodes.forEach((nodeA) => {
           if (nodeA.cluster === undefined || !clusterInfo.clusterDistricts[nodeA.cluster]) return;
 
@@ -763,13 +840,16 @@ const ForceGraphComponent = forwardRef((props, ref) => {
 
   return (
     <ForceGraphContext.Provider value={{}}>
+      {/* Axes helper pour visualiser les axes X, Y, Z */}
+      <AxesHelper size={200} />
+
       {/* Labels des districts */}
       {DISTRICTS.map((district, index) => (
         <ClusterLabel
           key={`district-${index}`}
           position={{
             x: district.position[0],
-            y: district.position[1] + 100, // Légèrement au-dessus
+            y: district.position[1], // Légèrement au-dessus
             z: district.position[2],
           }}
           text={district.text}
