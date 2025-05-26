@@ -4,8 +4,6 @@ import React, {
   memo,
   useMemo,
   useRef,
-  createContext,
-  useContext,
   useCallback,
 } from "react";
 import { useThree, useFrame } from "@react-three/fiber";
@@ -17,16 +15,37 @@ import {
   calculateClusterBoundingBoxes,
 } from "./utils/utils";
 import useCollisionStore from "../../../../services/CollisionService";
-import useGameStore from "../../../../store";
+import useGameStore, { useHoveredCluster } from "../../../../store";
 import { useInputs } from "../../../../components/AdvancedCameraController/inputManager";
 import { useInteractionText } from "../../../../components/AdvancedCameraController/CameraIndicators";
-
-// Contexte pour partager l'état d'activité des clusters sans re-rendus inutiles
-const ActiveClusterContext = createContext(null);
+import {
+  THEMATIC_COLORS,
+  getDarkerColor,
+} from "../../../../../../constants/thematicColors";
+import Node from "./components/Node";
+import Link from "./components/Link";
 
 // Créer des vecteurs réutilisables pour éviter les allocations dans les boucles d'animation
 const tempVec3 = new THREE.Vector3();
 const tempBox3 = new THREE.Box3();
+
+// Ajouter en haut du fichier, après les imports
+const linkMaterialCache = new Map();
+
+const getLinkMaterial = (color, opacity = 0.3) => {
+  const key = `${color.getHexString()}-${opacity}`;
+  if (!linkMaterialCache.has(key)) {
+    linkMaterialCache.set(
+      key,
+      new THREE.LineBasicMaterial({
+        color: color,
+        transparent: true,
+        opacity: opacity,
+      })
+    );
+  }
+  return linkMaterialCache.get(key);
+};
 
 /**
  * Composant simple pour afficher un graphe avec des sphères et des lignes
@@ -192,6 +211,19 @@ const Graph = memo(() => {
       transparent: false,
     });
 
+    // Créer les matériaux pour chaque groupe thématique
+    Object.entries(THEMATIC_COLORS).forEach(([group, color]) => {
+      materialsRef.current[`node_${group}`] = new THREE.MeshBasicMaterial({
+        color: color,
+        transparent: false,
+      });
+      materialsRef.current[`visitedNode_${group}`] =
+        new THREE.MeshBasicMaterial({
+          color: getDarkerColor(color),
+          transparent: false,
+        });
+    });
+
     // Nettoyage
     return () => {
       // Disposer les géométries
@@ -229,17 +261,6 @@ const Graph = memo(() => {
       };
     });
   }, [graphData]);
-
-  // Créer un map des nœuds pour accéder rapidement par ID
-  const nodeMap = useMemo(() => {
-    const map = new Map();
-    if (nodes && nodes.length) {
-      nodes.forEach((node) => {
-        map.set(node.id, node);
-      });
-    }
-    return map;
-  }, [nodes]);
 
   // Calculer les centroïdes des clusters et récupérer leurs noms
   const { centroids, clusterNames, clusterSlugs } = useMemo(() => {
@@ -286,6 +307,33 @@ const Graph = memo(() => {
     return result;
   }, [nodes]);
 
+  // Créer un map des nœuds pour accéder rapidement par ID
+  const nodeMap = useMemo(() => {
+    const map = new Map();
+    if (nodes && nodes.length) {
+      nodes.forEach((node) => {
+        map.set(node.id, node);
+      });
+    }
+    return map;
+  }, [nodes]);
+
+  // Créer un map des groupes thématiques par cluster
+  const clusterThematicGroups = useMemo(() => {
+    const groups = {};
+    if (nodes && nodes.length) {
+      nodes.forEach((node) => {
+        if (node.cluster !== undefined && node.thematicGroup) {
+          if (!groups[node.cluster] || node.isClusterMaster) {
+            groups[node.cluster] = node.thematicGroup;
+          }
+        }
+      });
+    }
+    console.log("Groupes thématiques par cluster:", groups);
+    return groups;
+  }, [nodes]);
+
   // Enregistrer les boîtes englobantes auprès du service de collision
   useEffect(() => {
     if (!clusterBoundingBoxes || Object.keys(clusterBoundingBoxes).length === 0)
@@ -311,19 +359,6 @@ const Graph = memo(() => {
 
   // Détecter les collisions localement sans utiliser le state global
   // useFrame supprimé car géré par le CollisionManager
-
-  // Valeur du contexte avec les refs nécessaires
-  const contextValue = useMemo(
-    () => ({
-      registerLabel: (id, component) => {
-        labelRefs.current.set(id, component);
-      },
-      unregisterLabel: (id) => {
-        labelRefs.current.delete(id);
-      },
-    }),
-    []
-  );
 
   // Mettre à jour les références aux noms et slugs de clusters pour le hover
   useEffect(() => {
@@ -411,69 +446,56 @@ const Graph = memo(() => {
   if (!graphData) return null;
 
   return (
-    <ActiveClusterContext.Provider value={contextValue}>
-      <group>
-        {/* Nœuds du graphe représentés par des sphères */}
-        {nodes.map((node, index) => (
-          <mesh
-            key={`node-${index}`}
-            position={[node.x || 0, node.y || 0, node.z || 0]}
-            geometry={geometriesRef.current.node}
-            material={
-              isClusterVisited(node)
-                ? materialsRef.current.visitedNode
-                : materialsRef.current.node
-            }
+    <group>
+      {/* Nœuds du graphe représentés par des sphères */}
+      {nodes.map((node, index) => (
+        <Node
+          key={`node-${index}`}
+          node={node}
+          geometriesRef={geometriesRef}
+          materialsRef={materialsRef}
+          isClusterVisited={isClusterVisited}
+        />
+      ))}
+
+      {/* Liens du graphe représentés par des lignes */}
+      {edges.map((edge, index) => {
+        const source = nodeMap.get(edge.source);
+        const target = nodeMap.get(edge.target);
+
+        if (!source || !target) {
+          return null;
+        }
+
+        return (
+          <Link
+            key={`edge-${index}`}
+            edge={edge}
+            source={source}
+            target={target}
+            materialsRef={materialsRef}
+            isLinkVisited={isLinkVisited}
           />
-        ))}
+        );
+      })}
 
-        {/* Liens du graphe représentés par des lignes */}
-        {edges.map((edge, index) => {
-          // Récupérer les nœuds source et cible par ID
-          const source = nodeMap.get(edge.source);
-          const target = nodeMap.get(edge.target);
-
-          // Vérifier que les nœuds existent
-          if (!source || !target) {
-            return null;
-          }
-
-          // Créer les points de la ligne
-          const points = [
-            new THREE.Vector3(source.x || 0, source.y || 0, source.z || 0),
-            new THREE.Vector3(target.x || 0, target.y || 0, target.z || 0),
-          ];
-
-          // Mettre à jour la géométrie de la ligne
-          edge.geometry.setFromPoints(points);
-
-          return (
-            <line
-              key={`edge-${index}`}
-              geometry={edge.geometry}
-              material={
-                isLinkVisited(source, target)
-                  ? materialsRef.current.visitedLine
-                  : materialsRef.current.line
-              }
-            />
-          );
-        })}
-
-        {/* Noms des clusters aux centroïdes - apparaissent quand on s'approche */}
-        {Object.entries(centroids).map(([clusterId, centroid]) => (
+      {/* Noms des clusters aux centroïdes */}
+      {Object.entries(centroids).map(([clusterId, centroid]) => {
+        const thematicGroup = clusterThematicGroups[clusterId];
+        return (
           <ClusterLabel
             key={`cluster-${clusterId}`}
             id={clusterId}
             centroid={centroid}
             name={clusterNames[clusterId] || clusterId}
+            thematicGroup={thematicGroup}
             isVisited={isClusterVisited(
               nodes.find((n) => n.cluster === clusterId)
             )}
           />
-        ))}
-      </group>
-    </ActiveClusterContext.Provider>
+        );
+      })}
+    </group>
   );
 });
 
@@ -482,44 +504,50 @@ const Graph = memo(() => {
  * Utilise un contexte pour ne mettre à jour le composant
  * que lorsque son état actif change, sans re-rendre le graphe complet
  */
-const ClusterLabel = memo(({ id, centroid, name, isVisited }) => {
-  const [isActive, setIsActive] = useState(false);
-  const context = useContext(ActiveClusterContext);
-  const hoveredCluster = useGameStore((state) => state.hoveredCluster);
+const ClusterLabel = memo(
+  ({ id, centroid, name, isVisited, thematicGroup }) => {
+    const hoveredCluster = useHoveredCluster();
+    const isActive = hoveredCluster === id;
 
-  // Mettre à jour l'état actif quand le contexte change
-  useEffect(() => {
-    if (context && context.updateActivity) {
-      context.updateActivity(id, setIsActive);
-    }
-  }, [context, id]);
+    // Position du texte avec un décalage vers le haut
+    const position = useMemo(
+      () => [centroid.x || 0, (centroid.y || 0) + 30, centroid.z || 0],
+      [centroid]
+    );
 
-  // Position du texte avec un décalage vers le haut
-  const position = useMemo(
-    () => [centroid.x || 0, (centroid.y || 0) + 30, centroid.z || 0],
-    [centroid]
-  );
+    // Déterminer la couleur du texte en fonction du groupe thématique
+    const textColor = useMemo(() => {
+      if (isVisited) {
+        if (THEMATIC_COLORS[thematicGroup]) {
+          return getDarkerColor(THEMATIC_COLORS[thematicGroup]);
+        }
+        return "#666666";
+      }
 
-  return (
-    <group>
-      {/* Nom du cluster */}
-      <CustomText
-        text={name}
-        position={position}
-        size={15}
-        minSize={6}
-        maxSize={20}
-        dynamicSize={true}
-        color={isVisited ? "#666666" : "#ffffff"}
-        reverseOpacity={true}
-        maxDistance={1000}
-        minDistance={300}
-        outline={true}
-        outlineWidth={2.0}
-        outlineColor="#000000"
-      />
-    </group>
-  );
-});
+      const color = THEMATIC_COLORS[thematicGroup];
+      return color || "#ffffff";
+    }, [isVisited, thematicGroup]);
+
+    return (
+      <group>
+        <CustomText
+          text={name}
+          position={position}
+          size={15}
+          minSize={6}
+          maxSize={20}
+          dynamicSize={true}
+          color={textColor}
+          reverseOpacity={true}
+          maxDistance={1000}
+          minDistance={300}
+          outline={true}
+          outlineWidth={2.0}
+          outlineColor="#000000"
+        />
+      </group>
+    );
+  }
+);
 
 export default Graph;

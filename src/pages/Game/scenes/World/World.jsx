@@ -8,6 +8,7 @@ import Stars from "../../components/Stars";
 import ShootingStars from "./components/ShootingStars";
 import DistrictLabels from "./components/DistrictLabels";
 import SvgPath from "../../components/SvgPath";
+import VibSvgPath from "../../components/VibSvgPath";
 import useAssets from "../../hooks/useAssets";
 import Graph from "./components/Graph/Graph";
 import AdvancedCluster from "../AdvancedCluster/AdvancedCluster";
@@ -17,7 +18,16 @@ import BlackHoleEffect from "./components/BlackHoleEffect";
 
 // Composant générique pour les icônes de personnages
 const CharacterIcon = memo(
-  ({ svgName, position, size = 300, onClick, persona }) => {
+  ({
+    svgName,
+    position,
+    size = 300,
+    onClick,
+    persona,
+    useVibration = false,
+    vibrationIntensity = 0.2,
+    vibrationSpeed = 1.5,
+  }) => {
     const assets = useAssets({ autoInit: false });
     const setActiveLevel = useGameStore((state) => state.setActiveLevel);
     const groupRef = React.useRef();
@@ -57,14 +67,18 @@ const CharacterIcon = memo(
     const svgPath = `${svgName}.svg`;
     console.log("[World] Tentative de chargement du SVG:", svgPath);
 
+    const SvgComponent = useVibration ? VibSvgPath : SvgPath;
+
     return (
       <group ref={groupRef} onClick={handleClick} position={position}>
-        <SvgPath
+        <SvgComponent
           svgPath={svgPath}
           size={size}
           color="white"
           lineWidth={2}
           isBillboard={true}
+          vibrationIntensity={vibrationIntensity}
+          vibrationSpeed={vibrationSpeed}
           onError={(err) => {
             console.error(`[World] Erreur de chargement pour ${svgPath}:`, err);
             handleSvgError(err);
@@ -90,6 +104,10 @@ const WorldLevel = memo(() => {
               name: "Joshua Goldberg",
               type: "persona",
             }}
+            useVibration={true}
+            size={300}
+            vibrationIntensity={5}
+            vibrationSpeed={2}
           />
         ),
         position: [0, 0, 0],
@@ -108,6 +126,9 @@ const WorldLevel = memo(() => {
             svgName="heart-1"
             position={[200, 150, 100]}
             size={25}
+            useVibration={true}
+            vibrationIntensity={2}
+            vibrationSpeed={3}
           />
         ),
         position: [200, 150, 100],
@@ -126,6 +147,9 @@ const WorldLevel = memo(() => {
             svgName="heart-2"
             position={[-150, 200, -100]}
             size={25}
+            useVibration={true}
+            vibrationIntensity={2.5}
+            vibrationSpeed={2.5}
           />
         ),
         position: [-150, 200, -100],
@@ -144,6 +168,9 @@ const WorldLevel = memo(() => {
             svgName="heart-3"
             position={[200, -350, 200]}
             size={25}
+            useVibration={true}
+            vibrationIntensity={3}
+            vibrationSpeed={2}
           />
         ),
         position: [200, -350, 200],
@@ -167,6 +194,9 @@ const WorldLevel = memo(() => {
               type: "persona",
             }}
             size={150}
+            useVibration={true}
+            vibrationIntensity={4}
+            vibrationSpeed={1.5}
           />
         ),
         position: [-420, 0, 0],
@@ -178,35 +208,35 @@ const WorldLevel = memo(() => {
           depth: 200,
         },
       },
-      {
-        id: "blackhole",
-        element: (
-          <BlackHoleEffect
-            position={[420, 0, 0]}
-            size={10}
-            particles={35000}
-            rotationSpeed={0.12}
-            spiralTightness={5}
-            rotation={[0.2, 2.5, 0.5]}
-          />
-        ),
-        position: [420, 0, 0],
-        isInteractive: true,
-        text: "Un trou noir mystérieux qui semble absorber l'énergie environnante. Sa présence crée une distorsion fascinante dans l'espace.",
-        targetLevel: {
-          id: "blackhole",
-          type: "blackhole",
-          name: "Trou Noir",
-          data: {
-            position: [420, 0, 0],
-          },
-        },
-        boundingBox: {
-          width: 150,
-          height: 120,
-          depth: 150,
-        },
-      },
+      // {
+      //   id: "blackhole",
+      //   element: (
+      //     <BlackHoleEffect
+      //       position={[420, 0, 0]}
+      //       size={10}
+      //       particles={35000}
+      //       rotationSpeed={0.12}
+      //       spiralTightness={5}
+      //       rotation={[0.2, 2.5, 0.5]}
+      //     />
+      //   ),
+      //   position: [420, 0, 0],
+      //   isInteractive: true,
+      //   text: "Un trou noir mystérieux qui semble absorber l'énergie environnante. Sa présence crée une distorsion fascinante dans l'espace.",
+      //   targetLevel: {
+      //     id: "blackhole",
+      //     type: "blackhole",
+      //     name: "Trou Noir",
+      //     data: {
+      //       position: [420, 0, 0],
+      //     },
+      //   },
+      //   boundingBox: {
+      //     width: 150,
+      //     height: 120,
+      //     depth: 150,
+      //   },
+      // },
     ],
     []
   );

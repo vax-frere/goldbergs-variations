@@ -69,9 +69,25 @@ const Intro = () => {
                     letterSpacing: "0.3px",
                     textAlign: "center",
                     mx: "auto",
+                    mb: 4,
                   }}
                 >
-                  <BoldText text="From <b>40,000</b> posts (2006-2015), this work unfolds a narrative <b>galaxy of extremist</b>, <b>whimsical</b>, or <b>impersonated</b> characters. Inspired by <b>Lombardi</b>, this <b>data visualization</b> maps political <b>obsessions</b> and geek culture. It simulates a fragmented mind experiencing the world as a simulation, unveiling a digital <b>Joker</b> confronting the Internet's contradictions." />
+                  <BoldText text="<b>Joshua Ryne Goldberg</b>, the world's most prolific nihilistic troll, spent <b>14 to 20 hours a day</b> on the Internet between 2006 and 2015. Under multiple identities, he embodied characters with opposing ideologies: <b>jihadist</b>, <b>feminist</b>, <b>neo-nazi</b>, manipulating media and social networks. His arrest by the FBI in 2015 revealed a fragmented mind, diagnosed with schizophrenia, who had turned the Internet into his personal theater." />
+                </Typography>
+                <Typography
+                  variant="body1"
+                  paragraph
+                  sx={{
+                    lineHeight: 1.7,
+                    maxWidth: "800px",
+                    opacity: 0.85,
+                    fontWeight: 300,
+                    letterSpacing: "0.3px",
+                    textAlign: "center",
+                    mx: "auto",
+                  }}
+                >
+                  <BoldText text="Inspired by <b>Lombardi's</b> narrative structures, this <b>data visualization</b> maps his <b>political obsessions</b> and geek culture through a galaxy of <b>40,000 posts</b>. The experience simulates a fragmented mind experiencing the world as a simulation, unveiling a digital <b>Joker</b> confronting the Internet's contradictions." />
                 </Typography>
               </motion.div>
 

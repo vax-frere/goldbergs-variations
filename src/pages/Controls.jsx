@@ -83,16 +83,19 @@ const Controls = () => {
                     maxWidth: "800px",
                     opacity: 0.85,
                     fontWeight: 300,
+                    mb: 0,
                     letterSpacing: "0.3px",
                   }}
                 >
-                  You will pilot a <strong>spacecraft</strong> through Joshua's{" "}
-                  <strong>mind</strong>, exploring the
-                  <strong> neural pathways</strong> and{" "}
-                  <strong>musical memories</strong> that form his consciousness.
-                  Navigate through the <strong>digital footprints</strong> of
-                  his online presence, where <strong>40,000 posts</strong> form
-                  a vast network of thoughts.
+                  Navigate through an immersive <strong>data landscape</strong>{" "}
+                  where each node represents a fragment of Joshua's{" "}
+                  <strong>digital identity</strong>. Explore the{" "}
+                  <strong>interconnected network</strong> of his multiple
+                  personas, revealing the <strong>patterns</strong> and{" "}
+                  <strong>contradictions</strong> that shaped his online
+                  presence. Use the controls below to traverse this{" "}
+                  <strong>abstract visualization</strong> of his digital
+                  consciousness.
                 </Typography>
               </motion.div>
 

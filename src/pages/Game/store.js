@@ -25,7 +25,8 @@ export const useGameStore = create((set, get) => ({
   audioEnabled: true, // État du son (activé par défaut)
   debug: getInitialDebugState(), // État du mode debug initialisé depuis le localStorage
   camera: null, // Référence à la caméra principale
-  hoveredCluster: null, // Slug du cluster survolé actuellement
+  hoveredCluster: null,
+  hoveredClusterData: null, // Ajout des données complètes du cluster survolé
 
   // Système de niveaux unifié
   currentLevel: GAME_LEVELS.WORLD, // Niveau actuel
@@ -116,7 +117,11 @@ export const useGameStore = create((set, get) => ({
   setCamera: (camera) => set({ camera }),
 
   // Fonction pour définir le slug du cluster survolé
-  setHoveredCluster: (clusterSlug) => set({ hoveredCluster: clusterSlug }),
+  setHoveredCluster: (clusterSlug, clusterData = null) =>
+    set({
+      hoveredCluster: clusterSlug,
+      hoveredClusterData: clusterData,
+    }),
 
   // Fonction pour changer de niveau avec transition
   setActiveLevel: (levelData, targetLevel = null) => {
@@ -241,6 +246,9 @@ export const useGameStore = create((set, get) => ({
   // Fonction pour définir si un composant est interactif
   setComponentInteractive: (isInteractive) =>
     set({ isComponentInteractive: isInteractive }),
+
+  // Getter pour les données du cluster survolé
+  getHoveredClusterData: () => get().hoveredClusterData,
 }));
 
 export default useGameStore;
@@ -265,3 +273,7 @@ export const useIsTransitioning = () =>
 // Selector spécifique pour les données du nœud actif
 export const useActiveNodeData = () =>
   useGameStore((state) => state.activeNodeData);
+
+// Nouveau sélecteur pour les données du cluster survolé
+export const useHoveredClusterData = () =>
+  useGameStore((state) => state.hoveredClusterData);

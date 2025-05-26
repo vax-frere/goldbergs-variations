@@ -1,5 +1,6 @@
 import React from "react";
 import CustomText from "../../../components/CustomText";
+import { DISTRICT_LABEL_COLORS } from "../../../../../constants/thematicColors";
 
 /**
  * Liste des quartiers/catégories à afficher dans l'espace 3D
@@ -18,7 +19,7 @@ const DISTRICTS = [
  * Composant pour afficher les noms des quartiers dans le graphe
  * @param {Object} props - Propriétés du composant
  * @param {number} [props.textSize=20] - Taille du texte (réduite de 40 à 20)
- * @param {string} [props.textColor="#ffffff"] - Couleur du texte
+ * @param {string} [props.textColor="#ffffff"] - Couleur du texte par défaut si pas de couleur thématique
  * @param {Array} [props.districts=DISTRICTS] - Tableau personnalisé de districts/quartiers
  * @param {number} [props.maxDistance=400] - Distance maximale à laquelle le texte est complètement visible
  * @param {number} [props.minDistance=70] - Distance minimale à laquelle le texte devient complètement invisible
@@ -38,7 +39,7 @@ const DistrictLabels = ({
           text={district.text}
           position={district.position}
           size={textSize}
-          color={textColor}
+          color={DISTRICT_LABEL_COLORS[district.text] || textColor}
           maxDistance={maxDistance}
           minDistance={minDistance}
           outline={true}

@@ -1,4 +1,4 @@
-import { useState, useEffect, memo, useRef } from "react";
+import { useState, useEffect, memo, useRef, useCallback } from "react";
 import { Canvas, useThree } from "@react-three/fiber";
 import { Stats } from "@react-three/drei";
 import useSound from "use-sound";
@@ -37,6 +37,42 @@ const CollisionManager = memo(() => {
   const { camera } = useThree();
   const setHoveredCluster = useGameStore((state) => state.setHoveredCluster);
   const activeLevel = useGameStore((state) => state.activeLevel);
+  const assets = useAssets();
+
+  // Fonction pour trouver les données d'un cluster
+  const findClusterData = useCallback(
+    (clusterId) => {
+      if (!assets.isReady) return null;
+
+      const database = assets.getData("database");
+      const graphData = assets.getData("graph");
+
+      let data = null;
+
+      // Chercher dans la base de données
+      if (database) {
+        data = database.find((item) => item.slug === clusterId);
+      }
+
+      // Chercher dans les nœuds du graphe
+      if (graphData?.nodes) {
+        const node = graphData.nodes.find(
+          (n) => n.slug === clusterId || String(n.id) === clusterId
+        );
+        if (node) {
+          data = {
+            ...node,
+            ...(data || {}),
+            name: data?.name || node.name || node.id,
+            type: data?.type || node.type,
+          };
+        }
+      }
+
+      return data;
+    },
+    [assets]
+  );
 
   // Initialiser le service de collision
   useEffect(() => {
@@ -60,14 +96,18 @@ const CollisionManager = memo(() => {
 
       // Détecter les collisions
       const collisions = detectCollisions();
-      if (!collisions) return;
+      if (!collisions) {
+        setHoveredCluster(null, null);
+        return;
+      }
 
       // Gérer les collisions avec les clusters
       if (collisions.clusters && collisions.clusters.length > 0) {
         const detectedCluster = collisions.clusters[0];
-        setHoveredCluster(detectedCluster.id);
+        const clusterData = findClusterData(detectedCluster.id);
+        setHoveredCluster(detectedCluster.id, clusterData);
       } else {
-        setHoveredCluster(null);
+        setHoveredCluster(null, null);
       }
     };
 
@@ -75,7 +115,7 @@ const CollisionManager = memo(() => {
 
     return () => {
       clearInterval(interval);
-      setHoveredCluster(null);
+      setHoveredCluster(null, null);
     };
   }, [
     camera,
@@ -83,6 +123,7 @@ const CollisionManager = memo(() => {
     calculateDetectionPoint,
     detectCollisions,
     setHoveredCluster,
+    findClusterData,
   ]);
 
   return null;

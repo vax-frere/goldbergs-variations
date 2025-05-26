@@ -33,7 +33,7 @@ const LoadingBar = memo(({ progress, message, stage, totalStages }) => {
       <ManyFaces />
       <div
         style={{
-          width: "100px",
+          width: "120px",
           textAlign: "center",
         }}
       >

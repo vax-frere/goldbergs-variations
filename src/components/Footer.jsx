@@ -74,8 +74,7 @@ const Footer = () => {
               top: "50%",
               left: "50%",
               transform: "translate(-50%, -50%)",
-              width: { xs: "90%", sm: "500px" },
-              maxWidth: "600px",
+              width: { xs: "90%", sm: "60%" },
               bgcolor: "black",
               color: "#f5f5f5",
               boxShadow: 24,
@@ -113,31 +112,69 @@ const Footer = () => {
               id="about-modal-description"
               sx={{ mt: 2, mb: 3, fontWeight: 300 }}
             >
-              From 40,000 posts (2006-2015), this work unfolds a narrative
-              galaxy of extremist, whimsical, or impersonated characters. It
-              simulates a fragmented mind experiencing the world as a
-              simulation, unveiling a digital Joker confronting the Internet's
-              contradictions.
+              First presented at the <strong>Vidéoformes Festival</strong>{" "}
+              (Chapelle de l'Oratoire), this installation explores the digital
+              stream of consciousness of <strong>Joshua Ryne Goldberg</strong>,
+              the world's most prolific nihilistic troll.
               <br />
-              <br /> Here is the{" "}
+              <br />
+              Drawing from an archive of over <strong>40,000 posts</strong>{" "}
+              accumulated between 2006 and 2015, through twenty-hour days spent
+              on the Internet, the work unfolds a narrative galaxy of{" "}
+              <strong>
+                extremist, fantastical, or impersonated characters
+              </strong>
+              .
+              <br />
+              <br />
+              Inspired by <strong>Mark Lombardi's narrative structures</strong>,
+              this interactive data visualization maps his political obsessions,
+              geek culture, and solipsistic visions of a world experienced as a
+              simulation. This immersive device constitutes a simulation of his{" "}
+              <strong>fragmented thought</strong>, revealing the project of a
+              digital <strong>"Joker"</strong> confronting the Internet with its
+              own contradictions.
+              <br />
+              <br />
+              Explore the complete{" "}
               <Link
                 href="https://tfrere.github.io/joshua-post-timeline/"
                 target="_blank"
                 rel="noopener noreferrer"
               >
-                scrapped database
-              </Link>
+                <strong>database here</strong>
+              </Link>{" "}
             </Typography>
-
             <Typography variant="subtitle1" fontWeight="500" gutterBottom>
               Credits:
             </Typography>
 
             <Typography variant="body2" paragraph sx={{ fontWeight: 300 }}>
-              <strong>Artistic Direction:</strong> Chandouti Ismael
+              <strong>Artist & Artistic Direction:</strong>{" "}
+              <Link
+                href="https://linktr.ee/ismael_jchandoutis"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                Chandouti Ismael
+              </Link>
               <br />
-              <strong>Design & Development:</strong> Benjamin Vaxelaire, Frere
-              Thibaud
+              <strong>Technical Development:</strong>{" "}
+              <Link
+                href="https://datawrap.fr/"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                Benjamin Vaxelaire
+              </Link>
+              ,{" "}
+              <Link
+                href="https://tfrere.com"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                Frere Thibaud
+              </Link>
               <br />
               <strong>Data scraping:</strong> Aymeric Georgin, xxx
               <br />

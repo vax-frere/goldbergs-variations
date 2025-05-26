@@ -75,84 +75,116 @@ const ExportForceGraphPage = () => {
       const links = graphData.links || [];
 
       // Nettoyer les nœuds pour n'inclure que les propriétés essentielles
-      const cleanNodes = nodesWithPositions.map((node) => {
-        // Extraire uniquement les propriétés dont nous avons besoin
-        return {
-          id: node.id,
-          name: node.name,
-          type: node.type,
-          cluster: node.cluster,
-          x: node.x,
-          y: node.y,
-          z: node.z,
-          value: node.value || node.val,
-          color: node.color,
-          slug: node.originalId,
-          isClusterMaster: node.isClusterOrigin || false, // Utiliser la propriété existante
-          // Propriétés supplémentaires demandées
-          displayName: node.displayName,
-          aliases: node.aliases,
-          isJoshua: node.isJoshua,
-          fictionOrImpersonation: node.fictionOrImpersonation,
-          thematic: node.thematic,
-          thematicGroup: node.thematicGroup,
-          career: node.career,
-          genre: node.genre,
-          polarisation: node.polarisation,
-          cercle: node.cercle,
-          politicalSphere: node.politicalSphere,
-          clusterSlug: node.clusterSlug,
-        };
-      });
-
-      // Nettoyer les liens pour n'inclure que les propriétés essentielles
-      const cleanLinks = links.map((link) => {
-        // Assurer que source et target sont des chaînes d'ID et non des objets
-        const source =
-          typeof link.source === "object" ? link.source.id : link.source;
-        const target =
-          typeof link.target === "object" ? link.target.id : link.target;
-
-        // Récupérer les données originales du lien si elles existent
-        const originalData = link.originalLinkData || {};
-
-        // Supprimer les propriétés problématiques du lien actuel
-        const cleanLink = {
-          // Ne garder que les propriétés essentielles
-          value: link.value,
-          color: link.color,
-          // Autres propriétés non problématiques...
-        };
-
-        // Garantir que chaque propriété est correctement préservée
-        // en privilégiant les données originales
-        const exportedLink = {
-          // Propriétés de base
-          source: source,
-          target: target,
-          value: link.value,
-          color: link.color,
-
-          // Propriétés importantes - prendre d'abord de originalData, sinon du lien
-          type: originalData.type || link.type,
-          isDirect: originalData.isDirect || link.isDirect,
-          relationType: originalData.relationType || link.relationType,
-          mediaImpact: originalData.mediaImpact || link.mediaImpact,
-          virality: originalData.virality || link.virality,
-          mediaCoverage: originalData.mediaCoverage || link.mediaCoverage,
-          linkType: originalData.linkType || link.linkType,
-          platforms: originalData.platforms || link.platforms,
-        };
-
-        // Ajouter toutes les autres propriétés de originalData qui ne sont pas déjà incluses
-        Object.keys(originalData).forEach((key) => {
-          if (exportedLink[key] === undefined) {
-            exportedLink[key] = originalData[key];
-          }
+      const cleanNodes = nodesWithPositions
+        .filter((node) => "thematicGroup" in node)
+        .map((node) => {
+          // Extraire uniquement les propriétés dont nous avons besoin
+          return {
+            id: node.id,
+            name: node.name,
+            type: node.type,
+            cluster: node.cluster,
+            x: node.x,
+            y: node.y,
+            z: node.z,
+            value: node.value || node.val,
+            color: node.color,
+            slug: node.originalId,
+            isClusterMaster: node.isClusterOrigin || false, // Utiliser la propriété existante
+            // Propriétés supplémentaires demandées
+            displayName: node.displayName,
+            aliases: node.aliases,
+            isJoshua: node.isJoshua,
+            fictionOrImpersonation: node.fictionOrImpersonation,
+            thematic: node.thematic,
+            thematicGroup: node.thematicGroup,
+            career: node.career,
+            genre: node.genre,
+            polarisation: node.polarisation,
+            cercle: node.cercle,
+            politicalSphere: node.politicalSphere,
+            clusterSlug: node.clusterSlug,
+          };
         });
 
-        return exportedLink;
-      });
+      // Nettoyer les liens pour n'inclure que les propriétés essentielles
+      const cleanLinks = links
+        .filter((link) => {
+          // Trouver les nœuds source et target
+          const sourceNode = nodesWithPositions.find(
+            (n) =>
+              n.id ===
+              (typeof link.source === "object" ? link.source.id : link.source)
+          );
+          const targetNode = nodesWithPositions.find(
+            (n) =>
+              n.id ===
+              (typeof link.target === "object" ? link.target.id : link.target)
+          );
+
+          // Vérifier que les deux nœuds existent et ont la clé thematicGroup
+          return (
+            sourceNode &&
+            targetNode &&
+            "thematicGroup" in sourceNode &&
+            "thematicGroup" in targetNode
+          );
+        })
+        .map((link) => {
+          // Trouver les nœuds source et target pour récupérer leurs thematicGroup
+          const sourceNode = nodesWithPositions.find(
+            (n) =>
+              n.id ===
+              (typeof link.source === "object" ? link.source.id : link.source)
+          );
+          const targetNode = nodesWithPositions.find(
+            (n) =>
+              n.id ===
+              (typeof link.target === "object" ? link.target.id : link.target)
+          );
+
+          // Assurer que source et target sont des chaînes d'ID et non des objets
+          const source =
+            typeof link.source === "object" ? link.source.id : link.source;
+          const target =
+            typeof link.target === "object" ? link.target.id : link.target;
+
+          // Récupérer les données originales du lien si elles existent
+          const originalData = link.originalLinkData || {};
+
+          // Garantir que chaque propriété est correctement préservée
+          // en privilégiant les données originales
+          const exportedLink = {
+            // Propriétés de base
+            source: source,
+            target: target,
+            value: link.value,
+            color: link.color,
+            // Ajouter les thematicGroup des nœuds source et target
+            sourceThematicGroup: sourceNode.thematicGroup,
+            targetThematicGroup: targetNode.thematicGroup,
+            thematicGroup: sourceNode.thematicGroup, // On prend arbitrairement celui de la source
+
+            // Propriétés importantes - prendre d'abord de originalData, sinon du lien
+            type: originalData.type || link.type,
+            isDirect: originalData.isDirect || link.isDirect,
+            relationType: originalData.relationType || link.relationType,
+            mediaImpact: originalData.mediaImpact || link.mediaImpact,
+            virality: originalData.virality || link.virality,
+            mediaCoverage: originalData.mediaCoverage || link.mediaCoverage,
+            linkType: originalData.linkType || link.linkType,
+            platforms: originalData.platforms || link.platforms,
+          };
+
+          // Ajouter toutes les autres propriétés de originalData qui ne sont pas déjà incluses
+          Object.keys(originalData).forEach((key) => {
+            if (exportedLink[key] === undefined) {
+              exportedLink[key] = originalData[key];
+            }
+          });
+
+          return exportedLink;
+        });
 
       // Créer l'objet complet à exporter
       const exportData = {
