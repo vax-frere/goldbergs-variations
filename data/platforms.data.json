@@ -1,0 +1,202 @@
+[
+  {
+    "id": "4plebs",
+    "name": "4plebs",
+    "description": "Archive site for 4chan boards that preserves posts and threads from various boards, allowing users to search through historical content that would otherwise be lost due to 4chan's ephemeral nature."
+  },
+  {
+    "id": "8chan",
+    "name": "8chan",
+    "description": "Anonymous imageboard platform created as an alternative to 4chan, featuring user-created boards with minimal moderation. Known for hosting controversial content and being associated with various internet subcultures."
+  },
+  {
+    "id": "adult-swim",
+    "name": "Adult Swim",
+    "description": "Late-night programming block on Cartoon Network featuring adult-oriented animated series, experimental shows, and alternative comedy. Known for its surreal humor and cult following among internet communities."
+  },
+  {
+    "id": "justpaste-it",
+    "name": "JustPaste.it",
+    "description": "Simple anonymous text sharing service that allows users to quickly paste and share text content without registration. Often used for sharing code snippets, messages, or documents temporarily."
+  },
+  {
+    "id": "mail",
+    "name": "Mail",
+    "description": "Traditional email communication platform used for private correspondence, newsletters, and digital communication. Remains a primary method for formal and personal online communication."
+  },
+  {
+    "id": "anime-news-network",
+    "name": "Anime News Network",
+    "description": "Comprehensive news and information website covering anime, manga, and Japanese pop culture. Features reviews, industry news, release schedules, and an extensive database of anime and manga titles."
+  },
+  {
+    "id": "animesuki",
+    "name": "AnimeSuki",
+    "description": "Long-running anime discussion forum and community where fans discuss series, share recommendations, and engage in detailed analysis of anime and manga. Known for its dedicated fanbase and in-depth discussions."
+  },
+  {
+    "id": "badmovies",
+    "name": "BadMovies",
+    "description": "Specialized forum dedicated to discussing B-movies, cult films, and so-bad-they're-good cinema. Community of film enthusiasts who celebrate low-budget and unconventional movies."
+  },
+  {
+    "id": "bluelight",
+    "name": "Bluelight",
+    "description": "Harm reduction forum focused on drug safety, education, and support. Provides evidence-based information about substances and promotes safer use practices within a supportive community environment."
+  },
+  {
+    "id": "bluwiki",
+    "name": "BluWiki",
+    "description": "Collaborative wiki platform that allowed users to create and share content on various topics. Was a popular alternative to Wikipedia for more specialized or niche content before its closure."
+  },
+  {
+    "id": "breitbart",
+    "name": "Breitbart",
+    "description": "Conservative news and opinion website known for its right-wing political commentary and controversial reporting. Influential in conservative media circles and associated with populist political movements."
+  },
+  {
+    "id": "criterion",
+    "name": "Criterion",
+    "description": "Prestigious film collection and discussion platform focused on classic, arthouse, and important cinema. The Criterion Collection is renowned for its high-quality film restorations and scholarly approach to cinema."
+  },
+  {
+    "id": "daily-kos",
+    "name": "Daily Kos",
+    "description": "Progressive political blog and community platform featuring liberal commentary, political analysis, and grassroots activism. Known for its active user base and influence in Democratic politics."
+  },
+  {
+    "id": "dailykos",
+    "name": "DailyKos",
+    "description": "Alternative spelling of Daily Kos - progressive political blog and community platform featuring liberal commentary, political analysis, and grassroots activism coordination."
+  },
+  {
+    "id": "dailystormer",
+    "name": "Daily Stormer",
+    "description": "Far-right extremist website and forum promoting white supremacist ideology and neo-Nazi content. Known for spreading hate speech and conspiracy theories, frequently banned from mainstream platforms."
+  },
+  {
+    "id": "deviantart",
+    "name": "DeviantArt",
+    "description": "Large online art community and platform where artists share digital artwork, photography, literature, and other creative content. Features galleries, critiques, and social networking for creative individuals."
+  },
+  {
+    "id": "digitpress",
+    "name": "DigitPress",
+    "description": "Specialized video game collecting and discussion forum focused on retro gaming, rare games, and gaming memorabilia. Community of collectors and enthusiasts sharing knowledge about game values and history."
+  },
+  {
+    "id": "disqus",
+    "name": "Disqus",
+    "description": "Widely-used comment system and discussion platform that websites integrate to enable user comments and discussions. Provides moderation tools and social features for online communities."
+  },
+  {
+    "id": "e-mail",
+    "name": "E-mail",
+    "description": "Electronic mail communication system that remains fundamental to internet communication. Used for everything from personal correspondence to business communications and automated notifications."
+  },
+  {
+    "id": "facebook",
+    "name": "Facebook",
+    "description": "Major social networking platform connecting billions of users worldwide. Features personal profiles, groups, pages, messaging, and content sharing. Central to modern social media and online identity."
+  },
+  {
+    "id": "filmboards",
+    "name": "FilmBoards",
+    "description": "Movie discussion forum and community where film enthusiasts analyze movies, share reviews, and engage in detailed discussions about cinema, directors, and film theory."
+  },
+  {
+    "id": "imdb",
+    "name": "IMDb",
+    "description": "Internet Movie Database - the world's most comprehensive source for movie, TV, and celebrity information. Features ratings, reviews, trivia, and detailed filmographies for entertainment content."
+  },
+  {
+    "id": "lastfm",
+    "name": "Last.fm",
+    "description": "Music discovery and social networking service that tracks listening habits, provides personalized recommendations, and connects users with similar musical tastes. Popular among music enthusiasts for discovering new artists."
+  },
+  {
+    "id": "medium",
+    "name": "Medium",
+    "description": "Online publishing platform for articles, essays, and long-form content. Popular among writers, journalists, and thought leaders for sharing in-depth analysis and personal stories."
+  },
+  {
+    "id": "reddit",
+    "name": "Reddit",
+    "description": "Social news aggregation and discussion platform organized into topic-based communities called subreddits. Known for its voting system, diverse communities, and influence on internet culture."
+  },
+  {
+    "id": "sluthate",
+    "name": "Sluthate",
+    "description": "Controversial forum focused on dating, relationships, and pickup culture. Known for hosting discussions about dating strategies and relationship dynamics, often with controversial viewpoints."
+  },
+  {
+    "id": "stormfront",
+    "name": "Stormfront",
+    "description": "White supremacist forum and community that has been one of the internet's most prominent hate sites. Promotes racist ideology and serves as a gathering place for white nationalist movements."
+  },
+  {
+    "id": "surespot",
+    "name": "Surespot",
+    "description": "Encrypted messaging application designed for secure and private communication. Features end-to-end encryption and focuses on protecting user privacy and message security."
+  },
+  {
+    "id": "techdirt",
+    "name": "Techdirt",
+    "description": "Technology news and policy discussion website covering digital rights, internet freedom, copyright issues, and tech policy. Known for its critical analysis of technology legislation and corporate practices."
+  },
+  {
+    "id": "tezukainenglish",
+    "name": "TezukaInEnglish",
+    "description": "Specialized forum dedicated to the works of Osamu Tezuka, the legendary manga creator known as the 'God of Manga.' Discusses his various series including Astro Boy, Black Jack, and Phoenix."
+  },
+  {
+    "id": "the-west-australian",
+    "name": "The West Australian",
+    "description": "Major Australian newspaper and news website serving Western Australia. Covers local, national, and international news with a focus on Australian perspectives and regional issues."
+  },
+  {
+    "id": "thoughtcatalog",
+    "name": "Thought Catalog",
+    "description": "Digital magazine and platform for personal essays, cultural commentary, and lifestyle content. Features millennial-focused writing on relationships, career, mental health, and contemporary culture."
+  },
+  {
+    "id": "times-of-israel",
+    "name": "Times of Israel",
+    "description": "Israeli news website providing comprehensive coverage of Middle East affairs, Israeli politics, and Jewish community news worldwide. Offers multiple perspectives on regional conflicts and developments."
+  },
+  {
+    "id": "twitter",
+    "name": "Twitter",
+    "description": "Microblogging and social networking platform known for real-time news, political discourse, and viral content. Limited character count encourages concise communication and rapid information sharing."
+  },
+  {
+    "id": "vnn",
+    "name": "VNN",
+    "description": "Vanguard News Network - white nationalist website promoting antisemitic and racist content. Serves as a platform for extremist political views and hate speech targeting minority groups."
+  },
+  {
+    "id": "wikipedia",
+    "name": "Wikipedia",
+    "description": "Free online encyclopedia with collaborative editing, containing millions of articles on virtually every topic. One of the most visited websites globally and a primary source of information for internet users."
+  },
+  {
+    "id": "wordpress",
+    "name": "WordPress",
+    "description": "Popular content management system and blogging platform powering millions of websites worldwide. Offers both hosted and self-hosted solutions for creating blogs, business sites, and online publications."
+  },
+  {
+    "id": "wrong-planet",
+    "name": "Wrong Planet",
+    "description": "Online community and support forum for people with autism, Asperger's syndrome, and related conditions. Provides a safe space for discussion, advice, and connection among neurodivergent individuals."
+  },
+  {
+    "id": "youtube",
+    "name": "YouTube",
+    "description": "World's largest video sharing and streaming platform owned by Google. Hosts billions of videos ranging from entertainment and education to news and personal vlogs, fundamentally changing media consumption."
+  },
+  {
+    "id": "ytmnd",
+    "name": "YTMND",
+    "description": "You're The Man Now Dog - early internet meme website for creating simple multimedia pages combining images, text, and sound. Influential in early internet culture and meme development."
+  }
+]
