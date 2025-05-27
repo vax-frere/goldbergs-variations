@@ -17,13 +17,6 @@ export function Stars({ count = 4000, radius = 5000, size = 5.5 }) {
   const materialRef = useRef();
   const assets = useAssets();
 
-  // Données pour l'animation de scintillement
-  const animationData = useRef({
-    time: 0,
-    twinkleOffsets: null,
-    twinkleFrequencies: null,
-  });
-
   // Couleurs stellaires réalistes basées sur la température
   const stellarColors = useMemo(
     () => [
@@ -127,12 +120,10 @@ export function Stars({ count = 4000, radius = 5000, size = 5.5 }) {
   }, [assets.isReady]);
 
   // Créer les positions, couleurs et tailles des étoiles avec distribution réaliste
-  const [positions, colors, sizes, twinkleData] = useMemo(() => {
+  const [positions, colors, sizes] = useMemo(() => {
     const positions = new Float32Array(count * 3);
     const colors = new Float32Array(count * 3);
     const sizes = new Float32Array(count);
-    const twinkleOffsets = new Float32Array(count);
-    const twinkleFrequencies = new Float32Array(count);
 
     // Paramètres pour la simulation de la Voie lactée
     const milkyWayDensity = 0.5; // 50% des étoiles dans le plan galactique (plus visible)
@@ -231,54 +222,10 @@ export function Stars({ count = 4000, radius = 5000, size = 5.5 }) {
       colors[i * 3] = stellarColor.r;
       colors[i * 3 + 1] = stellarColor.g;
       colors[i * 3 + 2] = stellarColor.b;
-
-      // Données pour le scintillement (plus prononcé pour les étoiles brillantes)
-      twinkleOffsets[i] = Math.random() * Math.PI * 2;
-
-      // Seules les étoiles brillantes (magnitude < 3.0) scintillent, soit environ 10%
-      const shouldTwinkle = magnitude < 3.0;
-      twinkleFrequencies[i] = shouldTwinkle ? 0.8 + Math.random() * 2.0 : 0; // 0 = pas de scintillement
     }
 
-    return [positions, colors, sizes, { twinkleOffsets, twinkleFrequencies }];
+    return [positions, colors, sizes];
   }, [count, radius, size, stellarColors]);
-
-  // Stocker les données d'animation
-  useEffect(() => {
-    animationData.current.twinkleOffsets = twinkleData.twinkleOffsets;
-    animationData.current.twinkleFrequencies = twinkleData.twinkleFrequencies;
-  }, [twinkleData]);
-
-  // Animation de scintillement
-  useFrame((state, delta) => {
-    if (!pointsRef.current || !animationData.current.twinkleOffsets) return;
-
-    animationData.current.time += delta;
-
-    const geometry = pointsRef.current.geometry;
-    const sizeAttribute = geometry.attributes.size;
-
-    // Mettre à jour les tailles pour le scintillement (seulement les étoiles qui scintillent)
-    for (let i = 0; i < count; i++) {
-      const baseSize = sizes[i];
-      const frequency = animationData.current.twinkleFrequencies[i];
-
-      // Si frequency = 0, l'étoile ne scintille pas
-      if (frequency === 0) {
-        sizeAttribute.array[i] = baseSize;
-        continue;
-      }
-
-      const offset = animationData.current.twinkleOffsets[i];
-
-      // Scintillement plus visible (±25% de la taille de base au lieu de 10%)
-      const twinkle =
-        1.0 + 0.25 * Math.sin(animationData.current.time * frequency + offset);
-      sizeAttribute.array[i] = baseSize * twinkle;
-    }
-
-    sizeAttribute.needsUpdate = true;
-  });
 
   if (!assets.isReady) {
     return null;

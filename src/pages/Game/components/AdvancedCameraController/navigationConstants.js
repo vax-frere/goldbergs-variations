@@ -78,11 +78,18 @@ export const INPUT_ACTIONS = {
   },
 };
 
+// Types de périphériques d'entrée
+export const INPUT_DEVICE_TYPES = {
+  KEYBOARD: "keyboard",
+  GAMEPAD: "gamepad",
+  TOUCH: "touch", // Pour une future extension mobile
+};
+
 // Paramètres du champ de vision
 export const CAMERA_FOV = 50;
 
 // Paramètres des limites spatiales
-export const BASE_CAMERA_DISTANCE = 1600;
+export const BASE_CAMERA_DISTANCE = 1900;
 export const BOUNDING_SPHERE_RADIUS = 2400; // Rayon de la sphère limite au-delà de laquelle on revient à la position par défaut
 export const ACCELERATION_DISTANCE_THRESHOLD = 10; // Distance à partir de laquelle on applique l'accélération
 export const ORBIT_DISTANCE = 1600; // Distance fixe pour le mode d'orbite automatique
@@ -99,20 +106,125 @@ export const CAMERA_POSITIONS = [
   // { position: new Vector3(150, -100, 200), target: new Vector3(0, 50, 0) },
 ];
 
-// Configuration du mode vol
-export const DEFAULT_FLIGHT_CONFIG = {
-  maxSpeed: 300, // Maintenu pour la vitesse maximale
-  acceleration: 400, // Réduit pour une accélération plus progressive (était 800)
-  deceleration: 0.92, // Augmenté pour une décélération plus longue (était 0.85)
-  rotationSpeed: 1.2, // Augmenté pour une rotation plus sensible (était 0.5)
-  deadzone: 0.08, // Maintenu pour la sensibilité
+// Configuration de base (valeurs par défaut)
+const BASE_FLIGHT_CONFIG = {
+  maxSpeed: 300,
+  acceleration: 400,
+  deceleration: 0.92,
+  rotationSpeed: 1.2,
+  deadzone: 0.08,
 };
 
-// Facteurs d'accélération
+// Configurations spécifiques par périphérique
+export const DEVICE_SPECIFIC_CONFIGS = {
+  [INPUT_DEVICE_TYPES.KEYBOARD]: {
+    ...BASE_FLIGHT_CONFIG,
+    // Clavier : plus précis mais nécessite plus d'accélération pour compenser le binaire on/off
+    acceleration: 500, // Plus élevé pour compenser les entrées binaires
+    maxSpeed: 700, // Légèrement plus rapide pour le clavier
+    rotationSpeed: 1.5, // Plus sensible en rotation
+    // Multiplicateurs spécifiques au clavier
+    keyboardSensitivity: 1.5,
+    keyboardMovementMultiplier: 1.0,
+    keyboardLookMultiplier: 1.8,
+    // Paramètres de douceur pour l'orientation
+    orientationSmoothFactor: 0.05, // Lissage au relâchement (plus bas = plus doux)
+    orientationInertiaFactor: 0.06, // Inertie au démarrage (plus bas = plus d'inertie)
+    // Courbe de réponse (pour les futures améliorations)
+    responseCurve: "linear",
+  },
+  [INPUT_DEVICE_TYPES.GAMEPAD]: {
+    ...BASE_FLIGHT_CONFIG,
+    // Manette : plus fluide avec les sticks analogiques
+    acceleration: 350, // Plus doux grâce aux entrées analogiques
+    maxSpeed: 280, // Légèrement plus lent pour plus de contrôle
+    rotationSpeed: 1.0, // Moins sensible, compensé par la courbe exponentielle
+    deadzone: 0.08,
+    // Paramètres spécifiques à la manette
+    lookSensitivity: 1.2, // Sensibilité du stick droit
+    lookCurveIntensity: 0.5, // Intensité de la courbe exponentielle pour les mouvements de caméra
+    vibrationEnabled: true, // Support de la vibration
+    // Paramètres de douceur pour l'orientation
+    orientationSmoothFactor: 0.12, // Lissage au relâchement
+    orientationInertiaFactor: 0.18, // Plus réactif au démarrage pour la manette
+    // Courbe de réponse
+    responseCurve: "exponential",
+  },
+  [INPUT_DEVICE_TYPES.TOUCH]: {
+    ...BASE_FLIGHT_CONFIG,
+    // Configuration pour une future extension mobile
+    acceleration: 300,
+    maxSpeed: 250,
+    rotationSpeed: 0.8,
+    deadzone: 0.12, // Plus large pour les écrans tactiles
+    touchSensitivity: 1.0,
+    // Paramètres de douceur pour l'orientation
+    orientationSmoothFactor: 0.1, // Lissage au relâchement
+    orientationInertiaFactor: 0.15, // Inertie au démarrage
+    responseCurve: "smooth",
+  },
+};
+
+// Configuration par défaut (fallback)
+export const DEFAULT_FLIGHT_CONFIG =
+  DEVICE_SPECIFIC_CONFIGS[INPUT_DEVICE_TYPES.KEYBOARD];
+
+// Fonction utilitaire pour obtenir la configuration selon le périphérique actif
+export const getFlightConfigForDevice = (deviceType) => {
+  return DEVICE_SPECIFIC_CONFIGS[deviceType] || DEFAULT_FLIGHT_CONFIG;
+};
+
+// Fonction pour mélanger les configurations (pour les cas où plusieurs périphériques sont actifs)
+export const blendConfigs = (
+  primaryDevice,
+  secondaryDevice,
+  blendFactor = 0.5
+) => {
+  const primaryConfig = getFlightConfigForDevice(primaryDevice);
+  const secondaryConfig = getFlightConfigForDevice(secondaryDevice);
+
+  const blendedConfig = { ...primaryConfig };
+
+  // Mélanger les valeurs numériques
+  Object.keys(primaryConfig).forEach((key) => {
+    if (
+      typeof primaryConfig[key] === "number" &&
+      typeof secondaryConfig[key] === "number"
+    ) {
+      blendedConfig[key] =
+        primaryConfig[key] * (1 - blendFactor) +
+        secondaryConfig[key] * blendFactor;
+    }
+  });
+
+  return blendedConfig;
+};
+
+// Facteurs d'accélération (maintenant aussi spécifiques par périphérique)
 export const ACCELERATION_FACTORS = {
-  DEFAULT: 1,
-  DISTANT: 3,
-  TRANSITION_SPEED: 0.04, // Réduit pour une transition plus progressive (était 0.08)
+  [INPUT_DEVICE_TYPES.KEYBOARD]: {
+    DEFAULT: 1.5,
+    DISTANT: 3.2, // Plus élevé pour le clavier
+    TRANSITION_SPEED: 0.08,
+  },
+  [INPUT_DEVICE_TYPES.GAMEPAD]: {
+    DEFAULT: 1.3, // Plus doux pour la manette
+    DISTANT: 2.8,
+    TRANSITION_SPEED: 0.06, // Plus lent pour plus de fluidité
+  },
+  [INPUT_DEVICE_TYPES.TOUCH]: {
+    DEFAULT: 1.2,
+    DISTANT: 2.5,
+    TRANSITION_SPEED: 0.05,
+  },
+};
+
+// Fonction utilitaire pour obtenir les facteurs d'accélération selon le périphérique
+export const getAccelerationFactorsForDevice = (deviceType) => {
+  return (
+    ACCELERATION_FACTORS[deviceType] ||
+    ACCELERATION_FACTORS[INPUT_DEVICE_TYPES.KEYBOARD]
+  );
 };
 
 // Modes de contrôle de caméra disponibles

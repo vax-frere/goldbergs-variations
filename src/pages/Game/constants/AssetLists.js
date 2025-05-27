@@ -22,11 +22,18 @@ export const ASSET_PATHS = {
 export const SVG_FILES = [
   // Personnages et éléments principaux
   "joshua-goldberg.svg",
+  "astroboy.svg",
   "thug.svg",
   "trollface.svg",
   "heart-1.svg",
   "heart-2.svg",
   "heart-3.svg",
+  "star-1.svg",
+  "star-2.svg",
+  "star-3.svg",
+  "star-4.svg",
+  "star-5.svg",
+  "star-6.svg",
   "music-note-1.svg",
   "music-note-2.svg",
   "music-note-3.svg",
@@ -123,7 +130,7 @@ export const DATA_FILES = [
   },
   {
     id: "graph",
-    file: "final_spatialized_graph.data.json",
+    file: "spatialized_graph.data.json",
   },
   {
     id: "srt_interview",

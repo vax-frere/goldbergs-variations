@@ -24,6 +24,7 @@ import useDebugMode from "./hooks/useDebugMode";
 import { AdvancedCameraController } from "./components/AdvancedCameraController/AdvancedCameraController";
 import GameAudio from "./components/GameAudio";
 import CollisionDebugRenderer from "./components/debug/CollisionDebugRenderer";
+import GridReferences from "./components/GridReferences";
 import { useFrame } from "@react-three/fiber";
 import textContentService from "./services/TextContentService";
 import EffectRenderer from "./components/EffectRenderer";
@@ -158,6 +159,12 @@ const DebugStats = memo(() => {
   return debug ? <Stats /> : null;
 });
 
+// Composant pour afficher la grille de référence uniquement en mode debug
+const DebugGridReferences = memo(() => {
+  const debug = useGameStore((state) => state.debug);
+  return debug ? <GridReferences /> : null;
+});
+
 // Composant pour le Canvas et ses effets
 const GameCanvas = memo(({ children }) => {
   // Activer l'écoute de la touche P pour le debug mode
@@ -183,6 +190,7 @@ const GameCanvas = memo(({ children }) => {
       <AdvancedCameraController />
       <CollisionManager />
       <CollisionDebugRenderer />
+      <DebugGridReferences />
 
       {/* Renderer des effets visuels (global) */}
       <EffectRenderer />

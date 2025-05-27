@@ -30,24 +30,26 @@ const NodeSphere = ({
     // Les nœuds simplement sélectionnés sont jaunes
     sphereColor = "#ffcc00";
   } else {
-    // Les nœuds non sélectionnés utilisent la couleur par défaut
+    // Les nœuds non sélectionnés utilisent la couleur thématique
     sphereColor = color;
   }
 
   // Intensité de l'émission pour renforcer la visibilité
   const emissiveIntensity =
-    isSelected || isActiveNode || isInCluster ? 0.6 : 0.3;
+    isSelected || isActiveNode || isInCluster ? 0.6 : 0.2;
+
+  // Couleur d'émission - utiliser la couleur thématique pour les nœuds non sélectionnés
+  const emissiveColor =
+    isSelected || isActiveNode || isInCluster ? sphereColor : color;
 
   return (
     <>
-      <sphereGeometry args={[size * 3 || 0.5, 32, 32]} />
+      <sphereGeometry args={[size * 6 || 1.0, 32, 32]} />
       <meshStandardMaterial
         color={sphereColor}
         roughness={0.3}
         metalness={0.8}
-        emissive={
-          isSelected || isActiveNode || isInCluster ? sphereColor : "#FFF"
-        }
+        emissive={emissiveColor}
         emissiveIntensity={emissiveIntensity}
         transparent={transparent}
         opacity={transparent ? 0.3 : 1.0}
@@ -65,6 +67,7 @@ const NodeSVG = ({
   isMultiSelected,
   isActiveNode,
   isInCluster,
+  thematicColor = "#FFFFFF",
 }) => {
   if (!svgData || !svgBounds) return null;
 
@@ -79,7 +82,7 @@ const NodeSVG = ({
   } else if (isSelected) {
     strokeColor = "#ffcc00"; // Jaune pour les nœuds sélectionnés
   } else {
-    strokeColor = "#FFFFFF"; // Blanc pour les nœuds non sélectionnés
+    strokeColor = thematicColor; // Couleur thématique pour les nœuds non sélectionnés
   }
 
   return (
@@ -156,7 +159,7 @@ const NodeLabel = ({
   const fontSize = isSelected || isActiveNode || isInCluster ? 2.2 : 2;
 
   return (
-    <group position={[0, size * 3 + 0.3, 0]}>
+    <group position={[0, size * 6 + 0.5, 0]}>
       <Billboard>
         <group>
           {/* Background plane for better text visibility */}
@@ -289,7 +292,6 @@ const MovableNode = ({
   onPositionUpdate,
   onTransformStart,
   onTransformEnd,
-  controlsRef,
 }) => {
   const nodeRef = useRef();
   const transformRef = useRef();
@@ -309,9 +311,12 @@ const MovableNode = ({
   }, [isSelected]);
 
   // Couleurs et propriétés visuelles
+  // Utiliser la couleur thématique si disponible, sinon couleur par défaut
   const defaultColor = isSelected ? "#ff9500" : "#0088ff";
   const nodeColor =
-    node.data && node.data.color ? node.data.color : defaultColor;
+    node.thematicColor ||
+    node.baseThematicColor ||
+    (node.data && node.data.color ? node.data.color : defaultColor);
 
   // Adapter la taille si le nœud est actif
   const baseSize = node.size || 0.5;
@@ -491,6 +496,7 @@ const MovableNode = ({
             isMultiSelected={isMultiSelected}
             isActiveNode={isActiveNode}
             isInCluster={isInCluster}
+            thematicColor={nodeColor}
           />
         )}
 

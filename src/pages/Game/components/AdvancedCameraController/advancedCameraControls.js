@@ -11,6 +11,9 @@ import {
   RETURN_VELOCITY,
   RETURN_ROTATION_SPEED,
   RETURN_DURATION,
+  INPUT_DEVICE_TYPES,
+  getFlightConfigForDevice,
+  getAccelerationFactorsForDevice,
 } from "./navigationConstants";
 
 // Re-export des constantes importantes
@@ -140,10 +143,18 @@ export class FlightController {
     this.defaultTarget = DEFAULT_TARGET;
     this.isReturningToDefault = false;
 
+    // Périphérique actif et configurations dynamiques
+    this.activeDevice = INPUT_DEVICE_TYPES.KEYBOARD;
+    this.deviceConfig = getFlightConfigForDevice(this.activeDevice);
+    this.deviceAccelerationFactors = getAccelerationFactorsForDevice(
+      this.activeDevice
+    );
+
     // Facteurs d'accélération pour la transition
-    this.currentAccelerationFactor = ACCELERATION_FACTORS.DEFAULT;
-    this.targetAccelerationFactor = ACCELERATION_FACTORS.DEFAULT;
-    this.accelerationTransitionSpeed = ACCELERATION_FACTORS.TRANSITION_SPEED;
+    this.currentAccelerationFactor = this.deviceAccelerationFactors.DEFAULT;
+    this.targetAccelerationFactor = this.deviceAccelerationFactors.DEFAULT;
+    this.accelerationTransitionSpeed =
+      this.deviceAccelerationFactors.TRANSITION_SPEED;
 
     // Entrées actuelles
     this.input = {
@@ -158,8 +169,12 @@ export class FlightController {
     // Entrées cibles (pour le lissage)
     this.targetInput = { ...this.input };
 
-    // Lissage des entrées
-    this.smoothFactor = 0.15;
+    // Vitesses d'orientation actuelles (pour l'inertie au démarrage)
+    this.orientationVelocity = {
+      yaw: 0,
+      pitch: 0,
+      roll: 0,
+    };
 
     // Vitesse actuelle
     this.velocity = new Vector3(0, 0, 0);
@@ -201,6 +216,40 @@ export class FlightController {
     this._config = { ...DEFAULT_FLIGHT_CONFIG, ...newConfig };
   }
 
+  // Nouvelle méthode pour mettre à jour le périphérique actif
+  setActiveDevice(deviceType) {
+    if (this.activeDevice !== deviceType) {
+      console.log(
+        `🎮 FLIGHT: Switching device configuration from ${this.activeDevice} to ${deviceType}`
+      );
+
+      this.activeDevice = deviceType;
+      this.deviceConfig = getFlightConfigForDevice(deviceType);
+      this.deviceAccelerationFactors =
+        getAccelerationFactorsForDevice(deviceType);
+
+      // Mettre à jour les facteurs d'accélération
+      this.accelerationTransitionSpeed =
+        this.deviceAccelerationFactors.TRANSITION_SPEED;
+
+      // Exposer les informations pour le debug
+      window.__activeDevice = deviceType;
+      window.__deviceConfig = this.deviceConfig;
+
+      console.log(
+        `🎮 FLIGHT: New config - acceleration: ${this.deviceConfig.acceleration}, maxSpeed: ${this.deviceConfig.maxSpeed}`
+      );
+    }
+  }
+
+  // Obtenir la configuration effective (mélange entre config de base et config du périphérique)
+  getEffectiveConfig() {
+    return {
+      ...this._config,
+      ...this.deviceConfig,
+    };
+  }
+
   setInput(input) {
     // Mettre à jour les entrées cibles, pas directement les entrées actuelles
     this.targetInput = { ...this.targetInput, ...input };
@@ -215,15 +264,15 @@ export class FlightController {
       return;
     }
 
-    // Utiliser la configuration actuelle
-    const config = this._config;
+    // Utiliser la configuration effective (base + périphérique)
+    const config = this.getEffectiveConfig();
 
     // Calculer la distance par rapport au centre pour déterminer le facteur d'accélération cible
     const distanceFromCenter = this.camera.position.length();
     this.targetAccelerationFactor =
       distanceFromCenter > ACCELERATION_DISTANCE_THRESHOLD
-        ? ACCELERATION_FACTORS.DISTANT
-        : ACCELERATION_FACTORS.DEFAULT;
+        ? this.deviceAccelerationFactors.DISTANT
+        : this.deviceAccelerationFactors.DEFAULT;
 
     // Interpolation linéaire vers le facteur d'accélération cible
     if (
@@ -248,20 +297,56 @@ export class FlightController {
 
     // Exposer le facteur d'accélération actuel pour le DebugNavigationUI
     window.__accelerationFactor = accelerationFactor;
+    window.__activeDeviceInFlight = this.activeDevice;
 
-    // Interpoler progressivement entre les entrées actuelles et les entrées cibles
+    // Système d'inertie pour l'orientation avec accélération progressive
+    // Mouvement (utilise le lissage simple)
     this.input.thrust +=
-      (this.targetInput.thrust - this.input.thrust) * this.smoothFactor;
+      (this.targetInput.thrust - this.input.thrust) *
+      this.deviceConfig.orientationSmoothFactor;
     this.input.lateral +=
-      (this.targetInput.lateral - this.input.lateral) * this.smoothFactor;
+      (this.targetInput.lateral - this.input.lateral) *
+      this.deviceConfig.orientationSmoothFactor;
     this.input.upDown +=
-      (this.targetInput.upDown - this.input.upDown) * this.smoothFactor;
-    this.input.yaw +=
-      (this.targetInput.yaw - this.input.yaw) * this.smoothFactor;
-    this.input.pitch +=
-      (this.targetInput.pitch - this.input.pitch) * this.smoothFactor;
-    this.input.roll +=
-      (this.targetInput.roll - this.input.roll) * this.smoothFactor;
+      (this.targetInput.upDown - this.input.upDown) *
+      this.deviceConfig.orientationSmoothFactor;
+
+    // Orientation (utilise le système d'inertie)
+    // Yaw (lacet)
+    const targetYawVelocity = this.targetInput.yaw * config.rotationSpeed;
+    this.orientationVelocity.yaw +=
+      (targetYawVelocity - this.orientationVelocity.yaw) *
+      this.deviceConfig.orientationInertiaFactor;
+    // Décélération quand pas d'entrée
+    if (Math.abs(this.targetInput.yaw) < 0.001) {
+      this.orientationVelocity.yaw *=
+        1 - this.deviceConfig.orientationSmoothFactor;
+    }
+    this.input.yaw = this.orientationVelocity.yaw / config.rotationSpeed;
+
+    // Pitch (tangage)
+    const targetPitchVelocity = this.targetInput.pitch * config.rotationSpeed;
+    this.orientationVelocity.pitch +=
+      (targetPitchVelocity - this.orientationVelocity.pitch) *
+      this.deviceConfig.orientationInertiaFactor;
+    // Décélération quand pas d'entrée
+    if (Math.abs(this.targetInput.pitch) < 0.001) {
+      this.orientationVelocity.pitch *=
+        1 - this.deviceConfig.orientationSmoothFactor;
+    }
+    this.input.pitch = this.orientationVelocity.pitch / config.rotationSpeed;
+
+    // Roll (roulis)
+    const targetRollVelocity = this.targetInput.roll * config.rotationSpeed;
+    this.orientationVelocity.roll +=
+      (targetRollVelocity - this.orientationVelocity.roll) *
+      this.deviceConfig.orientationInertiaFactor;
+    // Décélération quand pas d'entrée
+    if (Math.abs(this.targetInput.roll) < 0.001) {
+      this.orientationVelocity.roll *=
+        1 - this.deviceConfig.orientationSmoothFactor;
+    }
+    this.input.roll = this.orientationVelocity.roll / config.rotationSpeed;
 
     // Calculer l'accélération dans la direction de vue (avant/arrière)
     if (Math.abs(this.input.thrust) > 0.001) {
@@ -443,6 +528,13 @@ export class FlightController {
       thrust: 0,
       lateral: 0,
       upDown: 0,
+      yaw: 0,
+      pitch: 0,
+      roll: 0,
+    };
+
+    // Réinitialiser les vitesses d'orientation
+    this.orientationVelocity = {
       yaw: 0,
       pitch: 0,
       roll: 0,

@@ -34,6 +34,7 @@
     "react-dom": "^19.0.0",
     "react-router-dom": "^7.2.0",
     "react-spring": "^9.7.5",
+    "seedrandom": "^3.0.5",
     "three": "^0.174.0",
     "use-sound": "^5.0.0"
   },

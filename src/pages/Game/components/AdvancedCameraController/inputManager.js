@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { INPUT_DEVICE_TYPES } from "./navigationConstants";
 
 // Classe pour la gestion unifiée des entrées (clavier et manette)
 export class InputManager {
@@ -42,8 +43,65 @@ export class InputManager {
     this.listeners = [];
     this.gamepadConnected = false;
 
+    // Détection du périphérique actif
+    this.activeDevice = INPUT_DEVICE_TYPES.KEYBOARD; // Par défaut
+    this.lastInputTime = {
+      [INPUT_DEVICE_TYPES.KEYBOARD]: 0,
+      [INPUT_DEVICE_TYPES.GAMEPAD]: 0,
+    };
+    this.deviceSwitchThreshold = 100; // ms pour considérer un changement de périphérique
+
     // Démarre les écouteurs d'événements
     this.bindEvents();
+  }
+
+  // Obtenir le périphérique actuellement actif
+  getActiveDevice() {
+    return this.activeDevice;
+  }
+
+  // Mettre à jour le périphérique actif basé sur la dernière entrée
+  updateActiveDevice(deviceType) {
+    const now = Date.now();
+    this.lastInputTime[deviceType] = now;
+
+    // Changer de périphérique actif si l'entrée est récente
+    if (this.activeDevice !== deviceType) {
+      const timeSinceLastActiveInput =
+        now - this.lastInputTime[this.activeDevice];
+
+      if (timeSinceLastActiveInput > this.deviceSwitchThreshold) {
+        console.log(
+          `🎮 INPUT: Switching active device from ${this.activeDevice} to ${deviceType}`
+        );
+        this.activeDevice = deviceType;
+
+        // Notifier les écouteurs du changement de périphérique
+        this.notifyDeviceChange(deviceType);
+      }
+    }
+  }
+
+  // Ajouter un écouteur pour les changements de périphérique
+  addDeviceChangeListener(callback) {
+    if (!this.deviceChangeListeners) {
+      this.deviceChangeListeners = [];
+    }
+    this.deviceChangeListeners.push(callback);
+    return () => {
+      this.deviceChangeListeners = this.deviceChangeListeners.filter(
+        (cb) => cb !== callback
+      );
+    };
+  }
+
+  // Notifier les écouteurs du changement de périphérique
+  notifyDeviceChange(newDevice) {
+    if (this.deviceChangeListeners) {
+      for (const listener of this.deviceChangeListeners) {
+        listener(newDevice);
+      }
+    }
   }
 
   // Ajouter un écouteur pour recevoir les mises à jour d'entrée
@@ -147,6 +205,9 @@ export class InputManager {
 
   // Gestion des événements clavier
   handleKeyDown = (event) => {
+    // Mettre à jour le périphérique actif
+    this.updateActiveDevice(INPUT_DEVICE_TYPES.KEYBOARD);
+
     this.keysPressed[event.code] = true;
 
     // Gestion d'actions spéciales
@@ -189,6 +250,9 @@ export class InputManager {
   };
 
   handleKeyUp = (event) => {
+    // Mettre à jour le périphérique actif
+    this.updateActiveDevice(INPUT_DEVICE_TYPES.KEYBOARD);
+
     this.keysPressed[event.code] = false;
 
     // Réinitialiser les actions après notification
@@ -230,6 +294,14 @@ export class InputManager {
 
   // Traitement des entrées clavier
   processKeyboardInput() {
+    // Mettre à jour le périphérique actif si des touches sont pressées
+    const hasKeyboardInput = Object.values(this.keysPressed).some(
+      (pressed) => pressed
+    );
+    if (hasKeyboardInput) {
+      this.updateActiveDevice(INPUT_DEVICE_TYPES.KEYBOARD);
+    }
+
     // Application des multiplicateurs pour le clavier
     const moveMultiplier = this.config.keyboardMovementMultiplier;
     const lookMultiplier = this.config.keyboardLookMultiplier;
@@ -332,6 +404,18 @@ export class InputManager {
         Math.pow(Math.abs(deadzonedValue), curveIntensity)
       );
     };
+
+    // Détecter l'activité de la manette
+    const hasGamepadInput =
+      Math.abs(gamepad.axes[0]) > this.config.deadzone ||
+      Math.abs(gamepad.axes[1]) > this.config.deadzone ||
+      Math.abs(gamepad.axes[2]) > this.config.deadzone ||
+      Math.abs(gamepad.axes[3]) > this.config.deadzone ||
+      gamepad.buttons.some((button) => button.pressed);
+
+    if (hasGamepadInput) {
+      this.updateActiveDevice(INPUT_DEVICE_TYPES.GAMEPAD);
+    }
 
     // Mouvements (stick gauche)
     this.gamepadInputs.moveForward = -applyDeadzone(gamepad.axes[1]);
@@ -558,4 +642,53 @@ export const useInputs = () => {
   }, []);
 
   return inputs;
+};
+
+// Hook React pour obtenir les informations du périphérique actif
+export const useActiveDevice = () => {
+  const [activeDevice, setActiveDevice] = useState(
+    getInputManager().getActiveDevice()
+  );
+
+  useEffect(() => {
+    const inputManager = getInputManager();
+
+    // S'abonner aux changements de périphérique
+    const unsubscribe = inputManager.addDeviceChangeListener((newDevice) => {
+      setActiveDevice(newDevice);
+    });
+
+    // Vérifier le périphérique actuel au montage
+    setActiveDevice(inputManager.getActiveDevice());
+
+    // Nettoyer l'abonnement
+    return unsubscribe;
+  }, []);
+
+  return activeDevice;
+};
+
+// Hook React pour obtenir la configuration du périphérique actif
+export const useDeviceConfig = () => {
+  const activeDevice = useActiveDevice();
+  const [config, setConfig] = useState(null);
+
+  useEffect(() => {
+    // Importer dynamiquement pour éviter les dépendances circulaires
+    import("./navigationConstants").then(
+      ({ getFlightConfigForDevice, getAccelerationFactorsForDevice }) => {
+        const deviceConfig = getFlightConfigForDevice(activeDevice);
+        const accelerationFactors =
+          getAccelerationFactorsForDevice(activeDevice);
+
+        setConfig({
+          ...deviceConfig,
+          accelerationFactors,
+          deviceType: activeDevice,
+        });
+      }
+    );
+  }, [activeDevice]);
+
+  return config;
 };

@@ -1,25 +1,24 @@
 import React from "react";
 import * as THREE from "three";
-import { THEMATIC_COLORS } from "../../../../../../../constants/thematicColors";
+import { THEMATIC_COLORS } from "../../../../../constants/thematicColors";
 
 /**
  * Composant Node - Gère le rendu d'un nœud individuel dans le graphe
  */
-const Node = ({ node, geometriesRef, materialsRef, isClusterVisited }) => {
+const Node = ({
+  node,
+  geometriesRef,
+  materialsRef: getMaterial,
+  isClusterVisited,
+}) => {
   const thematicGroup = node.clusterThematicGroup;
   const isVisited = isClusterVisited(node);
-  let material;
 
-  // Utiliser la couleur thématique pour tous les nœuds
-  if (thematicGroup && THEMATIC_COLORS[thematicGroup]) {
-    material = isVisited
-      ? materialsRef.current[`visitedNode_${thematicGroup}`]
-      : materialsRef.current[`node_${thematicGroup}`];
-  } else {
-    material = isVisited
-      ? materialsRef.current.visitedNode
-      : materialsRef.current.node;
-  }
+  // Déterminer la couleur en fonction du groupe thématique
+  const color = (thematicGroup && THEMATIC_COLORS[thematicGroup]) || "#ffffff";
+
+  // Obtenir le matériau via la fonction getMaterial
+  const material = getMaterial("node", color, isVisited);
 
   // Ajuster la taille du nœud en fonction de son type
   const scale = node.isClusterMaster ? 1.5 : 1;

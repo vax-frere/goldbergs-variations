@@ -24,6 +24,8 @@ export const DebugNavigationUI = ({ graphRef }) => {
   const [timeBeforeAutoOrbit, setTimeBeforeAutoOrbit] = useState(null);
   const [accelerationFactor, setAccelerationFactor] = useState(1);
   const [cameraSpeed, setCameraSpeed] = useState(0);
+  const [activeDevice, setActiveDevice] = useState("keyboard");
+  const [deviceConfig, setDeviceConfig] = useState(null);
 
   // Listen to animation state exposed by camera controller and update positions
   useEffect(() => {
@@ -96,6 +98,15 @@ export const DebugNavigationUI = ({ graphRef }) => {
         setCameraSpeed(parseFloat(window.__cameraSpeed.toFixed(2)));
       }
 
+      // Update active device information
+      if (window.__activeDeviceInFlight) {
+        setActiveDevice(window.__activeDeviceInFlight);
+      }
+
+      if (window.__deviceConfig) {
+        setDeviceConfig(window.__deviceConfig);
+      }
+
       // Show export button once data is loaded
       if (
         graphRef &&
@@ -144,18 +155,69 @@ export const DebugNavigationUI = ({ graphRef }) => {
         }}
       >
         <strong>Free Flight Mode</strong>
-        <span
+        <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
+          <span
+            style={{
+              backgroundColor:
+                activeDevice === "gamepad" ? "#00aaff" : "#4CAF50",
+              padding: "2px 8px",
+              borderRadius: "10px",
+              fontSize: "11px",
+              color: "#fff",
+              textTransform: "capitalize",
+            }}
+          >
+            {activeDevice}
+          </span>
+          <span
+            style={{
+              backgroundColor: getModeColor(),
+              padding: "2px 8px",
+              borderRadius: "10px",
+              fontSize: "12px",
+              color: "#fff",
+            }}
+          >
+            {cameraMode}
+          </span>
+        </div>
+      </div>
+
+      {/* Device configuration display */}
+      {deviceConfig && (
+        <div
           style={{
-            backgroundColor: getModeColor(),
-            padding: "2px 8px",
-            borderRadius: "10px",
-            fontSize: "12px",
-            color: "#fff",
+            fontSize: "11px",
+            backgroundColor: "rgba(0,100,200,0.2)",
+            padding: "6px",
+            borderRadius: "4px",
+            marginBottom: "8px",
+            border: "1px solid rgba(0,170,255,0.3)",
           }}
         >
-          {cameraMode}
-        </span>
-      </div>
+          <div
+            style={{
+              marginBottom: "3px",
+              fontWeight: "bold",
+              color: "#00aaff",
+            }}
+          >
+            Device Config ({activeDevice}):
+          </div>
+          <div
+            style={{
+              display: "grid",
+              gridTemplateColumns: "1fr 1fr",
+              gap: "2px",
+            }}
+          >
+            <span>Acceleration: {deviceConfig.acceleration}</span>
+            <span>Max Speed: {deviceConfig.maxSpeed}</span>
+            <span>Rotation: {deviceConfig.rotationSpeed}</span>
+            <span>Deceleration: {deviceConfig.deceleration}</span>
+          </div>
+        </div>
+      )}
 
       {/* Camera information display */}
       <div

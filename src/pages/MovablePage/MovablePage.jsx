@@ -2,8 +2,19 @@ import { Canvas } from "@react-three/fiber";
 import { Stats } from "@react-three/drei";
 import { useState, useEffect, useRef } from "react";
 import MovableGraph from "./components/MovableGraph";
-import GridReferences from "./components/GridReferences";
+import GridReferences from "../Game/components/GridReferences";
 import "./MovablePage.css";
+import {
+  CAMERA_FOV,
+  BASE_CAMERA_DISTANCE,
+} from "../Game/components/AdvancedCameraController/navigationConstants";
+import { AdvancedCameraController } from "../Game/components/AdvancedCameraController/AdvancedCameraController";
+import {
+  WORLD_INTERACTIVE_OBJECTS,
+  WORLD_NON_INTERACTIVE_OBJECTS,
+} from "../Game/scenes/WorldLevel/constants/worldObjects";
+import SvgPath from "../Game/components/SvgPath";
+import VibSvgPath from "../Game/components/VibSvgPath";
 
 // Fonction utilitaire pour télécharger un fichier JSON
 const downloadJSON = (content, fileName) => {
@@ -20,12 +31,71 @@ const downloadJSON = (content, fileName) => {
   URL.revokeObjectURL(url);
 };
 
+// Composant pour afficher les objets SVG du monde
+const WorldObjects = () => {
+  return (
+    <group>
+      {WORLD_INTERACTIVE_OBJECTS.map((obj) => {
+        const SvgComponent = obj.useVibration ? VibSvgPath : SvgPath;
+        const svgPath = `${obj.svgName}.svg`;
+
+        return (
+          <group key={obj.id} position={obj.position}>
+            <SvgComponent
+              svgPath={svgPath}
+              size={obj.size}
+              color="white"
+              lineWidth={2}
+              isBillboard={true}
+              vibrationIntensity={obj.vibrationIntensity}
+              vibrationSpeed={obj.vibrationSpeed}
+              onError={(err) => {
+                console.error(
+                  `[MovablePage] Erreur de chargement pour ${svgPath}:`,
+                  err
+                );
+              }}
+            />
+          </group>
+        );
+      })}
+    </group>
+  );
+};
+
+// Composant pour afficher les objets non interactifs (étoiles fixes)
+const NonInteractiveObjects = () => {
+  return (
+    <group>
+      {WORLD_NON_INTERACTIVE_OBJECTS.map((obj) => (
+        <VibSvgPath
+          key={obj.id}
+          svgPath={`${obj.component}.svg`}
+          position={obj.position}
+          size={obj.size}
+          color="white"
+          lineWidth={1}
+          isBillboard={false}
+          vibrationIntensity={2}
+          vibrationSpeed={1.5}
+          onError={(err) => {
+            console.error(
+              `[MovablePage] Erreur de chargement pour ${obj.component}:`,
+              err
+            );
+          }}
+        />
+      ))}
+    </group>
+  );
+};
+
 const MovablePage = () => {
   const [graphData, setGraphData] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
   const graphInstanceRef = useRef(null);
   // Nouvel état pour suivre le mode cluster
-  const [isClusterMode, setIsClusterMode] = useState(false);
+  const [isClusterMode, setIsClusterMode] = useState(true);
 
   // Ajout des états pour les paramètres de la grille
   const [showGrid, setShowGrid] = useState(true);
@@ -52,7 +122,7 @@ const MovablePage = () => {
   const loadJsonData = async () => {
     setIsLoading(true);
     try {
-      // Charger les données du graphe
+      // Charger les données du graphe - utiliser le fichier spatialized_graph.data.json
       const graphResponse = await fetch("/data/spatialized_graph.data.json");
       const graphJsonData = await graphResponse.json();
 
@@ -60,6 +130,9 @@ const MovablePage = () => {
       if (graphJsonData && graphJsonData.nodes && graphJsonData.links) {
         setGraphData(graphJsonData);
         console.log("Données du graphe chargées:", graphJsonData);
+        console.log(
+          `Nœuds: ${graphJsonData.nodes.length}, Liens: ${graphJsonData.links.length}`
+        );
       } else {
         console.error("Format de données du graphe invalide:", graphJsonData);
       }
@@ -74,11 +147,6 @@ const MovablePage = () => {
   useEffect(() => {
     loadJsonData();
   }, []);
-
-  // Fonction pour basculer l'affichage de la grille
-  const toggleGrid = () => {
-    setShowGrid(!showGrid);
-  };
 
   // Fonction pour exporter les données spatialisées
   const exportSpatializedData = () => {
@@ -134,15 +202,19 @@ const MovablePage = () => {
 
         if (hasGraphData) {
           nodesWithPositions = graphData.nodes.map((node) => {
-            // Créer un objet qui contient toutes les propriétés du nœud
+            // Créer un objet qui contient toutes les propriétés du nœud avec le nouveau format
             return {
               id: node.id,
-              group: node.group || 0,
               name: node.name || "",
-              x: node.coordinates?.x ?? node.x ?? 0,
-              y: node.coordinates?.y ?? node.y ?? 0,
-              z: node.coordinates?.z ?? node.z ?? 0,
-              value: node.value || 1,
+              type: node.type || "",
+              clusterId: node.clusterId || "",
+              nodeId: node.nodeId || node.id,
+              isClusterMaster: node.isClusterMaster || false,
+              nodeThematicGroup: node.nodeThematicGroup || "",
+              clusterThematicGroup: node.clusterThematicGroup || "",
+              x: node.x ?? 0,
+              y: node.y ?? 0,
+              z: node.z ?? 0,
               // Conserver toutes les propriétés originales
               ...node,
             };
@@ -153,7 +225,7 @@ const MovablePage = () => {
         }
       }
 
-      // 3. Préparer les liens depuis graphData
+      // 3. Préparer les liens depuis graphData avec le nouveau format
       if (graphData && graphData.links && graphData.links.length > 0) {
         links = graphData.links.map((link) => {
           // Extraction des IDs de source et cible
@@ -165,7 +237,18 @@ const MovablePage = () => {
           return {
             source: source,
             target: target,
-            value: link.value || 1,
+            sourceClusterThematicGroup: link.sourceClusterThematicGroup || "",
+            targetClusterThematicGroup: link.targetClusterThematicGroup || "",
+            clusterThematicGroup: link.clusterThematicGroup || "",
+            type: link.type || "",
+            isDirect: link.isDirect || "",
+            relationType: link.relationType || "",
+            // Propriétés optionnelles
+            ...(link.mediaImpact && { mediaImpact: link.mediaImpact }),
+            ...(link.virality && { virality: link.virality }),
+            ...(link.mediaCoverage && { mediaCoverage: link.mediaCoverage }),
+            ...(link.linkType && { linkType: link.linkType }),
+            ...(link.platforms && { platforms: link.platforms }),
             // Conserver toutes les propriétés originales
             ...link,
           };
@@ -184,15 +267,7 @@ const MovablePage = () => {
       console.log(
         `Export des nœuds: ${nodesWithPositions.length}, liens: ${links.length}`
       );
-      downloadJSON(
-        spatializedNodesAndLinks,
-        "final_spatialized_graph.data.json"
-      );
-
-      // 7. Afficher un message de confirmation
-      alert(`Exportation terminée!
-- Noeuds: ${nodesWithPositions.length}
-- Liens: ${links.length}`);
+      downloadJSON(spatializedNodesAndLinks, "spatialized_graph.data.json");
     } catch (error) {
       console.error("Erreur pendant l'exportation:", error);
       alert(`Erreur pendant l'exportation: ${error.message}`);
@@ -206,9 +281,6 @@ const MovablePage = () => {
       ) : (
         <>
           <div className="controls">
-            <button onClick={toggleGrid}>
-              {showGrid ? "Hide grid" : "Show grid"}
-            </button>
             <button onClick={exportSpatializedData}>
               Export spatialized data
             </button>
@@ -223,7 +295,15 @@ const MovablePage = () => {
           </div>
 
           <div className="canvas-container">
-            <Canvas camera={{ position: [0, 0, 2000], fov: 75, far: 100000 }}>
+            <Canvas
+              camera={{
+                position: [0, -300, BASE_CAMERA_DISTANCE * 4],
+                fov: CAMERA_FOV,
+                near: 0.1,
+                far: 1000000,
+              }}
+            >
+              <AdvancedCameraController />
               {graphData && (
                 <MovableGraph
                   ref={graphInstanceRef}
@@ -231,6 +311,8 @@ const MovablePage = () => {
                   isClusterMode={isClusterMode}
                 />
               )}
+              <WorldObjects />
+              <NonInteractiveObjects />
               {showGrid && (
                 <GridReferences
                   rotationInterval={rotationInterval}

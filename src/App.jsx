@@ -10,6 +10,7 @@ import Controls from "./pages/Controls";
 import Game from "./pages/Game/Game";
 import ExportForceGraphPage from "./pages/ExportForceGraphPage/ExportForceGraphPage";
 import MovablePage from "./pages/MovablePage";
+import Playground from "./pages/Playground";
 import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
 import BackgroundCanvas from "./components/BackgroundCanvas";
@@ -27,6 +28,7 @@ function App() {
           <Route path="/intro" element={<Intro />} />
           <Route path="/controls" element={<Controls />} />
           <Route path="/game" element={<Game />} />
+          <Route path="/playground" element={<Playground />} />
           <Route
             path="/spatialize-and-export-forcegraph"
             element={<ExportForceGraphPage />}

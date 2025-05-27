@@ -976,6 +976,25 @@ export function AdvancedCameraController({ config = DEFAULT_FLIGHT_CONFIG }) {
 
       // Exposer également le gestionnaire d'entrées au niveau global pour le FlightController
       window.getInputManager = getInputManager;
+
+      // Écouter les changements de périphérique actif
+      const inputManager = getInputManager();
+      const unsubscribeDeviceChange = inputManager.addDeviceChangeListener(
+        (newDevice) => {
+          if (flightController.current) {
+            flightController.current.setActiveDevice(newDevice);
+          }
+        }
+      );
+
+      // Définir le périphérique initial
+      const initialDevice = inputManager.getActiveDevice();
+      flightController.current.setActiveDevice(initialDevice);
+
+      // Nettoyer l'écouteur lors du démontage
+      return () => {
+        unsubscribeDeviceChange();
+      };
     }
   }, [camera, config]);
 

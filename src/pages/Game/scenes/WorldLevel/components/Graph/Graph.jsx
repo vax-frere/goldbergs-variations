@@ -25,32 +25,67 @@ import {
   getDarkerColor,
   getVisitedNodeColor,
 } from "../../../../constants/thematicColors";
-import Node from "./components/VibNode";
-import Link from "./components/VibLink";
+import Node from "./components/Node";
+import Link from "./components/Link";
 import textContentService from "../../../../services/TextContentService";
 
-// Créer des vecteurs réutilisables pour éviter les allocations dans les boucles d'animation
-const tempVec3 = new THREE.Vector3();
-const tempBox3 = new THREE.Box3();
+// Cache global pour les matériaux
+const materialCache = new Map();
 
-// Ajouter en haut du fichier, après les imports
-const linkMaterialCache = new Map();
+/**
+ * Fonction utilitaire pour créer et cacher les matériaux
+ */
+const getMaterial = (
+  type,
+  color = "#ffffff",
+  isVisited = false,
+  opacity = 1
+) => {
+  const visitedSuffix = isVisited ? "_visited" : "";
+  const key = `${type}_${color}_${opacity}${visitedSuffix}`;
 
-const getLinkMaterial = (color, opacity = 0.3) => {
-  const key = `${color.getHexString()}-${opacity}`;
-  if (!linkMaterialCache.has(key)) {
-    linkMaterialCache.set(
-      key,
-      new THREE.LineBasicMaterial({
-        color: color,
-        transparent: true,
-        opacity: opacity,
-      })
-    );
+  if (!materialCache.has(key)) {
+    let material;
+    const finalColor = isVisited ? getVisitedNodeColor(color) : color;
+
+    switch (type) {
+      case "node":
+        material = new THREE.MeshBasicMaterial({
+          color: finalColor,
+          transparent: isVisited,
+          opacity: isVisited ? 0.2 : 1,
+        });
+        break;
+      case "line":
+        material = new THREE.LineBasicMaterial({
+          color: finalColor,
+          transparent: true,
+          opacity: isVisited ? 0.2 : opacity,
+          linewidth: 2,
+        });
+        break;
+      default:
+        material = new THREE.MeshBasicMaterial({ color: finalColor });
+    }
+
+    materialCache.set(key, material);
   }
-  return linkMaterialCache.get(key);
+
+  return materialCache.get(key);
 };
 
+/**
+ * Fonction pour nettoyer le cache des matériaux
+ */
+const clearMaterialCache = () => {
+  materialCache.forEach((material) => {
+    if (material && material.dispose) {
+      material.dispose();
+    }
+  });
+  materialCache.clear();
+};
+s;
 /**
  * Composant simple pour afficher un graphe avec des sphères et des lignes
  * Charge les données du fichier final_spatialized_graph.data.json
@@ -61,9 +96,8 @@ const Graph = memo(() => {
   const assets = useAssets({ autoInit: false });
   const { scene, camera } = useThree();
 
-  // Références pour les géométries et matériaux partagés
+  // Références pour les géométries partagées
   const geometriesRef = useRef({});
-  const materialsRef = useRef({});
 
   // Accéder aux entrées unifiées (clavier et manette)
   const inputs = useInputs();
@@ -142,59 +176,13 @@ const Graph = memo(() => {
     }
   }, [assets.isReady, assets.getData]);
 
-  // Initialiser les géométries et matériaux partagés
+  // Initialiser les géométries partagées
   useEffect(() => {
     if (!assets.isReady) return;
 
     // Créer les géométries
     geometriesRef.current.node = new THREE.SphereGeometry(2.5, 8, 8);
     geometriesRef.current.line = new THREE.BufferGeometry();
-
-    // Créer les matériaux
-    materialsRef.current.node = new THREE.MeshBasicMaterial({
-      color: "#ffffff",
-      transparent: false,
-    });
-    materialsRef.current.visitedNode = new THREE.MeshBasicMaterial({
-      color: getVisitedNodeColor("#ffffff"),
-      transparent: false,
-    });
-    materialsRef.current.line = new THREE.LineBasicMaterial({
-      color: "#ffffff",
-      transparent: false,
-    });
-    materialsRef.current.visitedLine = new THREE.LineBasicMaterial({
-      color: getVisitedNodeColor("#ffffff"),
-      transparent: false,
-    });
-
-    // Créer les matériaux pour chaque groupe thématique
-    Object.entries(THEMATIC_COLORS).forEach(([group, color]) => {
-      materialsRef.current[`node_${group}`] = new THREE.MeshBasicMaterial({
-        color: color,
-        transparent: false,
-      });
-      materialsRef.current[`visitedNode_${group}`] =
-        new THREE.MeshBasicMaterial({
-          color: getVisitedNodeColor(color),
-          transparent: false,
-        });
-
-      // Créer les matériaux pour les liens thématiques
-      materialsRef.current[`link_${group}`] = new THREE.LineBasicMaterial({
-        color: color,
-        transparent: true,
-        opacity: 0.4,
-        linewidth: 2,
-      });
-      materialsRef.current[`visitedLink_${group}`] =
-        new THREE.LineBasicMaterial({
-          color: getVisitedNodeColor(color),
-          transparent: true,
-          opacity: 0.4,
-          linewidth: 2,
-        });
-    });
 
     // Nettoyage
     return () => {
@@ -205,14 +193,6 @@ const Graph = memo(() => {
         }
       });
       geometriesRef.current = {};
-
-      // Disposer les matériaux
-      Object.values(materialsRef.current).forEach((material) => {
-        if (material && material.dispose) {
-          material.dispose();
-        }
-      });
-      materialsRef.current = {};
     };
   }, [assets.isReady]);
 
@@ -326,7 +306,6 @@ const Graph = memo(() => {
           name: clusterNames[id],
           slug: clusterSlugs[id],
         },
-        debugColor: [0, 1, 0], // Couleur par défaut
       };
     });
 
@@ -380,6 +359,9 @@ const Graph = memo(() => {
 
       // Réinitialiser les autres références
       prevInteract.current = false;
+
+      // Nettoyer le cache des matériaux
+      clearMaterialCache();
     };
   }, [edges, setHoveredCluster]);
 
@@ -432,7 +414,7 @@ const Graph = memo(() => {
           key={`node-${index}`}
           node={node}
           geometriesRef={geometriesRef}
-          materialsRef={materialsRef}
+          materialsRef={getMaterial}
           isClusterVisited={isClusterVisitedByNode}
         />
       ))}
@@ -452,7 +434,7 @@ const Graph = memo(() => {
             edge={edge}
             source={source}
             target={target}
-            materialsRef={materialsRef}
+            materialsRef={getMaterial}
             isLinkVisited={isLinkVisited}
           />
         );

@@ -6,11 +6,11 @@ import useCollisionStore from "../../services/CollisionService";
 import { useFrame } from "@react-three/fiber";
 
 // Constantes pour les couleurs par défaut (format RGB 0-1)
-const DEFAULT_COLOR = [0, 1, 0]; // Vert
+const DEFAULT_COLOR = [0.5, 0.5, 0.5]; // Gris léger
 const ACTIVE_COLOR = [1, 0, 0]; // Rouge
 
 // Opacités
-const DEFAULT_OPACITY = 0.4;
+const DEFAULT_OPACITY = 0.15;
 const ACTIVE_OPACITY = 0.8;
 
 /**

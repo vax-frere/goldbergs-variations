@@ -7,9 +7,23 @@ import React, {
   useCallback,
 } from "react";
 import { useThree, useFrame } from "@react-three/fiber";
-import { OrbitControls } from "@react-three/drei";
+import { Text, Billboard, GizmoHelper, GizmoViewport } from "@react-three/drei";
 import * as THREE from "three";
 import MovableNode from "./MovableNode";
+import {
+  THEMATIC_COLORS,
+  BASE_THEMATIC_COLORS,
+} from "../../Game/constants/thematicColors";
+
+// Fonction pour obtenir la couleur d'un groupe thématique
+const getThematicColor = (clusterThematicGroup) => {
+  return THEMATIC_COLORS[clusterThematicGroup] || "#FFFFFF";
+};
+
+// Fonction pour obtenir la couleur de base (plus vive) d'un groupe thématique
+const getBaseThematicColor = (clusterThematicGroup) => {
+  return BASE_THEMATIC_COLORS[clusterThematicGroup] || "#FFFFFF";
+};
 
 // Composant pour une ligne avec flèche directionnelle entre deux nœuds
 const ArrowLine = ({ sourceNode, targetNode, color = "#FFFFFF" }) => {
@@ -110,7 +124,6 @@ const MovableGraph = forwardRef(({ data, isClusterMode }, ref) => {
   const [initialPositions, setInitialPositions] = useState({}); // Positions initiales avant déplacement
   const [isMovingGroup, setIsMovingGroup] = useState(false);
 
-  const controlsRef = useRef();
   const { camera } = useThree();
 
   // Exposer la méthode getNodesPositions via la réf
@@ -146,12 +159,12 @@ const MovableGraph = forwardRef(({ data, isClusterMode }, ref) => {
       );
 
       // Mode cluster: sélectionner tous les nœuds du même cluster
-      if (isClusterMode && node.cluster !== undefined) {
-        console.log("Sélection du cluster:", node.cluster);
+      if (isClusterMode && node.clusterId !== undefined) {
+        console.log("Sélection du cluster:", node.clusterId);
 
         // Récupérer tous les nœuds du même cluster
         const clusterNodes = data.nodes
-          .filter((n) => n.cluster === node.cluster)
+          .filter((n) => n.clusterId === node.clusterId)
           .map((n) => n.id);
 
         // Si tous les nœuds du cluster sont déjà sélectionnés, désélectionner
@@ -256,11 +269,6 @@ const MovableGraph = forwardRef(({ data, isClusterMode }, ref) => {
 
       // Marquer qu'on est en train de déplacer un groupe si nécessaire
       setIsMovingGroup(selectedNodes.length > 1 && nodeId === activeNodeId);
-
-      // Désactiver les contrôles de caméra pendant la transformation
-      if (controlsRef.current) {
-        controlsRef.current.enabled = false;
-      }
     },
     [selectedNodes, nodePositions, activeNodeId, data.nodes]
   );
@@ -268,11 +276,6 @@ const MovableGraph = forwardRef(({ data, isClusterMode }, ref) => {
   // Fin du déplacement d'un nœud
   const handleTransformEnd = useCallback((nodeId) => {
     console.log("Fin transformation du nœud:", nodeId);
-
-    // Réactiver les contrôles de caméra
-    if (controlsRef.current) {
-      controlsRef.current.enabled = true;
-    }
 
     setIsMovingGroup(false);
   }, []);
@@ -343,15 +346,6 @@ const MovableGraph = forwardRef(({ data, isClusterMode }, ref) => {
 
   return (
     <group>
-      {/* Contrôles de caméra */}
-      <OrbitControls
-        ref={controlsRef}
-        enableDamping
-        dampingFactor={0.05}
-        rotateSpeed={0.5}
-        target={[0, 0, 0]}
-      />
-
       {/* Rendu de tous les liens avec des flèches directionnelles */}
       {data.links.map((link, index) => {
         const sourceNode = nodeMap[link.source];
@@ -359,8 +353,10 @@ const MovableGraph = forwardRef(({ data, isClusterMode }, ref) => {
 
         if (!sourceNode || !targetNode) return null;
 
-        // Définir une couleur pour le lien (basée sur la relation ou une valeur par défaut)
-        const linkColor = link.color || "#FFFFFF";
+        // Définir une couleur pour le lien basée sur le groupe thématique du cluster
+        const linkColor = link.clusterThematicGroup
+          ? getBaseThematicColor(link.clusterThematicGroup)
+          : "#FFFFFF";
 
         return (
           <ArrowLine
@@ -375,6 +371,14 @@ const MovableGraph = forwardRef(({ data, isClusterMode }, ref) => {
       {/* Rendu de tous les nœuds */}
       {data.nodes.map((node) => {
         node.size = 1;
+        // Ajouter la couleur thématique au nœud
+        node.thematicColor = node.clusterThematicGroup
+          ? getThematicColor(node.clusterThematicGroup)
+          : "#FFFFFF";
+        node.baseThematicColor = node.clusterThematicGroup
+          ? getBaseThematicColor(node.clusterThematicGroup)
+          : "#FFFFFF";
+
         const isSelected = selectedNodes.includes(node.id);
         const isActiveNode = node.id === activeNodeId;
 
@@ -389,10 +393,17 @@ const MovableGraph = forwardRef(({ data, isClusterMode }, ref) => {
             onPositionUpdate={(newPos) => updateNodePosition(node.id, newPos)}
             onTransformStart={() => handleTransformStart(node.id)}
             onTransformEnd={() => handleTransformEnd(node.id)}
-            controlsRef={controlsRef}
           />
         );
       })}
+
+      {/* Gizmo d'orientation dans le coin de l'écran */}
+      <GizmoHelper alignment="bottom-right" margin={[80, 80]}>
+        <GizmoViewport
+          axisColors={["#ff0000", "#00ff00", "#0000ff"]}
+          labelColor="white"
+        />
+      </GizmoHelper>
     </group>
   );
 });

@@ -158,31 +158,20 @@ const ExportForceGraphPage = () => {
             nodeId = node.name;
           }
 
-          // Extraire uniquement les propriétés dont nous avons besoin
+          // Extraire uniquement les propriétés dont nous avons besoin selon le format attendu
           return {
             id: node.id,
             name: node.name,
             type: node.type,
-            clusterId: node.clusterId,
+            clusterId: node.clusterId, // Le slug du master cluster
             x: node.x,
             y: node.y,
             z: node.z,
-            color: node.color,
             nodeId: nodeId, // Utiliser le nodeId extrait de manière robuste
             isClusterMaster:
               node.isClusterOrigin || node.isClusterMaster || false,
-            // Propriétés supplémentaires demandées
-            displayName: node.displayName,
-            aliases: node.aliases,
-            fictionOrImpersonation: node.fictionOrImpersonation,
-            thematic: node.thematic,
             nodeThematicGroup: node.nodeThematicGroup,
             clusterThematicGroup: node.clusterThematicGroup,
-            career: node.career,
-            genre: node.genre,
-            polarisation: node.polarisation,
-            cercle: node.cercle,
-            politicalSphere: node.politicalSphere,
           };
         });
 
@@ -237,7 +226,6 @@ const ExportForceGraphPage = () => {
             // Propriétés de base
             source: source,
             target: target,
-            color: link.color,
             // Ajouter les clusterThematicGroup des nœuds source et target
             sourceClusterThematicGroup: sourceNode.clusterThematicGroup,
             targetClusterThematicGroup: targetNode.clusterThematicGroup,
@@ -247,9 +235,10 @@ const ExportForceGraphPage = () => {
             type: originalData.type || link.type,
             isDirect: originalData.isDirect || link.isDirect,
             relationType: originalData.relationType || link.relationType,
-            mediaImpact: originalData.mediaImpact || link.mediaImpact,
-            virality: originalData.virality || link.virality,
-            mediaCoverage: originalData.mediaCoverage || link.mediaCoverage,
+            mediaImpact: originalData.mediaImpact || link.mediaImpact || "",
+            virality: originalData.virality || link.virality || "",
+            mediaCoverage:
+              originalData.mediaCoverage || link.mediaCoverage || "",
             linkType: originalData.linkType || link.linkType,
             platforms: originalData.platforms || link.platforms,
           };

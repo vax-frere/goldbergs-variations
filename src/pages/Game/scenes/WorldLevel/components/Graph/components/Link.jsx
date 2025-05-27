@@ -1,29 +1,17 @@
 import React, { useMemo } from "react";
 import * as THREE from "three";
-import { THEMATIC_COLORS } from "../../../../../../../constants/thematicColors";
-
-// Cache des matériaux pour les liens
-const linkMaterialCache = new Map();
-
-const getLinkMaterial = (color, opacity = 0.3) => {
-  const key = `${color.getHexString()}-${opacity}`;
-  if (!linkMaterialCache.has(key)) {
-    linkMaterialCache.set(
-      key,
-      new THREE.LineBasicMaterial({
-        color: color,
-        transparent: true,
-        opacity: opacity,
-      })
-    );
-  }
-  return linkMaterialCache.get(key);
-};
+import { THEMATIC_COLORS } from "../../../../../constants/thematicColors";
 
 /**
  * Composant Link - Gère le rendu d'un lien individuel dans le graphe
  */
-const Link = ({ edge, source, target, materialsRef, isLinkVisited }) => {
+const Link = ({
+  edge,
+  source,
+  target,
+  materialsRef: getMaterial,
+  isLinkVisited,
+}) => {
   // Créer les points de la ligne
   const points = useMemo(() => {
     return [
@@ -38,19 +26,21 @@ const Link = ({ edge, source, target, materialsRef, isLinkVisited }) => {
   // Déterminer la couleur du lien en fonction des groupes thématiques
   const sourceGroup = source.clusterThematicGroup;
   const targetGroup = target.clusterThematicGroup;
+  const isVisited = isLinkVisited(source, target);
 
-  let linkMaterial;
-  if (isLinkVisited(source, target)) {
-    linkMaterial = materialsRef.current.visitedLine;
-  } else if (sourceGroup === targetGroup && THEMATIC_COLORS[sourceGroup]) {
-    const color = new THREE.Color(THEMATIC_COLORS[sourceGroup]);
-    linkMaterial = getLinkMaterial(color, 0.4);
+  let linkColor = "#ffffff";
+  let opacity = 0.4;
+
+  if (sourceGroup === targetGroup && THEMATIC_COLORS[sourceGroup]) {
+    // Même groupe thématique
+    linkColor = THEMATIC_COLORS[sourceGroup];
   } else if (
     sourceGroup &&
     targetGroup &&
     THEMATIC_COLORS[sourceGroup] &&
     THEMATIC_COLORS[targetGroup]
   ) {
+    // Groupes différents - mélanger les couleurs
     const color1 = new THREE.Color(THEMATIC_COLORS[sourceGroup]);
     const color2 = new THREE.Color(THEMATIC_COLORS[targetGroup]);
     const mixedColor = new THREE.Color(
@@ -58,10 +48,12 @@ const Link = ({ edge, source, target, materialsRef, isLinkVisited }) => {
       (color1.g + color2.g) / 2,
       (color1.b + color2.b) / 2
     );
-    linkMaterial = getLinkMaterial(mixedColor, 0.3);
-  } else {
-    linkMaterial = materialsRef.current.line;
+    linkColor = `#${mixedColor.getHexString()}`;
+    opacity = 0.3;
   }
+
+  // Obtenir le matériau via la fonction getMaterial
+  const linkMaterial = getMaterial("line", linkColor, isVisited, opacity);
 
   return <line geometry={edge.geometry} material={linkMaterial} />;
 };
