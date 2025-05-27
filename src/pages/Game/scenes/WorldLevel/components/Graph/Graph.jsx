@@ -85,7 +85,6 @@ const clearMaterialCache = () => {
   });
   materialCache.clear();
 };
-s;
 /**
  * Composant simple pour afficher un graphe avec des sphères et des lignes
  * Charge les données du fichier final_spatialized_graph.data.json

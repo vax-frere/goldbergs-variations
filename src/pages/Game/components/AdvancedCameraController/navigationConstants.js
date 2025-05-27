@@ -121,7 +121,7 @@ export const DEVICE_SPECIFIC_CONFIGS = {
     ...BASE_FLIGHT_CONFIG,
     // Clavier : plus précis mais nécessite plus d'accélération pour compenser le binaire on/off
     acceleration: 500, // Plus élevé pour compenser les entrées binaires
-    maxSpeed: 700, // Légèrement plus rapide pour le clavier
+    maxSpeed: 1000, // Légèrement plus rapide pour le clavier
     rotationSpeed: 1.5, // Plus sensible en rotation
     // Multiplicateurs spécifiques au clavier
     keyboardSensitivity: 1.5,
