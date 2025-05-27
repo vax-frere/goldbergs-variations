@@ -4,6 +4,12 @@ import { useFrame } from "@react-three/fiber";
 import * as THREE from "three";
 import { SVGLoader } from "three/examples/jsm/loaders/SVGLoader";
 import useAssets from "../hooks/useAssets";
+import {
+  useVibrationAnimation,
+  precomputeVibrationStates,
+  updateGeometryPositions,
+  VIBRATION_PATTERNS,
+} from "../utils/vibrationHelpers";
 
 // Créer un cache pour les matériaux par couleur et opacité
 const materialCache = new Map();
@@ -24,12 +30,10 @@ const getMaterial = (color, opacity, lineWidth) => {
   return materialCache.get(key);
 };
 
-const VIBRATION_STATES = 8; // Nombre d'états de vibration pré-calculés
-
 /**
  * Component to display SVG paths directly in 3D as outlines with vibration effect
  * Uses Three.js SVGLoader to convert SVG paths to Three.js lines
- * Adds vibration effect to the points
+ * Adds vibration effect to the points using vibration helpers
  *
  * @param {Object} props - Component properties
  * @param {string} props.svgPath - Path to the SVG file
@@ -44,6 +48,8 @@ const VIBRATION_STATES = 8; // Nombre d'états de vibration pré-calculés
  * @param {Function} props.onError - Callback function called when SVG loading fails
  * @param {number} props.vibrationIntensity - Intensity of the vibration effect (default: 0.1)
  * @param {number} props.vibrationSpeed - Speed of the vibration effect (default: 1)
+ * @param {number} props.resolution - Resolution for SVG curves (default: 6)
+ * @param {number} props.statesCount - Number of vibration states to pre-compute (default: 8)
  * @returns {JSX.Element}
  */
 const VibSvgPath = ({
@@ -59,6 +65,8 @@ const VibSvgPath = ({
   onError = null,
   vibrationIntensity = 0.1,
   vibrationSpeed = 1,
+  resolution = 6,
+  statesCount = 8,
 }) => {
   const [svgData, setSvgData] = useState(null);
   const [dimensions, setDimensions] = useState({ width: 1, height: 1 });
@@ -67,8 +75,7 @@ const VibSvgPath = ({
   const groupRef = useRef();
   const geometriesRef = useRef([]);
   const originalPointsRef = useRef([]);
-  const vibratingStatesRef = useRef([]); // Stockage des états pré-calculés
-  const precomputedGeometriesRef = useRef([]);
+  const vibrationStatesRef = useRef([]);
 
   // Utiliser notre service d'assets centralisé
   const assets = useAssets();
@@ -79,133 +86,53 @@ const VibSvgPath = ({
     [color, opacity, lineWidth]
   );
 
+  // Utiliser les helpers de vibration
+  const { updateVibration } = useVibrationAnimation({
+    vibrationSpeed,
+    statesCount,
+    baseFPS: 10,
+  });
+
   // Références pour les optimisations
   const tempVector = new THREE.Vector3();
   const tempBox = new THREE.Box3();
-  const positionsArrayRef = useRef(null);
-  const maxPointsRef = useRef(0);
-
-  // Fonction pour s'assurer que le buffer de positions est assez grand
-  const ensurePositionsCapacity = (requiredSize) => {
-    if (
-      !positionsArrayRef.current ||
-      positionsArrayRef.current.length < requiredSize
-    ) {
-      // Arrondir à la puissance de 2 supérieure pour éviter trop de réallocations
-      const newSize = Math.pow(2, Math.ceil(Math.log2(requiredSize)));
-      positionsArrayRef.current = new Float32Array(newSize);
-      maxPointsRef.current = Math.floor(newSize / 3);
-    }
-  };
 
   // Réinitialiser les références quand le composant est démonté
   useEffect(() => {
     return () => {
       geometriesRef.current = [];
       originalPointsRef.current = [];
-      precomputedGeometriesRef.current.forEach((geometry) => {
-        if (geometry) {
-          geometry.dispose();
-        }
-      });
-      precomputedGeometriesRef.current = [];
-      positionsArrayRef.current = null;
-      maxPointsRef.current = 0;
+      vibrationStatesRef.current = [];
     };
   }, []);
 
-  // Fonction pour pré-calculer les états de vibration
-  const precomputeVibrationStates = (originalPoints, intensity) => {
-    const states = [];
-    const geometries = [];
+  // Animation frame avec les helpers
+  useFrame((state) => {
+    if (!geometriesRef.current.length || !vibrationStatesRef.current.length)
+      return;
 
-    for (let stateIndex = 0; stateIndex < VIBRATION_STATES; stateIndex++) {
-      const statePositions = originalPoints.map((point) => {
-        const direction = Math.floor(Math.random() * 4);
-        const displacement = intensity * (Math.random() > 0.5 ? 1 : -1);
-
-        switch (direction) {
-          case 0: // Horizontal
-            return { x: point.x + displacement, y: point.y };
-          case 1: // Vertical
-            return { x: point.x, y: point.y + displacement };
-          case 2: // Diagonal haut-droite/bas-gauche
-            return {
-              x: point.x + displacement * 0.7,
-              y: point.y + displacement * 0.7,
-            };
-          case 3: // Diagonal haut-gauche/bas-droite
-            return {
-              x: point.x + displacement * 0.7,
-              y: point.y - displacement * 0.7,
-            };
-          default:
-            return point;
+    updateVibration(state.clock.getElapsedTime(), (currentState) => {
+      geometriesRef.current.forEach((geometry, geoIndex) => {
+        const vibrationState =
+          vibrationStatesRef.current[geoIndex]?.[currentState];
+        if (vibrationState) {
+          updateGeometryPositions(geometry, vibrationState, true); // preserveZ for 2D SVG
         }
       });
-      states.push(statePositions);
-    }
-
-    // On ne pré-calcule plus les géométries ici
-    return states;
-  };
-
-  // Optimiser l'animation frame
-  const lastUpdateRef = useRef(0);
-  const UPDATE_INTERVAL = 1000 / 15;
-  const currentStateRef = useRef(0);
-
-  useFrame((state) => {
-    if (!geometriesRef.current || !vibratingStatesRef.current.length) return;
-
-    const now = state.clock.getElapsedTime() * 1000;
-    if (now - lastUpdateRef.current < UPDATE_INTERVAL) return;
-    lastUpdateRef.current = now;
-
-    currentStateRef.current = (currentStateRef.current + 1) % VIBRATION_STATES;
-    const currentState = currentStateRef.current;
-
-    geometriesRef.current.forEach((geometry, geoIndex) => {
-      if (!geometry?.attributes?.position) return;
-
-      const vibrationState =
-        vibratingStatesRef.current[geoIndex]?.[currentState];
-      if (!vibrationState) return;
-
-      const positions = geometry.attributes.position.array;
-      const positionsBuffer = positionsArrayRef.current;
-
-      // Utiliser notre buffer pré-alloué comme espace de travail temporaire
-      for (
-        let i = 0;
-        i < positions.length && i / 3 < vibrationState.length;
-        i += 3
-      ) {
-        const point = vibrationState[i / 3];
-        positionsBuffer[i] = point.x;
-        positionsBuffer[i + 1] = point.y;
-        positionsBuffer[i + 2] = positions[i + 2]; // Garder la coordonnée Z
-      }
-
-      // Copier en une seule fois avec TypedArray.set
-      positions.set(positionsBuffer.subarray(0, positions.length));
-      geometry.attributes.position.needsUpdate = true;
     });
   });
 
-  // Modifier processSvgData pour utiliser les objets réutilisables
+  // Modifier processSvgData pour utiliser les helpers
   const processSvgData = (data) => {
     try {
       tempBox.makeEmpty();
       const allPoints = [];
       const allVibrationStates = [];
-      let totalPoints = 0;
 
       data.paths.forEach((path) => {
         path.subPaths.forEach((subPath) => {
-          const points = subPath.getPoints();
+          const points = subPath.getPoints(resolution);
           if (points && points.length > 0) {
-            totalPoints += points.length;
             const pointsCopy = points.map((p) => {
               tempVector.set(p.x, p.y, 0);
               tempBox.expandByPoint(tempVector);
@@ -213,19 +140,21 @@ const VibSvgPath = ({
             });
             allPoints.push(pointsCopy);
 
-            // Pré-calculer les états de vibration pour ce sous-chemin
+            // Utiliser le helper pour pré-calculer les états de vibration
             allVibrationStates.push(
-              precomputeVibrationStates(pointsCopy, vibrationIntensity)
+              precomputeVibrationStates(
+                pointsCopy,
+                vibrationIntensity,
+                statesCount,
+                VIBRATION_PATTERNS.PLANAR
+              )
             );
           }
         });
       });
 
-      // S'assurer que notre buffer est assez grand
-      ensurePositionsCapacity(totalPoints * 3);
-
       originalPointsRef.current = allPoints;
-      vibratingStatesRef.current = allVibrationStates;
+      vibrationStatesRef.current = allVibrationStates;
 
       const svgWidth = tempBox.max.x - tempBox.min.x;
       const svgHeight = tempBox.max.y - tempBox.min.y;
@@ -255,6 +184,7 @@ const VibSvgPath = ({
     setError(null);
     geometriesRef.current = [];
     originalPointsRef.current = [];
+    vibrationStatesRef.current = [];
 
     // Fonction asynchrone pour charger et traiter le SVG
     const loadSvg = async () => {
@@ -306,7 +236,7 @@ const VibSvgPath = ({
     };
 
     loadSvg();
-  }, [svgPath, assets.isReady, onError]);
+  }, [svgPath, assets.isReady, onError, vibrationIntensity, statesCount]);
 
   // Rendu d'un cercle de secours en cas d'erreur
   const renderFallbackCircle = () => {
@@ -355,7 +285,7 @@ const VibSvgPath = ({
   // Create the lines from the SVG paths with vibration effect
   const lines = svgData.paths.map((path, pathIndex) => {
     return path.subPaths.map((subPath, subPathIndex) => {
-      const points = subPath.getPoints();
+      const points = subPath.getPoints(resolution);
       const geometry = new THREE.BufferGeometry().setFromPoints(points);
       const key = `path-${pathIndex}-subpath-${subPathIndex}`;
 

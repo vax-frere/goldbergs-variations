@@ -1,181 +1,66 @@
 import React, { useState, useEffect, memo } from "react";
-import useGameStore, { useActiveNodeData } from "../../../store";
+import useTextContent from "../../../hooks/useTextContent";
 import useAssets from "../../../hooks/useAssets";
+import { THEMATIC_COLORS } from "../../../constants/thematicColors";
 import "./TextPanel.css";
 
 /**
- * Composant qui affiche un panel de texte en bas de l'écran
- * - Affiche les informations des clusters survolés
- * - Affiche les informations des nœuds actifs en mode cluster avancé
- * Optimisé avec memo pour éviter les re-rendus inutiles
+ * Composant TextPanel générique utilisant le TextContentService
+ * Supporte deux types de templates : simple et detailed
  */
 const TextPanel = memo(() => {
-  // Récupérer les slugs depuis le store global
-  const hoveredClusterSlug = useGameStore((state) => state.hoveredCluster);
-  const activeClusterSlug = useGameStore((state) => state.activeCluster);
-  const activeNodeSlug = useActiveNodeData(); // Maintenant c'est juste un slug
-  const activeComponentText = useGameStore(
-    (state) => state.activeComponentText
-  );
-
-  console.log("TextPanel - Rendu du composant:", {
-    hoveredClusterSlug,
-    activeClusterSlug,
-    activeNodeSlug,
-    activeComponentText,
-  });
-
-  // Récupérer les assets
+  const content = useTextContent();
   const assets = useAssets();
 
-  // État local pour stocker les données
-  const [isVisible, setIsVisible] = useState(false);
-  const [displayBio, setDisplayBio] = useState("");
-  const [displayThematic, setDisplayThematic] = useState("");
-  const [currentTitle, setCurrentTitle] = useState("");
-  const [genre, setGenre] = useState(null);
-  const [postCount, setPostCount] = useState(null);
-  const [currentSlug, setCurrentSlug] = useState(null);
+  // États pour les métadonnées (images, etc.)
   const [characterImageExists, setCharacterImageExists] = useState(false);
-
-  // Fonction pour chercher les données d'un élément par son slug
-  const findDataBySlug = (slug) => {
-    if (!slug || !assets.isReady) return null;
-
-    // Récupérer la base de données depuis l'asset manager
-    const database = assets.getData("database");
-    const graphData = assets.getData("graph");
-
-    let data = null;
-
-    // Chercher dans la base de données
-    if (database) {
-      data = database.find((item) => item.slug === slug);
-    }
-
-    // Chercher dans les nœuds du graphe
-    if (graphData?.nodes) {
-      const node = graphData.nodes.find(
-        (n) => n.slug === slug || String(n.id) === slug
-      );
-      if (node) {
-        // Si on a déjà des données de la base, les fusionner avec celles du graphe
-        data = {
-          ...node,
-          ...(data || {}), // Les données de la base écrasent celles du graphe si elles existent
-          name: data?.name || node.name || node.id, // Priorité au nom de la base
-          type: data?.type || node.type, // Priorité au type de la base
-        };
-      }
-    }
-
-    return data;
-  };
-
-  useEffect(() => {
-    // Réinitialiser les états
-    setPostCount(null);
-    setGenre(null);
-    setCurrentSlug(null);
-    setDisplayBio("");
-    setDisplayThematic("");
-    setCurrentTitle("");
-
-    // Fonction pour afficher les données
-    const displayData = (data) => {
-      if (!data) {
-        setIsVisible(false);
-        return;
-      }
-
-      setCurrentTitle(data.name || data.id);
-      setDisplayBio(data.biography || data.description || "");
-      setDisplayThematic(data.thematic || data.type || "");
-      setCurrentSlug(data.slug);
-
-      setPostCount(data.totalPosts || 0);
-
-      if (data.genre) {
-        setGenre(data.genre);
-      }
-
-      setIsVisible(true);
-    };
-
-    // Priorité 0: Composant interactif
-    if (activeComponentText) {
-      setCurrentTitle("Joshua Goldberg");
-      setDisplayBio(activeComponentText);
-      setDisplayThematic("interactive");
-      setIsVisible(true);
-      return;
-    }
-
-    // Priorité 1: Nœud actif
-    if (activeNodeSlug) {
-      const nodeData = findDataBySlug(activeNodeSlug);
-      displayData(nodeData);
-    }
-    // Priorité 2: Cluster actif
-    else if (activeClusterSlug) {
-      const clusterData = findDataBySlug(activeClusterSlug);
-      displayData(clusterData);
-    }
-    // Priorité 3: Cluster survolé
-    else if (hoveredClusterSlug) {
-      const clusterData = findDataBySlug(hoveredClusterSlug);
-      displayData(clusterData);
-    }
-    // Rien d'actif
-    else {
-      setIsVisible(false);
-    }
-  }, [
-    activeNodeSlug,
-    activeClusterSlug,
-    hoveredClusterSlug,
-    activeComponentText,
-    assets,
-  ]);
 
   // Vérifier si l'image du personnage existe dans l'AssetManager
   useEffect(() => {
-    if (!currentSlug || !assets.isReady) {
+    // CORRECTION: Utiliser l'ID unique au lieu du slug pour l'image
+    const imageKey = content?.id || content?.slug;
+    if (!imageKey || !assets.isReady) {
       setCharacterImageExists(false);
       return;
     }
 
     // Vérifier si l'image existe dans l'AssetManager
-    const imageId = `${currentSlug}.png`;
+    const imageId = `${imageKey}.png`;
     const texture = assets.getTexture(imageId);
     const exists = texture !== null && texture !== undefined;
 
-    console.log(`TextPanel - Vérification image pour ${currentSlug}:`, exists);
     setCharacterImageExists(exists);
-  }, [currentSlug, assets.isReady, assets.getTexture]);
+  }, [content?.id, content?.slug, assets.isReady, assets.getTexture]);
 
   // Fonction pour rendre l'icône du genre
   const renderGenderIcon = () => {
-    if (!genre) return null;
+    if (!content?.genre) return null;
 
     // Déterminer l'icône à afficher en fonction du genre
     const iconSrc =
-      genre.toLowerCase() === "masculin"
+      content.genre.toLowerCase() === "masculin"
         ? assets.getImagePath("male.svg")
-        : genre.toLowerCase() === "féminin"
+        : content.genre.toLowerCase() === "féminin"
         ? assets.getImagePath("female.svg")
         : assets.getImagePath("neutral.svg");
 
     return (
-      <img src={iconSrc} alt={genre} className="gender-icon" title={genre} />
+      <img
+        src={iconSrc}
+        alt={content.genre}
+        className="gender-icon"
+        title={content.genre}
+      />
     );
   };
 
   // Obtenir l'URL de l'image à afficher (spécifique au personnage ou par défaut)
   const getCharacterImageUrl = () => {
-    if (characterImageExists && currentSlug) {
+    // CORRECTION: Utiliser l'ID unique au lieu du slug pour l'image
+    const imageKey = content?.id || content?.slug;
+    if (characterImageExists && imageKey) {
       // Récupérer la texture depuis l'AssetManager
-      const imageId = `${currentSlug}.png`;
+      const imageId = `${imageKey}.png`;
       const texture = assets.getTexture(imageId);
 
       if (texture && texture.image) {
@@ -188,60 +73,119 @@ const TextPanel = memo(() => {
     return assets.getImagePath("character.svg");
   };
 
-  // Pas de texte à afficher, on cache le panel
-  if (!isVisible) {
-    console.log("TextPanel - Panel caché, isVisible:", isVisible);
+  // Obtenir l'URL de l'image de la plateforme
+  const getPlatformImageUrl = () => {
+    // Si on a une référence à l'asset SVG, l'utiliser
+    if (content?.svgAsset) {
+      const texture = assets.getTexture(content.svgAsset);
+      if (texture && texture.image) {
+        return texture.image.src;
+      }
+    }
+
+    // Sinon, essayer de construire le nom du fichier SVG à partir du nom de la plateforme
+    if (content?.name) {
+      const platformSvgKey = `platforms/${content.name.toLowerCase()}.svg`;
+      const texture = assets.getTexture(platformSvgKey);
+      if (texture && texture.image) {
+        return texture.image.src;
+      }
+    }
+
+    // Image par défaut pour les plateformes
+    return assets.getImagePath("default.svg");
+  };
+
+  // Pas de contenu à afficher
+  if (!content) {
     return null;
   }
 
-  console.log("TextPanel - Panel visible, rendu du contenu:", {
-    currentTitle,
-    displayBio: displayBio.substring(0, 50) + "...",
-    displayThematic,
-    currentSlug,
-  });
+  // Template simple : juste un message
+  if (content.type === "simple") {
+    return (
+      <div className="text-panel text-panel-simple">
+        <div className="text-panel-content text-panel-content-simple">
+          <div className="text-panel-text-content">
+            <div className="text-panel-bio">{content.text}</div>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
-  // Affichage standard avec image et texte
-  const isPlatform = displayThematic === "platform";
+  // Template detailed : informations complètes
+  if (content.type === "detailed" || content.type === "platform") {
+    const isPlatform = content.type === "platform";
+    const title = content.name || content.id || "Unknown";
+    const bio = content.biography || content.description || "";
+    const thematic = content.thematic || content.type || "";
+    const postCount = content.totalPosts || 0;
 
-  return (
-    <div className={`text-panel ${isPlatform ? "text-panel-platform" : ""}`}>
-      <div
-        className={`text-panel-content ${
-          isPlatform ? "text-panel-content-platform" : ""
-        }`}
-      >
-        {!isPlatform && (
+    // Déterminer la couleur du thématique selon le thematicGroup
+    const getThematicColor = () => {
+      if (content.thematicGroup && THEMATIC_COLORS[content.thematicGroup]) {
+        return THEMATIC_COLORS[content.thematicGroup];
+      }
+      return "#ffffff"; // Couleur par défaut
+    };
+
+    return (
+      <div className="text-panel">
+        <div className="text-panel-content">
           <div className="text-panel-image">
             <img
-              src={getCharacterImageUrl()}
-              alt={currentTitle || "Character"}
+              src={isPlatform ? getPlatformImageUrl() : getCharacterImageUrl()}
+              alt={title}
             />
           </div>
-        )}
-        <div className="text-panel-text-content">
-          <div className="text-panel-header">
-            <div className="text-panel-title">{currentTitle || ""}</div>
+          <div className="text-panel-text-content">
+            <div className="text-panel-header">
+              <div
+                className="text-panel-title"
+                style={{ color: getThematicColor() }}
+              >
+                {title}
+              </div>
 
-            {!isPlatform && (
-              <div className="text-panel-metadata">
-                {genre && genre !== "" && renderGenderIcon()}
+              {!isPlatform && (
+                <div className="text-panel-metadata">
+                  {content.genre && content.genre !== "" && renderGenderIcon()}
 
-                {postCount !== null && postCount > 0 && (
-                  <div className="post-count">
-                    <span className="post-count-number">{postCount}</span>
-                    <span className="post-count-label">posts</span>
-                  </div>
-                )}
+                  {postCount > 0 && (
+                    <div className="post-count">
+                      <span className="post-count-number">{postCount}</span>
+                      <span className="post-count-label">posts</span>
+                    </div>
+                  )}
+                </div>
+              )}
+            </div>
+
+            {thematic && (
+              <div
+                className="text-panel-thematic"
+                style={{ color: getThematicColor() }}
+              >
+                {thematic}
               </div>
             )}
+
+            {bio && <div className="text-panel-bio">{bio}</div>}
           </div>
+        </div>
+      </div>
+    );
+  }
 
-          {displayThematic && (
-            <div className="text-panel-thematic">{displayThematic}</div>
-          )}
-
-          {displayBio && <div className="text-panel-bio">{displayBio}</div>}
+  // Fallback pour types inconnus
+  return (
+    <div className="text-panel text-panel-simple">
+      <div className="text-panel-content text-panel-content-simple">
+        <div className="text-panel-text-content">
+          <div className="text-panel-bio">
+            {content.text || "Unknown content"}
+          </div>
         </div>
       </div>
     </div>

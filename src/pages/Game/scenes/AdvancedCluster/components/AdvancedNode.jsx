@@ -2,23 +2,22 @@ import React, { memo, useMemo, useState, useEffect } from "react";
 import * as THREE from "three";
 import { Billboard } from "@react-three/drei";
 import CustomText from "../../../components/CustomText";
-import SvgPath from "../../../components/SvgPath";
-import NodeHoverEffect from "./NodeHoverEffect";
+import SvgPath from "../../../components/VibSvgPath";
 import useGameStore from "../../../store";
 import useAssets from "../../../hooks/useAssets";
+import textContentService from "../../../services/TextContentService";
+import { THEMATIC_COLORS } from "../../../constants/thematicColors";
 
 /**
  * Composant AdvancedNode - Version améliorée des nœuds pour le mode avancé
  */
 const AdvancedNode = memo(({ node, isActive = false }) => {
   const [svgError, setSvgError] = useState(false);
-  const [showEffect, setShowEffect] = useState(false);
-  const [effectKey, setEffectKey] = useState(0);
   const assets = useAssets();
 
   // Vérifier si le nœud a déjà été visité
   const isNodeVisited = useGameStore((state) =>
-    state.isNodeVisited(node.slug || String(node.id))
+    state.isNodeVisited(String(node.id))
   );
 
   // Tailles de base
@@ -31,29 +30,11 @@ const AdvancedNode = memo(({ node, isActive = false }) => {
 
   // Calculer l'opacité en fonction de l'état de visite
   const nodeStyle = useMemo(() => {
-    if (isClusterMaster) {
-      return {
-        opacity: 1.0,
-        textOpacity: 1.0,
-      };
-    }
     return {
       opacity: isNodeVisited ? 0.1 : 1.0,
       textOpacity: isNodeVisited ? 0.1 : 1.0,
     };
   }, [isNodeVisited, isClusterMaster]);
-
-  // Gérer l'effet temporaire quand le nœud devient actif
-  useEffect(() => {
-    if (isActive) {
-      setShowEffect(true);
-      setEffectKey((prev) => prev + 1);
-      const timer = setTimeout(() => {
-        setShowEffect(false);
-      }, 1000);
-      return () => clearTimeout(timer);
-    }
-  }, [isActive]);
 
   // Déterminer le nom du fichier SVG à utiliser
   const svgFileName = useMemo(() => {
@@ -66,11 +47,11 @@ const AdvancedNode = memo(({ node, isActive = false }) => {
       return "characters/fbi.svg";
     }
 
-    if (isClusterMaster || node.isJoshua === true) {
+    if (node.type === "persona_character") {
       return "characters/character.svg";
     }
 
-    if (node.type === "character") {
+    if (node.type === "external_character") {
       return "characters/journalist.svg";
     }
 
@@ -98,14 +79,31 @@ const AdvancedNode = memo(({ node, isActive = false }) => {
   // Taille finale de l'icône
   const iconFinalSize = iconSize * (isClusterMaster ? 3 : 1.5);
 
+  // Déterminer la couleur du nœud selon son groupe thématique
+  const nodeColor = useMemo(() => {
+    // Couleur thématique uniquement pour les persona_character
+    if (node.type === "persona_character") {
+      const thematicGroup = node.nodeThematicGroup;
+
+      if (thematicGroup && THEMATIC_COLORS[thematicGroup]) {
+        return THEMATIC_COLORS[thematicGroup];
+      }
+    }
+
+    // Couleur par défaut pour tous les autres types de nœuds
+    return "#ffffff";
+  }, [node.type, node.nodeThematicGroup]);
+
   return (
     <group position={[node.x || 0, node.y || 0, node.z || 0]}>
       {/* Icône SVG avec Billboard */}
       <Billboard>
         <group scale={[iconFinalSize, iconFinalSize, 1]}>
           <SvgPath
+            vibrationIntensity={3}
+            segments={10}
             svgPath={svgFileName}
-            color="#ffffff"
+            color={nodeColor}
             opacity={nodeStyle.opacity}
             lineWidth={1.5}
             onError={(error) => {
@@ -129,7 +127,7 @@ const AdvancedNode = memo(({ node, isActive = false }) => {
             text={node.name}
             position={[0, 0, 0]}
             size={isClusterMaster ? 5 : 2}
-            color="#ffffff"
+            color={nodeColor}
             maxDistance={100}
             minDistance={20}
             outline={true}
@@ -138,15 +136,6 @@ const AdvancedNode = memo(({ node, isActive = false }) => {
             opacity={nodeStyle.textOpacity}
           />
         </Billboard>
-      )}
-
-      {/* Effet de survol temporaire */}
-      {showEffect && (
-        <NodeHoverEffect
-          key={effectKey}
-          size={size}
-          isClusterMaster={isClusterMaster}
-        />
       )}
     </group>
   );

@@ -23,9 +23,14 @@ export const SVG_FILES = [
   // Personnages et éléments principaux
   "joshua-goldberg.svg",
   "thug.svg",
+  "trollface.svg",
   "heart-1.svg",
   "heart-2.svg",
   "heart-3.svg",
+  "music-note-1.svg",
+  "music-note-2.svg",
+  "music-note-3.svg",
+  "ak47.svg",
 
   // Characters
   "characters/character.svg",
@@ -35,6 +40,8 @@ export const SVG_FILES = [
   // Interface utilisateur
   "default.svg",
   "hud.svg",
+  "mute.svg",
+  "unmute.svg",
 
   // Plateformes et réseaux sociaux
   "platforms/4chan.svg",
@@ -75,6 +82,8 @@ export const SVG_FILES = [
 export const IMAGE_FILES = [
   // Personnages et éléments principaux
   "particle.png",
+  "background.png", // Image pour la skybox
+  // "space.hdr", // HDR pour la skybox
 ];
 
 // Liste des images de personnages à charger
@@ -120,6 +129,10 @@ export const DATA_FILES = [
     id: "srt_interview",
     file: "interview.srt",
   },
+  {
+    id: "platforms",
+    file: "platforms.data.json",
+  },
 ];
 
 /**
@@ -156,6 +169,22 @@ export function getCharacterTextures() {
 }
 
 /**
+ * Fonction qui extrait et convertit les SVGs des plateformes en format attendu par l'AssetManager
+ * @returns {Array} Liste des textures de plateformes à précharger
+ */
+export function getPlatformTextures() {
+  // Filtrer les SVGs qui sont dans le dossier platforms/
+  const platformSvgs = SVG_FILES.filter((file) =>
+    file.startsWith("platforms/")
+  );
+
+  return platformSvgs.map((file) => ({
+    id: file,
+    url: getImagePath(file),
+  }));
+}
+
+/**
  * Fonction qui convertit la liste des sons en format attendu par l'AssetManager
  * @returns {Array} Liste des sons à précharger
  */
@@ -187,6 +216,7 @@ export function getAllAssets() {
       ...getSvgTextures(),
       ...getImageTextures(),
       ...getCharacterTextures(),
+      ...getPlatformTextures(),
     ],
     sounds: getSounds(),
     data: getDataFiles(),
@@ -202,6 +232,7 @@ export default {
   getSvgTextures,
   getImageTextures,
   getCharacterTextures,
+  getPlatformTextures,
   getSounds,
   getDataFiles,
   getAllAssets,

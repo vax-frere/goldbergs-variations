@@ -28,9 +28,19 @@ const AdvancedLinkAlt = memo(
     // Constantes pour les flèches
     const arrowSize = 2.0;
 
+    // Constantes pour le décalage circulaire
+    const circleRadius = 3.0; // Rayon réduit pour un effet plus subtil
+    const circleAngle = Math.PI / 8; // Angle réduit (22.5 degrés) pour plus de subtilité
+
     // Calculer les points et la courbe du lien
-    const { points, curve } = useMemo(() => {
-      if (!sourceNode?.x || !targetNode?.x) return { points: [], curve: null };
+    const { points, curve, adjustedSource, adjustedTarget } = useMemo(() => {
+      if (!sourceNode?.x || !targetNode?.x)
+        return {
+          points: [],
+          curve: null,
+          adjustedSource: null,
+          adjustedTarget: null,
+        };
 
       // Créer les vecteurs source et cible
       const srcVector = new THREE.Vector3(
@@ -49,18 +59,18 @@ const AdvancedLinkAlt = memo(
         .subVectors(tgtVector, srcVector)
         .normalize();
 
-      // Appliquer les offsets aux points de départ et d'arrivée
+      // Calculer les points de base avec offset
       const sourceOffset = direction.clone().multiplyScalar(startOffset);
       const targetOffset = direction.clone().multiplyScalar(-endOffset);
 
-      const adjustedSource = srcVector.clone().add(sourceOffset);
-      const adjustedTarget = tgtVector.clone().add(targetOffset);
+      const baseSource = srcVector.clone().add(sourceOffset);
+      const baseTarget = tgtVector.clone().add(targetOffset);
 
-      // Calculer le point de contrôle pour l'arc
+      // Calculer le point de contrôle pour l'arc AVANT les décalages
       const midPoint = new THREE.Vector3()
-        .addVectors(adjustedSource, adjustedTarget)
+        .addVectors(baseSource, baseTarget)
         .multiplyScalar(0.5);
-      const distance = adjustedSource.distanceTo(adjustedTarget);
+      const distance = baseSource.distanceTo(baseTarget);
 
       // Trouver un vecteur perpendiculaire pour l'arc
       const up = new THREE.Vector3(0, 1, 0);
@@ -75,6 +85,23 @@ const AdvancedLinkAlt = memo(
       const controlPoint = midPoint
         .clone()
         .add(perpendicular.multiplyScalar(distance * arcHeight));
+
+      // Maintenant, décaler légèrement les points source et target
+      // en fonction de la direction vers le point de contrôle
+      const sourceToControl = new THREE.Vector3()
+        .subVectors(controlPoint, baseSource)
+        .normalize();
+      const targetToControl = new THREE.Vector3()
+        .subVectors(controlPoint, baseTarget)
+        .normalize();
+
+      // Décalage subtil dans la direction de l'arc
+      const adjustedSource = baseSource
+        .clone()
+        .add(sourceToControl.multiplyScalar(circleRadius));
+      const adjustedTarget = baseTarget
+        .clone()
+        .add(targetToControl.multiplyScalar(circleRadius));
 
       // Générer les points de la courbe
       const curvePoints = [];
@@ -93,8 +120,18 @@ const AdvancedLinkAlt = memo(
       return {
         points: curvePoints.map((p) => [p.x, p.y, p.z]),
         curve: { v0: adjustedSource, v1: controlPoint, v2: adjustedTarget },
+        adjustedSource,
+        adjustedTarget,
       };
-    }, [sourceNode, targetNode, arcHeight, startOffset, endOffset]);
+    }, [
+      sourceNode,
+      targetNode,
+      arcHeight,
+      startOffset,
+      endOffset,
+      circleRadius,
+      circleAngle,
+    ]);
 
     // Calculer les données pour le texte
     const textData = useMemo(() => {
@@ -146,27 +183,25 @@ const AdvancedLinkAlt = memo(
 
     // Calculer les vecteurs pour les flèches
     const arrowVectors = useMemo(() => {
-      if (!points.length) return null;
+      if (!points.length || !adjustedTarget || !curve) return null;
 
-      const lastPoint = new THREE.Vector3(
-        points[points.length - 1][0],
-        points[points.length - 1][1],
-        points[points.length - 1][2]
+      // Utiliser le point adjustedTarget (décalé sur le cercle) comme point de fin de flèche
+      const lastPoint = adjustedTarget.clone();
+
+      // Calculer la tangente de la courbe au point final (t=1)
+      const bezierCurve = new THREE.QuadraticBezierCurve3(
+        curve.v0, // adjustedSource
+        curve.v1, // controlPoint
+        curve.v2 // adjustedTarget
       );
-      const prevPoint = new THREE.Vector3(
-        points[points.length - 2][0],
-        points[points.length - 2][1],
-        points[points.length - 2][2]
-      );
 
-      const direction = new THREE.Vector3()
-        .subVectors(lastPoint, prevPoint)
-        .normalize();
+      // Obtenir la tangente au point final
+      const tangent = bezierCurve.getTangent(1).normalize();
 
-      // Trouver un vecteur perpendiculaire
+      // Trouver un vecteur perpendiculaire pour les branches de la flèche
       const up = new THREE.Vector3(0, 1, 0);
       let perpendicular = new THREE.Vector3()
-        .crossVectors(direction, up)
+        .crossVectors(tangent, up)
         .normalize();
       if (perpendicular.length() < 0.1) {
         perpendicular = new THREE.Vector3(1, 0, 0);
@@ -174,11 +209,11 @@ const AdvancedLinkAlt = memo(
 
       // Calculer les branches de la flèche
       const arrowAngle = Math.PI / 4;
-      const branch1Dir = direction
+      const branch1Dir = tangent
         .clone()
         .negate()
         .applyAxisAngle(perpendicular, arrowAngle);
-      const branch2Dir = direction
+      const branch2Dir = tangent
         .clone()
         .negate()
         .applyAxisAngle(perpendicular, -arrowAngle);
@@ -200,7 +235,7 @@ const AdvancedLinkAlt = memo(
           [branch2End.x, branch2End.y, branch2End.z],
         ],
       };
-    }, [points, arrowSize]);
+    }, [points, arrowSize, adjustedTarget, curve]);
 
     if (!points.length || !curve) return null;
 

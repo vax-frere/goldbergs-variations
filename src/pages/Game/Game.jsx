@@ -14,8 +14,9 @@ import {
 import { getAudioState } from "./components/GameAudio";
 import HUD from "./components/HUD/HUD";
 import LoadingBar from "./components/LoadingBar/LoadingBar";
-import World from "./scenes/World/World";
+import LevelSwitcher from "./LevelSwitcher";
 import Stars from "./components/Stars";
+import Skybox from "./components/Skybox";
 import useCollisionStore, {
   CollisionLayers,
 } from "./services/CollisionService";
@@ -24,6 +25,8 @@ import { AdvancedCameraController } from "./components/AdvancedCameraController/
 import GameAudio from "./components/GameAudio";
 import CollisionDebugRenderer from "./components/debug/CollisionDebugRenderer";
 import { useFrame } from "@react-three/fiber";
+import textContentService from "./services/TextContentService";
+import EffectRenderer from "./components/EffectRenderer";
 
 // Composant pour initialiser et gérer le service de collision
 const CollisionManager = memo(() => {
@@ -41,7 +44,7 @@ const CollisionManager = memo(() => {
 
   // Fonction pour trouver les données d'un cluster
   const findClusterData = useCallback(
-    (clusterId) => {
+    (nodeId) => {
       if (!assets.isReady) return null;
 
       const database = assets.getData("database");
@@ -49,22 +52,23 @@ const CollisionManager = memo(() => {
 
       let data = null;
 
-      // Chercher dans la base de données
+      // Chercher dans la base de données par slug (qui correspond au nodeId)
       if (database) {
-        data = database.find((item) => item.slug === clusterId);
+        data = database.find((item) => item.slug === nodeId);
       }
 
-      // Chercher dans les nœuds du graphe
+      // Chercher le nœud master du cluster dans le graphe
       if (graphData?.nodes) {
-        const node = graphData.nodes.find(
-          (n) => n.slug === clusterId || String(n.id) === clusterId
+        const masterNode = graphData.nodes.find(
+          (n) => n.nodeId === nodeId && n.isClusterMaster
         );
-        if (node) {
+
+        if (masterNode) {
           data = {
-            ...node,
-            ...(data || {}),
-            name: data?.name || node.name || node.id,
-            type: data?.type || node.type,
+            ...masterNode,
+            ...(data || {}), // Les données de la base écrasent celles du graphe
+            name: data?.name || masterNode.name || nodeId,
+            type: data?.type || masterNode.type,
           };
         }
       }
@@ -105,7 +109,26 @@ const CollisionManager = memo(() => {
       if (collisions.clusters && collisions.clusters.length > 0) {
         const detectedCluster = collisions.clusters[0];
         const clusterData = findClusterData(detectedCluster.id);
-        setHoveredCluster(detectedCluster.id, clusterData);
+
+        // Contournement: récupérer le slug depuis les boîtes enregistrées
+        let clusterSlug = detectedCluster.data?.slug;
+
+        if (!clusterSlug) {
+          // Fallback: chercher dans les boîtes enregistrées
+          const collisionState = useCollisionStore.getState();
+          const clusterBoxes = collisionState.boundingBoxRefs?.clusterBoxes;
+
+          if (clusterBoxes && clusterBoxes[detectedCluster.id]) {
+            clusterSlug = clusterBoxes[detectedCluster.id].data?.slug;
+          }
+        }
+
+        // Si toujours pas de slug, utiliser l'ID comme fallback
+        if (!clusterSlug) {
+          clusterSlug = detectedCluster.id;
+        }
+
+        setHoveredCluster(clusterSlug, clusterData);
       } else {
         setHoveredCluster(null, null);
       }
@@ -161,8 +184,12 @@ const GameCanvas = memo(({ children }) => {
       <CollisionManager />
       <CollisionDebugRenderer />
 
+      {/* Renderer des effets visuels (global) */}
+      <EffectRenderer />
+
       {/* Fond étoilé */}
-      <Stars count={4000} radius={BOUNDING_SPHERE_RADIUS * 4} size={2.5} />
+      <Stars radius={BOUNDING_SPHERE_RADIUS * 4} />
+      {/* <Skybox radius={BOUNDING_SPHERE_RADIUS * 6} opacity={0.3} /> */}
 
       {/* Scène 3D */}
       {children}
@@ -187,9 +214,13 @@ const Game = () => {
   const [gameReady, setGameReady] = useState(false);
   const [audioProgress, setAudioProgress] = useState(0);
   const [loadingStage, setLoadingStage] = useState(0);
+  const [showLoadingOverlay, setShowLoadingOverlay] = useState(true);
+  const [isLoadingFadingOut, setIsLoadingFadingOut] = useState(false);
   const TOTAL_LOADING_STAGES = 3;
   const loadStartTime = useRef(Date.now());
   const MIN_LOADING_TIME = 3000; // 3 secondes minimum
+  const GAME_WARMUP_TIME = 650; // Temps pour que le jeu tourne en arrière-plan
+  const FADE_OUT_DURATION = 350; // Durée du fade out
   const [playEnterLevelSound] = useSound("/sounds/enter-level.mp3", {
     volume: 0.1,
   });
@@ -241,9 +272,31 @@ const Game = () => {
     }
   }, [assets.progress, assets.isReady, loadingStage]);
 
+  // Gérer le fade out de la loading bar après que le jeu soit prêt
+  useEffect(() => {
+    if (!gameReady) return;
+
+    // Laisser le jeu tourner en arrière-plan pendant GAME_WARMUP_TIME
+    const warmupTimer = setTimeout(() => {
+      setIsLoadingFadingOut(true);
+
+      // Après le fade out, cacher complètement l'overlay
+      const fadeOutTimer = setTimeout(() => {
+        setShowLoadingOverlay(false);
+      }, FADE_OUT_DURATION);
+
+      return () => clearTimeout(fadeOutTimer);
+    }, GAME_WARMUP_TIME);
+
+    return () => clearTimeout(warmupTimer);
+  }, [gameReady, GAME_WARMUP_TIME, FADE_OUT_DURATION]);
+
   // Combinaison simplifiée pour gérer le chargement du jeu
   useEffect(() => {
     if (!assets.isReady) return;
+
+    // Initialiser le TextContentService avec les assets
+    textContentService.initialize(assets);
 
     // En développement: forcer le démarrage rapide
     if (import.meta.env.DEV) {
@@ -286,29 +339,45 @@ const Game = () => {
 
   return (
     <div style={{ width: "100vw", height: "100vh", background: "#000" }}>
-      {/* Afficher la barre de chargement si le jeu n'est pas prêt */}
-      {!gameReady ? (
-        <LoadingBar
-          progress={
-            loadingStage === 1
-              ? assets.progress
-              : loadingStage === 2
-              ? audioProgress
-              : 100
-          }
-          message={getLoadingMessage()}
-          stage={loadingStage}
-          totalStages={TOTAL_LOADING_STAGES}
-        />
-      ) : (
+      {/* Le jeu tourne dès qu'il est prêt, même si la loading bar est encore visible */}
+      {gameReady && (
         <>
           <GameCanvas>
-            <World />
+            <LevelSwitcher />
           </GameCanvas>
-
-          {/* HUD principal qui contient tous les composants UI */}
           <HUD />
         </>
+      )}
+
+      {/* Overlay de chargement avec fade out */}
+      {showLoadingOverlay && (
+        <div
+          style={{
+            position: "absolute",
+            top: 0,
+            left: 0,
+            width: "100%",
+            height: "100%",
+            backgroundColor: "#000",
+            zIndex: 1000,
+            opacity: isLoadingFadingOut ? 0 : 1,
+            transition: `opacity ${FADE_OUT_DURATION}ms ease-out`,
+            pointerEvents: isLoadingFadingOut ? "none" : "auto",
+          }}
+        >
+          <LoadingBar
+            progress={
+              loadingStage === 1
+                ? assets.progress
+                : loadingStage === 2
+                ? audioProgress
+                : 100
+            }
+            message={getLoadingMessage()}
+            stage={loadingStage}
+            totalStages={TOTAL_LOADING_STAGES}
+          />
+        </div>
       )}
     </div>
   );

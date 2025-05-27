@@ -1,6 +1,6 @@
 .text-panel {
   position: fixed;
-  bottom: 0px;
+  bottom: 30px;
   left: 50%;
   transform: translateX(-50%);
   z-index: 1000;
@@ -35,7 +35,7 @@
 
 .text-panel-content {
   background-color: rgba(0, 0, 0, 1);
-  border: 0.25px solid rgba(255, 255, 255, 0.5);
+  border: 1px solid rgba(255, 255, 255, 1);
   /* border-radius: 12px; */
   overflow: hidden;
   display: flex;
@@ -52,7 +52,7 @@
   flex-shrink: 0;
   width: 220px;
   height: 220px;
-  border-right: 1px solid rgba(255, 255, 255, 0.5);
+  border-right: 1px solid rgba(255, 255, 255, 1);
 }
 
 .text-panel-image img {
@@ -92,8 +92,7 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  background-color: rgba(255, 255, 255, 0.1);
-  border-radius: 6px;
+  /* border: 1px solid rgba(255, 255, 255, 1); */
   padding: 4px 8px;
   font-size: 12px;
   line-height: 1;
@@ -211,6 +210,21 @@
   .text-panel-thematic {
     text-align: center;
   }
+
+  /* Ajustements pour les messages simples sur mobile */
+  .text-panel-simple {
+    min-width: 300px;
+    max-width: 90%;
+  }
+
+  .text-panel-content-simple {
+    padding: 20px 25px;
+    min-height: 100px;
+  }
+
+  .text-panel-content-simple .text-panel-bio {
+    font-size: 16px;
+  }
 }
 
 .text-panel-platform {
@@ -220,4 +234,39 @@
 .text-panel-content-platform {
   min-height: unset;
   padding: 15px;
+}
+
+/* Style spécifique pour les messages simples (composants interactifs) */
+.text-panel-simple {
+  min-width: 400px;
+  max-width: 600px;
+}
+
+.text-panel-content-simple {
+  min-height: 120px;
+  padding: 30px 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+
+.text-panel-content-simple .text-panel-text-content {
+  padding: 0;
+  min-height: unset;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+}
+
+.text-panel-content-simple .text-panel-bio {
+  color: rgba(255, 255, 255, 0.9);
+  font-size: 18px;
+  line-height: 1.4;
+  text-align: center;
+  margin: 0;
+  max-height: unset;
+  overflow-y: unset;
+  font-weight: 400;
 }

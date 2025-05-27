@@ -3,3 +3,4 @@ node_modules
 public/data/
 **/*/.DS_Store
 public/.DS_Store
+/public/img/space.hdr

@@ -178,6 +178,8 @@ const Footer = () => {
               <br />
               <strong>Data scraping:</strong> Aymeric Georgin, xxx
               <br />
+              <strong>Global advices:</strong> Paloma sanchez
+              <br />
               <strong>Based on:</strong> Joshua Ryne Goldberg's online
               activities
             </Typography>

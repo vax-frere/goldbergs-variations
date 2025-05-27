@@ -1,6 +1,63 @@
 import * as THREE from "three";
 import { create } from "zustand";
 
+// Variables pour le système de son positionnel
+let audioListener = null;
+let audioLoader = null;
+let audioBuffer = null; // Stocker le buffer une seule fois
+
+// Fonction pour initialiser le système audio positionnel
+const initializePositionalAudio = (camera) => {
+  if (typeof window !== "undefined" && camera && !audioListener) {
+    try {
+      // Créer l'AudioListener et l'attacher à la caméra
+      audioListener = new THREE.AudioListener();
+      camera.add(audioListener);
+
+      // Créer l'AudioLoader
+      audioLoader = new THREE.AudioLoader();
+
+      // Charger le fichier audio une seule fois
+      audioLoader.load(
+        "/sounds/hover.mp3",
+        (buffer) => {
+          audioBuffer = buffer;
+          console.log("Hover sound buffer loaded successfully");
+        },
+        undefined,
+        (error) => {
+          console.warn("Could not load hover sound:", error);
+        }
+      );
+    } catch (error) {
+      console.warn("Could not initialize positional audio:", error);
+    }
+  }
+};
+
+// Fonction pour jouer le son de hover (crée une nouvelle instance à chaque fois)
+const playHoverSound = () => {
+  if (audioListener && audioBuffer) {
+    try {
+      // Créer une nouvelle instance Audio pour chaque son
+      const hoverSound = new THREE.Audio(audioListener);
+      hoverSound.setBuffer(audioBuffer);
+      hoverSound.setVolume(0.25);
+
+      // Jouer le son
+      hoverSound.play();
+
+      // Nettoyer automatiquement quand le son se termine
+      hoverSound.onEnded = () => {
+        // Le son se nettoie automatiquement quand il se termine
+        hoverSound.disconnect();
+      };
+    } catch (error) {
+      console.warn("Could not play hover sound:", error);
+    }
+  }
+};
+
 /**
  * Définition des layers de collision par défaut
  * Utilise un système de masques binaires (comme dans Unity/Unreal)
@@ -142,6 +199,14 @@ const useCollisionStore = create((set, get) => ({
 
   // État de debug
   debugMode: false,
+
+  /**
+   * Initialise le système audio positionnel
+   * @param {THREE.Camera} camera - Caméra à laquelle attacher l'AudioListener
+   */
+  initializeAudio: (camera) => {
+    initializePositionalAudio(camera);
+  },
 
   /**
    * Active ou désactive un layer de collision spécifique
@@ -409,13 +474,14 @@ const useCollisionStore = create((set, get) => ({
     const boxesWithData = {};
     Object.entries(clusterBoxes).forEach(([id, box]) => {
       // Utiliser directement le slug du cluster s'il existe dans les données
-      const clusterSlug = box.data?.clusterSlug || box.data?.slug || id;
+      const slug = box.data?.slug || box.data?.clusterSlug || id;
 
       boxesWithData[id] = {
         ...box,
         data: {
           ...box.data,
-          id: clusterSlug, // On utilise le slug comme identifiant principal
+          id: slug, // On utilise le slug comme identifiant principal
+          slug: slug, // Ajouter explicitement le slug
           numericId: id, // On garde l'ID numérique si besoin
         },
         layer,
@@ -705,6 +771,15 @@ const useCollisionStore = create((set, get) => ({
     if (containingCluster) {
       state.stats.clusterDetections += 1;
       state.stats.collisionsFound += 1;
+
+      // Jouer le son si c'est un nouveau cluster détecté
+      if (state.lastDetected.clusterId !== containingCluster.id) {
+        playHoverSound();
+        state.lastDetected.clusterId = containingCluster.id;
+      }
+    } else {
+      // Réinitialiser si aucun cluster détecté
+      state.lastDetected.clusterId = null;
     }
 
     return containingCluster;
@@ -747,9 +822,9 @@ const useCollisionStore = create((set, get) => ({
         if (distance < minDistance) {
           minDistance = distance;
           containingNode = {
-            id: nodeId,
+            id: nodeId, // nodeId est maintenant le slug grâce à nos corrections
             distance,
-            name: box.name || `Node ${nodeId}`,
+            name: box.name || box.data?.name || `Node ${nodeId}`,
             data: box.data,
           };
         }
@@ -760,6 +835,16 @@ const useCollisionStore = create((set, get) => ({
     if (containingNode) {
       state.stats.nodeDetections += 1;
       state.stats.collisionsFound += 1;
+
+      // Jouer le son si c'est un nouveau nœud détecté
+      // Utiliser l'ID (qui est maintenant le slug) pour la comparaison
+      if (state.lastDetected.nodeId !== containingNode.id) {
+        playHoverSound();
+        state.lastDetected.nodeId = containingNode.id;
+      }
+    } else {
+      // Réinitialiser si aucun nœud détecté
+      state.lastDetected.nodeId = null;
     }
 
     return containingNode;

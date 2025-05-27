@@ -146,10 +146,9 @@ export function CustomText({
       }
     }
 
-    // Gérer l'opacité du contour
-    const outlineOpacity = targetOpacity > 0.1 ? 1 : targetOpacity * 10;
+    // Gérer l'opacité du contour - même opacité que le texte principal
     if (textRef.current.outlineMaterial) {
-      textRef.current.outlineMaterial.opacity = outlineOpacity;
+      textRef.current.outlineMaterial.opacity = targetOpacity;
     }
   });
 
@@ -161,6 +160,7 @@ export function CustomText({
           ? position
           : [position.x, position.y, position.z]
       }
+      renderOrder={1000}
     >
       <Text
         ref={textRef}
@@ -172,8 +172,9 @@ export function CustomText({
         outlineColor={outlineColor}
         material-transparent={true}
         material-depthWrite={false}
-        material-depthTest={true}
+        material-depthTest={false}
         material-alphaTest={0.01}
+        renderOrder={1000}
       >
         {text}
       </Text>

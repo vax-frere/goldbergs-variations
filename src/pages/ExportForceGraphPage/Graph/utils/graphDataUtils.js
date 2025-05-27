@@ -1,86 +1,96 @@
 /**
- * Configuration globale pour les paramètres du graphe - permet de contrôler les réglages
+ * ============================================================================
+ * GRAPH DATA UTILITIES
+ * ============================================================================
+ *
+ * Ce fichier contient toutes les utilitaires pour charger, construire et
+ * analyser les données du graphe de personnages.
+ *
+ * Fonctions principales :
+ * - loadGraphData() : Point d'entrée principal pour charger les données
+ * - buildGraphFromCharacterData() : Construction du graphe à partir des données
+ * - getNodesWithPositions() : Récupération des positions des nœuds
+ * - analyzeGraphClusters() : Analyse et debug des clusters
+ * - cleanOrphanLinks() : Nettoyage des liens orphelins
  */
-export const graphConfig = {
-  // Configuration des clusters
-  clusterCount: 20, // Augmenté pour permettre plus de clusters (était 10)
-  clusterSpreadFactor: 300, // Facteur pour l'espacement des clusters (était 300)
-  clusterStrategy: "sequential", // "sequential" ou "modulo" pour la répartition des clusters
-  // Autres paramètres de rendu
-  minTextSize: 0.8,
-  maxTextSize: 2.5,
-  joshuaNodeSize: 10,
-  characterNodeSize: 5,
-  platformNodeSize: 15,
-  // Groupes visuels
-  joshuaGroup: 1,
-  characterGroup: 2,
-  platformGroup: 3,
-};
+
+// ============================================================================
+// CONFIGURATION
+// ============================================================================
 
 /**
- * Calcule la taille du texte en fonction du nombre de posts
- * @param {Number} totalPosts - Nombre total de posts du personnage
- * @returns {Number} Taille du texte à utiliser
+ * Configuration pour les logs de debug du graphe
+ * Mettre à true pour activer les logs détaillés
  */
-const calculateTextSize = (totalPosts) => {
-  if (!totalPosts || isNaN(totalPosts)) {
-    return 1; // Taille par défaut si pas de données
-  }
+const DEBUG_GRAPH = true;
 
-  // Définir des limites pour éviter des textes trop petits ou trop grands
-  const minSize = graphConfig.minTextSize; // Taille minimale
-  const maxSize = graphConfig.maxTextSize; // Taille maximale
-
-  // Utiliser une fonction logarithmique pour avoir une échelle plus adaptée
-  // car les différences de posts peuvent être très grandes
-  const size = Math.log10(totalPosts + 1) / 2;
-
-  // Limiter la taille entre min et max
-  return Math.max(minSize, Math.min(maxSize, size));
-};
+// ============================================================================
+// FONCTIONS PUBLIQUES PRINCIPALES
+// ============================================================================
 
 /**
- * Loads character data from the database.data.json file and constructs nodes and links for the graph
- * @param {Object} config - Configuration optionnelle pour surcharger les paramètres par défaut
- * @returns {Promise<{nodes: Array, links: Array}>} A promise that resolves to an object containing nodes and links arrays
+ * Point d'entrée principal : charge les données depuis database.data.json
+ * et construit le graphe complet
+ *
+ * @param {Object} config - Configuration optionnelle
+ * @returns {Promise<{nodes: Array, links: Array}>} Données du graphe
  */
 export const loadGraphData = async (config = {}) => {
   try {
-    // Fusionner la configuration par défaut avec les paramètres fournis
-    // Appliquer toute configuration passée, SAUF 'verbose' qui est global
-    const { verbose, ...restConfig } = config; // Séparer 'verbose' s'il est passé
-    Object.assign(graphConfig, restConfig);
-    console.log("Configuration appliquée:", graphConfig);
+    if (DEBUG_GRAPH) {
+      console.log(
+        "Début du chargement des données depuis database.data.json..."
+      );
+    }
 
-    console.log("Début du chargement des données...");
-
-    // Charger le fichier final_spatialized_graph.data.json qui contient les thematicGroup et positions
+    // Charger le fichier database.data.json
     const response = await fetch(
-      `${import.meta.env.BASE_URL}data/final_spatialized_graph.data.json`
+      `${import.meta.env.BASE_URL}data/database.data.json`
     );
     if (!response.ok) {
       throw new Error(`Erreur HTTP: ${response.status}`);
     }
 
-    const graphData = await response.json();
-    console.log(
-      `Données chargées depuis final_spatialized_graph.data.json: ${graphData.nodes?.length || 0} nodes, ${graphData.links?.length || 0} links`
-    );
-
-    // Vérifier que les données ont la structure attendue
-    if (!graphData.nodes || !graphData.links) {
-      throw new Error("Structure de données invalide: nodes ou links manquants");
+    const characterData = await response.json();
+    if (DEBUG_GRAPH) {
+      console.log(`Données chargées: ${characterData.length} personnages`);
     }
+
+    // Vérifier la structure des données
+    if (!Array.isArray(characterData)) {
+      throw new Error(
+        "Structure de données invalide: attendu un tableau de personnages"
+      );
+    }
+
+    // Générer le graphe
+    if (DEBUG_GRAPH) console.log("Génération dynamique du graphe...");
+    const graphData = buildGraphFromCharacterData(characterData);
 
     // Nettoyer les liens orphelins
     const cleanedData = cleanOrphanLinks(graphData.nodes, graphData.links);
-    console.log(`🧹 Nettoyage: ${graphData.links.length - cleanedData.links.length} liens orphelins supprimés`);
+    if (DEBUG_GRAPH) {
+      console.log(
+        `🧹 Nettoyage: ${cleanedData.orphanLinksRemoved} liens orphelins supprimés`
+      );
+    }
 
-    // Analyse des clusters après chargement
-    analyzeGraphClusters(cleanedData.nodes, cleanedData.links);
+    // Analyse des clusters (debug uniquement)
+    if (DEBUG_GRAPH) {
+      analyzeGraphClusters(cleanedData.nodes, cleanedData.links);
+    }
 
-    return { nodes: cleanedData.nodes, links: cleanedData.links };
+    // Combiner les statistiques
+    const combinedStats = {
+      ...graphData.stats,
+      orphanLinksRemoved: cleanedData.orphanLinksRemoved,
+    };
+
+    return {
+      nodes: cleanedData.nodes,
+      links: cleanedData.links,
+      stats: combinedStats,
+    };
   } catch (err) {
     console.error("Erreur lors du chargement des données:", err);
     throw err;
@@ -88,178 +98,13 @@ export const loadGraphData = async (config = {}) => {
 };
 
 /**
- * Analyse et affiche des informations détaillées sur les clusters créés
- * @param {Array} nodes - Tableau des nœuds du graphe
- * @param {Array} links - Tableau des liens du graphe
- */
-export const analyzeGraphClusters = (nodes, links) => {
-  console.log("Début de l'analyse des clusters...");
-
-  // Regrouper les nœuds par cluster
-  const clusterMap = {};
-
-  // Identifier les personnages à l'origine de chaque cluster
-  const clusterOrigins = {};
-  // Pour identifier l'origine, on utilise le caractère d'index le plus bas dans chaque cluster
-  const relevantCharacters = nodes.filter((node) => node.type === "character");
-
-  // Trier les personnages par index d'origine
-  const sortedCharacters = [...relevantCharacters].sort((a, b) => {
-    // Extraire l'index du format "slug_index"
-    const indexA = parseInt(a.id.split("_").pop());
-    const indexB = parseInt(b.id.split("_").pop());
-    return indexA - indexB;
-  });
-
-  // Le premier personnage de chaque cluster est considéré comme l'origine
-  sortedCharacters.forEach((char) => {
-    if (!clusterOrigins[char.cluster]) {
-      clusterOrigins[char.cluster] = {
-        name: char.name,
-        id: char.id,
-        originalId: char.originalId,
-        isJoshua: char.isJoshua,
-        totalPosts: char.totalPosts,
-      };
-    }
-  });
-
-  nodes.forEach((node) => {
-    if (!clusterMap[node.cluster]) {
-      clusterMap[node.cluster] = {
-        id: node.cluster,
-        nodes: [],
-        characters: [],
-        platforms: [],
-        offsetX: node.offsetX || 0,
-        offsetY: node.offsetY || 0,
-        offsetZ: node.offsetZ || 0,
-        origin: clusterOrigins[node.cluster] || { name: "Inconnu" },
-      };
-    }
-
-    clusterMap[node.cluster].nodes.push(node);
-
-    if (node.type === "character") {
-      if (!clusterMap[node.cluster].characters.includes(node.name)) {
-        clusterMap[node.cluster].characters.push(node.name);
-      }
-    } else if (node.type === "platform") {
-      if (!clusterMap[node.cluster].platforms.includes(node.name)) {
-        clusterMap[node.cluster].platforms.push(node.name);
-      }
-    }
-  });
-
-  // Calculer les liens intra-cluster et inter-clusters
-  const clusterLinks = {};
-  links.forEach((link) => {
-    // Trouver les nœuds source et cible
-    const sourceNode = nodes.find((n) => n.id === link.source);
-    const targetNode = nodes.find((n) => n.id === link.target);
-
-    if (sourceNode && targetNode) {
-      const sourceCluster = sourceNode.cluster;
-      const targetCluster = targetNode.cluster;
-
-      // Initialiser les compteurs de liens
-      if (!clusterLinks[sourceCluster]) {
-        clusterLinks[sourceCluster] = { internal: 0, external: {} };
-      }
-
-      // Compter les liens internes et externes
-      if (sourceCluster === targetCluster) {
-        clusterLinks[sourceCluster].internal++;
-      } else {
-        if (!clusterLinks[sourceCluster].external[targetCluster]) {
-          clusterLinks[sourceCluster].external[targetCluster] = 0;
-        }
-        clusterLinks[sourceCluster].external[targetCluster]++;
-      }
-    }
-  });
-
-  // Afficher les informations pour chaque cluster
-  console.log("Détails par cluster:");
-  Object.values(clusterMap).forEach((cluster) => {
-    const originInfo = cluster.origin.isJoshua
-      ? `${cluster.origin.name} (Joshua, ${
-          cluster.origin.totalPosts || 0
-        } posts)`
-      : `${cluster.origin.name} (${cluster.origin.totalPosts || 0} posts)`;
-
-    console.log(`[CLUSTER ${cluster.id}] Origine: ${originInfo}`);
-
-    // Afficher la position seulement si les offsets existent
-    if (cluster.offsetX !== 0 || cluster.offsetY !== 0 || cluster.offsetZ !== 0) {
-      console.log(
-        `  - Position offset: (${cluster.offsetX.toFixed(2)}, ${cluster.offsetY.toFixed(
-          2
-        )}, ${cluster.offsetZ.toFixed(2)})`
-      );
-    } else {
-      console.log(`  - Position offset: Non définie (utilise positions du fichier)`);
-    }
-    console.log(
-      `  - ${cluster.nodes.length} nœuds (${cluster.characters.length} personnages, ${cluster.platforms.length} plateformes)`
-    );
-    console.log(`  - Personnages: ${cluster.characters.join(", ")}`);
-    console.log(`  - Plateformes: ${cluster.platforms.join(", ")}`);
-
-    // Afficher les informations sur les liens
-    if (clusterLinks[cluster.id]) {
-      console.log(`  - ${clusterLinks[cluster.id].internal} liens internes`);
-
-      const externalLinks = clusterLinks[cluster.id].external;
-      if (Object.keys(externalLinks).length > 0) {
-        console.log(
-          `  - Liens externes vers: ${Object.entries(externalLinks)
-            .map(
-              ([targetCluster, count]) => `Cluster ${targetCluster} (${count})`
-            )
-            .join(", ")}`
-        );
-      } else {
-        console.log(`  - Aucun lien externe`);
-      }
-    }
-    console.log("");
-  });
-
-  // Statistiques globales
-  console.log(
-    `Début de l'analyse des clusters... ${
-      Object.keys(clusterMap).length
-    } clusters analysés`
-  );
-
-  // Identifier les clusters les plus grands et les plus connectés
-  const largestCluster = Object.values(clusterMap).sort(
-    (a, b) => b.nodes.length - a.nodes.length
-  )[0];
-
-  console.log(
-    `Cluster le plus grand: Cluster ${largestCluster.id} (origine: ${largestCluster.origin.name}) avec ${largestCluster.nodes.length} nœuds`
-  );
-
-  // Créer une visualisation textuelles des clusters
-  console.log("Carte des clusters et leurs origines:");
-  console.log(
-    Object.values(clusterMap)
-      .map((cluster) => `  C${cluster.id}: ${cluster.origin.name}`)
-      .join("\n")
-  );
-
-  return clusterMap;
-};
-
-/**
- * Builds a graph structure (nodes and links) from character data
- * @param {Array} characterData - Array of character objects from database.data.json
- * @returns {{nodes: Array, links: Array}} Object containing nodes and links arrays
+ * Construit le graphe complet à partir des données de personnages
+ *
+ * @param {Array} characterData - Données brutes des personnages
+ * @returns {{nodes: Array, links: Array}} Graphe construit
  */
 export const buildGraphFromCharacterData = (characterData) => {
-  console.log("Début de la construction du graphe...");
+  if (DEBUG_GRAPH) console.log("Début de la construction du graphe...");
 
   // Filtrer les personnages qui n'ont ni liens, ni posts, ni sources
   const relevantCharacters = characterData.filter((character) => {
@@ -269,13 +114,14 @@ export const buildGraphFromCharacterData = (characterData) => {
     return hasLinks || hasPosts || hasSources;
   });
 
-  console.log(
-    `FILTRAGE ${
-      characterData.length - relevantCharacters.length
-    } personnages ignorés car sans liens, posts ni sources (${
-      relevantCharacters.length
-    } personnages conservés)`
-  );
+  if (DEBUG_GRAPH)
+    console.log(
+      `FILTRAGE ${
+        characterData.length - relevantCharacters.length
+      } personnages ignorés car sans liens, posts ni sources (${
+        relevantCharacters.length
+      } personnages conservés)`
+    );
 
   // Nouveaux tableaux de tous les nœuds et liens (avec redondances possibles)
   let allNodes = [];
@@ -284,16 +130,10 @@ export const buildGraphFromCharacterData = (characterData) => {
   // Identifiant unique pour les nœuds qui peuvent être dupliqués
   let nodeIdCounter = 0;
 
-  // Pour la stratégie séquentielle, on garde un compteur de cluster incrémental
-  let currentClusterIndex = 0;
-
-  // La carte des positions des clusters pour maintenir une répartition spatiale équilibrée
-  const clusterPositions = {};
-
-  // Tableau pour garder une trace des origines de clusters
+  // Tableau pour garder une trace des origines de clusterIds
   const clusterOrigins = {};
 
-  // Pour suivre quels clusters sont réellement utilisés
+  // Pour suivre quels clusterIds sont réellement utilisés
   const usedClusters = new Set();
 
   // Statistiques pour suivi détaillé
@@ -306,8 +146,9 @@ export const buildGraphFromCharacterData = (characterData) => {
     targetsNotFound: 0,
     clustersWithNoOrigin: 0,
     originsDesignated: 0,
-    sequentialClusters: 0,
     duplicateCharactersRemoved: 0,
+    clustersRemoved: 0,
+    finalClusters: 0,
   };
 
   // Pour chaque personnage, créer un mini-graphe
@@ -315,106 +156,53 @@ export const buildGraphFromCharacterData = (characterData) => {
     // Vérifier si le personnage a un slug
     if (!character.slug) {
       stats.charactersWithoutSlug++;
-      console.log(
-        `[ATTENTION] Personnage sans slug ignoré: ${
-          character.displayName || "Inconnu"
-        }`
-      );
+      if (DEBUG_GRAPH)
+        console.log(
+          `[ATTENTION] Personnage sans slug ignoré: ${
+            character.displayName || "Inconnu"
+          }`
+        );
       return;
     }
 
-    // Calculer le cluster en fonction de la stratégie choisie
-    let clusterIndex;
+    // Marquer ce clusterId comme utilisé
+    usedClusters.add(character.slug);
 
-    if (graphConfig.clusterStrategy === "sequential") {
-      // Déterminer si ce personnage doit commencer un nouveau cluster
-      const shouldStartNewCluster =
-        character.isClusterRoot ||
-        characterIndex === 0 ||
-        currentClusterIndex === 0 ||
-        character.isJoshua;
-
-      if (shouldStartNewCluster) {
-        currentClusterIndex++;
-        stats.sequentialClusters++;
-        console.log(
-          `[CLUSTER] Création du cluster #${currentClusterIndex} pour "${
-            character.displayName || character.slug
-          }"`
-        );
-      }
-
-      clusterIndex = currentClusterIndex;
-    } else {
-      // Stratégie par défaut (modulo)
-      clusterIndex = characterIndex % graphConfig.clusterCount;
-    }
-
-    // Marquer ce cluster comme utilisé
-    usedClusters.add(clusterIndex);
-
-    // Générer ou réutiliser les décalages pour ce cluster
-    let offsetX, offsetY, offsetZ;
-
-    if (clusterPositions[clusterIndex]) {
-      // Réutiliser les mêmes décalages pour tout le cluster
-      offsetX = clusterPositions[clusterIndex].x;
-      offsetY = clusterPositions[clusterIndex].y;
-      offsetZ = clusterPositions[clusterIndex].z;
-    } else {
-      // Générer de nouveaux décalages pour ce cluster
-      offsetX = (Math.random() - 0.5) * graphConfig.clusterSpreadFactor;
-      offsetY = (Math.random() - 0.5) * graphConfig.clusterSpreadFactor;
-      offsetZ = (Math.random() - 0.5) * graphConfig.clusterSpreadFactor;
-
-      // Enregistrer ces décalages pour les futurs nœuds du même cluster
-      clusterPositions[clusterIndex] = { x: offsetX, y: offsetY, z: offsetZ };
-    }
-
-    console.log(
-      `[PERSONNAGE] Traitement de "${
-        character.displayName || character.slug
-      }" (Cluster ${clusterIndex})`
-    );
+    if (DEBUG_GRAPH)
+      console.log(
+        `[PERSONNAGE] Traitement de "${
+          character.displayName || character.slug
+        }" (ClusterId ${character.slug})`
+      );
 
     // Récupérer un ID unique pour créer des nœuds distincts même si même slug
     const characterNodeId = `${character.slug}_${nodeIdCounter++}`;
 
-    // Vérifier si c'est le premier personnage dans ce cluster (origine du cluster)
-    const isClusterOrigin = !clusterOrigins[clusterIndex];
+    // Vérifier si c'est le premier personnage dans ce clusterId (origine du clusterId)
+    const isClusterOrigin = !clusterOrigins[character.slug];
 
     // Si c'est l'origine, l'enregistrer
     if (isClusterOrigin) {
-      clusterOrigins[clusterIndex] = characterNodeId;
-      console.log(
-        `  - [ORIGINE] Ce personnage est l'origine du cluster ${clusterIndex}`
-      );
+      clusterOrigins[character.slug] = characterNodeId;
+      if (DEBUG_GRAPH)
+        console.log(
+          `  - [ORIGINE] Ce personnage est l'origine du clusterId ${character.slug}`
+        );
     }
 
     // Créer le nœud de ce personnage
     const characterNode = {
       id: characterNodeId,
       originalId: character.slug, // Garder le slug original pour les liens
-      type: "character",
+      nodeId: character.slug, // Nouveau nom pour le slug
+      type: character.isJoshua ? "persona_character" : "external_character",
       name: character.displayName || character.slug,
-      value: character.isJoshua
-        ? graphConfig.joshuaNodeSize
-        : graphConfig.characterNodeSize,
-      group: character.isJoshua
-        ? graphConfig.joshuaGroup
-        : graphConfig.characterGroup,
-      thematicGroup: character.thematicGroup,
-      isJoshua: character.isJoshua || false,
+      nodeThematicGroup: character.thematicGroup, // Thématique propre au nœud
+      clusterThematicGroup: character.thematicGroup, // Sera mis à jour avec le master du cluster
       // Ajouter le nombre total de posts pour dimensionner le texte
       totalPosts: character.totalPosts || 0,
-      // Calculer une taille de texte proportionnelle au nombre de posts
-      textSize: calculateTextSize(character.totalPosts),
       // Créer un groupe visuel pour aider à distinguer les mini-graphes
-      cluster: clusterIndex,
-      // Ajouter une propriété de décalage pour positionner chaque mini-graphe séparément
-      offsetX: offsetX,
-      offsetY: offsetY,
-      offsetZ: offsetZ,
+      clusterId: character.slug, // Utiliser le slug comme clusterId
       // Marquer ce nœud comme l'origine du cluster
       isClusterOrigin: isClusterOrigin,
     };
@@ -428,7 +216,8 @@ export const buildGraphFromCharacterData = (characterData) => {
 
     // 1. Ajouter les plateformes du personnage depuis la clé "sources" (au lieu de "platform")
     if (character.sources && Array.isArray(character.sources)) {
-      console.log(`  - Sources: ${character.sources.join(", ") || "aucune"}`);
+      if (DEBUG_GRAPH)
+        console.log(`  - Sources: ${character.sources.join(", ") || "aucune"}`);
 
       character.sources.forEach((platform) => {
         if (!platform) return;
@@ -440,27 +229,26 @@ export const buildGraphFromCharacterData = (characterData) => {
           // Réutiliser l'ID existant
           platformNodeId = platformNodesInCluster[platform];
           stats.platformsReused++;
-          console.log(`    * Plateforme "${platform}" réutilisée`);
+          if (DEBUG_GRAPH)
+            console.log(`    * Plateforme "${platform}" réutilisée`);
         } else {
           // Créer un ID unique pour ce nœud de plateforme
           platformNodeId = `platform_${platform}_${nodeIdCounter++}`;
           stats.platformsCreated++;
-          console.log(
-            `    * Plateforme "${platform}" créée (id: ${platformNodeId})`
-          );
+          if (DEBUG_GRAPH)
+            console.log(
+              `    * Plateforme "${platform}" créée (id: ${platformNodeId})`
+            );
 
           // Créer le nœud de plateforme
           const platformNode = {
             id: platformNodeId,
+            nodeId: `${platform}_${character.slug}`, // ID unique pour la plateforme
             type: "platform",
             name: platform,
-            value: graphConfig.platformNodeSize,
-            group: graphConfig.platformGroup,
-            cluster: clusterIndex,
-            // Utiliser le même décalage que le personnage parent
-            offsetX: characterNode.offsetX,
-            offsetY: characterNode.offsetY,
-            offsetZ: characterNode.offsetZ,
+            nodeThematicGroup: character.thematicGroup, // Hériter du thematicGroup du personnage
+            clusterThematicGroup: character.thematicGroup, // Sera mis à jour avec le master du cluster
+            clusterId: character.slug,
           };
 
           // Ajouter le nœud de plateforme à notre collection
@@ -474,23 +262,26 @@ export const buildGraphFromCharacterData = (characterData) => {
         allLinks.push({
           source: characterNodeId,
           target: platformNodeId,
-          value: 1.5,
           type: "character_platform_connection",
           isDirect: "Direct",
           relationType: "Présence",
+          nodeThematicGroup: character.thematicGroup, // Ajouter le thematicGroup au lien
+          clusterThematicGroup: character.thematicGroup, // Thématique du cluster
         });
       });
     }
 
     // 2. Ajouter les liens vers d'autres personnages et leurs plateformes
     if (character.links && Array.isArray(character.links)) {
-      console.log(
-        `  - ${character.links.length} liens vers d'autres personnages`
-      );
+      if (DEBUG_GRAPH)
+        console.log(
+          `  - ${character.links.length} liens vers d'autres personnages`
+        );
 
       character.links.forEach((link, linkIndex) => {
         if (!link.target) {
-          console.log(`    * Lien #${linkIndex + 1} ignoré: cible manquante`);
+          if (DEBUG_GRAPH)
+            console.log(`    * Lien #${linkIndex + 1} ignoré: cible manquante`);
           return;
         }
 
@@ -500,41 +291,35 @@ export const buildGraphFromCharacterData = (characterData) => {
         );
         if (!targetCharacter) {
           stats.targetsNotFound++;
-          console.log(
-            `    * Lien #${linkIndex + 1}: CIBLE NON TROUVÉE "${link.target}"`
-          );
+          if (DEBUG_GRAPH)
+            console.log(
+              `    * Lien #${linkIndex + 1}: CIBLE NON TROUVÉE "${link.target}"`
+            );
           return;
         }
 
-        console.log(
-          `    * Lien #${linkIndex + 1} vers "${
-            targetCharacter.displayName || link.target
-          }"`
-        );
+        if (DEBUG_GRAPH)
+          console.log(
+            `    * Lien #${linkIndex + 1} vers "${
+              targetCharacter.displayName || link.target
+            }"`
+          );
 
         // Créer un nœud pour le personnage cible
         const targetNodeId = `${link.target}_${nodeIdCounter++}`;
         const targetNode = {
           id: targetNodeId,
           originalId: link.target,
-          type: "character",
+          nodeId: link.target, // Nouveau nom pour le slug
+          type: targetCharacter.isJoshua
+            ? "persona_character"
+            : "external_character",
           name: targetCharacter.displayName || link.target,
-          value: targetCharacter.isJoshua
-            ? graphConfig.joshuaNodeSize
-            : graphConfig.characterNodeSize,
-          group: targetCharacter.isJoshua
-            ? graphConfig.joshuaGroup
-            : graphConfig.characterGroup,
-          isJoshua: targetCharacter.isJoshua || false,
+          nodeThematicGroup: targetCharacter.thematicGroup, // Thématique propre au nœud cible
+          clusterThematicGroup: character.thematicGroup, // Hérite du cluster du personnage source
           // Ajouter le nombre total de posts pour le personnage cible
           totalPosts: targetCharacter.totalPosts || 0,
-          // Calculer une taille de texte proportionnelle au nombre de posts
-          textSize: calculateTextSize(targetCharacter.totalPosts),
-          cluster: clusterIndex,
-          // Utiliser le même décalage que le personnage parent
-          offsetX: characterNode.offsetX,
-          offsetY: characterNode.offsetY,
-          offsetZ: characterNode.offsetZ,
+          clusterId: character.slug,
         };
 
         // Ajouter le nœud cible à notre collection
@@ -542,11 +327,12 @@ export const buildGraphFromCharacterData = (characterData) => {
 
         // Ajouter les plateformes du personnage cible depuis ses sources
         if (targetCharacter.sources && Array.isArray(targetCharacter.sources)) {
-          console.log(
-            `      - Sources de la cible: ${
-              targetCharacter.sources.join(", ") || "aucune"
-            }`
-          );
+          if (DEBUG_GRAPH)
+            console.log(
+              `      - Sources de la cible: ${
+                targetCharacter.sources.join(", ") || "aucune"
+              }`
+            );
 
           targetCharacter.sources.forEach((platform) => {
             if (!platform) return;
@@ -562,22 +348,20 @@ export const buildGraphFromCharacterData = (characterData) => {
               // Créer un ID unique pour ce nœud de plateforme
               platformNodeId = `platform_${platform}_${nodeIdCounter++}`;
               stats.platformsCreated++;
-              console.log(
-                `        * Plateforme "${platform}" créée pour la cible`
-              );
+              if (DEBUG_GRAPH)
+                console.log(
+                  `        * Plateforme "${platform}" créée pour la cible`
+                );
 
               // Créer le nœud de plateforme
               const platformNode = {
                 id: platformNodeId,
+                nodeId: `${platform}_${character.slug}`, // ID unique pour la plateforme
                 type: "platform",
                 name: platform,
-                value: graphConfig.platformNodeSize,
-                group: graphConfig.platformGroup,
-                cluster: clusterIndex,
-                // Utiliser le même décalage que le personnage parent
-                offsetX: characterNode.offsetX,
-                offsetY: characterNode.offsetY,
-                offsetZ: characterNode.offsetZ,
+                nodeThematicGroup: character.thematicGroup, // Hériter du thematicGroup du personnage
+                clusterThematicGroup: character.thematicGroup, // Sera mis à jour avec le master du cluster
+                clusterId: character.slug,
               };
 
               // Ajouter le nœud de plateforme à notre collection
@@ -591,10 +375,11 @@ export const buildGraphFromCharacterData = (characterData) => {
             allLinks.push({
               source: targetNodeId,
               target: platformNodeId,
-              value: 1.5,
               type: "character_platform_connection",
               isDirect: "Direct",
               relationType: "Présence",
+              nodeThematicGroup: character.thematicGroup, // Ajouter le thematicGroup au lien
+              clusterThematicGroup: character.thematicGroup, // Thématique du cluster
             });
           });
         }
@@ -605,9 +390,10 @@ export const buildGraphFromCharacterData = (characterData) => {
           Array.isArray(link.platforms) &&
           link.platforms.length > 0
         ) {
-          console.log(
-            `      - Plateformes intermédiaires: ${link.platforms.join(", ")}`
-          );
+          if (DEBUG_GRAPH)
+            console.log(
+              `      - Plateformes intermédiaires: ${link.platforms.join(", ")}`
+            );
           stats.platformIntermediaryLinks++;
 
           // Utiliser les plateformes comme intermédiaires - ne pas créer de lien direct
@@ -629,15 +415,12 @@ export const buildGraphFromCharacterData = (characterData) => {
               // Créer le nœud de plateforme
               const platformNode = {
                 id: platformNodeId,
+                nodeId: `${platform}_${character.slug}`, // ID unique pour la plateforme
                 type: "platform",
                 name: platform,
-                value: graphConfig.platformNodeSize,
-                group: graphConfig.platformGroup,
-                cluster: clusterIndex,
-                // Utiliser le même décalage que le personnage parent
-                offsetX: characterNode.offsetX,
-                offsetY: characterNode.offsetY,
-                offsetZ: characterNode.offsetZ,
+                nodeThematicGroup: character.thematicGroup, // Hériter du thematicGroup du personnage
+                clusterThematicGroup: character.thematicGroup, // Sera mis à jour avec le master du cluster
+                clusterId: character.slug,
               };
 
               // Ajouter le nœud de plateforme à notre collection
@@ -652,71 +435,75 @@ export const buildGraphFromCharacterData = (characterData) => {
             allLinks.push({
               source: characterNodeId,
               target: platformNodeId,
-              value: 1,
               type: "platform_connection",
               isDirect: "Direct",
               relationType: "Communication",
-              originalLinkData: link, // Conserver les données du lien original
+              nodeThematicGroup: character.thematicGroup, // Ajouter le thematicGroup au lien
+              clusterThematicGroup: character.thematicGroup, // Thématique du cluster
+              originalLinkData: link,
             });
 
             // La plateforme se connecte au personnage cible
             allLinks.push({
               source: platformNodeId,
               target: targetNodeId,
-              value: 1,
               type: "platform_connection",
               isDirect: "Direct",
               relationType: "Communication",
-              originalLinkData: link, // Conserver les données du lien original
+              nodeThematicGroup: character.thematicGroup, // Ajouter le thematicGroup au lien
+              clusterThematicGroup: character.thematicGroup, // Thématique du cluster
+              originalLinkData: link,
             });
           });
         } else {
           // S'il n'y a pas de plateformes, créer un lien direct entre les personnages
-          console.log(`      - Lien direct (sans plateforme intermédiaire)`);
+          if (DEBUG_GRAPH)
+            console.log(`      - Lien direct (sans plateforme intermédiaire)`);
           stats.directCharacterLinks++;
 
           allLinks.push({
             source: characterNodeId,
             target: targetNodeId,
-            value: 2,
             type: link.type || "character_connection",
             isDirect: link.isDirect || "Indirect",
             relationType: link.relationType || "",
             linkType: link.linkType || "",
+            nodeThematicGroup: character.thematicGroup, // Ajouter le thematicGroup au lien
+            clusterThematicGroup: character.thematicGroup, // Thématique du cluster
           });
         }
       });
     } else {
-      console.log(`  - Aucun lien vers d'autres personnages`);
+      if (DEBUG_GRAPH) console.log(`  - Aucun lien vers d'autres personnages`);
     }
   });
 
-  // Après avoir créé tous les nœuds, s'assurer que chaque cluster utilisé a un nœud d'origine défini
-  console.log(
-    `Début de l'analyse des clusters... ${usedClusters.size} clusters réellement utilisés dans le graphe`
-  );
-  console.log(
-    `Clusters utilisés: ${Array.from(usedClusters)
-      .sort((a, b) => a - b)
-      .join(", ")}`
-  );
-
-  if (graphConfig.clusterStrategy === "sequential") {
+  // Après avoir créé tous les nœuds, s'assurer que chaque clusterId utilisé a un nœud d'origine défini
+  if (DEBUG_GRAPH)
     console.log(
-      `Début de l'analyse des clusters... ${stats.sequentialClusters} clusters séquentiels créés`
+      `Début de l'analyse des clusterIds... ${usedClusters.size} clusterIds réellement utilisés dans le graphe`
     );
-  }
+  if (DEBUG_GRAPH)
+    console.log(
+      `ClusterIds utilisés: ${Array.from(usedClusters).sort().join(", ")}`
+    );
 
-  // 2. Pour chaque cluster qui n'a pas d'origine, désigner un nœud comme origine
-  usedClusters.forEach((clusterIndex) => {
-    // Vérifier si ce cluster a une origine
-    if (!clusterOrigins[clusterIndex]) {
+  // 2. Pour chaque clusterId qui n'a pas d'origine, désigner un nœud comme origine
+  usedClusters.forEach((clusterSlug) => {
+    // Vérifier si ce clusterId a une origine
+    if (!clusterOrigins[clusterSlug]) {
       stats.clustersWithNoOrigin++;
-      console.log(`Cluster ${clusterIndex} n'a pas de nœud d'origine défini`);
+      if (DEBUG_GRAPH)
+        console.log(
+          `ClusterId ${clusterSlug} n'a pas de nœud d'origine défini`
+        );
 
-      // Filtrer les nœuds de caractères dans ce cluster
+      // Filtrer les nœuds de caractères dans ce clusterId
       const nodesInCluster = allNodes.filter(
-        (node) => node.cluster === clusterIndex && node.type === "character"
+        (node) =>
+          node.clusterId === clusterSlug &&
+          (node.type === "persona_character" ||
+            node.type === "external_character")
       );
 
       if (nodesInCluster.length > 0) {
@@ -730,172 +517,208 @@ export const buildGraphFromCharacterData = (characterData) => {
         designatedOrigin.isClusterOrigin = true;
 
         stats.originsDesignated++;
-        console.log(
-          `"${designatedOrigin.name}" (${
-            designatedOrigin.totalPosts || 0
-          } posts) désigné comme origine du cluster ${clusterIndex}`
-        );
+        if (DEBUG_GRAPH)
+          console.log(
+            `"${designatedOrigin.name}" (${
+              designatedOrigin.totalPosts || 0
+            } posts) désigné comme origine du clusterId ${clusterSlug}`
+          );
 
         // Mettre à jour le registre des origines
-        clusterOrigins[clusterIndex] = designatedOrigin.id;
+        clusterOrigins[clusterSlug] = designatedOrigin.id;
       } else {
-        console.log(
-          `Impossible de désigner une origine pour le cluster ${clusterIndex}: aucun personnage trouvé`
-        );
+        if (DEBUG_GRAPH)
+          console.log(
+            `Impossible de désigner une origine pour le clusterId ${clusterSlug}: aucun personnage trouvé`
+          );
       }
     }
   });
 
-  // Déduplication des personnages au sein de chaque cluster
-  console.log("Déduplication des personnages au sein de chaque cluster...");
+  // Déduplication des personnages au sein de chaque clusterId
+  if (DEBUG_GRAPH)
+    console.log("Déduplication des personnages au sein de chaque clusterId...");
 
-  // On va dupliquer les tableaux originaux car nous allons les modifier
-  const originalNodes = [...allNodes];
-  const originalLinks = [...allLinks];
-
-  // Réinitialiser les tableaux
-  allNodes = [];
-  allLinks = [];
-
-  // Dictionnaire pour suivre les nœuds déjà traités par cluster
-  const processedCharactersByCluster = {};
-
-  // Dictionnaire pour le remapping des IDs (ancienID -> nouveauID)
+  // Grouper les nœuds par clusterId et originalId pour identifier les doublons
+  const nodesByClusterAndOriginal = {};
+  const nodesToKeep = [];
   const idRemapping = {};
 
-  // Dictionnaire pour stocker les slugs des clusters
-  const clusterSlugs = {};
-
-  // Première passe : identifier les slugs des clusters à partir des origines
-  originalNodes.forEach((node) => {
-    if (node.isClusterOrigin && node.originalId) {
-      clusterSlugs[node.cluster] = node.originalId;
-    }
-  });
-
-  // Traiter chaque nœud original
-  originalNodes.forEach((node) => {
-    const clusterIndex = node.cluster;
-
-    // Ajouter le clusterSlug à chaque nœud
-    node.clusterSlug = clusterSlugs[clusterIndex] || null;
-
-    // Initialiser le suivi pour ce cluster si nécessaire
-    if (!processedCharactersByCluster[clusterIndex]) {
-      processedCharactersByCluster[clusterIndex] = {};
-    }
-
-    // Si c'est un nœud de plateforme, on le garde toujours
-    // (la déduplication des plateformes est déjà gérée lors de la création)
+  allNodes.forEach((node) => {
     if (node.type === "platform") {
-      allNodes.push(node);
+      // Garder toutes les plateformes
+      nodesToKeep.push(node);
       return;
     }
 
-    // Pour les personnages, vérifier s'il s'agit d'un doublon
-    if (node.type === "character" && node.originalId) {
-      const characterOriginalId = node.originalId;
+    if (
+      (node.type === "persona_character" ||
+        node.type === "external_character") &&
+      node.originalId
+    ) {
+      const key = `${node.clusterId}_${node.originalId}`;
 
-      // Si ce personnage a déjà été traité dans ce cluster
-      if (processedCharactersByCluster[clusterIndex][characterOriginalId]) {
-        // C'est un doublon, on enregistre son ID pour le remapping des liens
-        const existingNodeId =
-          processedCharactersByCluster[clusterIndex][characterOriginalId];
-        idRemapping[node.id] = existingNodeId;
+      if (!nodesByClusterAndOriginal[key]) {
+        // Premier nœud de ce personnage dans ce cluster
+        nodesByClusterAndOriginal[key] = node;
+        nodesToKeep.push(node);
+      } else {
+        // Doublon détecté
+        const existingNode = nodesByClusterAndOriginal[key];
+        idRemapping[node.id] = existingNode.id;
         stats.duplicateCharactersRemoved++;
 
-        // Si ce doublon était marqué comme origine de cluster, transférer ce statut au nœud conservé
+        // Si ce doublon était marqué comme origine, transférer le statut
         if (node.isClusterOrigin) {
-          const existingNode = originalNodes.find(
-            (n) => n.id === existingNodeId
-          );
-          if (existingNode) {
-            existingNode.isClusterOrigin = true;
-
-            // Mettre à jour le registre des origines
-            clusterOrigins[clusterIndex] = existingNodeId;
-
-            console.log(
-              `[DÉDUPLICATION] Transféré le statut d'origine du cluster ${clusterIndex} à "${existingNode.name}"`
-            );
-          }
+          existingNode.isClusterOrigin = true;
+          clusterOrigins[node.clusterId] = existingNode.id;
         }
-
-        return; // Ne pas ajouter ce nœud
       }
-
-      // Premier nœud de ce personnage dans ce cluster, l'enregistrer
-      processedCharactersByCluster[clusterIndex][characterOriginalId] = node.id;
+    } else {
+      // Autres types de nœuds
+      nodesToKeep.push(node);
     }
-
-    // Dans tous les autres cas, conserver le nœud
-    allNodes.push(node);
   });
 
-  // Maintenant, ajuster les liens pour utiliser les IDs dédupliqués
-  originalLinks.forEach((link) => {
-    // Créer une copie du lien
-    const newLink = { ...link };
+  // Mettre à jour les liens avec les IDs remappés
+  const updatedLinks = allLinks.map((link) => ({
+    ...link,
+    source: idRemapping[link.source] || link.source,
+    target: idRemapping[link.target] || link.target,
+  }));
 
-    // Remplacer l'ID source si nécessaire
-    if (idRemapping[newLink.source]) {
-      newLink.source = idRemapping[newLink.source];
+  // Remplacer les tableaux
+  allNodes = nodesToKeep;
+  allLinks = updatedLinks;
+
+  // Propager le clusterThematicGroup du nœud maître à tous les nœuds du cluster
+  if (DEBUG_GRAPH)
+    console.log(
+      "Propagation du clusterThematicGroup depuis les nœuds maîtres..."
+    );
+
+  // Identifier les thématiques des clusters depuis leurs nœuds maîtres
+  const clusterThematicGroups = {};
+  allNodes.forEach((node) => {
+    if (node.isClusterOrigin && node.nodeThematicGroup) {
+      clusterThematicGroups[node.clusterId] = node.nodeThematicGroup;
     }
-
-    // Remplacer l'ID cible si nécessaire
-    if (idRemapping[newLink.target]) {
-      newLink.target = idRemapping[newLink.target];
-    }
-
-    // Ajouter le lien ajusté
-    allLinks.push(newLink);
   });
 
-  console.log(
-    `Début de l'analyse des clusters... ${stats.duplicateCharactersRemoved} personnages dupliqués supprimés`
-  );
+  // Appliquer le clusterThematicGroup à tous les nœuds
+  allNodes.forEach((node) => {
+    if (clusterThematicGroups[node.clusterId]) {
+      node.clusterThematicGroup = clusterThematicGroups[node.clusterId];
+    }
+  });
+
+  // Appliquer le clusterThematicGroup à tous les liens
+  allLinks.forEach((link) => {
+    // Trouver le nœud source pour déterminer son cluster
+    const sourceNode = allNodes.find((n) => n.id === link.source);
+    if (sourceNode && clusterThematicGroups[sourceNode.clusterId]) {
+      link.clusterThematicGroup = clusterThematicGroups[sourceNode.clusterId];
+    }
+  });
+
+  if (DEBUG_GRAPH)
+    console.log(
+      `Propagé clusterThematicGroup pour ${
+        Object.keys(clusterThematicGroups).length
+      } clusters`
+    );
+
+  // Passe finale : supprimer tous les clusters sans connexion avec des personas
+  if (DEBUG_GRAPH)
+    console.log("Début du nettoyage des clusters sans personas...");
+  const finalCleanedData = removeNonPersonaClusters(allNodes, allLinks);
+  allNodes = finalCleanedData.nodes;
+  allLinks = finalCleanedData.links;
+
+  // Utiliser les vraies statistiques de nettoyage
+  stats.nodesRemovedFinal = finalCleanedData.nodesRemoved;
+  stats.linksRemovedFinal = finalCleanedData.linksRemoved;
+  stats.clustersRemoved = finalCleanedData.clustersRemoved;
+  stats.finalClusters = new Set(allNodes.map((n) => n.clusterId)).size;
 
   // Log des statistiques détaillées
-  console.log("STATISTIQUES");
-  console.log(
-    `  - Personnages sans slug ignorés: ${stats.charactersWithoutSlug}`
-  );
-  console.log(`  - Plateformes créées: ${stats.platformsCreated}`);
-  console.log(`  - Plateformes réutilisées: ${stats.platformsReused}`);
-  console.log(
-    `  - Liens directs entre personnages: ${stats.directCharacterLinks}`
-  );
-  console.log(
-    `  - Liens via plateformes intermédiaires: ${stats.platformIntermediaryLinks}`
-  );
-  console.log(`  - Cibles non trouvées: ${stats.targetsNotFound}`);
-  console.log(
-    `  - Clusters sans origine détectés: ${stats.clustersWithNoOrigin}`
-  );
-  console.log(
-    `  - Origines désignées automatiquement: ${stats.originsDesignated}`
-  );
-  console.log(`  - Clusters réellement utilisés: ${usedClusters.size}`);
-  console.log(
-    `  - Doublons de personnages supprimés: ${stats.duplicateCharactersRemoved}`
-  );
+  if (DEBUG_GRAPH) {
+    console.log("STATISTIQUES");
+    console.log(
+      `  - Personnages sans slug ignorés: ${stats.charactersWithoutSlug}`
+    );
+    console.log(`  - Plateformes créées: ${stats.platformsCreated}`);
+    console.log(`  - Plateformes réutilisées: ${stats.platformsReused}`);
+    console.log(
+      `  - Liens directs entre personnages: ${stats.directCharacterLinks}`
+    );
+    console.log(
+      `  - Liens via plateformes intermédiaires: ${stats.platformIntermediaryLinks}`
+    );
+    console.log(`  - Cibles non trouvées: ${stats.targetsNotFound}`);
+    console.log(
+      `  - ClusterIds sans origine détectés: ${stats.clustersWithNoOrigin}`
+    );
+    console.log(
+      `  - Origines désignées automatiquement: ${stats.originsDesignated}`
+    );
+    console.log(`  - ClusterIds réellement utilisés: ${usedClusters.size}`);
+    console.log(
+      `  - Doublons de personnages supprimés: ${stats.duplicateCharactersRemoved}`
+    );
+    console.log(
+      `  - Clusters supprimés (sans personas): ${stats.clustersRemoved}`
+    );
+    console.log(`  - Clusters finaux conservés: ${stats.finalClusters}`);
 
-  console.log(
-    `[GRAPHE] ${allNodes.length} nœuds (après déduplication) dont ${
-      allNodes.filter((n) => n.type === "platform").length
-    } plateformes et ${allLinks.length} liens`
-  );
+    console.log(
+      `[GRAPHE] ${allNodes.length} nœuds (après nettoyage final) dont ${
+        allNodes.filter((n) => n.type === "platform").length
+      } plateformes et ${allLinks.length} liens`
+    );
 
-  console.log(`[CLUSTERS] ${usedClusters.size} clusters de mini-graphes créés`);
+    console.log(
+      `[CLUSTERIDS] ${stats.finalClusters} clusters finaux (tous connectés à des personas)`
+    );
 
-  return { nodes: allNodes, links: allLinks };
+    // Log de la liste unique des plateformes présentes dans le graphe
+    const uniquePlatforms = new Set();
+    allNodes.forEach((node) => {
+      if (node.type === "platform") {
+        uniquePlatforms.add(node.name);
+      }
+    });
+
+    const platformsList = Array.from(uniquePlatforms).sort();
+    console.log(
+      `[PLATEFORMES] ${platformsList.length} plateformes uniques dans le graphe:`
+    );
+    console.log(`  ${platformsList.join(", ")}`);
+  }
+
+  return {
+    nodes: allNodes,
+    links: allLinks,
+    stats: {
+      charactersWithoutSlug: stats.charactersWithoutSlug,
+      duplicateCharactersRemoved: stats.duplicateCharactersRemoved,
+      clustersRemoved: stats.clustersRemoved,
+      finalClusters: stats.finalClusters,
+      targetsNotFound: stats.targetsNotFound,
+      platformsCreated: stats.platformsCreated,
+      platformsReused: stats.platformsReused,
+      nodesRemovedFinal: stats.nodesRemovedFinal,
+      linksRemovedFinal: stats.linksRemovedFinal,
+    },
+  };
 };
 
 /**
- * Helper function to get node positions from the graph instance
- * @param {Object} graphInstanceRef - Reference to the graph instance
- * @param {Object} graphData - Current graph data
- * @returns {Array} - Array of nodes with their positions
+ * Récupère les positions actuelles des nœuds depuis l'instance du graphe 3D
+ *
+ * @param {Object} graphInstanceRef - Référence à l'instance du graphe
+ * @param {Object} graphData - Données actuelles du graphe
+ * @returns {Array} Nœuds avec leurs positions
  */
 export const getNodesWithPositions = (graphInstanceRef, graphData) => {
   let nodesWithPositions = [];
@@ -906,7 +729,8 @@ export const getNodesWithPositions = (graphInstanceRef, graphData) => {
   ) {
     // Récupérer les positions des nœuds depuis l'instance du graphe
     nodesWithPositions = graphInstanceRef.current.getNodesPositions();
-    console.log(`Récupéré ${nodesWithPositions.length} nœuds avec positions`);
+    if (DEBUG_GRAPH)
+      console.log(`Récupéré ${nodesWithPositions.length} nœuds avec positions`);
 
     // S'assurer que les informations de cluster sont préservées
     // en fusionnant les positions actuelles avec les informations originales des nœuds
@@ -928,70 +752,63 @@ export const getNodesWithPositions = (graphInstanceRef, graphData) => {
             y: posNode.y,
             z: posNode.z,
             // S'assurer que les informations de cluster sont conservées
-            cluster: originalNode.cluster,
-            offsetX: originalNode.offsetX,
-            offsetY: originalNode.offsetY,
-            offsetZ: originalNode.offsetZ,
+            clusterId: originalNode.clusterId,
           };
         }
         return posNode;
       });
 
-      console.log(`Nœuds enrichis avec les informations de cluster`);
+      if (DEBUG_GRAPH)
+        console.log(`Nœuds enrichis avec les informations de cluster`);
     }
   } else {
     // Si la référence n'est pas disponible, utiliser les données de l'état
-    console.log("Utilisation des données d'état pour l'export");
+    if (DEBUG_GRAPH)
+      console.log("Utilisation des données d'état pour l'export");
     nodesWithPositions = graphData.nodes;
   }
 
   // Analyser les clusters dans les données exportées
   const clusters = new Set();
   nodesWithPositions.forEach((node) => {
-    if (node.cluster !== undefined) {
-      clusters.add(node.cluster);
+    if (node.clusterId !== undefined) {
+      clusters.add(node.clusterId);
     }
   });
 
-  console.log(`Clusters distincts identifiés dans les données exportées`);
+  if (DEBUG_GRAPH)
+    console.log(`Clusters distincts identifiés dans les données exportées`);
   return nodesWithPositions;
 };
 
-/**
- * Fonction utilitaire pour ajuster dynamiquement la configuration du graphe
- * @param {Object} newConfig - Nouvelles valeurs de configuration à appliquer
- * @returns {Object} - Configuration mise à jour
- */
-export const updateGraphConfig = (newConfig) => {
-  // Séparer 'verbose' de la config à appliquer, car il est géré globalement
-  const { verbose, ...restConfig } = newConfig;
-  console.log("Mise à jour de la configuration du graphe");
-  console.log("  - Ancienne config:", { ...graphConfig });
-
-  // Fusionner la nouvelle configuration avec l'existante
-  Object.assign(graphConfig, restConfig);
-
-  console.log("  - Nouvelle config:", { ...graphConfig });
-  return graphConfig;
-};
+// ============================================================================
+// FONCTIONS UTILITAIRES
+// ============================================================================
 
 /**
- * Nettoie les liens orphelins (qui pointent vers des nodes inexistants)
+ * Nettoie les liens orphelins (qui pointent vers des nœuds inexistants)
+ *
  * @param {Array} nodes - Tableau des nœuds du graphe
  * @param {Array} links - Tableau des liens du graphe
  * @returns {{nodes: Array, links: Array}} Données nettoyées
  */
 export const cleanOrphanLinks = (nodes, links) => {
   // Créer un Set des IDs de nodes existants pour une recherche rapide
-  const nodeIds = new Set(nodes.map(node => node.id));
+  const nodeIds = new Set(nodes.map((node) => node.id));
+
+  let orphanLinksRemoved = 0;
 
   // Filtrer les liens pour ne garder que ceux dont source et target existent
-  const validLinks = links.filter(link => {
+  const validLinks = links.filter((link) => {
     const sourceExists = nodeIds.has(link.source);
     const targetExists = nodeIds.has(link.target);
 
     if (!sourceExists || !targetExists) {
-      console.warn(`🔗 Lien orphelin supprimé: ${link.source} -> ${link.target} (source: ${sourceExists}, target: ${targetExists})`);
+      orphanLinksRemoved++;
+      if (DEBUG_GRAPH)
+        console.warn(
+          `🔗 Lien orphelin supprimé: ${link.source} -> ${link.target} (source: ${sourceExists}, target: ${targetExists})`
+        );
       return false;
     }
 
@@ -1000,6 +817,318 @@ export const cleanOrphanLinks = (nodes, links) => {
 
   return {
     nodes: nodes,
-    links: validLinks
+    links: validLinks,
+    orphanLinksRemoved: orphanLinksRemoved,
   };
+};
+
+/**
+ * Supprime tous les clusters qui n'ont pas de connexion (même indirecte) avec des personas
+ * Seuls les clusters ayant un persona comme origine (cluster master) sont conservés
+ *
+ * @param {Array} nodes - Tableau des nœuds du graphe
+ * @param {Array} links - Tableau des liens du graphe
+ * @returns {{nodes: Array, links: Array}} Données nettoyées
+ */
+export const removeNonPersonaClusters = (nodes, links) => {
+  if (DEBUG_GRAPH) console.log("🧹 Nettoyage des clusters sans personas...");
+
+  // 1. Identifier tous les clusters qui ont un persona comme origine
+  const personaClusters = new Set();
+
+  nodes.forEach((node) => {
+    if (node.type === "persona_character" && node.isClusterOrigin) {
+      personaClusters.add(node.clusterId);
+      if (DEBUG_GRAPH) {
+        console.log(
+          `✅ Cluster ${node.clusterId} conservé (origine persona: ${node.name})`
+        );
+      }
+    }
+  });
+
+  // 2. Construire un graphe de connexions entre clusters pour identifier les connexions indirectes
+  const clusterConnections = new Map();
+
+  links.forEach((link) => {
+    const sourceNode = nodes.find((n) => n.id === link.source);
+    const targetNode = nodes.find((n) => n.id === link.target);
+
+    if (
+      sourceNode &&
+      targetNode &&
+      sourceNode.clusterId !== targetNode.clusterId
+    ) {
+      // Lien inter-cluster
+      if (!clusterConnections.has(sourceNode.clusterId)) {
+        clusterConnections.set(sourceNode.clusterId, new Set());
+      }
+      if (!clusterConnections.has(targetNode.clusterId)) {
+        clusterConnections.set(targetNode.clusterId, new Set());
+      }
+
+      clusterConnections.get(sourceNode.clusterId).add(targetNode.clusterId);
+      clusterConnections.get(targetNode.clusterId).add(sourceNode.clusterId);
+    }
+  });
+
+  // 3. Utiliser un parcours en largeur pour trouver tous les clusters connectés aux personas
+  const connectedClusters = new Set(personaClusters);
+  const queue = [...personaClusters];
+
+  while (queue.length > 0) {
+    const currentCluster = queue.shift();
+    const connections = clusterConnections.get(currentCluster);
+
+    if (connections) {
+      connections.forEach((connectedCluster) => {
+        if (!connectedClusters.has(connectedCluster)) {
+          connectedClusters.add(connectedCluster);
+          queue.push(connectedCluster);
+          if (DEBUG_GRAPH) {
+            console.log(
+              `✅ Cluster ${connectedCluster} conservé (connexion indirecte avec personas)`
+            );
+          }
+        }
+      });
+    }
+  }
+
+  // 4. Identifier les clusters à supprimer
+  const allClusters = new Set();
+  nodes.forEach((node) => allClusters.add(node.clusterId));
+
+  const clustersToRemove = new Set();
+  allClusters.forEach((clusterId) => {
+    if (!connectedClusters.has(clusterId)) {
+      clustersToRemove.add(clusterId);
+    }
+  });
+
+  // 5. Filtrer les nœuds et liens
+  const filteredNodes = nodes.filter((node) => {
+    const shouldKeep = connectedClusters.has(node.clusterId);
+    if (!shouldKeep && DEBUG_GRAPH) {
+      console.log(
+        `❌ Nœud supprimé: ${node.name} (cluster ${node.clusterId} sans persona)`
+      );
+    }
+    return shouldKeep;
+  });
+
+  const filteredLinks = links.filter((link) => {
+    const sourceNode = nodes.find((n) => n.id === link.source);
+    const targetNode = nodes.find((n) => n.id === link.target);
+
+    if (!sourceNode || !targetNode) return false;
+
+    const shouldKeep =
+      connectedClusters.has(sourceNode.clusterId) &&
+      connectedClusters.has(targetNode.clusterId);
+
+    if (!shouldKeep && DEBUG_GRAPH) {
+      console.log(
+        `❌ Lien supprimé: ${link.source} -> ${link.target} (clusters sans persona)`
+      );
+    }
+
+    return shouldKeep;
+  });
+
+  if (DEBUG_GRAPH) {
+    console.log(`🧹 Nettoyage terminé:`);
+    console.log(`  - Clusters avec personas: ${personaClusters.size}`);
+    console.log(`  - Clusters connectés conservés: ${connectedClusters.size}`);
+    console.log(`  - Clusters supprimés: ${clustersToRemove.size}`);
+    console.log(
+      `  - Nœuds: ${nodes.length} → ${filteredNodes.length} (${
+        nodes.length - filteredNodes.length
+      } supprimés)`
+    );
+    console.log(
+      `  - Liens: ${links.length} → ${filteredLinks.length} (${
+        links.length - filteredLinks.length
+      } supprimés)`
+    );
+
+    if (clustersToRemove.size > 0) {
+      console.log(
+        `  - Clusters supprimés: ${Array.from(clustersToRemove).join(", ")}`
+      );
+    }
+  }
+
+  return {
+    nodes: filteredNodes,
+    links: filteredLinks,
+    nodesRemoved: nodes.length - filteredNodes.length,
+    linksRemoved: links.length - filteredLinks.length,
+    clustersRemoved: clustersToRemove.size,
+  };
+};
+
+/**
+ * Analyse et affiche des informations détaillées sur les clusters créés
+ * (Fonction de debug uniquement)
+ *
+ * @param {Array} nodes - Tableau des nœuds du graphe
+ * @param {Array} links - Tableau des liens du graphe
+ */
+export const analyzeGraphClusters = (nodes, links) => {
+  if (DEBUG_GRAPH) console.log("Début de l'analyse des clusters...");
+
+  // Regrouper les nœuds par cluster
+  const clusterMap = {};
+
+  // Identifier les personnages à l'origine de chaque cluster
+  const clusterOrigins = {};
+  // Pour identifier l'origine, on utilise le caractère d'index le plus bas dans chaque cluster
+  const relevantCharacters = nodes.filter(
+    (node) =>
+      node.type === "persona_character" || node.type === "external_character"
+  );
+
+  // Trier les personnages par index d'origine
+  const sortedCharacters = [...relevantCharacters].sort((a, b) => {
+    // Extraire l'index du format "slug_index"
+    const indexA = parseInt(a.id.split("_").pop());
+    const indexB = parseInt(b.id.split("_").pop());
+    return indexA - indexB;
+  });
+
+  // Le premier personnage de chaque cluster est considéré comme l'origine
+  sortedCharacters.forEach((char) => {
+    if (!clusterOrigins[char.clusterId]) {
+      clusterOrigins[char.clusterId] = {
+        name: char.name,
+        id: char.id,
+        originalId: char.originalId,
+        type: char.type,
+        totalPosts: char.totalPosts,
+      };
+    }
+  });
+
+  nodes.forEach((node) => {
+    if (!clusterMap[node.clusterId]) {
+      clusterMap[node.clusterId] = {
+        id: node.clusterId,
+        nodes: [],
+        characters: [],
+        platforms: [],
+        origin: clusterOrigins[node.clusterId] || { name: "Inconnu" },
+      };
+    }
+
+    clusterMap[node.clusterId].nodes.push(node);
+
+    if (
+      node.type === "persona_character" ||
+      node.type === "external_character"
+    ) {
+      if (!clusterMap[node.clusterId].characters.includes(node.name)) {
+        clusterMap[node.clusterId].characters.push(node.name);
+      }
+    } else if (node.type === "platform") {
+      if (!clusterMap[node.clusterId].platforms.includes(node.name)) {
+        clusterMap[node.clusterId].platforms.push(node.name);
+      }
+    }
+  });
+
+  // Calculer les liens intra-cluster et inter-clusters
+  const clusterLinks = {};
+  links.forEach((link) => {
+    // Trouver les nœuds source et cible
+    const sourceNode = nodes.find((n) => n.id === link.source);
+    const targetNode = nodes.find((n) => n.id === link.target);
+
+    if (sourceNode && targetNode) {
+      const sourceCluster = sourceNode.clusterId;
+      const targetCluster = targetNode.clusterId;
+
+      // Initialiser les compteurs de liens
+      if (!clusterLinks[sourceCluster]) {
+        clusterLinks[sourceCluster] = { internal: 0, external: {} };
+      }
+
+      // Compter les liens internes et externes
+      if (sourceCluster === targetCluster) {
+        clusterLinks[sourceCluster].internal++;
+      } else {
+        if (!clusterLinks[sourceCluster].external[targetCluster]) {
+          clusterLinks[sourceCluster].external[targetCluster] = 0;
+        }
+        clusterLinks[sourceCluster].external[targetCluster]++;
+      }
+    }
+  });
+
+  // Afficher les informations pour chaque cluster
+  if (DEBUG_GRAPH) {
+    console.log("Détails par cluster:");
+    Object.values(clusterMap).forEach((cluster) => {
+      const originInfo =
+        cluster.origin.type === "persona_character"
+          ? `${cluster.origin.name} (Joshua, ${
+              cluster.origin.totalPosts || 0
+            } posts)`
+          : `${cluster.origin.name} (${cluster.origin.totalPosts || 0} posts)`;
+
+      console.log(`[CLUSTER ${cluster.id}] Origine: ${originInfo}`);
+
+      console.log(
+        `  - ${cluster.nodes.length} nœuds (${cluster.characters.length} personnages, ${cluster.platforms.length} plateformes)`
+      );
+      console.log(`  - Personnages: ${cluster.characters.join(", ")}`);
+      console.log(`  - Plateformes: ${cluster.platforms.join(", ")}`);
+
+      // Afficher les informations sur les liens
+      if (clusterLinks[cluster.id]) {
+        console.log(`  - ${clusterLinks[cluster.id].internal} liens internes`);
+
+        const externalLinks = clusterLinks[cluster.id].external;
+        if (Object.keys(externalLinks).length > 0) {
+          console.log(
+            `  - Liens externes vers: ${Object.entries(externalLinks)
+              .map(
+                ([targetCluster, count]) =>
+                  `Cluster ${targetCluster} (${count})`
+              )
+              .join(", ")}`
+          );
+        } else {
+          console.log(`  - Aucun lien externe`);
+        }
+      }
+      console.log("");
+    });
+
+    // Statistiques globales
+    console.log(
+      `Début de l'analyse des clusters... ${
+        Object.keys(clusterMap).length
+      } clusters analysés`
+    );
+
+    // Identifier les clusters les plus grands et les plus connectés
+    const largestCluster = Object.values(clusterMap).sort(
+      (a, b) => b.nodes.length - a.nodes.length
+    )[0];
+
+    console.log(
+      `Cluster le plus grand: Cluster ${largestCluster.id} (origine: ${largestCluster.origin.name}) avec ${largestCluster.nodes.length} nœuds`
+    );
+
+    // Créer une visualisation textuelles des clusters
+    console.log("Carte des clusters et leurs origines:");
+    console.log(
+      Object.values(clusterMap)
+        .map((cluster) => `  C${cluster.id}: ${cluster.origin.name}`)
+        .join("\n")
+    );
+  }
+
+  return clusterMap;
 };

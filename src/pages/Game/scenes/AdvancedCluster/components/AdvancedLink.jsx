@@ -38,8 +38,8 @@ const AdvancedLink = memo(({ sourceNode, targetNode, isDirect = true }) => {
       .normalize();
 
     // Décaler les points de départ et d'arrivée
-    const sourceRadius = sourceNode.value || 5;
-    const targetRadius = targetNode.value || 5;
+    const sourceRadius = sourceNode.value || 10;
+    const targetRadius = targetNode.value || 10;
 
     const srcWithOffset = new THREE.Vector3().addVectors(
       srcVector,

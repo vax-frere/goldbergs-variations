@@ -1,12 +1,18 @@
 import React, { useState, useEffect, useRef, useMemo } from "react";
 import { styled } from "@mui/material/styles";
 import Box from "@mui/material/Box";
-import { useActiveLevel, useGameStore } from "../../store";
+import {
+  useActiveLevel,
+  useGameStore,
+  useVisitedPersonasCount,
+} from "../../store";
 import useAssets from "../../hooks/useAssets";
 import AudioStatus from "./components/AudioStatus";
 import TextPanel from "./components/TextPanel";
 import Subtitles from "./components/Subtitles";
 import InteractionPrompt from "./components/InteractionPrompt";
+import ThematicLegend from "./components/ThematicLegend";
+import ActiveLevelName from "./components/ActiveLevelName";
 
 const HUDOverlay = styled(Box)(({ theme }) => ({
   position: "fixed",
@@ -20,21 +26,6 @@ const HUDOverlay = styled(Box)(({ theme }) => ({
   opacity: 0.9,
 }));
 
-// Composant pour le nom du niveau actif en haut à gauche
-const ActiveLevelName = styled(Box)(({ theme }) => ({
-  position: "fixed",
-  top: "20px",
-  left: "20px",
-  fontSize: "24px",
-  fontFamily: "monospace",
-  color: "#ffffff",
-  textShadow: "0 0 5px rgba(255, 255, 255, 0.7)",
-  zIndex: 1000,
-  pointerEvents: "none",
-  whiteSpace: "nowrap",
-  fontWeight: "bold",
-}));
-
 // Style plus discret pour le compteur de personas
 const VisitedPersonasCounter = styled(Box)(({ theme }) => ({
   position: "fixed",
@@ -42,7 +33,11 @@ const VisitedPersonasCounter = styled(Box)(({ theme }) => ({
   right: "25px",
   fontSize: "11px",
   fontFamily: "monospace",
-  color: "rgba(255, 255, 255, 0.4)",
+  color: "rgba(255, 255, 255, 1)",
+  backgroundColor: "rgba(0, 0, 0, 1)",
+  border: "1px solid rgba(255, 255, 255, 1)",
+  borderRadius: "0px",
+  padding: "8px 12px",
   zIndex: 1000,
   pointerEvents: "none",
   whiteSpace: "nowrap",
@@ -59,9 +54,7 @@ const HUD = () => {
 
   // Récupérer le niveau actif et le compteur de personas depuis le store
   const activeLevel = useActiveLevel();
-  const visitedPersonasCount = useGameStore(
-    (state) => state.visitedPersonasCount
-  );
+  const visitedPersonasCount = useVisitedPersonasCount();
   const assets = useAssets({ autoInit: false });
 
   // Calculer le nombre total de clusters à partir des données du graphe
@@ -70,11 +63,11 @@ const HUD = () => {
     const graphData = assets.getData("graph");
     if (!graphData?.nodes) return 0;
 
-    // Créer un Set des clusterSlugs uniques
+    // Créer un Set des clusterIds uniques
     const uniqueClusters = new Set(
       graphData.nodes
-        .filter((node) => node.clusterSlug)
-        .map((node) => node.clusterSlug)
+        .filter((node) => node.clusterId !== undefined)
+        .map((node) => node.clusterId)
     );
 
     return uniqueClusters.size;
@@ -131,28 +124,23 @@ const HUD = () => {
   return (
     <>
       {/* Affichage du nom du niveau actif en haut à gauche */}
-      {activeLevel && (
-        <ActiveLevelName>
-          {activeLevel.name ||
-            (activeLevel.type === "cluster"
-              ? `Cluster: ${activeLevel.id
-                  .split("-")
-                  .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
-                  .join(" ")}`
-              : `${activeLevel.type || "Level"}: ${activeLevel.id}`)}
-        </ActiveLevelName>
-      )}
+      <ActiveLevelName />
+
+      {/* Légende des couleurs thématiques */}
+      <ThematicLegend
+        hasProgressCounter={visitedPersonasCount > 0 && totalClusters > 0}
+      />
 
       {/* Compteur de personas visitées - affiché si au moins 1 cluster visité */}
       {visitedPersonasCount > 0 && totalClusters > 0 && (
         <VisitedPersonasCounter>
-          {`${visitedPersonasCount}/${totalClusters} personas visitées (${completionPercentage}%)`}
+          {`${visitedPersonasCount}/${totalClusters} personas visited (${completionPercentage}%)`}
         </VisitedPersonasCounter>
       )}
 
       {/* Composants d'interface utilisateur */}
       <AudioStatus />
-      <Subtitles />
+      {/* <Subtitles /> */}
       <TextPanel />
       <InteractionPrompt />
 

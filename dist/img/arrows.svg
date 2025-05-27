@@ -1,0 +1,17 @@
+<svg width="200" height="200" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg" font-family="Arial, sans-serif">
+  <!-- Haut -->
+  <rect x="75" y="20" width="50" height="50" rx="6" fill="none" stroke="#000" stroke-width="2"/>
+  <text x="100" y="52" text-anchor="middle" font-size="24" fill="#000">↑</text>
+
+  <!-- Gauche -->
+  <rect x="20" y="80" width="50" height="50" rx="6" fill="none" stroke="#000" stroke-width="2"/>
+  <text x="45" y="112" text-anchor="middle" font-size="24" fill="#000">←</text>
+
+  <!-- Bas -->
+  <rect x="75" y="80" width="50" height="50" rx="6" fill="none" stroke="#000" stroke-width="2"/>
+  <text x="100" y="112" text-anchor="middle" font-size="24" fill="#000">↓</text>
+
+  <!-- Droite -->
+  <rect x="130" y="80" width="50" height="50" rx="6" fill="none" stroke="#000" stroke-width="2"/>
+  <text x="155" y="112" text-anchor="middle" font-size="24" fill="#000">→</text>
+</svg>

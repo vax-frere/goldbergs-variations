@@ -1,15 +1,17 @@
 import React, { memo, useEffect, useMemo, useRef } from "react";
-import { useThree } from "@react-three/fiber";
+import { useThree, useFrame } from "@react-three/fiber";
 import * as THREE from "three";
-import useSound from "use-sound";
 import useAssets from "../../hooks/useAssets";
 import useGameStore, { useActiveLevel } from "../../store";
-import { findClusterIdBySlug } from "../World/components/Graph/utils/utils";
+import { findClusterIdBySlug } from "../WorldLevel/components/Graph/utils/utils";
 import AdvancedNode from "./components/AdvancedNode";
-import AdvancedLink from "./components/AdvancedLink";
+import AdvancedLink from "./components/AdvancedLinkAlt";
+import AdvancedVibLink from "./components/AdvancedVibLink";
 import useCollisionStore, {
   CollisionLayers,
 } from "../../services/CollisionService";
+import textContentService from "../../services/TextContentService";
+import useEffectStore from "../../services/EffectService";
 
 const BOUNDING_BOX_MARGIN = 200; // Marge autour de la bounding box
 
@@ -21,9 +23,6 @@ const AdvancedCluster = memo(() => {
   const activeLevel = useActiveLevel();
   const assets = useAssets({ autoInit: false });
   const returnToWorld = useGameStore((state) => state.returnToWorld);
-  const setActiveNodeData = useGameStore((state) => state.setActiveNodeData);
-  const activeNodeData = useGameStore((state) => state.activeNodeData);
-  const [playTouchSound] = useSound("/sounds/touch.mp3", { volume: 0.1 });
   const registerNodeBoxes = useCollisionStore(
     (state) => state.registerNodeBoxes
   );
@@ -34,8 +33,14 @@ const AdvancedCluster = memo(() => {
     (state) => state.calculateDetectionPoint
   );
   const setCollisionMask = useCollisionStore((state) => state.setCollisionMask);
+  const initializeAudio = useCollisionStore((state) => state.initializeAudio);
+  const triggerEffect = useEffectStore((state) => state.triggerEffect);
   const camera = useThree((state) => state.camera);
   const lastTouchedNodeRef = useRef(null);
+  const activeNodeRef = useRef(null); // Pour tracker le nœud actif localement
+
+  // Option pour activer la vibration des liens (peut être contrôlée par un paramètre ou un état)
+  const useVibrationLinks = true; // Activé par défaut pour tester
 
   // Données du cluster à afficher
   const clusterData = useMemo(() => {
@@ -100,8 +105,25 @@ const AdvancedCluster = memo(() => {
   useEffect(() => {
     if (!clusterData?.nodes) return;
 
+    // DEBUG: Voir ce que contiennent les nœuds
+    console.log(
+      "[AdvancedCluster] Nodes data:",
+      clusterData.nodes.map((node) => ({
+        id: node.id,
+        name: node.name,
+        nodeId: node.nodeId,
+        clusterId: node.clusterId,
+        hasNodeId: !!node.nodeId,
+      }))
+    );
+
+    // Initialiser l'audio avec la caméra
+    if (camera) {
+      initializeAudio(camera);
+    }
+
     const nodeBoxes = {};
-    clusterData.nodes.forEach((node) => {
+    clusterData.nodes.forEach((node, index) => {
       const box = useCollisionStore
         .getState()
         .createBoundingBox(
@@ -109,8 +131,27 @@ const AdvancedCluster = memo(() => {
           20,
           CollisionLayers.NODES
         );
-      box.data = node;
-      nodeBoxes[node.id] = box;
+
+      // CORRECTION: Utiliser l'ID du nœud comme clé unique (pas le slug qui est identique pour tous)
+      const nodeKey = String(node.id); // L'ID est unique pour chaque nœud
+
+      box.data = {
+        ...node,
+        nodeKey: nodeKey, // La clé unique utilisée pour cette boîte
+        originalNodeId: node.nodeId, // Le nodeId original
+        individualId: node.id, // L'ID individuel du nœud
+      };
+
+      // Utiliser l'ID comme clé unique
+      nodeBoxes[nodeKey] = box;
+
+      console.log(`[AdvancedCluster] Registering node box: ${nodeKey}`, {
+        nodeId: node.id,
+        nodeName: node.name,
+        nodeIdProperty: node.nodeId,
+        nodeKey: nodeKey,
+        clusterId: node.clusterId,
+      });
     });
 
     registerNodeBoxes(nodeBoxes);
@@ -119,12 +160,20 @@ const AdvancedCluster = memo(() => {
     return () => {
       registerNodeBoxes({});
       setCollisionMask(CollisionLayers.CLUSTERS);
+      // Nettoyer le TextContentService au démontage
+      textContentService.hide();
     };
-  }, [clusterData, registerNodeBoxes, setCollisionMask]);
+  }, [
+    clusterData,
+    registerNodeBoxes,
+    setCollisionMask,
+    camera,
+    initializeAudio,
+  ]);
 
-  // Détecter les collisions avec les nœuds
-  useEffect(() => {
-    const checkCollisions = () => {
+  // Fonction mémorisée pour vérifier les collisions
+  const checkCollisions = useMemo(() => {
+    return () => {
       if (!camera) return;
 
       // Calculer le point de détection devant la caméra
@@ -133,59 +182,72 @@ const AdvancedCluster = memo(() => {
       // Trouver le nœud en collision
       const node = findContainingNode();
       if (node) {
-        const nodeSlug = node.data.slug || String(node.data.id);
+        // CORRECTION: Utiliser l'ID du nœud comme clé unique
+        const nodeKey = String(node.data.individualId || node.data.id);
+        const nodeName = node.data.name || nodeKey;
 
-        // Jouer le son uniquement si on touche un nouveau nœud
-        if (lastTouchedNodeRef.current !== nodeSlug) {
-          playTouchSound();
-          lastTouchedNodeRef.current = nodeSlug;
+        console.log(`[AdvancedCluster] Node collision detected:`, {
+          nodeId: node.id, // Clé de la boîte de collision (devrait être nodeKey)
+          nodeKey: nodeKey, // Clé unique (ID du nœud)
+          originalNodeId: node.data.originalNodeId, // NodeId original
+          nodeName: nodeName,
+          individualId: node.data.individualId,
+        });
+
+        // Afficher le contenu uniquement si on touche un nouveau nœud
+        if (lastTouchedNodeRef.current !== nodeKey) {
+          lastTouchedNodeRef.current = nodeKey;
+
+          // NOUVEAU: Déclencher l'effet visuel de collision
+          const nodePosition = {
+            x: node.data.x || 0,
+            y: node.data.y || 0,
+            z: node.data.z || 0,
+          };
+
+          triggerEffect(nodePosition);
+
+          // Utiliser le TextContentService avec le nodeId sémantique pour avoir les infos complètes
+          const semanticNodeId = node.data.originalNodeId || nodeKey;
+
+          // MODIFICATION: Déterminer le type selon le type de nœud
+          const contentType =
+            node.data.type === "platform" ? "platform" : "detailed";
+
+          textContentService.show({
+            type: contentType,
+            id: semanticNodeId, // Utiliser le nodeId sémantique
+            fallbackText: `Nœud: ${nodeName}`,
+          });
+
+          console.log(
+            `[AdvancedCluster] TextContentService called with semanticNodeId: ${semanticNodeId}, type: ${contentType}`
+          );
         }
 
-        // Mettre à jour le store avec le slug pour le hover et l'effet
-        setActiveNodeData(nodeSlug);
+        // Mettre à jour la référence locale pour l'effet visuel
+        activeNodeRef.current = nodeKey;
 
         // Marquer le nœud comme visité en passant les données complètes
         const state = useGameStore.getState();
-        const alreadyVisited = state.visitedNodes.some(
-          (visitedNode) => visitedNode.slug === nodeSlug
-        );
-
-        if (!alreadyVisited) {
-          useGameStore.setState((state) => ({
-            visitedNodes: [
-              ...state.visitedNodes,
-              {
-                slug: nodeSlug,
-                name: node.data.name,
-                data: node.data,
-                visitedAt: new Date().toISOString(),
-              },
-            ],
-          }));
-        }
+        state.markNodeAsVisited(nodeKey, nodeName, node.data);
       } else {
-        setActiveNodeData(null);
-        lastTouchedNodeRef.current = null;
+        if (lastTouchedNodeRef.current !== null) {
+          lastTouchedNodeRef.current = null;
+          activeNodeRef.current = null;
+          // Cacher le contenu du TextPanel
+          textContentService.hide();
+        }
       }
     };
+  }, [camera, calculateDetectionPoint, findContainingNode, triggerEffect]);
 
-    // Vérifier les collisions à chaque frame
-    const interval = setInterval(checkCollisions, 100);
+  // Utiliser useFrame au lieu de setInterval pour la détection des collisions
+  useFrame(() => {
+    checkCollisions();
+  });
 
-    return () => {
-      clearInterval(interval);
-      setActiveNodeData(null);
-      lastTouchedNodeRef.current = null;
-    };
-  }, [
-    camera,
-    calculateDetectionPoint,
-    findContainingNode,
-    setActiveNodeData,
-    playTouchSound,
-  ]);
-
-  // Gérer la touche Échap pour retourner au monde
+  // Gestion des touches pour retourner au monde
   useEffect(() => {
     const handleKeyPress = (event) => {
       if (event.key === "Escape") {
@@ -194,72 +256,65 @@ const AdvancedCluster = memo(() => {
     };
 
     window.addEventListener("keydown", handleKeyPress);
-    return () => window.removeEventListener("keydown", handleKeyPress);
+    return () => {
+      window.removeEventListener("keydown", handleKeyPress);
+    };
   }, [returnToWorld]);
 
-  // Calculer la bounding box du cluster avec marge
-  const clusterBounds = useMemo(() => {
-    if (!clusterData?.nodes?.length) return null;
-
-    const box = new THREE.Box3();
-
-    // Initialiser avec le premier nœud
-    const firstNode = clusterData.nodes[0];
-    box.min.set(
-      (firstNode.x || 0) - BOUNDING_BOX_MARGIN,
-      (firstNode.y || 0) - BOUNDING_BOX_MARGIN,
-      (firstNode.z || 0) - BOUNDING_BOX_MARGIN
-    );
-    box.max.set(
-      (firstNode.x || 0) + BOUNDING_BOX_MARGIN,
-      (firstNode.y || 0) + BOUNDING_BOX_MARGIN,
-      (firstNode.z || 0) + BOUNDING_BOX_MARGIN
-    );
-
-    // Étendre la box pour inclure tous les nœuds
-    clusterData.nodes.forEach((node) => {
-      box.expandByPoint(
-        new THREE.Vector3(
-          (node.x || 0) - BOUNDING_BOX_MARGIN,
-          (node.y || 0) - BOUNDING_BOX_MARGIN,
-          (node.z || 0) - BOUNDING_BOX_MARGIN
-        )
-      );
-      box.expandByPoint(
-        new THREE.Vector3(
-          (node.x || 0) + BOUNDING_BOX_MARGIN,
-          (node.y || 0) + BOUNDING_BOX_MARGIN,
-          (node.z || 0) + BOUNDING_BOX_MARGIN
-        )
-      );
-    });
-
-    return box;
-  }, [clusterData]);
-
-  // Vérifier si la caméra est en dehors de la bounding box
-  useEffect(() => {
-    if (!camera || !clusterBounds) return;
+  // Vérifier si la caméra sort des limites du cluster
+  useFrame(() => {
+    if (!camera || !clusterData?.nodes) return;
 
     const checkBounds = () => {
-      const cameraPosition = new THREE.Vector3(
-        camera.position.x,
-        camera.position.y,
-        camera.position.z
-      );
+      // Calculer la bounding box du cluster
+      let minX = Infinity,
+        maxX = -Infinity;
+      let minY = Infinity,
+        maxY = -Infinity;
+      let minZ = Infinity,
+        maxZ = -Infinity;
 
-      if (!clusterBounds.containsPoint(cameraPosition)) {
+      clusterData.nodes.forEach((node) => {
+        const x = node.x || 0;
+        const y = node.y || 0;
+        const z = node.z || 0;
+
+        minX = Math.min(minX, x);
+        maxX = Math.max(maxX, x);
+        minY = Math.min(minY, y);
+        maxY = Math.max(maxY, y);
+        minZ = Math.min(minZ, z);
+        maxZ = Math.max(maxZ, z);
+      });
+
+      // Ajouter une marge
+      minX -= BOUNDING_BOX_MARGIN;
+      maxX += BOUNDING_BOX_MARGIN;
+      minY -= BOUNDING_BOX_MARGIN;
+      maxY += BOUNDING_BOX_MARGIN;
+      minZ -= BOUNDING_BOX_MARGIN;
+      maxZ += BOUNDING_BOX_MARGIN;
+
+      // Vérifier si la caméra est dans les limites
+      const pos = camera.position;
+      if (
+        pos.x < minX ||
+        pos.x > maxX ||
+        pos.y < minY ||
+        pos.y > maxY ||
+        pos.z < minZ ||
+        pos.z > maxZ
+      ) {
+        console.log("Camera out of bounds, returning to world");
         returnToWorld();
       }
     };
 
-    const interval = setInterval(checkBounds, 100);
-
-    return () => clearInterval(interval);
-  }, [camera, clusterBounds, returnToWorld]);
+    checkBounds();
+  });
 
   // Si pas de données, ne rien afficher
-  if (!clusterData || !assets.isReady) {
+  if (!clusterData) {
     return null;
   }
 
@@ -280,32 +335,42 @@ const AdvancedCluster = memo(() => {
 
         if (!source || !target) return null;
 
-        return (
-          <AdvancedLink
-            key={`advanced-link-${index}`}
-            sourceNode={source}
-            targetNode={target}
-            isDirect={link.isDirect === "Direct"}
-            linkColor={link.color || "#ffffff"}
-            arcHeight={0.3}
-            textSize={1}
-            textOpacity={0.9}
-            textBackgroundColor="rgba(0,0,0,0.2)"
-            linkWidth={0.75}
-            opacity={0.8}
-            relationType={link.type || "relation"}
-          />
-        );
+        if (useVibrationLinks) {
+          return (
+            <AdvancedVibLink
+              key={`advanced-vib-link-${index}`}
+              sourceNode={source}
+              targetNode={target}
+              isDirect={link.isDirect === "Direct"}
+            />
+          );
+        } else {
+          return (
+            <AdvancedLink
+              key={`advanced-link-${index}`}
+              sourceNode={source}
+              targetNode={target}
+              isDirect={link.isDirect === "Direct"}
+              linkColor={link.color || "#ffffff"}
+              textBackgroundColor="rgba(0,0,0,0.2)"
+              relationType={link.type || "relation"}
+            />
+          );
+        }
       })}
 
       {/* Nœuds du cluster */}
-      {clusterData.nodes.map((node) => (
-        <AdvancedNode
-          key={`advanced-node-${node.id}`}
-          node={node}
-          isActive={activeNodeData === (node.slug || String(node.id))}
-        />
-      ))}
+      {clusterData.nodes.map((node) => {
+        // CORRECTION: Utiliser l'ID du nœud comme clé unique
+        const nodeKey = String(node.id);
+        return (
+          <AdvancedNode
+            key={`advanced-node-${node.id}`}
+            node={node}
+            isActive={activeNodeRef.current === nodeKey}
+          />
+        );
+      })}
     </group>
   );
 });

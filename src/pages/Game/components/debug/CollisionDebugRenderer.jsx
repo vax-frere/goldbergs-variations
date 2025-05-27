@@ -27,10 +27,6 @@ const CollisionDebugRenderer = () => {
 
   const debug = useGameStore((state) => state.debug);
   const hoveredCluster = useGameStore((state) => state.hoveredCluster);
-  const activeNodeData = useGameStore((state) => state.activeNodeData);
-  const activeComponentText = useGameStore(
-    (state) => state.activeComponentText
-  );
   const currentLevel = useCurrentLevel();
   const collisionService = useCollisionStore();
   const activeLevel = useGameStore((state) => state.activeLevel);
@@ -44,39 +40,93 @@ const CollisionDebugRenderer = () => {
     return () => clearInterval(interval);
   }, []);
 
-  // Mettre à jour les couleurs des boîtes de debug
-  useEffect(() => {
-    if (!debug) return;
+  // Fonction générique pour créer les lignes de debug d'une boîte
+  const createBoxLines = (box, id, isActive, materialCategory) => {
+    if (!box || !box.min || !box.max) return null;
 
-    const updateDebugColors = () => {
-      const store = useCollisionStore.getState();
+    // Initialiser le tableau des matériaux pour cet élément
+    if (!lineMaterialsRef.current[materialCategory][id]) {
+      lineMaterialsRef.current[materialCategory][id] = [];
+    }
 
-      // Si on est dans un cluster avancé
-      if (activeLevel?.type === "cluster") {
-        const nodeBoxes = store.boundingBoxRefs.nodeBoxes;
-        Object.values(nodeBoxes).forEach((box) => {
-          if (box.data) {
-            const nodeSlug = box.data.slug || String(box.data.id);
-            box.debugColor =
-              nodeSlug === activeNodeData ? [1, 0, 0] : [0, 1, 0];
-          }
-        });
-      }
-      // Si on est dans le monde principal
-      else {
-        const clusterBoxes = store.boundingBoxRefs.clusterBoxes;
-        Object.values(clusterBoxes).forEach((box) => {
-          if (box.data) {
-            const isActive = box.data.id === hoveredCluster;
-            box.debugColor = isActive ? [1, 0, 0] : [0, 1, 0];
-          }
-        });
-      }
-    };
+    // Utiliser la couleur personnalisée si elle existe, sinon utiliser la couleur par défaut
+    const colorArray =
+      box.debugColor || (isActive ? ACTIVE_COLOR : DEFAULT_COLOR);
+    const color = new THREE.Color(colorArray[0], colorArray[1], colorArray[2]);
 
-    // Mettre à jour immédiatement
-    updateDebugColors();
-  }, [debug, hoveredCluster, activeNodeData, activeLevel]);
+    const opacity = isActive ? ACTIVE_OPACITY : DEFAULT_OPACITY;
+    const lineWidth = isActive ? 2 : 1;
+
+    // Points pour dessiner la boîte
+    const points = [
+      [box.min.x, box.min.y, box.min.z],
+      [box.max.x, box.min.y, box.min.z],
+      [box.max.x, box.max.y, box.min.z],
+      [box.min.x, box.max.y, box.min.z],
+      [box.min.x, box.min.y, box.min.z],
+      [box.min.x, box.min.y, box.max.z],
+      [box.max.x, box.min.y, box.max.z],
+      [box.max.x, box.max.y, box.max.z],
+      [box.min.x, box.max.y, box.max.z],
+      [box.min.x, box.min.y, box.max.z],
+    ];
+
+    // Lignes supplémentaires pour compléter la boîte
+    const additionalLines = [
+      [
+        [box.max.x, box.min.y, box.min.z],
+        [box.max.x, box.min.y, box.max.z],
+      ],
+      [
+        [box.max.x, box.max.y, box.min.z],
+        [box.max.x, box.max.y, box.max.z],
+      ],
+      [
+        [box.min.x, box.max.y, box.min.z],
+        [box.min.x, box.max.y, box.max.z],
+      ],
+    ];
+
+    return (
+      <group key={id}>
+        <Line
+          points={points}
+          color={color}
+          lineWidth={lineWidth}
+          opacity={opacity}
+          transparent
+          ref={(material) => {
+            if (
+              material &&
+              !lineMaterialsRef.current[materialCategory][id].includes(material)
+            ) {
+              lineMaterialsRef.current[materialCategory][id].push(material);
+            }
+          }}
+        />
+        {additionalLines.map((line, index) => (
+          <Line
+            key={`${id}-${index}`}
+            points={line}
+            color={color}
+            lineWidth={lineWidth}
+            opacity={opacity}
+            transparent
+            ref={(material) => {
+              if (
+                material &&
+                !lineMaterialsRef.current[materialCategory][id].includes(
+                  material
+                )
+              ) {
+                lineMaterialsRef.current[materialCategory][id].push(material);
+              }
+            }}
+          />
+        ))}
+      </group>
+    );
+  };
 
   // Générer les lignes pour les boîtes de clusters
   const clusterBoxLines = useMemo(() => {
@@ -90,101 +140,15 @@ const CollisionDebugRenderer = () => {
       return null;
     }
 
+    // Trouver le cluster actuellement en collision
+    const currentCluster = collisionService.findContainingCluster();
+    const activeClusterId = currentCluster?.id;
+
     return Object.entries(collisionService.boundingBoxes.clusters)
       .map(([clusterId, box]) => {
-        if (!box || !box.min || !box.max) return null;
-
-        // Initialiser le tableau des matériaux pour ce cluster
-        if (!lineMaterialsRef.current.clusters[clusterId]) {
-          lineMaterialsRef.current.clusters[clusterId] = [];
-        }
-
-        // Déterminer si le cluster est survolé
-        const isHovered = box.slug === hoveredCluster;
-
-        // Utiliser la couleur personnalisée si elle existe, sinon utiliser la couleur par défaut
-        const colorArray =
-          box.debugColor || (isHovered ? ACTIVE_COLOR : DEFAULT_COLOR);
-        const color = new THREE.Color(
-          colorArray[0],
-          colorArray[1],
-          colorArray[2]
-        );
-
-        const opacity = isHovered ? ACTIVE_OPACITY : DEFAULT_OPACITY;
-        const lineWidth = isHovered ? 2 : 1;
-
-        // Points pour dessiner la boîte
-        const points = [
-          [box.min.x, box.min.y, box.min.z],
-          [box.max.x, box.min.y, box.min.z],
-          [box.max.x, box.max.y, box.min.z],
-          [box.min.x, box.max.y, box.min.z],
-          [box.min.x, box.min.y, box.min.z],
-          [box.min.x, box.min.y, box.max.z],
-          [box.max.x, box.min.y, box.max.z],
-          [box.max.x, box.max.y, box.max.z],
-          [box.min.x, box.max.y, box.max.z],
-          [box.min.x, box.min.y, box.max.z],
-        ];
-
-        // Lignes supplémentaires pour compléter la boîte
-        const additionalLines = [
-          [
-            [box.max.x, box.min.y, box.min.z],
-            [box.max.x, box.min.y, box.max.z],
-          ],
-          [
-            [box.max.x, box.max.y, box.min.z],
-            [box.max.x, box.max.y, box.max.z],
-          ],
-          [
-            [box.min.x, box.max.y, box.min.z],
-            [box.min.x, box.max.y, box.max.z],
-          ],
-        ];
-
-        return (
-          <group key={clusterId}>
-            <Line
-              points={points}
-              color={color}
-              lineWidth={lineWidth}
-              opacity={opacity}
-              transparent
-              ref={(material) => {
-                if (
-                  material &&
-                  !lineMaterialsRef.current.clusters[clusterId].includes(
-                    material
-                  )
-                ) {
-                  lineMaterialsRef.current.clusters[clusterId].push(material);
-                }
-              }}
-            />
-            {additionalLines.map((line, index) => (
-              <Line
-                key={`${clusterId}-${index}`}
-                points={line}
-                color={color}
-                lineWidth={lineWidth}
-                opacity={opacity}
-                transparent
-                ref={(material) => {
-                  if (
-                    material &&
-                    !lineMaterialsRef.current.clusters[clusterId].includes(
-                      material
-                    )
-                  ) {
-                    lineMaterialsRef.current.clusters[clusterId].push(material);
-                  }
-                }}
-              />
-            ))}
-          </group>
-        );
+        const isActive =
+          clusterId === activeClusterId || box.data?.slug === hoveredCluster;
+        return createBoxLines(box, clusterId, isActive, "clusters");
       })
       .filter(Boolean);
   }, [debug, hoveredCluster, collisionService, currentLevel, updateTrigger]);
@@ -201,101 +165,17 @@ const CollisionDebugRenderer = () => {
       return null;
     }
 
+    // Trouver le nœud actuellement en collision
+    const currentNode = collisionService.findContainingNode();
+    const activeNodeId = currentNode?.id;
+
     return Object.entries(collisionService.boundingBoxRefs.nodeBoxes)
       .map(([nodeId, box]) => {
-        if (!box || !box.min || !box.max) return null;
-
-        // Initialiser le tableau des matériaux pour ce nœud
-        if (!lineMaterialsRef.current.nodes[nodeId]) {
-          lineMaterialsRef.current.nodes[nodeId] = [];
-        }
-
-        // Déterminer si le nœud est actif
-        const isActive =
-          box.data && (box.data.slug || String(box.data.id)) === activeNodeData;
-
-        // Utiliser la couleur personnalisée si elle existe, sinon utiliser la couleur par défaut
-        const colorArray =
-          box.debugColor || (isActive ? ACTIVE_COLOR : DEFAULT_COLOR);
-        const color = new THREE.Color(
-          colorArray[0],
-          colorArray[1],
-          colorArray[2]
-        );
-
-        const opacity = isActive ? ACTIVE_OPACITY : DEFAULT_OPACITY;
-        const lineWidth = isActive ? 2 : 1;
-
-        // Points pour dessiner la boîte
-        const points = [
-          [box.min.x, box.min.y, box.min.z],
-          [box.max.x, box.min.y, box.min.z],
-          [box.max.x, box.max.y, box.min.z],
-          [box.min.x, box.max.y, box.min.z],
-          [box.min.x, box.min.y, box.min.z],
-          [box.min.x, box.min.y, box.max.z],
-          [box.max.x, box.min.y, box.max.z],
-          [box.max.x, box.max.y, box.max.z],
-          [box.min.x, box.max.y, box.max.z],
-          [box.min.x, box.min.y, box.max.z],
-        ];
-
-        // Lignes supplémentaires pour compléter la boîte
-        const additionalLines = [
-          [
-            [box.max.x, box.min.y, box.min.z],
-            [box.max.x, box.min.y, box.max.z],
-          ],
-          [
-            [box.max.x, box.max.y, box.min.z],
-            [box.max.x, box.max.y, box.max.z],
-          ],
-          [
-            [box.min.x, box.max.y, box.min.z],
-            [box.min.x, box.max.y, box.max.z],
-          ],
-        ];
-
-        return (
-          <group key={nodeId}>
-            <Line
-              points={points}
-              color={color}
-              lineWidth={lineWidth}
-              opacity={opacity}
-              transparent
-              ref={(material) => {
-                if (
-                  material &&
-                  !lineMaterialsRef.current.nodes[nodeId].includes(material)
-                ) {
-                  lineMaterialsRef.current.nodes[nodeId].push(material);
-                }
-              }}
-            />
-            {additionalLines.map((line, index) => (
-              <Line
-                key={`${nodeId}-${index}`}
-                points={line}
-                color={color}
-                lineWidth={lineWidth}
-                opacity={opacity}
-                transparent
-                ref={(material) => {
-                  if (
-                    material &&
-                    !lineMaterialsRef.current.nodes[nodeId].includes(material)
-                  ) {
-                    lineMaterialsRef.current.nodes[nodeId].push(material);
-                  }
-                }}
-              />
-            ))}
-          </group>
-        );
+        const isActive = nodeId === activeNodeId;
+        return createBoxLines(box, nodeId, isActive, "nodes");
       })
       .filter(Boolean);
-  }, [debug, activeNodeData, collisionService, currentLevel, updateTrigger]);
+  }, [debug, collisionService, currentLevel, updateTrigger]);
 
   // Générer les lignes pour les boîtes des composants interactifs
   const componentBoxLines = useMemo(() => {
@@ -309,114 +189,17 @@ const CollisionDebugRenderer = () => {
       return null;
     }
 
+    // Trouver le composant actuellement en collision
+    const currentComponent = collisionService.findContainingNode();
+    const activeComponentId = currentComponent?.data?.id;
+
     return Object.entries(collisionService.boundingBoxRefs.nodeBoxes)
       .map(([componentId, box]) => {
-        if (!box || !box.min || !box.max) return null;
-
-        // Initialiser le tableau des matériaux pour ce composant
-        if (!lineMaterialsRef.current.components[componentId]) {
-          lineMaterialsRef.current.components[componentId] = [];
-        }
-
-        // Déterminer si le composant est actif
-        const isActive = box.data && box.data.text === activeComponentText;
-
-        // Utiliser la couleur personnalisée si elle existe, sinon utiliser la couleur par défaut
-        const colorArray =
-          box.debugColor || (isActive ? ACTIVE_COLOR : DEFAULT_COLOR);
-        const color = new THREE.Color(
-          colorArray[0],
-          colorArray[1],
-          colorArray[2]
-        );
-
-        const opacity = isActive ? ACTIVE_OPACITY : DEFAULT_OPACITY;
-        const lineWidth = isActive ? 2 : 1;
-
-        // Points pour dessiner la boîte
-        const points = [
-          [box.min.x, box.min.y, box.min.z],
-          [box.max.x, box.min.y, box.min.z],
-          [box.max.x, box.max.y, box.min.z],
-          [box.min.x, box.max.y, box.min.z],
-          [box.min.x, box.min.y, box.min.z],
-          [box.min.x, box.min.y, box.max.z],
-          [box.max.x, box.min.y, box.max.z],
-          [box.max.x, box.max.y, box.max.z],
-          [box.min.x, box.max.y, box.max.z],
-          [box.min.x, box.min.y, box.max.z],
-        ];
-
-        // Lignes supplémentaires pour compléter la boîte
-        const additionalLines = [
-          [
-            [box.max.x, box.min.y, box.min.z],
-            [box.max.x, box.min.y, box.max.z],
-          ],
-          [
-            [box.max.x, box.max.y, box.min.z],
-            [box.max.x, box.max.y, box.max.z],
-          ],
-          [
-            [box.min.x, box.max.y, box.min.z],
-            [box.min.x, box.max.y, box.max.z],
-          ],
-        ];
-
-        return (
-          <group key={componentId}>
-            <Line
-              points={points}
-              color={color}
-              lineWidth={lineWidth}
-              opacity={opacity}
-              transparent
-              ref={(material) => {
-                if (
-                  material &&
-                  !lineMaterialsRef.current.components[componentId].includes(
-                    material
-                  )
-                ) {
-                  lineMaterialsRef.current.components[componentId].push(
-                    material
-                  );
-                }
-              }}
-            />
-            {additionalLines.map((line, index) => (
-              <Line
-                key={`${componentId}-${index}`}
-                points={line}
-                color={color}
-                lineWidth={lineWidth}
-                opacity={opacity}
-                transparent
-                ref={(material) => {
-                  if (
-                    material &&
-                    !lineMaterialsRef.current.components[componentId].includes(
-                      material
-                    )
-                  ) {
-                    lineMaterialsRef.current.components[componentId].push(
-                      material
-                    );
-                  }
-                }}
-              />
-            ))}
-          </group>
-        );
+        const isActive = box.data?.id === activeComponentId;
+        return createBoxLines(box, componentId, isActive, "components");
       })
       .filter(Boolean);
-  }, [
-    debug,
-    activeComponentText,
-    collisionService,
-    currentLevel,
-    updateTrigger,
-  ]);
+  }, [debug, collisionService, currentLevel, updateTrigger]);
 
   // Si pas de debug, on ne rend rien
   if (!debug) return null;

@@ -32,9 +32,6 @@ export const useGameStore = create((set, get) => ({
   currentLevel: GAME_LEVELS.WORLD, // Niveau actuel
   activeLevel: null, // Données du niveau actif (persona, cluster, etc.)
 
-  // Données du nœud actif
-  activeNodeData: null, // Données complètes du nœud actif
-
   // Données de transition pour éviter les baisses de framerate
   transitionData: null, // Données temporaires pendant la transition
   isTransitioning: false, // État de transition
@@ -44,41 +41,7 @@ export const useGameStore = create((set, get) => ({
   visitedNodes: [],
   visitedPersonasCount: 0,
 
-  // Nouvel état pour gérer le texte actif des composants interactifs
-  activeComponentText: null,
-  // Nouvel état pour gérer l'interactivité des composants
-  isComponentInteractive: false,
-
   // Actions pour modifier les états
-
-  // Fonction pour définir les données du nœud actif
-  setActiveNodeData: (nodeData) => {
-    set({ activeNodeData: nodeData });
-
-    // Si le nœud est actif et n'a pas encore été visité, l'ajouter à la liste
-    if (nodeData) {
-      const state = get();
-      const alreadyVisited = state.visitedNodes.some(
-        (node) => node.slug === nodeData.slug
-      );
-
-      if (!alreadyVisited) {
-        set((state) => ({
-          visitedNodes: [
-            ...state.visitedNodes,
-            {
-              slug: nodeData.slug,
-              name: nodeData.name,
-              data: nodeData,
-              visitedAt: new Date().toISOString(),
-            },
-          ],
-        }));
-      }
-    }
-
-    console.log("Active node data updated:", nodeData);
-  },
 
   // Fonction pour activer/désactiver le son
   toggleAudio: () => set((state) => ({ audioEnabled: !state.audioEnabled })),
@@ -170,27 +133,8 @@ export const useGameStore = create((set, get) => ({
       console.log("[DEBUG] Processing cluster visit");
       console.log("[DEBUG] Cluster ID:", levelData.id);
 
-      const alreadyVisited = state.visitedClusters.some(
-        (cluster) => cluster.slug === levelData.id
-      );
-
-      console.log("[DEBUG] Already visited?", alreadyVisited);
-
-      if (!alreadyVisited) {
-        console.log("[DEBUG] Adding to visited clusters");
-        set((state) => ({
-          visitedClusters: [
-            ...state.visitedClusters,
-            {
-              slug: levelData.id,
-              visitedAt: new Date().toISOString(),
-            },
-          ],
-          visitedPersonasCount: state.visitedPersonasCount + 1,
-        }));
-
-        console.log("[DEBUG] New visited count:", get().visitedPersonasCount);
-      }
+      // Utiliser la nouvelle fonction pour marquer le cluster comme visité
+      state.markClusterAsVisited(levelData.id, levelData.name);
     }
   },
 
@@ -200,7 +144,6 @@ export const useGameStore = create((set, get) => ({
     set({
       currentLevel: GAME_LEVELS.WORLD,
       activeLevel: null,
-      activeNodeData: null,
       transitionData: null,
       isTransitioning: false,
     });
@@ -217,9 +160,69 @@ export const useGameStore = create((set, get) => ({
   getActiveLevel: () => get().activeLevel,
 
   // Nouvelles fonctions utilitaires pour la gestion des visites
-  isNodeVisited: (nodeSlug) => {
+  isNodeVisited: (nodeId) => {
     const state = get();
-    return state.visitedNodes.some((node) => node.slug === nodeSlug);
+    return state.visitedNodes.some((node) => node.id === nodeId);
+  },
+
+  isClusterVisited: (clusterId) => {
+    const state = get();
+    return state.visitedClusters.some((cluster) => cluster.id === clusterId);
+  },
+
+  // Fonction pour marquer un cluster comme visité
+  markClusterAsVisited: (clusterId, clusterName = null) => {
+    const state = get();
+    const alreadyVisited = state.visitedClusters.some(
+      (cluster) => cluster.id === clusterId
+    );
+
+    if (!alreadyVisited) {
+      console.log(
+        `[Store] Marking cluster ${clusterId} (${clusterName}) as visited`
+      );
+      set((state) => ({
+        visitedClusters: [
+          ...state.visitedClusters,
+          {
+            id: clusterId,
+            name: clusterName || clusterId,
+            visitedAt: new Date().toISOString(),
+          },
+        ],
+        visitedPersonasCount: state.visitedPersonasCount + 1,
+      }));
+      console.log(
+        `[Store] Total visited clusters: ${
+          get().visitedClusters.length
+        }, personas count: ${get().visitedPersonasCount}`
+      );
+    } else {
+      console.log(`[Store] Cluster ${clusterId} already visited`);
+    }
+  },
+
+  // Fonction pour marquer un nœud comme visité
+  markNodeAsVisited: (nodeId, nodeName = null, nodeData = null) => {
+    const state = get();
+    const alreadyVisited = state.visitedNodes.some(
+      (node) => node.id === nodeId
+    );
+
+    if (!alreadyVisited) {
+      console.log(`[Store] Marking node ${nodeId} as visited`);
+      set((state) => ({
+        visitedNodes: [
+          ...state.visitedNodes,
+          {
+            id: nodeId,
+            name: nodeName || nodeId,
+            data: nodeData,
+            visitedAt: new Date().toISOString(),
+          },
+        ],
+      }));
+    }
   },
 
   resetVisitedClusters: () =>
@@ -240,18 +243,30 @@ export const useGameStore = create((set, get) => ({
       visitedNodes: [],
     }),
 
-  // Fonction pour définir le texte actif d'un composant interactif
-  setActiveComponentText: (text) => set({ activeComponentText: text }),
-
-  // Fonction pour définir si un composant est interactif
-  setComponentInteractive: (isInteractive) =>
-    set({ isComponentInteractive: isInteractive }),
+  // Fonction de debug pour afficher l'état des visites
+  debugVisitState: () => {
+    const state = get();
+    console.log("=== ÉTAT DES VISITES ===");
+    console.log(`Clusters visités: ${state.visitedClusters.length}`);
+    console.log(`Nœuds visités: ${state.visitedNodes.length}`);
+    console.log(`Compteur personas: ${state.visitedPersonasCount}`);
+    console.log("Clusters:", state.visitedClusters);
+    console.log("Nœuds:", state.visitedNodes);
+    console.log("========================");
+  },
 
   // Getter pour les données du cluster survolé
   getHoveredClusterData: () => get().hoveredClusterData,
 }));
 
 export default useGameStore;
+
+// Exposer la fonction de debug sur window pour les tests
+if (typeof window !== "undefined") {
+  window.debugVisitState = () => useGameStore.getState().debugVisitState();
+  window.resetVisitHistory = () =>
+    useGameStore.getState().resetAllVisitHistory();
+}
 
 // Selectors spécifiques pour optimiser les re-rendus
 
@@ -270,10 +285,16 @@ export const useActiveLevel = () => useGameStore((state) => state.activeLevel);
 export const useIsTransitioning = () =>
   useGameStore((state) => state.isTransitioning);
 
-// Selector spécifique pour les données du nœud actif
-export const useActiveNodeData = () =>
-  useGameStore((state) => state.activeNodeData);
-
-// Nouveau sélecteur pour les données du cluster survolé
+// Selector spécifique pour les données du cluster survolé
 export const useHoveredClusterData = () =>
   useGameStore((state) => state.hoveredClusterData);
+
+// Selectors pour les données de visite
+export const useVisitedClustersCount = () =>
+  useGameStore((state) => state.visitedClusters.length);
+
+export const useVisitedPersonasCount = () =>
+  useGameStore((state) => state.visitedPersonasCount);
+
+export const useVisitedNodesCount = () =>
+  useGameStore((state) => state.visitedNodes.length);

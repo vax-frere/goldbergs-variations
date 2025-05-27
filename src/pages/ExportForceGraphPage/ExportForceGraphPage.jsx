@@ -40,12 +40,73 @@ const HelpText = styled(Paper)(({ theme }) => ({
   borderRadius: "4px",
 }));
 
+// Style pour les statistiques du graphe
+const GraphStats = styled(Paper)(({ theme }) => ({
+  position: "absolute",
+  bottom: "20px",
+  right: "20px",
+  padding: "10px 15px",
+  backgroundColor: "rgba(0, 0, 0, 0.8)",
+  color: "#fff",
+  zIndex: 100,
+  minWidth: "200px",
+  fontSize: "12px",
+  borderRadius: "4px",
+  fontFamily: "monospace",
+}));
+
 const ExportForceGraphPage = () => {
   const [graphData, setGraphData] = useState({ nodes: [], links: [] });
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [graphStats, setGraphStats] = useState(null);
   const graphInstanceRef = useRef(null);
   const orbitControlsRef = useRef(null);
+
+  // Fonction pour calculer les statistiques du graphe
+  const calculateGraphStats = useCallback((data) => {
+    if (!data || !data.nodes || !data.links) return null;
+
+    const nodes = data.nodes;
+    const links = data.links;
+    const buildStats = data.stats || {};
+
+    // Compter les différents types de nœuds
+    const personaNodes = nodes.filter((n) => n.type === "persona_character");
+    const externalNodes = nodes.filter((n) => n.type === "external_character");
+    const platformNodes = nodes.filter((n) => n.type === "platform");
+
+    // Analyser les personnages uniques (par originalId/nodeId)
+    const uniquePersonas = new Set();
+    const uniqueExternals = new Set();
+
+    personaNodes.forEach((node) => {
+      if (node.originalId || node.nodeId) {
+        uniquePersonas.add(node.originalId || node.nodeId);
+      }
+    });
+
+    externalNodes.forEach((node) => {
+      if (node.originalId || node.nodeId) {
+        uniqueExternals.add(node.originalId || node.nodeId);
+      }
+    });
+
+    return {
+      "🔗 Nœuds": nodes.length,
+      "📎 Liens": links.length,
+      "👤 Personas": `${personaNodes.length} (${uniquePersonas.size} uniques)`,
+      "🧑 Externes": `${externalNodes.length} (${uniqueExternals.size} uniques)`,
+      "📱 Plateformes": platformNodes.length,
+      "🏘️ Clusters": new Set(nodes.map((n) => n.clusterId)).size,
+      "❌ Orphelins supprimés": buildStats.orphanLinksRemoved || 0,
+      "🗑️ Doublons supprimés": buildStats.duplicateCharactersRemoved || 0,
+      "🎯 Cibles non trouvées": buildStats.targetsNotFound || 0,
+      "🧹 Clusters supprimés": buildStats.clustersRemoved || 0,
+      "🔥 Nœuds supprimés": buildStats.nodesRemovedFinal || 0,
+      "💥 Liens supprimés": buildStats.linksRemovedFinal || 0,
+    };
+  }, []);
 
   // Fonction pour gérer la référence du graphe
   const getGraphRef = useCallback((instance) => {
@@ -76,34 +137,52 @@ const ExportForceGraphPage = () => {
 
       // Nettoyer les nœuds pour n'inclure que les propriétés essentielles
       const cleanNodes = nodesWithPositions
-        .filter((node) => "thematicGroup" in node)
+        .filter((node) => "clusterThematicGroup" in node)
         .map((node) => {
+          // Extraire le nodeId de manière robuste
+          let nodeId = node.originalId || node.nodeId;
+
+          // Si pas de nodeId trouvé, essayer d'extraire depuis l'ID
+          if (!nodeId && node.id) {
+            // Pour les IDs comme "24-129-100-84_0", extraire la partie avant "_"
+            const idParts = node.id.split("_");
+            if (idParts.length > 1) {
+              nodeId = idParts[0];
+            } else {
+              nodeId = node.id;
+            }
+          }
+
+          // Fallback sur le nom si aucun nodeId trouvé
+          if (!nodeId) {
+            nodeId = node.name;
+          }
+
           // Extraire uniquement les propriétés dont nous avons besoin
           return {
             id: node.id,
             name: node.name,
             type: node.type,
-            cluster: node.cluster,
+            clusterId: node.clusterId,
             x: node.x,
             y: node.y,
             z: node.z,
-            value: node.value || node.val,
             color: node.color,
-            slug: node.originalId,
-            isClusterMaster: node.isClusterOrigin || false, // Utiliser la propriété existante
+            nodeId: nodeId, // Utiliser le nodeId extrait de manière robuste
+            isClusterMaster:
+              node.isClusterOrigin || node.isClusterMaster || false,
             // Propriétés supplémentaires demandées
             displayName: node.displayName,
             aliases: node.aliases,
-            isJoshua: node.isJoshua,
             fictionOrImpersonation: node.fictionOrImpersonation,
             thematic: node.thematic,
-            thematicGroup: node.thematicGroup,
+            nodeThematicGroup: node.nodeThematicGroup,
+            clusterThematicGroup: node.clusterThematicGroup,
             career: node.career,
             genre: node.genre,
             polarisation: node.polarisation,
             cercle: node.cercle,
             politicalSphere: node.politicalSphere,
-            clusterSlug: node.clusterSlug,
           };
         });
 
@@ -122,16 +201,16 @@ const ExportForceGraphPage = () => {
               (typeof link.target === "object" ? link.target.id : link.target)
           );
 
-          // Vérifier que les deux nœuds existent et ont la clé thematicGroup
+          // Vérifier que les deux nœuds existent et ont la clé clusterThematicGroup
           return (
             sourceNode &&
             targetNode &&
-            "thematicGroup" in sourceNode &&
-            "thematicGroup" in targetNode
+            "clusterThematicGroup" in sourceNode &&
+            "clusterThematicGroup" in targetNode
           );
         })
         .map((link) => {
-          // Trouver les nœuds source et target pour récupérer leurs thematicGroup
+          // Trouver les nœuds source et target pour récupérer leurs clusterThematicGroup
           const sourceNode = nodesWithPositions.find(
             (n) =>
               n.id ===
@@ -158,12 +237,11 @@ const ExportForceGraphPage = () => {
             // Propriétés de base
             source: source,
             target: target,
-            value: link.value,
             color: link.color,
-            // Ajouter les thematicGroup des nœuds source et target
-            sourceThematicGroup: sourceNode.thematicGroup,
-            targetThematicGroup: targetNode.thematicGroup,
-            thematicGroup: sourceNode.thematicGroup, // On prend arbitrairement celui de la source
+            // Ajouter les clusterThematicGroup des nœuds source et target
+            sourceClusterThematicGroup: sourceNode.clusterThematicGroup,
+            targetClusterThematicGroup: targetNode.clusterThematicGroup,
+            clusterThematicGroup: sourceNode.clusterThematicGroup, // On prend arbitrairement celui de la source
 
             // Propriétés importantes - prendre d'abord de originalData, sinon du lien
             type: originalData.type || link.type,
@@ -225,6 +303,7 @@ const ExportForceGraphPage = () => {
         setIsLoading(true);
         const data = await loadGraphData();
         setGraphData(data);
+        setGraphStats(calculateGraphStats(data));
         setIsLoading(false);
       } catch (err) {
         console.error("Erreur lors du chargement des données:", err);
@@ -234,7 +313,7 @@ const ExportForceGraphPage = () => {
     };
 
     fetchData();
-  }, []);
+  }, [calculateGraphStats]);
 
   return (
     <PageTransition>
@@ -310,6 +389,26 @@ const ExportForceGraphPage = () => {
           {/* Ajout des Stats en mode debug */}
           {process.env.NODE_ENV === "development" && <Stats />}
         </Canvas>
+
+        {/* Statistiques du graphe */}
+        {graphStats && !isLoading && !error && (
+          <GraphStats>
+            <div
+              style={{
+                fontWeight: "bold",
+                marginBottom: "8px",
+                color: "#4fc3f7",
+              }}
+            >
+              📊 Statistiques du Graphe
+            </div>
+            {Object.entries(graphStats).map(([key, value]) => (
+              <div key={key}>
+                {key}: {value}
+              </div>
+            ))}
+          </GraphStats>
+        )}
       </div>
     </PageTransition>
   );
