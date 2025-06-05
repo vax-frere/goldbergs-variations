@@ -28,6 +28,7 @@ import {
 import Node from "./components/Node";
 import Link from "./components/Link";
 import textContentService from "../../../../services/TextContentService";
+import { useVisitedClustersForGraph } from "../../../../store";
 
 // Cache global pour les matériaux
 const materialCache = new Map();
@@ -53,14 +54,14 @@ const getMaterial = (
         material = new THREE.MeshBasicMaterial({
           color: finalColor,
           transparent: isVisited,
-          opacity: isVisited ? 0.2 : 1,
+          opacity: isVisited ? 0.4 : 1,
         });
         break;
       case "line":
         material = new THREE.LineBasicMaterial({
           color: finalColor,
           transparent: true,
-          opacity: isVisited ? 0.2 : opacity,
+          opacity: isVisited ? 0.4 : opacity,
           linewidth: 2,
         });
         break;
@@ -126,7 +127,6 @@ const Graph = memo(() => {
     (state) => state.unregisterClusterBoxes
   );
   const setCollisionMask = useCollisionStore((state) => state.setCollisionMask);
-  const initializeAudio = useCollisionStore((state) => state.initializeAudio);
 
   // Fonction pour notifier un composant spécifique qu'il est actif/inactif
   const notifyClusterActivity = (clusterId, isActive) => {
@@ -290,11 +290,6 @@ const Graph = memo(() => {
     if (!clusterBoundingBoxes || Object.keys(clusterBoundingBoxes).length === 0)
       return;
 
-    // Initialiser l'audio avec la caméra
-    if (camera) {
-      initializeAudio(camera);
-    }
-
     // Ajouter les données nécessaires à chaque boîte
     const boxesWithData = {};
     Object.entries(clusterBoundingBoxes).forEach(([id, box]) => {
@@ -326,8 +321,6 @@ const Graph = memo(() => {
     setCollisionMask,
     clusterNames,
     clusterSlugs,
-    camera,
-    initializeAudio,
   ]);
 
   // Mettre à jour les références aux noms et slugs de clusters pour le hover
@@ -376,8 +369,13 @@ const Graph = memo(() => {
         id: hoveredCluster, // hoveredCluster est le nodeId du cluster master
       });
     } else {
-      // Cacher le contenu du TextPanel
-      textContentService.hide();
+      // CORRECTION: Ne pas cacher le contenu si on est en transition
+      // Cela évite le flickering lors du clic
+      const isTransitioning = useGameStore.getState().isTransitioning;
+      if (!isTransitioning) {
+        // Cacher le contenu du TextPanel seulement si on n'est pas en transition
+        textContentService.hide();
+      }
     }
   }, [hoveredCluster]);
 
@@ -385,13 +383,16 @@ const Graph = memo(() => {
   const isNodeVisited = useGameStore((state) => state.isNodeVisited);
   const isClusterVisited = useGameStore((state) => state.isClusterVisited);
 
+  // NOUVEAU: Forcer le re-render quand les clusters visités changent
+  const visitedClustersCount = useVisitedClustersForGraph();
+
   // Vérifier si un cluster a été visité (basé sur le clusterId)
   const isClusterVisitedByNode = useCallback(
     (node) => {
       if (!node || node.clusterId === undefined) return false;
       return isClusterVisited(node.clusterId);
     },
-    [isClusterVisited]
+    [isClusterVisited, visitedClustersCount]
   );
 
   // Vérifier si un lien doit être grisé (les deux clusters sont visités)
@@ -399,7 +400,7 @@ const Graph = memo(() => {
     (source, target) => {
       return isClusterVisitedByNode(source) && isClusterVisitedByNode(target);
     },
-    [isClusterVisitedByNode]
+    [isClusterVisitedByNode, visitedClustersCount]
   );
 
   // Si les données ne sont pas encore chargées

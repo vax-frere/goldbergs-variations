@@ -12,7 +12,7 @@ import useAssets from "../hooks/useAssets";
  * @param {number} [props.radius=3000] - Rayon de la sphère sur laquelle les étoiles sont placées
  * @param {number} [props.size=1.5] - Taille de base des étoiles
  */
-export function Stars({ count = 4000, radius = 5000, size = 5.5 }) {
+export function Stars({ count = 4000, radius = 5000, size = 8.0 }) {
   const pointsRef = useRef();
   const materialRef = useRef();
   const assets = useAssets();
@@ -67,18 +67,20 @@ export function Stars({ count = 4000, radius = 5000, size = 5.5 }) {
     // Quelques étoiles très brillantes (magnitude faible)
     const rand = Math.random();
 
-    if (rand < 0.001) return 0.5 + Math.random() * 1.0; // Étoiles très brillantes (0.5-1.5)
-    if (rand < 0.01) return 1.5 + Math.random() * 1.5; // Étoiles brillantes (1.5-3.0)
-    if (rand < 0.05) return 3.0 + Math.random() * 1.5; // Étoiles moyennes (3.0-4.5)
-    if (rand < 0.2) return 4.5 + Math.random() * 1.0; // Étoiles faibles (4.5-5.5)
-    return 5.5 + Math.random() * 2.0; // Étoiles très faibles (5.5-7.5)
+    if (rand < 0.005) return 0.5 + Math.random() * 1.0; // Plus d'étoiles très brillantes (0.5-1.5)
+    if (rand < 0.03) return 1.5 + Math.random() * 1.5; // Plus d'étoiles brillantes (1.5-3.0)
+    if (rand < 0.12) return 3.0 + Math.random() * 1.5; // Plus d'étoiles moyennes (3.0-4.5)
+    if (rand < 0.35) return 4.5 + Math.random() * 1.0; // Plus d'étoiles faibles (4.5-5.5)
+    return 5.5 + Math.random() * 1.5; // Étoiles très faibles mais pas trop (5.5-7.0)
   };
 
   // Fonction pour convertir la magnitude en taille
   const magnitudeToSize = (magnitude) => {
     // Plus la magnitude est faible, plus l'étoile est brillante et grande
-    // Formule logarithmique inverse pour un rendu réaliste
-    return size * Math.pow(2.512, -(magnitude - 6)) * (2 + Math.random() * 0.5);
+    // Formule logarithmique inverse pour un rendu réaliste mais plus visible
+    return (
+      size * Math.pow(2.512, -(magnitude - 6)) * (2.5 + Math.random() * 0.8)
+    );
   };
 
   // Créer ou récupérer la texture de particule améliorée
@@ -216,7 +218,7 @@ export function Stars({ count = 4000, radius = 5000, size = 5.5 }) {
       const stellarColor = selectStellarColor();
 
       // Ajouter une légère variation de luminosité basée sur la magnitude
-      const brightness = Math.max(0.3, 1.0 - (magnitude - 0.5) / 7.0);
+      const brightness = Math.max(0.6, 1.0 - (magnitude - 0.5) / 6.0); // Luminosité minimale augmentée
       stellarColor.multiplyScalar(brightness);
 
       colors[i * 3] = stellarColor.r;

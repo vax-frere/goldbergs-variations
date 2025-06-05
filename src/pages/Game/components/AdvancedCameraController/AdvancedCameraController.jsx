@@ -29,7 +29,10 @@ import useGameStore from "../../store";
 /**
  * Contrôleur de caméra avancé en mode vol libre uniquement
  */
-export function AdvancedCameraController({ config = DEFAULT_FLIGHT_CONFIG }) {
+export function AdvancedCameraController({
+  config = DEFAULT_FLIGHT_CONFIG,
+  disabled = false,
+}) {
   const { camera, gl } = useThree();
   const setCamera = useGameStore((state) => state.setCamera);
   const controlsRef = useRef(null);

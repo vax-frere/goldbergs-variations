@@ -1,4 +1,5 @@
 import { create } from "zustand";
+import useAudioService from "./services/AudioService";
 
 // Fonction pour récupérer l'état debug persisté
 const getInitialDebugState = () => {
@@ -40,6 +41,12 @@ export const useGameStore = create((set, get) => ({
   visitedClusters: [],
   visitedNodes: [],
   visitedPersonasCount: 0,
+
+  // État pour l'avertissement de sortie de cluster
+  showExitWarning: false,
+
+  // Nouveau : système d'actions différées
+  scheduledActions: [],
 
   // Actions pour modifier les états
 
@@ -90,6 +97,9 @@ export const useGameStore = create((set, get) => ({
   setActiveLevel: (levelData, targetLevel = null) => {
     const state = get();
 
+    // Nettoyer les actions programmées précédentes pour éviter les conflits
+    state.clearScheduledActions();
+
     // Déterminer le niveau cible
     let newLevel = targetLevel;
     if (!newLevel) {
@@ -109,20 +119,28 @@ export const useGameStore = create((set, get) => ({
 
     // Si on change de niveau, gérer la transition
     if (state.currentLevel !== newLevel) {
+      // Démarrer la transition SANS changer le niveau immédiatement
       set({
         isTransitioning: true,
         transitionData: levelData,
-        activeLevel: levelData,
-        currentLevel: newLevel,
+        // NE PAS changer currentLevel et activeLevel tout de suite
       });
 
-      // Simuler une transition courte pour éviter les saccades
+      // Changer le niveau quand l'écran est noir (après fade in + un peu de temps)
+      setTimeout(() => {
+        set({
+          currentLevel: newLevel,
+          activeLevel: levelData,
+        });
+      }, 160); // 10ms (starting) + 150ms (fadeIn) = écran noir plus rapide
+
+      // Terminer la transition après le fade complet
       setTimeout(() => {
         set({
           isTransitioning: false,
           transitionData: null,
         });
-      }, 100);
+      }, 360); // 150ms fade in + 50ms visible + 150ms fade out = transition plus rapide
     } else {
       // Même niveau, juste mettre à jour les données
       set({ activeLevel: levelData });
@@ -133,20 +151,73 @@ export const useGameStore = create((set, get) => ({
       console.log("[DEBUG] Processing cluster visit");
       console.log("[DEBUG] Cluster ID:", levelData.id);
 
-      // Utiliser la nouvelle fonction pour marquer le cluster comme visité
-      state.markClusterAsVisited(levelData.id, levelData.name);
+      // NOUVEAU: Ne plus marquer immédiatement comme visité
+      // On va programmer cette action pour plus tard (quand on sort du cluster)
+      console.log("[DEBUG] Cluster will be marked as visited when exiting");
     }
   },
 
   // Fonction pour retourner au niveau monde
   returnToWorld: () => {
+    const currentState = get();
     console.log("Returning to world level");
+
+    // Récupérer les données du cluster actuel avant de changer de niveau
+    const currentClusterData = currentState.activeLevel;
+    const wasInCluster =
+      currentState.currentLevel === GAME_LEVELS.ADVANCED_CLUSTER;
+
+    // Démarrer la transition SANS changer le niveau immédiatement
     set({
-      currentLevel: GAME_LEVELS.WORLD,
-      activeLevel: null,
-      transitionData: null,
-      isTransitioning: false,
+      isTransitioning: true,
+      transitionData: { name: "World", type: "world" },
+      // NE PAS changer currentLevel et activeLevel tout de suite
     });
+
+    // Changer le niveau quand l'écran est noir (après fade in + un peu de temps)
+    setTimeout(() => {
+      set({
+        currentLevel: GAME_LEVELS.WORLD,
+        activeLevel: null,
+      });
+    }, 160); // 10ms (starting) + 150ms (fadeIn) = écran noir plus rapide
+
+    // Terminer la transition après le fade complet
+    setTimeout(() => {
+      set({
+        isTransitioning: false,
+        transitionData: null,
+      });
+    }, 360); // Même durée que setActiveLevel - transition plus rapide
+
+    // NOUVEAU: Programmer le marquage du cluster comme visité avec le son après un délai
+    if (
+      wasInCluster &&
+      currentClusterData &&
+      currentClusterData.type === "cluster"
+    ) {
+      const state = get();
+
+      // CORRECTION: Vérifier si le cluster n'est pas déjà visité avant de programmer l'action
+      if (!state.isClusterVisited(currentClusterData.id)) {
+        // Programmer l'action différée (1.5 secondes après la fin de la transition)
+        state.scheduleAction(() => {
+          // Jouer le son directement via AudioService
+          const audioService = useAudioService.getState();
+          audioService.playClusterOffSound();
+        }, 10); // Son joué à 1.5 secondes
+
+        // Programmer le marquage visuel avec un délai supplémentaire pour synchroniser avec le son
+        state.scheduleAction(() => {
+          // Marquer le cluster comme visité (effet visuel)
+          const currentState = get();
+          currentState.markClusterAsVisited(
+            currentClusterData.id,
+            currentClusterData.name
+          );
+        }, 1000); // Effet visuel à 2.5 secondes (1 seconde après le son)
+      }
+    }
   },
 
   // Getter pour récupérer uniquement le cluster survolé
@@ -257,6 +328,57 @@ export const useGameStore = create((set, get) => ({
 
   // Getter pour les données du cluster survolé
   getHoveredClusterData: () => get().hoveredClusterData,
+
+  // Fonction pour définir l'état de l'avertissement de sortie de cluster
+  setShowExitWarning: (show) => set({ showExitWarning: show }),
+
+  // Nouveau : fonctions pour gérer les actions différées
+
+  // Programmer une action différée
+  scheduleAction: (action, delay) => {
+    const timeoutId = setTimeout(() => {
+      try {
+        action();
+      } catch (error) {
+        console.error(
+          "Erreur lors de l'exécution d'une action différée:",
+          error
+        );
+      }
+      // Nettoyer l'action de la liste
+      set((state) => ({
+        scheduledActions: state.scheduledActions.filter(
+          (a) => a.id !== timeoutId
+        ),
+      }));
+    }, delay);
+
+    set((state) => ({
+      scheduledActions: [
+        ...state.scheduledActions,
+        { id: timeoutId, action, delay },
+      ],
+    }));
+
+    return timeoutId; // Retourner l'ID pour pouvoir annuler si besoin
+  },
+
+  // Nettoyer toutes les actions programmées (utile lors des transitions)
+  clearScheduledActions: () => {
+    const state = get();
+    state.scheduledActions.forEach(({ id }) => clearTimeout(id));
+    set({ scheduledActions: [] });
+  },
+
+  // Annuler une action spécifique
+  cancelScheduledAction: (timeoutId) => {
+    clearTimeout(timeoutId);
+    set((state) => ({
+      scheduledActions: state.scheduledActions.filter(
+        (a) => a.id !== timeoutId
+      ),
+    }));
+  },
 }));
 
 export default useGameStore;
@@ -298,3 +420,7 @@ export const useVisitedPersonasCount = () =>
 
 export const useVisitedNodesCount = () =>
   useGameStore((state) => state.visitedNodes.length);
+
+// Nouveau selector pour forcer le re-render du Graph
+export const useVisitedClustersForGraph = () =>
+  useGameStore((state) => state.visitedClusters.length);

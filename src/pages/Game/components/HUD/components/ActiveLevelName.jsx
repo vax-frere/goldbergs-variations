@@ -51,45 +51,45 @@ const ActiveLevelName = () => {
 
   // Fonction pour récupérer les données du personnage depuis la base de données
   const getCharacterData = (clusterId) => {
-    console.log("[ActiveLevelName] Searching for clusterId:", clusterId);
-    console.log("[ActiveLevelName] Assets ready:", assets.isReady);
+    // console.log("[ActiveLevelName] Searching for clusterId:", clusterId);
+    // console.log("[ActiveLevelName] Assets ready:", assets.isReady);
 
     if (!assets.isReady) {
-      console.log("[ActiveLevelName] Assets not ready yet");
+      // console.log("[ActiveLevelName] Assets not ready yet");
       return null;
     }
 
     const database = assets.getData("database");
-    console.log("[ActiveLevelName] Database available:", !!database);
-    console.log(
-      "[ActiveLevelName] Database is array:",
-      Array.isArray(database)
-    );
+    // console.log("[ActiveLevelName] Database available:", !!database);
+    // console.log(
+    //   "[ActiveLevelName] Database is array:",
+    //   Array.isArray(database)
+    // );
 
     if (!database || !Array.isArray(database)) {
-      console.log("[ActiveLevelName] Database not available or not an array");
+      // console.log("[ActiveLevelName] Database not available or not an array");
       return null;
     }
 
-    console.log("[ActiveLevelName] Database length:", database.length);
+    // console.log("[ActiveLevelName] Database length:", database.length);
 
     // Chercher dans la base de données un élément avec le slug correspondant au clusterId
     const character = database.find((item) => item.slug === clusterId);
 
-    console.log("[ActiveLevelName] Character found:", !!character);
-    if (character) {
-      console.log(
-        "[ActiveLevelName] Character displayName:",
-        character.displayName
-      );
-      console.log("[ActiveLevelName] Character slug:", character.slug);
-      console.log("[ActiveLevelName] Character thematic:", character.thematic);
-      console.log(
-        "[ActiveLevelName] Character thematicGroup:",
-        character.thematicGroup
-      );
-      console.log("[ActiveLevelName] Character aliases:", character.aliases);
-    }
+    // console.log("[ActiveLevelName] Character found:", !!character);
+    // if (character) {
+    //   console.log(
+    //     "[ActiveLevelName] Character displayName:",
+    //     character.displayName
+    //   );
+    //   console.log("[ActiveLevelName] Character slug:", character.slug);
+    //   console.log("[ActiveLevelName] Character thematic:", character.thematic);
+    //   console.log(
+    //     "[ActiveLevelName] Character thematicGroup:",
+    //     character.thematicGroup
+    //   );
+    //   console.log("[ActiveLevelName] Character aliases:", character.aliases);
+    // }
 
     return character || null;
   };
@@ -98,7 +98,7 @@ const ActiveLevelName = () => {
   let displayName;
   let characterData = null;
 
-  console.log("[ActiveLevelName] ActiveLevel:", activeLevel);
+  // console.log("[ActiveLevelName] ActiveLevel:", activeLevel);
 
   if (activeLevel.type === "cluster" && activeLevel.id) {
     // Pour les clusters, toujours essayer de récupérer les données du personnage depuis la base de données en premier
@@ -106,36 +106,35 @@ const ActiveLevelName = () => {
 
     if (characterData && characterData.displayName) {
       displayName = characterData.displayName;
-      console.log(
-        "[ActiveLevelName] Using character name from database:",
-        displayName
-      );
+      // console.log(
+      //   "[ActiveLevelName] Using character name from database:",
+      //   displayName
+      // );
     } else if (activeLevel.name) {
       // Si pas trouvé dans la base, utiliser activeLevel.name s'il existe
       displayName = activeLevel.name;
-      console.log(
-        "[ActiveLevelName] Using activeLevel.name as fallback:",
-        displayName
-      );
+      // console.log(
+      //   "[ActiveLevelName] Using activeLevel.name as fallback:",
+      //   displayName
+      // );
     } else {
       // Dernier fallback vers le format précédent
       displayName = `Cluster: ${activeLevel.id
         .split("-")
         .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
         .join(" ")}`;
-      console.log("[ActiveLevelName] Using fallback format:", displayName);
+      // console.log("[ActiveLevelName] Using fallback format:", displayName);
     }
   } else if (activeLevel.name) {
     // Pour les non-clusters, utiliser activeLevel.name s'il existe
     displayName = activeLevel.name;
-    console.log("[ActiveLevelName] Using activeLevel.name:", displayName);
+    // console.log("[ActiveLevelName] Using activeLevel.name:", displayName);
   } else {
     // Pour les autres types de niveaux
     displayName = `${activeLevel.type || "Level"}: ${activeLevel.id}`;
-    console.log("[ActiveLevelName] Using generic format:", displayName);
+    // console.log("[ActiveLevelName] Using generic format:", displayName);
   }
-
-  console.log("[ActiveLevelName] Final displayName:", displayName);
+  // console.log("[ActiveLevelName] Final displayName:", displayName);
 
   // Récupérer la couleur thématique
   const thematicColor = characterData?.thematicGroup

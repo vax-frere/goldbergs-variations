@@ -1,4 +1,10 @@
-import React, { useState, useEffect, useRef, useMemo } from "react";
+import React, {
+  useState,
+  useEffect,
+  useRef,
+  useMemo,
+  useCallback,
+} from "react";
 import { Billboard } from "@react-three/drei";
 import * as THREE from "three";
 import { SVGLoader } from "three/examples/jsm/loaders/SVGLoader";
@@ -42,8 +48,8 @@ const SvgPath = ({
   // Utiliser notre service d'assets centralisé
   const assets = useAssets();
 
-  // Fonction pour traiter les données SVG et calculer les dimensions
-  const processSvgData = (data) => {
+  // Mémoïser la fonction de traitement pour éviter les re-créations
+  const processSvgData = useCallback((data) => {
     try {
       // Calculate the dimensions of the SVG
       const box = new THREE.Box3();
@@ -75,7 +81,7 @@ const SvgPath = ({
       setError(err);
       setIsLoading(false);
     }
-  };
+  }, []);
 
   useEffect(() => {
     if (!assets.isReady || !svgPath) return;
@@ -192,9 +198,9 @@ const SvgPath = ({
 
     // Appeler la fonction asynchrone
     loadSvg();
-  }, [svgPath, assets.isReady, onError]);
+  }, [svgPath, assets.isReady, onError, processSvgData]);
 
-  // Create a material for the lines
+  // Create a material for the lines - mémoïsé pour éviter les re-créations
   const lineMaterial = useMemo(() => {
     return new THREE.LineBasicMaterial({
       color: new THREE.Color(color),
@@ -204,65 +210,88 @@ const SvgPath = ({
     });
   }, [color, opacity, lineWidth]);
 
-  // Rendu d'un cercle de secours en cas d'erreur
-  const renderFallbackCircle = () => {
-    const circleSegments = 32;
-    const circleGeometry = new THREE.CircleGeometry(size / 2, circleSegments);
-    const circleMaterial = new THREE.MeshBasicMaterial({
-      color: new THREE.Color(color),
-      transparent: true,
-      opacity,
-      side: THREE.DoubleSide,
-      wireframe: true,
+  // Mémoïser le rendu de secours pour éviter les re-créations
+  const fallbackCircle = useMemo(() => {
+    if (error || !svgData) {
+      const circleSegments = 32;
+      const circleGeometry = new THREE.CircleGeometry(size / 2, circleSegments);
+      const circleMaterial = new THREE.MeshBasicMaterial({
+        color: new THREE.Color(color),
+        transparent: true,
+        opacity,
+        side: THREE.DoubleSide,
+        wireframe: true,
+      });
+
+      const fallbackContent = (
+        <group position={position} rotation={rotation} scale={scale}>
+          <mesh geometry={circleGeometry} material={circleMaterial} />
+        </group>
+      );
+
+      return isBillboard ? (
+        <Billboard>{fallbackContent}</Billboard>
+      ) : (
+        fallbackContent
+      );
+    }
+    return null;
+  }, [
+    error,
+    svgData,
+    size,
+    color,
+    opacity,
+    position,
+    rotation,
+    scale,
+    isBillboard,
+  ]);
+
+  // Mémoïser les calculs d'échelle pour éviter les re-calculs
+  const scaleCalculations = useMemo(() => {
+    if (!dimensions || !svgData) return null;
+
+    const scaleFactor = size / dimensions.height;
+    const computedScale = [
+      scale[0] * scaleFactor,
+      -scale[1] * scaleFactor, // Flip Y axis
+      scale[2] * scaleFactor,
+    ];
+    const centerOffset = [-dimensions.center.x, -dimensions.center.y, 0];
+
+    return { computedScale, centerOffset };
+  }, [size, dimensions, scale]);
+
+  // Mémoïser les lignes SVG pour éviter les re-créations
+  const svgLines = useMemo(() => {
+    if (!svgData || !lineMaterial) return null;
+
+    return svgData.paths.map((path, pathIndex) => {
+      return path.subPaths.map((subPath, subPathIndex) => {
+        const points = subPath.getPoints();
+        const geometry = new THREE.BufferGeometry().setFromPoints(points);
+        const key = `path-${pathIndex}-subpath-${subPathIndex}`;
+
+        return <line key={key} geometry={geometry} material={lineMaterial} />;
+      });
     });
-
-    const fallbackContent = (
-      <group position={position} rotation={rotation} scale={scale}>
-        <mesh geometry={circleGeometry} material={circleMaterial} />
-      </group>
-    );
-
-    return isBillboard ? (
-      <Billboard>{fallbackContent}</Billboard>
-    ) : (
-      fallbackContent
-    );
-  };
+  }, [svgData, lineMaterial]);
 
   // Si en chargement ou si le service d'assets n'est pas prêt, ne rien rendre
   if (isLoading || !assets.isReady) {
     return null;
   }
 
-  // Si erreur, rendre un cercle de secours
+  // Si erreur, rendre le cercle de secours mémoïsé
   if (error || !svgData) {
-    return renderFallbackCircle();
+    return fallbackCircle;
   }
 
-  // Scale factor to achieve the desired size
-  const scaleFactor = size / dimensions.height;
-
-  // Computed scale that accounts for the user's scale and the size parameter
-  // Flip the Y axis to correct SVG orientation
-  const computedScale = [
-    scale[0] * scaleFactor,
-    -scale[1] * scaleFactor, // Flip Y axis
-    scale[2] * scaleFactor,
-  ];
-
-  // Offset to center the SVG
-  const centerOffset = [-dimensions.center.x, -dimensions.center.y, 0];
-
-  // Create the lines from the SVG paths
-  const lines = svgData.paths.map((path, pathIndex) => {
-    return path.subPaths.map((subPath, subPathIndex) => {
-      const points = subPath.getPoints();
-      const geometry = new THREE.BufferGeometry().setFromPoints(points);
-      const key = `path-${pathIndex}-subpath-${subPathIndex}`;
-
-      return <line key={key} geometry={geometry} material={lineMaterial} />;
-    });
-  });
+  // Si pas de calculs d'échelle, ne rien rendre
+  if (!scaleCalculations) {
+    return null;
+  }
 
   // Render the SVG
   const content = (
@@ -270,9 +299,9 @@ const SvgPath = ({
       ref={groupRef}
       position={position}
       rotation={rotation}
-      scale={computedScale}
+      scale={scaleCalculations.computedScale}
     >
-      <group position={centerOffset}>{lines}</group>
+      <group position={scaleCalculations.centerOffset}>{svgLines}</group>
     </group>
   );
 

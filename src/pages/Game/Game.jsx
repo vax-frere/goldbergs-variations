@@ -2,8 +2,9 @@ import { useState, useEffect, memo, useRef, useCallback } from "react";
 import { Canvas, useThree } from "@react-three/fiber";
 import { Stats } from "@react-three/drei";
 import useSound from "use-sound";
-import useGameStore from "./store";
+import useGameStore, { useIsTransitioning } from "./store";
 import useAssets from "./hooks/useAssets";
+import useAudioService from "./services/AudioService";
 import { EffectComposer } from "@react-three/postprocessing";
 import { Bloom, ToneMapping } from "@react-three/postprocessing";
 import {
@@ -22,6 +23,7 @@ import useCollisionStore, {
 } from "./services/CollisionService";
 import useDebugMode from "./hooks/useDebugMode";
 import { AdvancedCameraController } from "./components/AdvancedCameraController/AdvancedCameraController";
+import { DebugNavigationUI } from "./components/AdvancedCameraController/DebugNavigationUI";
 import GameAudio from "./components/GameAudio";
 import CollisionDebugRenderer from "./components/debug/CollisionDebugRenderer";
 import GridReferences from "./components/GridReferences";
@@ -42,6 +44,7 @@ const CollisionManager = memo(() => {
   const setHoveredCluster = useGameStore((state) => state.setHoveredCluster);
   const activeLevel = useGameStore((state) => state.activeLevel);
   const assets = useAssets();
+  const initializeAudio = useAudioService((state) => state.initializeAudio);
 
   // Fonction pour trouver les données d'un cluster
   const findClusterData = useCallback(
@@ -79,22 +82,29 @@ const CollisionManager = memo(() => {
     [assets]
   );
 
-  // Initialiser le service de collision
+  // Initialiser le service de collision et audio
   useEffect(() => {
     setCollisionMask(CollisionLayers.CLUSTERS | CollisionLayers.NODES);
     setDebugMode(debug);
+
+    // Initialiser le service audio positionnel
+    initializeAudio(camera);
 
     return () => {
       setCollisionMask(CollisionLayers.NONE);
       setDebugMode(false);
     };
-  }, [setCollisionMask, setDebugMode, debug]);
+  }, [setCollisionMask, setDebugMode, debug, initializeAudio, camera]);
 
   // Gérer les détections de collision avec setInterval
   useEffect(() => {
     const checkCollisions = () => {
       // Ne pas détecter si on est dans un cluster
       if (activeLevel?.type === "cluster") return;
+
+      // CORRECTION: Ne pas détecter pendant les transitions pour éviter le flickering
+      const gameState = useGameStore.getState();
+      if (gameState.isTransitioning) return;
 
       // Calculer le point de détection
       calculateDetectionPoint(camera);
@@ -165,8 +175,134 @@ const DebugGridReferences = memo(() => {
   return debug ? <GridReferences /> : null;
 });
 
+// Composant pour afficher le DebugNavigationUI uniquement en mode debug
+const DebugNavigationDisplay = memo(() => {
+  const debug = useGameStore((state) => state.debug);
+  return debug ? <DebugNavigationUI /> : null;
+});
+
+// Composant pour gérer les transitions entre niveaux avec fade
+const TransitionOverlay = memo(() => {
+  const isTransitioning = useIsTransitioning();
+  const transitionData = useGameStore((state) => state.transitionData);
+  const [fadePhase, setFadePhase] = useState("hidden"); // 'hidden', 'starting', 'fadeIn', 'visible', 'fadeOut'
+
+  useEffect(() => {
+    if (isTransitioning) {
+      // Phase 0: Commencer avec l'overlay visible mais transparent
+      setFadePhase("starting");
+
+      // Phase 1: Déclencher le fade in après un micro-délai pour permettre le rendu
+      const startTimer = setTimeout(() => {
+        setFadePhase("fadeIn");
+
+        // Phase 2: Maintenir l'écran noir pendant un court moment
+        const visibleTimer = setTimeout(() => {
+          setFadePhase("visible");
+
+          // Phase 3: Fade out (révéler le nouveau niveau)
+          const fadeOutTimer = setTimeout(() => {
+            setFadePhase("fadeOut");
+
+            // Phase 4: Cacher complètement l'overlay
+            const hideTimer = setTimeout(() => {
+              setFadePhase("hidden");
+            }, 150); // Durée du fade out réduite
+
+            return () => clearTimeout(hideTimer);
+          }, 50); // Temps d'attente en noir réduit
+
+          return () => clearTimeout(fadeOutTimer);
+        }, 150); // Durée du fade in réduite
+
+        return () => clearTimeout(visibleTimer);
+      }, 10); // Micro-délai pour permettre le rendu initial
+
+      return () => clearTimeout(startTimer);
+    } else {
+      setFadePhase("hidden");
+    }
+  }, [isTransitioning]);
+
+  // Ne pas afficher si caché
+  if (fadePhase === "hidden") return null;
+
+  // Déterminer l'opacité selon la phase
+  const getOpacity = () => {
+    switch (fadePhase) {
+      case "starting":
+        return 0; // Commencer transparent
+      case "fadeIn":
+        return 1; // Transition vers opaque
+      case "visible":
+        return 1; // Rester opaque
+      case "fadeOut":
+        return 0; // Transition vers transparent
+      default:
+        return 0;
+    }
+  };
+
+  // Déterminer la durée de transition
+  const getTransitionDuration = () => {
+    switch (fadePhase) {
+      case "starting":
+        return "0ms"; // Pas de transition pour l'état initial
+      case "fadeIn":
+        return "150ms"; // Transition douce vers le noir (réduite)
+      case "fadeOut":
+        return "150ms"; // Transition douce vers la transparence (réduite)
+      default:
+        return "0ms";
+    }
+  };
+
+  return (
+    <div
+      style={{
+        position: "absolute",
+        top: 0,
+        left: 0,
+        width: "100%",
+        height: "100%",
+        backgroundColor: "#000",
+        zIndex: 9998, // Juste en dessous de la loading bar
+        opacity: getOpacity(),
+        transition: `opacity ${getTransitionDuration()} ease-in-out`,
+        pointerEvents: isTransitioning ? "all" : "none", // Bloquer les interactions pendant la transition
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+      }}
+    >
+      {/* Optionnel: Afficher le nom du niveau pendant la transition */}
+      {transitionData &&
+        (fadePhase === "visible" || fadePhase === "fadeIn") && (
+          <div
+            style={{
+              color: "white",
+              fontSize: "14px", // Taille réduite de 24px à 14px
+              fontFamily: "monospace",
+              textAlign: "center",
+              opacity: fadePhase === "fadeIn" ? 0.4 : 0.4, // Opacité réduite de 0.8 à 0.4
+              transition: "opacity 100ms ease-in-out", // Transition du texte plus rapide
+              fontWeight: "300", // Police plus fine
+              letterSpacing: "0.5px", // Espacement des lettres pour plus de discrétion
+            }}
+          >
+            {transitionData.name
+              ? `Entering ${transitionData.name}...`
+              : "Loading..."}
+          </div>
+        )}
+    </div>
+  );
+});
+
 // Composant pour le Canvas et ses effets
 const GameCanvas = memo(({ children }) => {
+  const isTransitioning = useIsTransitioning();
+
   // Activer l'écoute de la touche P pour le debug mode
   useDebugMode();
 
@@ -177,6 +313,7 @@ const GameCanvas = memo(({ children }) => {
         background: "#000",
         width: "100%",
         height: "100%",
+        pointerEvents: isTransitioning ? "none" : "auto", // Désactiver les interactions pendant la transition
       }}
       camera={{
         position: [0, -300, BASE_CAMERA_DISTANCE * 4],
@@ -187,7 +324,7 @@ const GameCanvas = memo(({ children }) => {
     >
       {/* Systèmes du jeu */}
       <GameAudio />
-      <AdvancedCameraController />
+      <AdvancedCameraController disabled={isTransitioning} />
       <CollisionManager />
       <CollisionDebugRenderer />
       <DebugGridReferences />
@@ -219,6 +356,7 @@ const GameCanvas = memo(({ children }) => {
 const Game = () => {
   const activeLevel = useGameStore((state) => state.activeLevel);
   const assets = useAssets({ autoInit: true });
+  const initializeAudio = useAudioService((state) => state.initializeAudio);
   const [gameReady, setGameReady] = useState(false);
   const [audioProgress, setAudioProgress] = useState(0);
   const [loadingStage, setLoadingStage] = useState(0);
@@ -354,6 +492,7 @@ const Game = () => {
             <LevelSwitcher />
           </GameCanvas>
           <HUD />
+          <DebugNavigationDisplay />
         </>
       )}
 
@@ -387,6 +526,8 @@ const Game = () => {
           />
         </div>
       )}
+
+      <TransitionOverlay />
     </div>
   );
 };

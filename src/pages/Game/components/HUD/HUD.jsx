@@ -13,6 +13,7 @@ import Subtitles from "./components/Subtitles";
 import InteractionPrompt from "./components/InteractionPrompt";
 import ThematicLegend from "./components/ThematicLegend";
 import ActiveLevelName from "./components/ActiveLevelName";
+import ExitWarningPanel from "./components/ExitWarningPanel";
 
 const HUDOverlay = styled(Box)(({ theme }) => ({
   position: "fixed",
@@ -134,15 +135,16 @@ const HUD = () => {
       {/* Compteur de personas visitées - affiché si au moins 1 cluster visité */}
       {visitedPersonasCount > 0 && totalClusters > 0 && (
         <VisitedPersonasCounter>
-          {`${visitedPersonasCount}/${totalClusters} personas visited (${completionPercentage}%)`}
+          {`${visitedPersonasCount}/${totalClusters} visited personas  (${completionPercentage}%)`}
         </VisitedPersonasCounter>
       )}
 
       {/* Composants d'interface utilisateur */}
       <AudioStatus />
-      {/* <Subtitles /> */}
+      <Subtitles />
       <TextPanel />
       <InteractionPrompt />
+      <ExitWarningPanel />
 
       <HUDOverlay>
         <Box

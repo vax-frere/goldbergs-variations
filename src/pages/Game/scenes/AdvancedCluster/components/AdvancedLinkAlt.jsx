@@ -1,6 +1,7 @@
-import React, { memo, useMemo } from "react";
+import React, { memo, useMemo, useRef } from "react";
 import * as THREE from "three";
-import { Line, Text } from "@react-three/drei";
+import { Line, Text, Billboard } from "@react-three/drei";
+import { useFrame, useThree } from "@react-three/fiber";
 
 /**
  * Composant AdvancedLinkAlt - Version alternative des liens avec arc et texte
@@ -66,8 +67,8 @@ const AdvancedLinkAlt = memo(
       const baseSource = srcVector.clone().add(sourceOffset);
       const baseTarget = tgtVector.clone().add(targetOffset);
 
-      // Calculer le point de contrôle pour l'arc AVANT les décalages
-      const midPoint = new THREE.Vector3()
+      // Calculer le point de contrôle temporaire pour déterminer la direction de l'arc
+      const tempMidPoint = new THREE.Vector3()
         .addVectors(baseSource, baseTarget)
         .multiplyScalar(0.5);
       const distance = baseSource.distanceTo(baseTarget);
@@ -81,27 +82,55 @@ const AdvancedLinkAlt = memo(
         perpendicular = new THREE.Vector3(1, 0, 0);
       }
 
-      // Point de contrôle pour la courbe de Bézier
-      const controlPoint = midPoint
+      // Point de contrôle temporaire
+      const tempControlPoint = tempMidPoint
         .clone()
         .add(perpendicular.multiplyScalar(distance * arcHeight));
 
-      // Maintenant, décaler légèrement les points source et target
-      // en fonction de la direction vers le point de contrôle
+      // Calculer les directions tangentes aux cercles des nœuds
+      // Direction de la source vers le point de contrôle (tangente au cercle source)
       const sourceToControl = new THREE.Vector3()
-        .subVectors(controlPoint, baseSource)
-        .normalize();
-      const targetToControl = new THREE.Vector3()
-        .subVectors(controlPoint, baseTarget)
+        .subVectors(tempControlPoint, baseSource)
         .normalize();
 
-      // Décalage subtil dans la direction de l'arc
-      const adjustedSource = baseSource
+      // Direction du point de contrôle vers la cible (tangente au cercle cible)
+      const controlToTarget = new THREE.Vector3()
+        .subVectors(baseTarget, tempControlPoint)
+        .normalize();
+
+      // Ajuster les points pour qu'ils soient tangents aux cercles
+      const adjustedSource = srcVector
         .clone()
-        .add(sourceToControl.multiplyScalar(circleRadius));
-      const adjustedTarget = baseTarget
+        .add(sourceToControl.multiplyScalar(startOffset));
+
+      const adjustedTarget = tgtVector
         .clone()
-        .add(targetToControl.multiplyScalar(circleRadius));
+        .add(controlToTarget.multiplyScalar(-endOffset));
+
+      // Recalculer le point de contrôle avec les nouveaux points ajustés
+      const midPoint = new THREE.Vector3()
+        .addVectors(adjustedSource, adjustedTarget)
+        .multiplyScalar(0.5);
+      const adjustedDistance = adjustedSource.distanceTo(adjustedTarget);
+
+      // Recalculer la direction perpendiculaire avec les points ajustés
+      const adjustedDirection = new THREE.Vector3()
+        .subVectors(adjustedTarget, adjustedSource)
+        .normalize();
+
+      let adjustedPerpendicular = new THREE.Vector3()
+        .crossVectors(adjustedDirection, up)
+        .normalize();
+      if (adjustedPerpendicular.length() < 0.1) {
+        adjustedPerpendicular = new THREE.Vector3(1, 0, 0);
+      }
+
+      // Point de contrôle final
+      const controlPoint = midPoint
+        .clone()
+        .add(
+          adjustedPerpendicular.multiplyScalar(adjustedDistance * arcHeight)
+        );
 
       // Générer les points de la courbe
       const curvePoints = [];
@@ -123,63 +152,33 @@ const AdvancedLinkAlt = memo(
         adjustedSource,
         adjustedTarget,
       };
-    }, [
-      sourceNode,
-      targetNode,
-      arcHeight,
-      startOffset,
-      endOffset,
-      circleRadius,
-      circleAngle,
-    ]);
+    }, [sourceNode, targetNode, arcHeight, startOffset, endOffset]);
 
-    // Calculer les données pour le texte
-    const textData = useMemo(() => {
-      if (!curve || !points.length) return null;
+    // Calculer les données pour le texte orienté le long du lien
+    const orientedTextData = useMemo(() => {
+      if (!curve || !points.length || !relationType) return null;
 
-      // Position à mi-chemin de la courbe
+      // Position au centre du lien
       const midPoint = new THREE.Vector3(
         points[Math.floor(points.length / 2)][0],
         points[Math.floor(points.length / 2)][1],
         points[Math.floor(points.length / 2)][2]
       );
 
-      // Calculer l'orientation du texte
-      const prevPoint = new THREE.Vector3(
-        points[Math.floor(points.length / 2) - 1][0],
-        points[Math.floor(points.length / 2) - 1][1],
-        points[Math.floor(points.length / 2) - 1][2]
-      );
-      const nextPoint = new THREE.Vector3(
-        points[Math.floor(points.length / 2) + 1][0],
-        points[Math.floor(points.length / 2) + 1][1],
-        points[Math.floor(points.length / 2) + 1][2]
-      );
-
-      const direction = new THREE.Vector3()
-        .subVectors(nextPoint, prevPoint)
+      // Calculer la direction du lien (de source vers target)
+      const linkDirection = new THREE.Vector3()
+        .subVectors(adjustedTarget, adjustedSource)
         .normalize();
 
-      // Créer un repère orthonormé
-      let right = new THREE.Vector3(1, 0, 0);
-      if (Math.abs(direction.dot(right)) > 0.9) {
-        right = new THREE.Vector3(0, 1, 0);
-      }
-
-      const up = new THREE.Vector3().crossVectors(right, direction).normalize();
-      right = new THREE.Vector3().crossVectors(direction, up).normalize();
-
-      const matrix = new THREE.Matrix4().makeBasis(direction, up, right);
-      const rotation = new THREE.Euler().setFromRotationMatrix(matrix);
-
-      // Décalage vers le haut pour éviter que le texte ne chevauche le lien
-      const offsetPosition = midPoint.clone().add(up.multiplyScalar(1));
+      // Décalage vers le haut pour éviter le chevauchement avec le lien
+      const upOffset = new THREE.Vector3(0, 1, 0);
+      const offsetPosition = midPoint.clone().add(upOffset.multiplyScalar(3));
 
       return {
         position: offsetPosition,
-        rotation: rotation,
+        linkDirection: linkDirection,
       };
-    }, [points, curve]);
+    }, [points, curve, relationType, adjustedSource, adjustedTarget]);
 
     // Calculer les vecteurs pour les flèches
     const arrowVectors = useMemo(() => {
@@ -273,29 +272,34 @@ const AdvancedLinkAlt = memo(
           </>
         )}
 
-        {/* Texte du lien */}
-        {textData && relationType && (
-          <Text
-            position={textData.position}
-            rotation={textData.rotation}
-            fontSize={textSize}
-            color={linkColor}
-            anchorX="center"
-            anchorY="middle"
-            depthTest={false}
-            renderOrder={2}
-            transparent
-            opacity={textOpacity}
-            billboardAxis="y"
-            outlineWidth={0.05}
-            outlineColor="#000000"
-            outlineOpacity={0.5}
-            backgroundColor={textBackgroundColor}
-            backgroundOpacity={0.6}
-            padding={0.2}
-          >
-            {relationType}
-          </Text>
+        {/* Texte du lien - Version courbée ou normale selon la longueur */}
+        {relationType && (
+          <>
+            {/* Texte orienté le long du lien */}
+            {orientedTextData && (
+              <SmartOrientedText
+                position={orientedTextData.position}
+                linkDirection={orientedTextData.linkDirection}
+                fontSize={textSize}
+                color={linkColor}
+                anchorX="center"
+                anchorY="middle"
+                depthTest={false}
+                renderOrder={2}
+                transparent
+                opacity={textOpacity}
+                outlineWidth={0.05}
+                outlineColor="#000000"
+                outlineOpacity={0.5}
+                backgroundColor={textBackgroundColor}
+                backgroundOpacity={0.6}
+                padding={0.2}
+                data={relationType}
+              >
+                {relationType}
+              </SmartOrientedText>
+            )}
+          </>
         )}
       </group>
     );
@@ -303,5 +307,68 @@ const AdvancedLinkAlt = memo(
 );
 
 AdvancedLinkAlt.displayName = "AdvancedLinkAlt";
+
+// Composant pour le texte double face avec masque (sandwich)
+const SmartOrientedText = ({
+  position,
+  linkDirection,
+  children,
+  ...textProps
+}) => {
+  // Calculer l'angle de la direction du lien dans le plan XY
+  const linkAngle = Math.atan2(linkDirection.y, linkDirection.x);
+
+  // Position des deux textes (plus décalés en Z pour éviter le z-fighting)
+  const textOffset = 0.1;
+  const position1 = [0, 0, textOffset];
+  const position2 = [0, 0, -textOffset];
+
+  // Rotations opposées pour les deux textes
+  const rotation1 = [0, 0, linkAngle];
+  const rotation2 = [0, 0, linkAngle + Math.PI]; // 180° de différence
+
+  // Taille du masque plus généreuse
+  const maskWidth = (textProps.fontSize || 1) * children.length * 1.2;
+  const maskHeight = (textProps.fontSize || 1) * 2.0;
+
+  return (
+    <group position={position}>
+      {/* Masque noir au centre (sandwich) - plus visible */}
+      <mesh position={[0, 0, 0]} rotation={[0, 0, linkAngle]}>
+        <planeGeometry args={[maskWidth, maskHeight]} />
+        <meshBasicMaterial
+          color="#000000"
+          transparent={false}
+          depthTest={false}
+          depthWrite={false}
+          renderOrder={8}
+          side={THREE.DoubleSide}
+        />
+      </mesh>
+
+      {/* Premier texte - direction normale */}
+      <Text
+        position={position1}
+        rotation={rotation1}
+        {...textProps}
+        renderOrder={10}
+        depthTest={false}
+      >
+        {children}
+      </Text>
+
+      {/* Deuxième texte - direction opposée (180°) */}
+      <Text
+        position={position2}
+        rotation={rotation2}
+        {...textProps}
+        renderOrder={10}
+        depthTest={false}
+      >
+        {children}
+      </Text>
+    </group>
+  );
+};
 
 export default AdvancedLinkAlt;

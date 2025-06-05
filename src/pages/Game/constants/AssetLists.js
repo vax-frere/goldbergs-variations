@@ -120,6 +120,8 @@ export const SOUND_FILES = [
   // Effets sonores
   "click.mp3",
   "hover.mp3",
+
+  "cluster-off.mp3",
 ];
 
 // Liste des fichiers de données à charger

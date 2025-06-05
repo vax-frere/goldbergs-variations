@@ -1,8 +1,9 @@
-import React, { memo, useRef } from "react";
+import React, { memo, useRef, useMemo } from "react";
 import { Billboard } from "@react-three/drei";
 import { useThree } from "@react-three/fiber";
 import * as THREE from "three";
 import useAssets from "../../hooks/useAssets";
+import SvgPath from "../../components/SvgPath";
 
 /**
  * Effet visuel de notes de musique qui virevoltent
@@ -373,131 +374,131 @@ export class MusicNotesEffect {
 }
 
 /**
+ * Composant optimisé pour une note individuelle
+ * Mémoïsé pour éviter les re-rendus inutiles
+ */
+const OptimizedMusicNote = memo(({ note, adaptiveScale, cameraDistance }) => {
+  // Mémoïser la position pour éviter la re-création d'arrays
+  const position = useMemo(
+    () => [
+      note.currentPosition.x,
+      note.currentPosition.y,
+      note.currentPosition.z,
+    ],
+    [note.currentPosition.x, note.currentPosition.y, note.currentPosition.z]
+  );
+
+  // Mémoïser la rotation pour éviter la re-création d'arrays
+  const rotation = useMemo(() => [0, 0, note.rotation], [note.rotation]);
+
+  // Callback d'erreur mémoïsé pour éviter la re-création
+  const handleError = useMemo(
+    () => (error) => {
+      console.warn(
+        `[MusicNotesEffect] Erreur de chargement SVG pour ${note.type}:`,
+        error
+      );
+    },
+    [note.type]
+  );
+
+  return (
+    <SvgPath
+      svgPath={note.type}
+      size={adaptiveScale}
+      position={position}
+      rotation={rotation}
+      isBillboard={true}
+      opacity={note.opacity}
+      color="white"
+      lineWidth={2}
+      onError={handleError}
+    />
+  );
+});
+
+OptimizedMusicNote.displayName = "OptimizedMusicNote";
+
+/**
  * Composant React pour le rendu de l'effet de notes de musique
  */
 export const MusicNotesEffectRenderer = memo(({ effectData }) => {
   const groupRef = useRef();
-  const { getTexture, isReady } = useAssets();
   const { camera } = useThree();
 
-  // Ne pas rendre si les assets ne sont pas prêts
-  if (!isReady) {
-    console.log("[MusicNotesEffect] Assets pas encore prêts");
-    return null;
-  }
-
-  // Calculer la distance de la caméra à l'effet pour l'échelle adaptative
-  const effectPosition = new THREE.Vector3(
-    effectData.position.x,
-    effectData.position.y,
-    effectData.position.z
+  // Mémoïser la position de l'effet pour éviter la re-création
+  const effectPosition = useMemo(
+    () =>
+      new THREE.Vector3(
+        effectData.position.x,
+        effectData.position.y,
+        effectData.position.z
+      ),
+    [effectData.position.x, effectData.position.y, effectData.position.z]
   );
-  const cameraDistance = camera.position.distanceTo(effectPosition);
+
+  // Calculer la distance de la caméra une seule fois
+  const cameraDistance = useMemo(() => {
+    return camera.position.distanceTo(effectPosition);
+  }, [camera.position, effectPosition]);
+
+  // Mémoïser les paramètres de configuration pour éviter les re-calculs
+  const scaleConfig = useMemo(
+    () => ({
+      minScale: effectData.config?.minScale || 24.0,
+      maxScale: effectData.config?.maxScale || 64.0,
+      scaleDistance: effectData.config?.scaleDistance || 50.0,
+    }),
+    [
+      effectData.config?.minScale,
+      effectData.config?.maxScale,
+      effectData.config?.scaleDistance,
+    ]
+  );
+
+  // Mémoïser les notes filtrées et leurs données de rendu
+  const visibleNotes = useMemo(() => {
+    return effectData.notes
+      .filter((note) => note.opacity > 0.01)
+      .map((note) => {
+        // Calculer l'échelle adaptative pour cette note
+        const baseScale = note.scale || 2.0;
+        const normalizedDistance = cameraDistance / scaleConfig.scaleDistance;
+        const scaleFactor = 1.0 + normalizedDistance * 2.0;
+        const adaptiveScale = Math.min(
+          scaleConfig.maxScale,
+          Math.max(scaleConfig.minScale, baseScale * scaleFactor)
+        );
+
+        return {
+          ...note,
+          adaptiveScale,
+        };
+      });
+  }, [effectData.notes, cameraDistance, scaleConfig]);
+
+  // Debug optimisé - seulement quand nécessaire
+  useMemo(() => {
+    const firstNote = visibleNotes.find((note) => note.id.includes("note_0_"));
+    if (firstNote) {
+      console.log(
+        `[MusicNotesEffect] Distance caméra: ${cameraDistance.toFixed(2)}, ` +
+          `Scale adaptative: ${firstNote.adaptiveScale.toFixed(2)}, ` +
+          `Notes visibles: ${visibleNotes.length}`
+      );
+    }
+  }, [visibleNotes.length, cameraDistance]);
 
   return (
     <group ref={groupRef} name="music-notes-effect">
-      {effectData.notes.map((note) => {
-        // Calculer l'échelle adaptative basée sur la distance de la caméra
-        const baseScale = note.scale || 2.0;
-        // Utiliser les paramètres de configuration si disponibles
-        const minScale = effectData.config?.minScale || 24.0;
-        const maxScale = effectData.config?.maxScale || 64.0;
-        const scaleDistance = effectData.config?.scaleDistance || 50.0;
-
-        // Nouvelle formule d'échelle adaptative plus efficace
-        // Plus on est loin, plus l'échelle augmente pour rester visible
-        const normalizedDistance = cameraDistance / scaleDistance;
-        const scaleFactor = 1.0 + normalizedDistance * 2.0; // Facteur multiplicateur
-        const adaptiveScale = Math.min(
-          maxScale,
-          Math.max(minScale, baseScale * scaleFactor)
-        );
-
-        // Debug: afficher les valeurs de calcul
-        if (note.id.includes("note_0_")) {
-          // Log seulement pour la première note pour éviter le spam
-          console.log(
-            `[MusicNotesEffect] Distance caméra: ${cameraDistance.toFixed(
-              2
-            )}, Scale adaptative: ${adaptiveScale.toFixed(
-              2
-            )}, Base: ${baseScale}, Factor: ${scaleFactor.toFixed(2)}`
-          );
-        }
-
-        // Obtenir la texture de la note
-        const texture = getTexture(note.type);
-
-        // Debug: vérifier si la texture est chargée
-        if (!texture) {
-          console.warn(
-            `[MusicNotesEffect] Texture non trouvée pour: ${note.type}`
-          );
-
-          // Fallback: utiliser une géométrie simple
-          return (
-            <Billboard
-              key={note.id}
-              follow={true}
-              lockX={false}
-              lockY={false}
-              lockZ={false}
-              position={[
-                note.currentPosition.x,
-                note.currentPosition.y,
-                note.currentPosition.z,
-              ]}
-            >
-              <mesh
-                rotation={[0, 0, note.rotation]}
-                scale={[adaptiveScale, adaptiveScale, adaptiveScale]}
-                renderOrder={200}
-              >
-                {/* Fallback: cercle simple */}
-                <circleGeometry args={[0.5, 8]} />
-                <meshBasicMaterial
-                  color="#ffffff"
-                  transparent={true}
-                  opacity={note.opacity}
-                  depthWrite={false}
-                  side={THREE.DoubleSide}
-                />
-              </mesh>
-            </Billboard>
-          );
-        }
-
-        return (
-          <Billboard
-            key={note.id}
-            follow={true}
-            lockX={false}
-            lockY={false}
-            lockZ={false}
-            position={[
-              note.currentPosition.x,
-              note.currentPosition.y,
-              note.currentPosition.z,
-            ]}
-          >
-            <mesh
-              rotation={[0, 0, note.rotation]}
-              scale={[adaptiveScale, adaptiveScale, adaptiveScale]}
-              renderOrder={200}
-            >
-              <planeGeometry args={[1.5, 1.5]} />
-              <meshBasicMaterial
-                map={texture}
-                transparent={true}
-                opacity={note.opacity}
-                depthWrite={false}
-                alphaTest={0.1}
-                side={THREE.DoubleSide}
-              />
-            </mesh>
-          </Billboard>
-        );
-      })}
+      {visibleNotes.map((note) => (
+        <OptimizedMusicNote
+          key={note.id}
+          note={note}
+          adaptiveScale={note.adaptiveScale}
+          cameraDistance={cameraDistance}
+        />
+      ))}
     </group>
   );
 });

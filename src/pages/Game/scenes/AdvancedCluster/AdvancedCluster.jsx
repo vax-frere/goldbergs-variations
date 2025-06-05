@@ -1,4 +1,4 @@
-import React, { memo, useEffect, useMemo, useRef } from "react";
+import React, { memo, useEffect, useMemo, useRef, useState } from "react";
 import { useThree, useFrame } from "@react-three/fiber";
 import * as THREE from "three";
 import useAssets from "../../hooks/useAssets";
@@ -7,13 +7,17 @@ import { findClusterIdBySlug } from "../WorldLevel/components/Graph/utils/utils"
 import AdvancedNode from "./components/AdvancedNode";
 import AdvancedLink from "./components/AdvancedLinkAlt";
 import AdvancedVibLink from "./components/AdvancedVibLink";
+import PersonaPortrait from "./components/PersonaPortrait";
+import BoundingBoxHelper from "./components/BoundingBoxHelper";
 import useCollisionStore, {
   CollisionLayers,
 } from "../../services/CollisionService";
 import textContentService from "../../services/TextContentService";
 import useEffectStore from "../../services/EffectService";
+import AdvancedLinkAlt from "./components/AdvancedLinkAlt";
 
-const BOUNDING_BOX_MARGIN = 200; // Marge autour de la bounding box
+const BOUNDING_BOX_MARGIN = 500; // Marge autour de la bounding box
+const WARNING_DISTANCE = 300; // Distance à laquelle afficher l'avertissement
 
 /**
  * Composant AdvancedCluster - Affiche un cluster en mode avancé
@@ -33,11 +37,18 @@ const AdvancedCluster = memo(() => {
     (state) => state.calculateDetectionPoint
   );
   const setCollisionMask = useCollisionStore((state) => state.setCollisionMask);
-  const initializeAudio = useCollisionStore((state) => state.initializeAudio);
-  const triggerEffect = useEffectStore((state) => state.triggerEffect);
+  const triggerVibRibbonEffect = useEffectStore(
+    (state) => state.triggerVibRibbonEffect
+  );
+  const stopEffect = useEffectStore((state) => state.stopEffect);
   const camera = useThree((state) => state.camera);
   const lastTouchedNodeRef = useRef(null);
   const activeNodeRef = useRef(null); // Pour tracker le nœud actif localement
+  const activeEffectIdRef = useRef(null); // Pour tracker l'effet actif et pouvoir l'arrêter
+  const setShowExitWarning = useGameStore((state) => state.setShowExitWarning); // Utiliser le store
+
+  // Récupérer l'état debug du store
+  const debugMode = useGameStore((state) => state.debug);
 
   // Option pour activer la vibration des liens (peut être contrôlée par un paramètre ou un état)
   const useVibrationLinks = true; // Activé par défaut pour tester
@@ -117,11 +128,6 @@ const AdvancedCluster = memo(() => {
       }))
     );
 
-    // Initialiser l'audio avec la caméra
-    if (camera) {
-      initializeAudio(camera);
-    }
-
     const nodeBoxes = {};
     clusterData.nodes.forEach((node, index) => {
       const box = useCollisionStore
@@ -162,13 +168,15 @@ const AdvancedCluster = memo(() => {
       setCollisionMask(CollisionLayers.CLUSTERS);
       // Nettoyer le TextContentService au démontage
       textContentService.hide();
+      // Nettoyer l'état d'avertissement de sortie
+      setShowExitWarning(false);
     };
   }, [
     clusterData,
     registerNodeBoxes,
     setCollisionMask,
     camera,
-    initializeAudio,
+    setShowExitWarning,
   ]);
 
   // Fonction mémorisée pour vérifier les collisions
@@ -198,14 +206,53 @@ const AdvancedCluster = memo(() => {
         if (lastTouchedNodeRef.current !== nodeKey) {
           lastTouchedNodeRef.current = nodeKey;
 
-          // NOUVEAU: Déclencher l'effet visuel de collision
+          // Arrêter l'effet précédent s'il existe
+          if (activeEffectIdRef.current) {
+            stopEffect(activeEffectIdRef.current);
+            activeEffectIdRef.current = null;
+          }
+
+          // MODERNE: Déclencher l'effet visuel de collision avec l'API spécialisée
           const nodePosition = {
             x: node.data.x || 0,
             y: node.data.y || 0,
             z: node.data.z || 0,
           };
 
-          triggerEffect(nodePosition);
+          console.log(
+            `[AdvancedCluster] Déclenchement effet Vib Ribbon à la position:`,
+            nodePosition
+          );
+
+          // Configuration par défaut du Vib Ribbon (plus fancy)
+          const vibRibbonEffectConfig = {
+            duration: 0.4, // Retour à la durée par défaut
+            maxScale: 3.0, // Retour à l'échelle par défaut
+            color: [1.0, 1.0, 1.0], // Blanc pur
+            opacity: 0.8, // Retour à l'opacité par défaut
+            rayCount: 12, // 12 rayons comme par défaut (plus fancy)
+            rayLength: 1.0, // Retour à la longueur par défaut
+            rayWidth: 0.1, // Retour à la largeur par défaut
+            rayInnerRadius: 3.6, // Retour au rayon intérieur par défaut
+            animationOffset: 0.3, // Retour au décalage par défaut
+            randomFactor: 0.5, // Plus de random comme par défaut
+            randomSeed: Math.random(), // Seed aléatoire pour variation
+          };
+
+          activeEffectIdRef.current = triggerVibRibbonEffect(
+            nodePosition,
+            vibRibbonEffectConfig,
+            // Callback de fin d'effet
+            () => {
+              console.log(`[AdvancedCluster] Effet Vib Ribbon terminé`);
+              activeEffectIdRef.current = null;
+            }
+          );
+
+          console.log(
+            `[AdvancedCluster] Effet Vib Ribbon créé avec ID:`,
+            activeEffectIdRef.current
+          );
 
           // Utiliser le TextContentService avec le nodeId sémantique pour avoir les infos complètes
           const semanticNodeId = node.data.originalNodeId || nodeKey;
@@ -235,12 +282,25 @@ const AdvancedCluster = memo(() => {
         if (lastTouchedNodeRef.current !== null) {
           lastTouchedNodeRef.current = null;
           activeNodeRef.current = null;
+
+          // Arrêter l'effet quand on sort du nœud
+          if (activeEffectIdRef.current) {
+            stopEffect(activeEffectIdRef.current);
+            activeEffectIdRef.current = null;
+          }
+
           // Cacher le contenu du TextPanel
           textContentService.hide();
         }
       }
     };
-  }, [camera, calculateDetectionPoint, findContainingNode, triggerEffect]);
+  }, [
+    camera,
+    calculateDetectionPoint,
+    findContainingNode,
+    triggerVibRibbonEffect,
+    stopEffect,
+  ]);
 
   // Utiliser useFrame au lieu de setInterval pour la détection des collisions
   useFrame(() => {
@@ -260,6 +320,16 @@ const AdvancedCluster = memo(() => {
       window.removeEventListener("keydown", handleKeyPress);
     };
   }, [returnToWorld]);
+
+  // Cleanup des effets au démontage du composant
+  useEffect(() => {
+    return () => {
+      if (activeEffectIdRef.current) {
+        stopEffect(activeEffectIdRef.current);
+        activeEffectIdRef.current = null;
+      }
+    };
+  }, [stopEffect]);
 
   // Vérifier si la caméra sort des limites du cluster
   useFrame(() => {
@@ -287,25 +357,54 @@ const AdvancedCluster = memo(() => {
         maxZ = Math.max(maxZ, z);
       });
 
-      // Ajouter une marge
-      minX -= BOUNDING_BOX_MARGIN;
-      maxX += BOUNDING_BOX_MARGIN;
-      minY -= BOUNDING_BOX_MARGIN;
-      maxY += BOUNDING_BOX_MARGIN;
-      minZ -= BOUNDING_BOX_MARGIN;
-      maxZ += BOUNDING_BOX_MARGIN;
+      // Limites avec marge complète (sortie automatique)
+      const exitMinX = minX - BOUNDING_BOX_MARGIN;
+      const exitMaxX = maxX + BOUNDING_BOX_MARGIN;
+      const exitMinY = minY - BOUNDING_BOX_MARGIN;
+      const exitMaxY = maxY + BOUNDING_BOX_MARGIN;
+      const exitMinZ = minZ - BOUNDING_BOX_MARGIN;
+      const exitMaxZ = maxZ + BOUNDING_BOX_MARGIN;
 
-      // Vérifier si la caméra est dans les limites
+      // Limites avec marge réduite (avertissement)
+      const warningMinX = minX - (BOUNDING_BOX_MARGIN - WARNING_DISTANCE);
+      const warningMaxX = maxX + (BOUNDING_BOX_MARGIN - WARNING_DISTANCE);
+      const warningMinY = minY - (BOUNDING_BOX_MARGIN - WARNING_DISTANCE);
+      const warningMaxY = maxY + (BOUNDING_BOX_MARGIN - WARNING_DISTANCE);
+      const warningMinZ = minZ - (BOUNDING_BOX_MARGIN - WARNING_DISTANCE);
+      const warningMaxZ = maxZ + (BOUNDING_BOX_MARGIN - WARNING_DISTANCE);
+
       const pos = camera.position;
-      if (
-        pos.x < minX ||
-        pos.x > maxX ||
-        pos.y < minY ||
-        pos.y > maxY ||
-        pos.z < minZ ||
-        pos.z > maxZ
-      ) {
+
+      // Vérifier si la caméra est dans la zone d'avertissement
+      const isInWarningZone =
+        pos.x < warningMinX ||
+        pos.x > warningMaxX ||
+        pos.y < warningMinY ||
+        pos.y > warningMaxY ||
+        pos.z < warningMinZ ||
+        pos.z > warningMaxZ;
+
+      // Vérifier si la caméra est complètement sortie
+      const isOutOfBounds =
+        pos.x < exitMinX ||
+        pos.x > exitMaxX ||
+        pos.y < exitMinY ||
+        pos.y > exitMaxY ||
+        pos.z < exitMinZ ||
+        pos.z > exitMaxZ;
+
+      // Gérer l'affichage de l'avertissement
+      const currentShowExitWarning = useGameStore.getState().showExitWarning;
+      if (isInWarningZone && !currentShowExitWarning) {
+        setShowExitWarning(true);
+      } else if (!isInWarningZone && currentShowExitWarning) {
+        setShowExitWarning(false);
+      }
+
+      // Sortie automatique si complètement hors limites
+      if (isOutOfBounds) {
         console.log("Camera out of bounds, returning to world");
+        setShowExitWarning(false); // Cacher l'avertissement avant de sortir
         returnToWorld();
       }
     };
@@ -320,6 +419,9 @@ const AdvancedCluster = memo(() => {
 
   return (
     <group>
+      {/* Helper pour visualiser les limites du cluster */}
+      <BoundingBoxHelper nodes={clusterData.nodes} showHelper={debugMode} />
+
       {/* Éclairage spécifique pour le mode avancé */}
       <ambientLight intensity={0.6} />
       <directionalLight position={[10, 10, 5]} intensity={1.2} />
@@ -371,6 +473,9 @@ const AdvancedCluster = memo(() => {
           />
         );
       })}
+
+      {/* Persona portrait */}
+      <PersonaPortrait clusterId={clusterData.clusterId} assets={assets} />
     </group>
   );
 });

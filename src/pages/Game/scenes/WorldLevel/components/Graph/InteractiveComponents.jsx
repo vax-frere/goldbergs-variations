@@ -6,6 +6,9 @@ import useCollisionStore, {
 } from "../../../../services/CollisionService";
 import { useInputs } from "../../../../components/AdvancedCameraController/inputManager";
 import textContentService from "../../../../services/TextContentService";
+import SvgPath from "../../../../components/SvgPath";
+import VibSvgPath from "../../../../components/VibSvgPath";
+import useAssets from "../../../../hooks/useAssets";
 
 const DEFAULT_BOUNDING_BOX = {
   width: 20,
@@ -13,7 +16,84 @@ const DEFAULT_BOUNDING_BOX = {
   depth: 20,
 };
 
-const InteractiveComponents = memo(({ components }) => {
+// Composant générique pour les icônes de personnages (déplacé ici)
+const CharacterIcon = memo(
+  ({
+    svgName,
+    position,
+    size = 300,
+    onClick,
+    persona,
+    useVibration = false,
+    vibrationIntensity = 0.2,
+    vibrationSpeed = 1.5,
+  }) => {
+    const assets = useAssets({ autoInit: false });
+    const setActiveLevel = useGameStore((state) => state.setActiveLevel);
+    const groupRef = React.useRef();
+    const [useFallback, setUseFallback] = React.useState(false);
+
+    const handleClick = () => {
+      if (persona) {
+        setActiveLevel(persona);
+        console.log("Active persona set:", persona);
+      }
+      if (onClick) onClick();
+    };
+
+    const handleSvgError = (err) => {
+      console.error(`Erreur SVG ${svgName}:`, err);
+      setUseFallback(true);
+    };
+
+    if (!assets.isReady) return null;
+
+    if (useFallback) {
+      return (
+        <group ref={groupRef} onClick={handleClick} position={position}>
+          <mesh>
+            <sphereGeometry args={[1, 32, 32]} />
+            <meshStandardMaterial color="white" wireframe={true} />
+          </mesh>
+          <mesh position={[0, 1.5, 0]}>
+            <sphereGeometry args={[0.7, 32, 16]} />
+            <meshStandardMaterial color="white" wireframe={true} />
+          </mesh>
+        </group>
+      );
+    }
+
+    // Utiliser directement le nom du fichier comme dans AssetLists.js
+    const svgPath = `${svgName}.svg`;
+
+    const SvgComponent = useVibration ? VibSvgPath : SvgPath;
+
+    return (
+      <group ref={groupRef} onClick={handleClick} position={position}>
+        <SvgComponent
+          svgPath={svgPath}
+          size={size}
+          color="white"
+          lineWidth={2}
+          isBillboard={true}
+          vibrationIntensity={vibrationIntensity}
+          vibrationSpeed={vibrationSpeed}
+          onError={(err) => {
+            console.error(
+              `[InteractiveComponents] Erreur de chargement pour ${svgPath}:`,
+              err
+            );
+            handleSvgError(err);
+          }}
+        />
+      </group>
+    );
+  }
+);
+
+CharacterIcon.displayName = "CharacterIcon";
+
+const InteractiveComponents = memo(({ objectsData }) => {
   const camera = useThree((state) => state.camera);
   const setActiveLevel = useGameStore((state) => state.setActiveLevel);
   const registerComponentBoxes = useCollisionStore(
@@ -26,25 +106,24 @@ const InteractiveComponents = memo(({ components }) => {
     (state) => state.calculateDetectionPoint
   );
   const setCollisionMask = useCollisionStore((state) => state.setCollisionMask);
-  const initializeAudio = useCollisionStore((state) => state.initializeAudio);
   const inputs = useInputs();
   const prevInteract = React.useRef(false);
   const lastComponentId = React.useRef(null);
 
-  // Mémoiser la création des boîtes de collision
+  // Mémoiser la création des boîtes de collision à partir des données brutes
   const componentBoxes = useMemo(() => {
-    if (!components?.length) return {};
+    if (!objectsData?.length) return {};
 
     const boxes = {};
-    components.forEach((component) => {
+    objectsData.forEach((obj) => {
       const position = {
-        x: component.position?.[0] || 0,
-        y: component.position?.[1] || 0,
-        z: component.position?.[2] || 0,
+        x: obj.position?.[0] || 0,
+        y: obj.position?.[1] || 0,
+        z: obj.position?.[2] || 0,
       };
 
       // Utiliser les dimensions personnalisées ou les valeurs par défaut
-      const dimensions = component.boundingBox || DEFAULT_BOUNDING_BOX;
+      const dimensions = obj.boundingBox || DEFAULT_BOUNDING_BOX;
       const halfWidth = dimensions.width / 2;
       const halfHeight = dimensions.height / 2;
       const halfDepth = dimensions.depth / 2;
@@ -65,21 +144,21 @@ const InteractiveComponents = memo(({ components }) => {
         size: dimensions,
         layer: CollisionLayers.NODES,
         data: {
-          id: component.id,
-          text: component.text,
-          position: component.position,
-          isInteractive: component.isInteractive !== false, // Par défaut true sauf si explicitement false
-          targetLevel: component.targetLevel, // Ajouter le niveau cible s'il existe
+          id: obj.id,
+          text: obj.text,
+          position: obj.interactivePosition || obj.position,
+          isInteractive: obj.isInteractive !== false, // Par défaut true sauf si explicitement false
+          targetLevel: obj.targetLevel, // Ajouter le niveau cible s'il existe
           // Ajouter les données pour le TextContentService
-          contentData: component.contentData || null, // Données spécifiques pour le contenu
+          contentData: obj.contentData || null, // Données spécifiques pour le contenu
         },
       };
 
-      boxes[component.id] = box;
+      boxes[obj.id] = box;
     });
 
     return boxes;
-  }, [components]);
+  }, [objectsData]);
 
   // Mémoiser la fonction de vérification des collisions
   const checkCollisions = useCallback(() => {
@@ -140,12 +219,7 @@ const InteractiveComponents = memo(({ components }) => {
 
   // Enregistrer les boîtes de collision
   useEffect(() => {
-    if (!components?.length) return;
-
-    // Initialiser l'audio avec la caméra
-    if (camera) {
-      initializeAudio(camera);
-    }
+    if (!objectsData?.length) return;
 
     registerComponentBoxes(componentBoxes);
     setCollisionMask(CollisionLayers.CLUSTERS | CollisionLayers.NODES);
@@ -160,9 +234,7 @@ const InteractiveComponents = memo(({ components }) => {
     componentBoxes,
     registerComponentBoxes,
     setCollisionMask,
-    components?.length,
-    camera,
-    initializeAudio,
+    objectsData?.length,
   ]);
 
   // Utiliser useFrame au lieu de setInterval pour la détection des collisions
@@ -172,11 +244,23 @@ const InteractiveComponents = memo(({ components }) => {
 
   return (
     <group>
-      {components?.map((component) => (
-        <group key={component.id}>{component.element}</group>
+      {objectsData?.map((obj) => (
+        <group key={obj.id}>
+          <CharacterIcon
+            svgName={obj.svgName}
+            position={obj.position}
+            size={obj.size}
+            useVibration={obj.useVibration}
+            vibrationIntensity={obj.vibrationIntensity}
+            vibrationSpeed={obj.vibrationSpeed}
+            persona={obj.persona}
+          />
+        </group>
       ))}
     </group>
   );
 });
+
+InteractiveComponents.displayName = "InteractiveComponents";
 
 export default InteractiveComponents;

@@ -143,7 +143,7 @@ export const DebugNavigationUI = ({ graphRef }) => {
         borderRadius: "5px",
         fontSize: "14px",
         zIndex: 1000,
-        maxWidth: "350px",
+        width: "320px",
       }}
     >
       <div
