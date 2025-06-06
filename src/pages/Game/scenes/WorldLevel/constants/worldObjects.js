@@ -14,7 +14,9 @@ export const WORLD_INTERACTIVE_OBJECTS = [
       type: "persona",
     },
     text: "Joshua Goldberg - Le créateur des variations",
-    isInteractive: false,
+    isInteractive: true,
+    interactionType: "audio_fragment",
+    audioFragment: "intro",
     boundingBox: {
       width: 200,
       height: 300,

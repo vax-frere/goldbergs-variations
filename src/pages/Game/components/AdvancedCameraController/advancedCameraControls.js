@@ -299,6 +299,13 @@ export class FlightController {
     window.__accelerationFactor = accelerationFactor;
     window.__activeDeviceInFlight = this.activeDevice;
 
+    // Exposer les vitesses d'orientation pour le calcul du son d'accélération
+    window.__orientationVelocity = {
+      yaw: Math.abs(this.orientationVelocity.yaw),
+      pitch: Math.abs(this.orientationVelocity.pitch),
+      roll: Math.abs(this.orientationVelocity.roll),
+    };
+
     // Système d'inertie pour l'orientation avec accélération progressive
     // Mouvement (utilise le lissage simple)
     this.input.thrust +=

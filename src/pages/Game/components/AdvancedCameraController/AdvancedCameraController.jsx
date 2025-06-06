@@ -1,22 +1,20 @@
 import { useState, useEffect, useRef } from "react";
 import { useThree, useFrame } from "@react-three/fiber";
 import { Vector3 } from "three";
-import useSound from "use-sound";
 import {
   FlightController,
   calculateCameraTransition,
+  DEFAULT_FLIGHT_CONFIG,
 } from "./advancedCameraControls";
 import {
   CAMERA_POSITIONS,
   CAMERA_MODES,
-  DEFAULT_FLIGHT_CONFIG,
   CAMERA_FOV,
   AUTO_ROTATE_DELAY,
   AUTO_ORBIT_DELAY,
   TRANSITION_DURATION,
-  ORBIT_SETTINGS,
-  AUDIO_SETTINGS,
   ORBIT_DISTANCE,
+  ORBIT_SETTINGS,
 } from "./navigationConstants";
 import { getInputManager, useInputs } from "./inputManager";
 import {
@@ -25,6 +23,8 @@ import {
   sendStartCountingSignal,
 } from "./CameraIndicators";
 import useGameStore from "../../store";
+import useAudioManager from "../../services/AudioManager";
+import useNavigationAudio from "../../hooks/useNavigationAudio";
 
 /**
  * Contrôleur de caméra avancé en mode vol libre uniquement
@@ -65,124 +65,24 @@ export function AdvancedCameraController({
   const [autoRotateEnabled, setAutoRotateEnabled] = useState(false);
   const lastInteractionTime = useRef(Date.now());
   const autoRotateTimerId = useRef(null);
-  const AUTO_ROTATE_SPEED = ORBIT_SETTINGS.AUTO_ROTATE_SPEED;
   const [orbitModeActive, setOrbitModeActive] = useState(false);
   const orbitTimerId = useRef(null);
   const orbitAttempted = useRef(false); // Nouvel état pour suivre les tentatives d'activation
 
-  // Paramètres d'orbite et de rotation
-  const ORBIT_SPEED = ORBIT_SETTINGS.SPEED;
-  const ORBIT_YAW = ORBIT_SETTINGS.YAW;
-  const ORBIT_PITCH = ORBIT_SETTINGS.PITCH;
-  const ORBIT_ACCELERATION_TIME = ORBIT_SETTINGS.ACCELERATION_TIME;
-
   // Timers et références pour l'accélération
   const orbitStartTime = useRef(null);
 
-  // Sound for acceleration - utiliser deux instances pour des transitions douces
-  const [
-    playAcceleration1,
-    { stop: stopAcceleration1, sound: accelerationSound1 },
-  ] = useSound(`${import.meta.env.BASE_URL}sounds/acceleration.mp3`, {
-    volume: 0,
-    loop: true,
-    interrupt: false,
-    soundEnabled: true,
-    playbackRate: 1,
+  // Audio system - NOUVEAU SYSTÈME SOLID
+  const audioManager = useAudioManager();
+  const navigationAudio = useNavigationAudio({
+    enabled: true,
+    autoInitialize: true,
   });
-
-  const [
-    playAcceleration2,
-    { stop: stopAcceleration2, sound: accelerationSound2 },
-  ] = useSound(`${import.meta.env.BASE_URL}sounds/acceleration.mp3`, {
-    volume: 0,
-    loop: true,
-    interrupt: false,
-    soundEnabled: true,
-    playbackRate: 1,
-  });
-
-  // Référence à l'instance active du son
-  const activeAccelerationSound = useRef(null);
-  const accelerationPlaying = useRef(false);
-  const currentAccelerationVolume = useRef(0);
-  const currentAccelerationPitch = useRef(1);
 
   // Référence pour stocker la position précédente de la caméra
   const previousCameraPosition = useRef(new Vector3());
   // Référence pour stocker la vitesse réelle calculée de la caméra
   const realCameraSpeed = useRef(0);
-
-  // Fonction pour démarrer le son avec un fondu
-  const startAccelerationSound = () => {
-    if (!accelerationPlaying.current) {
-      // Déterminer quelle instance utiliser (alterner entre les deux)
-      const useFirstInstance =
-        !activeAccelerationSound.current ||
-        activeAccelerationSound.current === accelerationSound2;
-
-      // Stopper l'instance précédente si elle existe
-      if (activeAccelerationSound.current) {
-        if (activeAccelerationSound.current === accelerationSound1) {
-          stopAcceleration1();
-        } else {
-          stopAcceleration2();
-        }
-      }
-
-      // Configurer et démarrer la nouvelle instance
-      if (useFirstInstance) {
-        // Démarrer la première instance à volume zéro
-        accelerationSound1.volume(0);
-        playAcceleration1();
-        activeAccelerationSound.current = accelerationSound1;
-      } else {
-        // Démarrer la seconde instance à volume zéro
-        accelerationSound2.volume(0);
-        playAcceleration2();
-        activeAccelerationSound.current = accelerationSound2;
-      }
-
-      accelerationPlaying.current = true;
-
-      // S'assurer que le volume commence à zéro
-      currentAccelerationVolume.current = 0;
-    }
-  };
-
-  // Fonction pour arrêter le son avec un fondu
-  const stopAccelerationSound = () => {
-    if (accelerationPlaying.current && activeAccelerationSound.current) {
-      // Créer un fondu de sortie progressif
-      const currentVolume = currentAccelerationVolume.current;
-      let fadeStep = currentVolume / AUDIO_SETTINGS.FADE_STEPS;
-      let currentStep = 0;
-
-      // Utiliser un intervalle pour créer un fondu de sortie manuel
-      const fadeInterval = setInterval(() => {
-        currentStep++;
-        const newVolume = Math.max(0, currentVolume - fadeStep * currentStep);
-
-        if (activeAccelerationSound.current) {
-          activeAccelerationSound.current.volume(newVolume);
-        }
-
-        if (currentStep >= AUDIO_SETTINGS.FADE_STEPS || newVolume <= 0) {
-          clearInterval(fadeInterval);
-
-          // Arrêter le son une fois le fondu terminé
-          if (activeAccelerationSound.current === accelerationSound1) {
-            stopAcceleration1();
-          } else {
-            stopAcceleration2();
-          }
-
-          accelerationPlaying.current = false;
-          activeAccelerationSound.current = null;
-        }
-      }, AUDIO_SETTINGS.FADE_INTERVAL); // Intervalles de 20ms
-    }
-  };
 
   // Récupérer les entrées unifiées (clavier et manette)
   const inputs = useInputs();
@@ -586,79 +486,60 @@ export function AdvancedCameraController({
 
   // Animation by frame for flight mode and transitions
   useFrame((state, delta) => {
-    // Initialiser la position précédente si c'est la première frame
-    if (!previousCameraPosition.current.x && camera) {
-      previousCameraPosition.current.copy(camera.position);
+    if (!camera || !flightController.current) return;
+
+    const cameraObj = camera;
+    const controller = flightController.current;
+
+    // Initialize audio manager if needed
+    if (!audioManager.isInitialized) {
+      audioManager.initialize(cameraObj);
     }
 
-    // Calculer la vitesse réelle de la caméra pour tous les modes
-    const realSpeed = calculateRealCameraSpeed(camera, delta);
+    // Calculate real speed for audio - NOUVEAU SYSTÈME SOLID
+    const currentPosition = cameraObj.position.clone();
+    if (previousCameraPosition.current) {
+      const distance = currentPosition.distanceTo(
+        previousCameraPosition.current
+      );
+      const realSpeed = distance / delta;
 
-    // Gestion du son d'accélération basée sur la vitesse réelle
-    // Abaisser le seuil pour plus de sensibilité
-    if (realSpeed > 0.01) {
-      if (!accelerationPlaying.current) {
-        startAccelerationSound();
-      }
+      // Get orientation velocity from global state
+      const orientationVel = window.__orientationVelocity || {
+        yaw: 0,
+        pitch: 0,
+        roll: 0,
+      };
 
-      // Ajuster le volume et le pitch en fonction de la vitesse réelle
-      if (activeAccelerationSound.current && accelerationPlaying.current) {
-        // Volume basé sur la vitesse (augmenter la sensibilité)
-        const targetVolume = Math.min(realSpeed * 4, 1);
-        currentAccelerationVolume.current =
-          currentAccelerationVolume.current * 0.95 + targetVolume * 0.05;
+      // Calculer la vitesse d'orientation combinée
+      const orientationSpeed = Math.sqrt(
+        orientationVel.yaw * orientationVel.yaw +
+          orientationVel.pitch * orientationVel.pitch +
+          orientationVel.roll * orientationVel.roll
+      );
 
-        // Pitch basé sur la vitesse
-        const targetPitch = 0.8 + realSpeed * 0.8; // Range from 0.8 to 1.6
-        currentAccelerationPitch.current =
-          (currentAccelerationPitch.current || 1) * 0.95 + targetPitch * 0.05;
-
-        // Appliquer les changements
-        activeAccelerationSound.current.volume(
-          currentAccelerationVolume.current
-        );
-
-        // Appliquer la modulation de hauteur (pitch)
-        try {
-          if (typeof activeAccelerationSound.current.rate === "function") {
-            activeAccelerationSound.current.rate(
-              currentAccelerationPitch.current
-            );
-          } else if (
-            activeAccelerationSound.current._sounds &&
-            activeAccelerationSound.current._sounds.length > 0
-          ) {
-            activeAccelerationSound.current._sounds.forEach((sound) => {
-              if (
-                sound._node &&
-                typeof sound._node.playbackRate !== "undefined"
-              ) {
-                sound._node.playbackRate.value =
-                  currentAccelerationPitch.current;
-              }
-            });
-          }
-        } catch (error) {
-          // Silencieux en cas d'erreur
-        }
-      }
-    } else if (realSpeed <= 0.01 && accelerationPlaying.current) {
-      stopAccelerationSound();
+      // NOUVEAU SYSTÈME SOLID - Utiliser le NavigationAudioService
+      navigationAudio.updateNavigationState({
+        realSpeed: realSpeed,
+        orientationSpeed: orientationSpeed,
+        combinedSpeed: Math.max(realSpeed, orientationSpeed),
+      });
     }
+    previousCameraPosition.current = currentPosition;
 
     // Exposer les positions de la caméra et de sa cible pour l'interface utilisateur
-    if (camera) {
+    if (cameraObj) {
       // Exposer la position actuelle
       window.__cameraPosition = {
-        x: camera.position.x,
-        y: camera.position.y,
-        z: camera.position.z,
+        x: cameraObj.position.x,
+        y: cameraObj.position.y,
+        z: cameraObj.position.z,
       };
 
       // Calculer et exposer une approximation de la cible
       const target = new Vector3(0, 0, -100)
-        .applyQuaternion(camera.quaternion)
-        .add(camera.position);
+        .applyQuaternion(cameraObj.quaternion)
+        .add(cameraObj.position);
       window.__cameraTarget = {
         x: target.x,
         y: target.y,
@@ -686,12 +567,15 @@ export function AdvancedCameraController({
 
     // Handle camera transitions
     if (transitioning.current.active) {
+      // NOUVEAU SYSTÈME SOLID - Arrêter l'audio pendant les transitions
+      navigationAudio.forceStop();
+
       const elapsed = (Date.now() - transitioning.current.startTime) / 1000;
       const progress = Math.min(elapsed / transitioning.current.duration, 1);
 
       // Calculer la nouvelle position et orientation de la caméra
       calculateCameraTransition(
-        camera,
+        cameraObj,
         null, // On n'utilise plus controlsRef ici
         {
           position: transitioning.current.startPosition,
@@ -718,9 +602,11 @@ export function AdvancedCameraController({
         }
 
         console.log(
-          `📊 MODE: Transition complétée, position finale: [${camera.position.x.toFixed(
+          `📊 MODE: Transition complétée, position finale: [${cameraObj.position.x.toFixed(
             2
-          )}, ${camera.position.y.toFixed(2)}, ${camera.position.z.toFixed(2)}]`
+          )}, ${cameraObj.position.y.toFixed(
+            2
+          )}, ${cameraObj.position.z.toFixed(2)}]`
         );
 
         // Reset input handler for allowing new transitions
@@ -736,6 +622,9 @@ export function AdvancedCameraController({
     }
     // Mode orbite automatique
     else if (orbitModeActive && flightController.current) {
+      // NOUVEAU SYSTÈME SOLID - Arrêter l'audio en mode orbite
+      navigationAudio.forceStop();
+
       // En mode orbite, on applique une rotation lente autour de la sphère
       // Log moins fréquent pour éviter de saturer la console
       if (Math.random() < 0.01) {
@@ -751,10 +640,10 @@ export function AdvancedCameraController({
       if (orbitStartTime.current) {
         const elapsedTime = (Date.now() - orbitStartTime.current) / 1000; // en secondes
 
-        if (elapsedTime < ORBIT_ACCELERATION_TIME) {
+        if (elapsedTime < ORBIT_SETTINGS.ACCELERATION_TIME) {
           // Utiliser une courbe d'accélération cubique (easeInOutCubic)
           // qui démarre doucement, accélère au milieu, puis ralentit l'accélération vers la fin
-          const progress = elapsedTime / ORBIT_ACCELERATION_TIME;
+          const progress = elapsedTime / ORBIT_SETTINGS.ACCELERATION_TIME;
 
           // Courbe easeInOutCubic
           accelerationFactor =
@@ -778,21 +667,21 @@ export function AdvancedCameraController({
         thrust: 0,
         lateral: 0,
         upDown: 0,
-        yaw: ORBIT_YAW * accelerationFactor,
-        pitch: ORBIT_PITCH * accelerationFactor,
+        yaw: ORBIT_SETTINGS.YAW * accelerationFactor,
+        pitch: ORBIT_SETTINGS.PITCH * accelerationFactor,
         roll: 0,
       };
 
       // Calculer un mouvement orbital RÉEL autour du centre
       // Obtenir la position actuelle par rapport au centre
-      const position = camera.position.clone();
+      const position = cameraObj.position.clone();
       const distance = position.length();
 
       // Maintenir la distance avec le centre (0,0,0)
       if (Math.abs(distance - ORBIT_DISTANCE) > 10) {
         const direction = position.clone().normalize();
         const targetPos = direction.multiplyScalar(ORBIT_DISTANCE);
-        camera.position.lerp(targetPos, 0.05);
+        cameraObj.position.lerp(targetPos, 0.05);
       }
 
       // ---------- AJOUT DU MOUVEMENT ORBITAL ----------
@@ -800,24 +689,24 @@ export function AdvancedCameraController({
       // en plus de la rotation de la caméra elle-même
 
       // 1. Calculer l'angle actuel dans le plan XZ
-      const angleXZ = Math.atan2(camera.position.x, camera.position.z);
+      const angleXZ = Math.atan2(cameraObj.position.x, cameraObj.position.z);
 
       // 2. Créer un nouvel angle en ajoutant une rotation (plus rapide que le yaw pour un effet visible)
       // Appliquer également le facteur d'accélération à la vitesse de déplacement orbital
-      const orbitSpeed = ORBIT_SPEED * delta * accelerationFactor;
+      const orbitSpeed = ORBIT_SETTINGS.SPEED * delta * accelerationFactor;
       const newAngleXZ = angleXZ + orbitSpeed;
 
       // 3. Calculer la nouvelle position en conservant la même hauteur et distance
       const horizontalDistance = Math.sqrt(
-        camera.position.x * camera.position.x +
-          camera.position.z * camera.position.z
+        cameraObj.position.x * cameraObj.position.x +
+          cameraObj.position.z * cameraObj.position.z
       );
       const newX = Math.sin(newAngleXZ) * horizontalDistance;
       const newZ = Math.cos(newAngleXZ) * horizontalDistance;
 
       // 4. Appliquer la nouvelle position tout en maintenant la hauteur (Y)
-      camera.position.x = newX;
-      camera.position.z = newZ;
+      cameraObj.position.x = newX;
+      cameraObj.position.z = newZ;
 
       // Fin des ajouts pour le mouvement orbital
 
@@ -826,7 +715,7 @@ export function AdvancedCameraController({
       flightController.current.update(delta);
 
       // S'assurer que la caméra pointe toujours vers le centre
-      camera.lookAt(0, 0, 0);
+      cameraObj.lookAt(0, 0, 0);
     }
     // On est en mode vol, mais pas en transition ni en mode orbite
     else if (flightController.current && !transitioning.current.active) {
@@ -869,7 +758,7 @@ export function AdvancedCameraController({
         // Add slight horizontal rotation
         flightController.current.setInput({
           ...flightInput,
-          yaw: AUTO_ROTATE_SPEED,
+          yaw: ORBIT_SETTINGS.AUTO_ROTATE_SPEED,
         });
       }
     }
@@ -1008,34 +897,13 @@ export function AdvancedCameraController({
     }
   }, [config]);
 
-  // Nettoyer la référence globale lors du démontage
+  // Cleanup function to stop acceleration sound when component unmounts or mode changes
   useEffect(() => {
     return () => {
-      // Supprimer la référence globale quand le composant est démonté
-      if (window.__animateToCameraPosition === animateToCameraPosition) {
-        window.__animateToCameraPosition = null;
-      }
-
-      // Nettoyer les timers d'autorotation et d'orbite
-      if (autoRotateTimerId.current) {
-        clearTimeout(autoRotateTimerId.current);
-      }
-
-      if (orbitTimerId.current) {
-        clearTimeout(orbitTimerId.current);
-      }
-
-      // Arrêter le son d'accélération
-      if (accelerationPlaying.current) {
-        if (activeAccelerationSound.current === accelerationSound1) {
-          stopAcceleration1();
-        } else if (activeAccelerationSound.current === accelerationSound2) {
-          stopAcceleration2();
-        }
-        accelerationPlaying.current = false;
-      }
+      // NOUVEAU SYSTÈME SOLID - Nettoyage automatique via le hook
+      // Le hook useNavigationAudio gère automatiquement le nettoyage
     };
-  }, [stopAcceleration1, stopAcceleration2]);
+  }, []);
 
   // Stocker la référence à la caméra dans le store du jeu pour le service de collision
   useEffect(() => {

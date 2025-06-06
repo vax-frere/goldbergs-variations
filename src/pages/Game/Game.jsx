@@ -4,7 +4,7 @@ import { Stats } from "@react-three/drei";
 import useSound from "use-sound";
 import useGameStore, { useIsTransitioning } from "./store";
 import useAssets from "./hooks/useAssets";
-import useAudioService from "./services/AudioService";
+import useAudioManager from "./services/AudioManager";
 import { EffectComposer } from "@react-three/postprocessing";
 import { Bloom, ToneMapping } from "@react-three/postprocessing";
 import {
@@ -44,7 +44,7 @@ const CollisionManager = memo(() => {
   const setHoveredCluster = useGameStore((state) => state.setHoveredCluster);
   const activeLevel = useGameStore((state) => state.activeLevel);
   const assets = useAssets();
-  const initializeAudio = useAudioService((state) => state.initializeAudio);
+  const audioManager = useAudioManager();
 
   // Fonction pour trouver les données d'un cluster
   const findClusterData = useCallback(
@@ -84,17 +84,27 @@ const CollisionManager = memo(() => {
 
   // Initialiser le service de collision et audio
   useEffect(() => {
-    setCollisionMask(CollisionLayers.CLUSTERS | CollisionLayers.NODES);
+    const newMask =
+      CollisionLayers.CLUSTERS |
+      CollisionLayers.NODES |
+      CollisionLayers.INTERACTIVE;
+    console.log("[Game] Setting collision mask to:", newMask);
+    console.log(
+      "[Game] CLUSTERS:",
+      CollisionLayers.CLUSTERS,
+      "NODES:",
+      CollisionLayers.NODES,
+      "INTERACTIVE:",
+      CollisionLayers.INTERACTIVE
+    );
+    setCollisionMask(newMask);
     setDebugMode(debug);
-
-    // Initialiser le service audio positionnel
-    initializeAudio(camera);
 
     return () => {
       setCollisionMask(CollisionLayers.NONE);
       setDebugMode(false);
     };
-  }, [setCollisionMask, setDebugMode, debug, initializeAudio, camera]);
+  }, [setCollisionMask, setDebugMode, debug]);
 
   // Gérer les détections de collision avec setInterval
   useEffect(() => {
@@ -356,7 +366,7 @@ const GameCanvas = memo(({ children }) => {
 const Game = () => {
   const activeLevel = useGameStore((state) => state.activeLevel);
   const assets = useAssets({ autoInit: true });
-  const initializeAudio = useAudioService((state) => state.initializeAudio);
+  const audioManager = useAudioManager();
   const [gameReady, setGameReady] = useState(false);
   const [audioProgress, setAudioProgress] = useState(0);
   const [loadingStage, setLoadingStage] = useState(0);

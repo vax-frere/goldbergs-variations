@@ -15,6 +15,7 @@ export const ASSET_TYPES = {
   DATA: "data",
   JSON: "json",
   TEXT: "text", // Nouveau type pour les fichiers texte (comme SRT)
+  SVG: "svg", // Nouveau type pour les SVG React (contenu brut)
 };
 
 /**
@@ -85,6 +86,17 @@ const useAssetStore = create((set, get) => ({
       });
     }
 
+    // Ajouter les SVG HUD
+    if (assetLists.hudSvgs) {
+      assetLists.hudSvgs.forEach((svg) => {
+        assetsToPreload.push({
+          id: svg.id,
+          url: svg.url,
+          type: ASSET_TYPES.SVG,
+        });
+      });
+    }
+
     // Commencer le préchargement
     if (assetsToPreload.length > 0) {
       get().preloadAssets(assetsToPreload);
@@ -130,6 +142,9 @@ const useAssetStore = create((set, get) => ({
         case ASSET_TYPES.TEXT:
           loadText(asset.url, asset.id, onAssetLoaded, onAssetError);
           break;
+        case ASSET_TYPES.SVG:
+          loadSVG(asset.url, asset.id, onAssetLoaded, onAssetError);
+          break;
         default:
           console.warn(
             `[AssetManager] Type d'asset non pris en charge: ${asset.type}`
@@ -158,6 +173,9 @@ const useAssetStore = create((set, get) => ({
         case ASSET_TYPES.DATA:
         case ASSET_TYPES.TEXT:
           newAssets.data[id] = asset;
+          break;
+        case ASSET_TYPES.SVG:
+          newAssets.data[id] = asset; // Stocker les SVG dans data aussi
           break;
       }
 
@@ -223,6 +241,7 @@ const useAssetStore = create((set, get) => ({
       case ASSET_TYPES.JSON:
       case ASSET_TYPES.DATA:
       case ASSET_TYPES.TEXT:
+      case ASSET_TYPES.SVG:
         return assets.data[id] || null;
       default:
         console.warn(`[AssetManager] Type d'asset non pris en charge: ${type}`);
@@ -255,6 +274,15 @@ const useAssetStore = create((set, get) => ({
    */
   getData: (id) => {
     return get().getAsset(id, ASSET_TYPES.DATA);
+  },
+
+  /**
+   * Obtenir un SVG par son ID (contenu brut pour React)
+   * @param {string} id - ID du SVG
+   * @returns {string|null} - Le contenu SVG demandé ou null
+   */
+  getSVG: (id) => {
+    return get().getAsset(id, ASSET_TYPES.SVG);
   },
 
   /**
@@ -401,6 +429,29 @@ function loadText(url, id, onLoaded, onError) {
     })
     .then((data) => {
       onLoaded(id, data, ASSET_TYPES.TEXT);
+    })
+    .catch((error) => {
+      onError(id, error);
+    });
+}
+
+/**
+ * Fonction utilitaire pour charger un fichier SVG (contenu brut pour React)
+ * @param {string} url - URL du fichier SVG
+ * @param {string} id - ID du fichier
+ * @param {Function} onLoaded - Callback appelé quand le fichier est chargé
+ * @param {Function} onError - Callback appelé en cas d'erreur
+ */
+function loadSVG(url, id, onLoaded, onError) {
+  fetch(url)
+    .then((response) => {
+      if (!response.ok) {
+        throw new Error(`Erreur HTTP: ${response.status}`);
+      }
+      return response.text();
+    })
+    .then((data) => {
+      onLoaded(id, data, ASSET_TYPES.SVG);
     })
     .catch((error) => {
       onError(id, error);

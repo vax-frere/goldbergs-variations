@@ -1,6 +1,6 @@
 import * as THREE from "three";
 import { create } from "zustand";
-import useAudioService from "./AudioService";
+import useAudioManager from "./AudioManager";
 
 /**
  * Définition des layers de collision par défaut
@@ -143,6 +143,7 @@ const useCollisionStore = create((set, get) => ({
 
   // État de debug
   debugMode: false,
+  debugCollision: false, // Debug spécifique pour les collisions
 
   /**
    * Active ou désactive un layer de collision spécifique
@@ -711,8 +712,8 @@ const useCollisionStore = create((set, get) => ({
       // Jouer le son si c'est un nouveau cluster détecté
       if (state.lastDetected.clusterId !== containingCluster.id) {
         // Utiliser le nouveau système audio
-        const audioService = useAudioService.getState();
-        audioService.playHoverSound();
+        const audioManager = useAudioManager.getState();
+        audioManager.playHoverSound();
         state.lastDetected.clusterId = containingCluster.id;
       }
     } else {
@@ -778,8 +779,8 @@ const useCollisionStore = create((set, get) => ({
       // Utiliser l'ID (qui est maintenant le slug) pour la comparaison
       if (state.lastDetected.nodeId !== containingNode.id) {
         // Utiliser le nouveau système audio
-        const audioService = useAudioService.getState();
-        audioService.playHoverSound();
+        const audioManager = useAudioManager.getState();
+        audioManager.playHoverSound();
         state.lastDetected.nodeId = containingNode.id;
       }
     } else {
@@ -796,51 +797,81 @@ const useCollisionStore = create((set, get) => ({
    * @returns {Object|null} - Élément contenant le point ou null
    */
   findContainingInteractiveElement: (point = null) => {
-    const state = get();
+    if (get().debugCollision) {
+      console.log("[CollisionService] findContainingInteractiveElement called");
+      console.log(
+        "[CollisionService] collisionEnabled.interactiveElements:",
+        get().collisionEnabled.interactiveElements
+      );
+      console.log("[CollisionService] collisionMask:", get().collisionMask);
+      console.log(
+        "[CollisionService] INTERACTIVE layer:",
+        CollisionLayers.INTERACTIVE
+      );
+      console.log(
+        "[CollisionService] mask check result:",
+        get().isLayerEnabled(CollisionLayers.INTERACTIVE)
+      );
+    }
 
-    // Vérifier si les collisions d'éléments interactifs sont activées
-    if (
-      !state.collisionEnabled.interactiveElements ||
-      !(state.collisionMask & CollisionLayers.INTERACTIVE)
-    ) {
+    const detectionPoint = get().detectionPoint;
+    const mask = get().collisionMask;
+    const layerEnabled = get().isLayerEnabled(CollisionLayers.INTERACTIVE);
+
+    if (!get().collisionEnabled.interactiveElements || !layerEnabled) {
+      if (get().debugCollision) {
+        console.log(
+          "[CollisionService] Interactive elements collision disabled or masked"
+        );
+      }
       return null;
     }
 
-    const checkPoint = point || state.detectionPoint;
+    if (get().debugCollision) {
+      console.log("[CollisionService] detectionPoint:", detectionPoint);
+      console.log(
+        "[CollisionService] Interactive elements count:",
+        Object.keys(get().boundingBoxes.interactiveElements).length
+      );
+      console.log(
+        "[CollisionService] Available elements:",
+        Object.keys(get().boundingBoxes.interactiveElements)
+      );
+    }
+
     let containingElement = null;
     let minDistance = Infinity;
 
-    // Utiliser les boîtes de la référence
-    const elements = state.boundingBoxRefs.interactiveElements;
-
     // Mettre à jour les stats par mutation directe sans provoquer de rendu global
-    state.stats.detectionCalls += 1;
+    get().stats.detectionCalls += 1;
 
     // Parcourir toutes les boîtes englobantes des éléments interactifs
-    Object.entries(elements).forEach(([elementId, element]) => {
-      const box = element;
+    Object.entries(get().boundingBoxes.interactiveElements).forEach(
+      ([elementId, element]) => {
+        const box = element;
 
-      // Utiliser la fonction utilitaire isPointInBoundingBox
-      if (state.isPointInBoundingBox(checkPoint, box)) {
-        // Calculer la distance au centre
-        const distance = state.distanceToBoxCenter(checkPoint, box);
+        // Utiliser la fonction utilitaire isPointInBoundingBox
+        if (get().isPointInBoundingBox(detectionPoint, box)) {
+          // Calculer la distance au centre
+          const distance = get().distanceToBoxCenter(detectionPoint, box);
 
-        // Si cette boîte est plus proche que la précédente, la sélectionner
-        if (distance < minDistance) {
-          minDistance = distance;
-          containingElement = {
-            id: elementId,
-            distance,
-            ...element, // Inclure les métadonnées
-          };
+          // Si cette boîte est plus proche que la précédente, la sélectionner
+          if (distance < minDistance) {
+            minDistance = distance;
+            containingElement = {
+              id: elementId,
+              distance,
+              ...element, // Inclure les métadonnées
+            };
+          }
         }
       }
-    });
+    );
 
     // Mettre à jour les stats par mutation directe sans provoquer de rendu global
     if (containingElement) {
-      state.stats.interactiveElementDetections += 1;
-      state.stats.collisionsFound += 1;
+      get().stats.interactiveElementDetections += 1;
+      get().stats.collisionsFound += 1;
     }
 
     return containingElement;

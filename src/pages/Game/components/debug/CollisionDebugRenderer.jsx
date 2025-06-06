@@ -183,20 +183,21 @@ const CollisionDebugRenderer = () => {
       !debug ||
       !collisionService ||
       !collisionService.boundingBoxRefs ||
-      !collisionService.boundingBoxRefs.nodeBoxes ||
+      !collisionService.boundingBoxRefs.interactiveElements ||
       currentLevel !== GAME_LEVELS.WORLD
     ) {
       return null;
     }
 
     // Trouver le composant actuellement en collision
-    const currentComponent = collisionService.findContainingNode();
-    const activeComponentId = currentComponent?.data?.id;
+    const currentComponent =
+      collisionService.findContainingInteractiveElement();
+    const activeComponentId = currentComponent?.id;
 
-    return Object.entries(collisionService.boundingBoxRefs.nodeBoxes)
-      .map(([componentId, box]) => {
-        const isActive = box.data?.id === activeComponentId;
-        return createBoxLines(box, componentId, isActive, "components");
+    return Object.entries(collisionService.boundingBoxRefs.interactiveElements)
+      .map(([componentId, element]) => {
+        const isActive = componentId === activeComponentId;
+        return createBoxLines(element, componentId, isActive, "components");
       })
       .filter(Boolean);
   }, [debug, collisionService, currentLevel, updateTrigger]);

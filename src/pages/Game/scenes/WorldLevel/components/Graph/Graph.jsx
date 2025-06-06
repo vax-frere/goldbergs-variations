@@ -307,7 +307,11 @@ const Graph = memo(() => {
     registerClusterBoxes(boxesWithData);
 
     // Configurer le masque de collision pour les clusters ET les nodes (composants interactifs)
-    setCollisionMask(CollisionLayers.CLUSTERS | CollisionLayers.NODES);
+    setCollisionMask(
+      CollisionLayers.CLUSTERS |
+        CollisionLayers.NODES |
+        CollisionLayers.INTERACTIVE
+    );
 
     return () => {
       // Nettoyer les boîtes de collision

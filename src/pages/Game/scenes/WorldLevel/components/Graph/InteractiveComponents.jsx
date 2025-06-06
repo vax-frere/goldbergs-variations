@@ -1,4 +1,4 @@
-import React, { memo, useEffect, useMemo, useCallback } from "react";
+import React, { memo, useEffect, useMemo, useCallback, useRef } from "react";
 import { useThree, useFrame } from "@react-three/fiber";
 import useGameStore from "../../../../store";
 import useCollisionStore, {
@@ -9,6 +9,8 @@ import textContentService from "../../../../services/TextContentService";
 import SvgPath from "../../../../components/SvgPath";
 import VibSvgPath from "../../../../components/VibSvgPath";
 import useAssets from "../../../../hooks/useAssets";
+import useAudioManager from "../../../../services/AudioManager";
+import useAudioFragment from "../../../../hooks/useAudioFragment";
 
 const DEFAULT_BOUNDING_BOX = {
   width: 20,
@@ -32,6 +34,11 @@ const CharacterIcon = memo(
     const setActiveLevel = useGameStore((state) => state.setActiveLevel);
     const groupRef = React.useRef();
     const [useFallback, setUseFallback] = React.useState(false);
+
+    // Reset fallback state on svgName change (hot reload)
+    React.useEffect(() => {
+      setUseFallback(false);
+    }, [svgName]);
 
     const handleClick = () => {
       if (persona) {
@@ -71,6 +78,7 @@ const CharacterIcon = memo(
     return (
       <group ref={groupRef} onClick={handleClick} position={position}>
         <SvgComponent
+          key={`${svgPath}-${useVibration ? "vib" : "static"}`} // Force re-render on hot reload
           svgPath={svgPath}
           size={size}
           color="white"
@@ -93,104 +101,191 @@ const CharacterIcon = memo(
 
 CharacterIcon.displayName = "CharacterIcon";
 
-const InteractiveComponents = memo(({ objectsData }) => {
-  const camera = useThree((state) => state.camera);
+const InteractiveComponents = memo(({ objectsData, debug = false }) => {
+  const { camera } = useThree();
   const setActiveLevel = useGameStore((state) => state.setActiveLevel);
-  const registerComponentBoxes = useCollisionStore(
-    (state) => state.registerNodeBoxes
+  const registerInteractiveElement = useCollisionStore(
+    (state) => state.registerInteractiveElement
+  );
+  const unregisterInteractiveElement = useCollisionStore(
+    (state) => state.unregisterInteractiveElement
   );
   const findContainingNode = useCollisionStore(
     (state) => state.findContainingNode
+  );
+  const findContainingInteractiveElement = useCollisionStore(
+    (state) => state.findContainingInteractiveElement
   );
   const calculateDetectionPoint = useCollisionStore(
     (state) => state.calculateDetectionPoint
   );
   const setCollisionMask = useCollisionStore((state) => state.setCollisionMask);
   const inputs = useInputs();
-  const prevInteract = React.useRef(false);
-  const lastComponentId = React.useRef(null);
+  const lastComponentId = useRef(null);
+  const prevInteract = useRef(false);
+  const registeredElements = useRef(new Set()); // Track registered elements
+  const { playFragment } = useAudioFragment();
 
-  // Mémoiser la création des boîtes de collision à partir des données brutes
-  const componentBoxes = useMemo(() => {
-    if (!objectsData?.length) return {};
-
-    const boxes = {};
-    objectsData.forEach((obj) => {
-      const position = {
-        x: obj.position?.[0] || 0,
-        y: obj.position?.[1] || 0,
-        z: obj.position?.[2] || 0,
-      };
-
-      // Utiliser les dimensions personnalisées ou les valeurs par défaut
-      const dimensions = obj.boundingBox || DEFAULT_BOUNDING_BOX;
-      const halfWidth = dimensions.width / 2;
-      const halfHeight = dimensions.height / 2;
-      const halfDepth = dimensions.depth / 2;
-
-      // Créer une boîte de collision personnalisée
-      const box = {
-        min: {
-          x: position.x - halfWidth,
-          y: position.y - halfHeight,
-          z: position.z - halfDepth,
-        },
-        max: {
-          x: position.x + halfWidth,
-          y: position.y + halfHeight,
-          z: position.z + halfDepth,
-        },
-        center: position,
-        size: dimensions,
-        layer: CollisionLayers.NODES,
-        data: {
-          id: obj.id,
-          text: obj.text,
-          position: obj.interactivePosition || obj.position,
-          isInteractive: obj.isInteractive !== false, // Par défaut true sauf si explicitement false
-          targetLevel: obj.targetLevel, // Ajouter le niveau cible s'il existe
-          // Ajouter les données pour le TextContentService
-          contentData: obj.contentData || null, // Données spécifiques pour le contenu
-        },
-      };
-
-      boxes[obj.id] = box;
-    });
-
-    return boxes;
+  // Reset refs on hot reload
+  useEffect(() => {
+    lastComponentId.current = null;
+    prevInteract.current = false;
   }, [objectsData]);
 
-  // Mémoiser la fonction de vérification des collisions
+  // Cleanup function to ensure proper cleanup
+  const cleanupInteractiveElements = useCallback(() => {
+    // Unregister all previously registered elements
+    registeredElements.current.forEach((id) => {
+      unregisterInteractiveElement(id);
+    });
+    registeredElements.current.clear();
+
+    // Reset collision mask
+    setCollisionMask(CollisionLayers.CLUSTERS);
+
+    // Hide text content
+    textContentService.hide();
+
+    // Reset component tracking
+    lastComponentId.current = null;
+  }, [unregisterInteractiveElement, setCollisionMask]);
+
+  // Global cleanup on mount to handle hot reload
+  useEffect(() => {
+    return () => {
+      // Final cleanup on unmount
+      cleanupInteractiveElements();
+    };
+  }, [cleanupInteractiveElements]);
+
+  // Créer des boîtes de collision pour chaque objet
+  const componentBoxes = useMemo(() => {
+    if (!objectsData) return {};
+
+    console.log("[InteractiveComponents] objectsData:", objectsData);
+
+    return objectsData.reduce((boxes, obj) => {
+      console.log("[InteractiveComponents] Processing object:", obj);
+
+      if (obj.boundingBox) {
+        const position = obj.interactivePosition || obj.position;
+        console.log(
+          "[InteractiveComponents] Object has boundingBox:",
+          obj.boundingBox,
+          "position:",
+          position
+        );
+
+        boxes[obj.id] = {
+          min: {
+            x: position[0] - obj.boundingBox.width / 2,
+            y: position[1] - obj.boundingBox.height / 2,
+            z: position[2] - obj.boundingBox.depth / 2,
+          },
+          max: {
+            x: position[0] + obj.boundingBox.width / 2,
+            y: position[1] + obj.boundingBox.height / 2,
+            z: position[2] + obj.boundingBox.depth / 2,
+          },
+          center: {
+            x: position[0],
+            y: position[1],
+            z: position[2],
+          },
+          debugColor: [0, 1, 0], // Vert pour les éléments interactifs
+          data: obj, // Stocker les données de l'objet pour faciliter l'accès
+        };
+
+        console.log(
+          "[InteractiveComponents] Created box for",
+          obj.id,
+          ":",
+          boxes[obj.id]
+        );
+      } else {
+        console.log("[InteractiveComponents] Object has no boundingBox:", obj);
+      }
+      return boxes;
+    }, {});
+  }, [objectsData]);
+
+  // Fonction de vérification des collisions avec gestion des interactions
   const checkCollisions = useCallback(() => {
     if (!camera) return;
 
     calculateDetectionPoint(camera);
-    const component = findContainingNode();
+
+    if (debug) {
+      console.log("[InteractiveComponents] Checking collisions...");
+    }
+
+    if (debug) {
+      console.log(
+        "[InteractiveComponents] Calling findContainingInteractiveElement..."
+      );
+    }
+    const component = findContainingInteractiveElement();
+    if (debug) {
+      console.log(
+        "[InteractiveComponents] findContainingInteractiveElement result:",
+        component
+      );
+    }
 
     if (component) {
+      if (debug) {
+        console.log(
+          "[InteractiveComponents] Interactive element found:",
+          component
+        );
+      }
+      if (debug) {
+        console.log("[InteractiveComponents] Component data:", component.data);
+      }
+
       // Afficher le contenu textuel quand on entre dans une nouvelle collision
       if (lastComponentId.current !== component.data.id) {
         lastComponentId.current = component.data.id;
 
+        console.log(
+          "[InteractiveComponents] New component detected, showing text content"
+        );
+
         // Toujours afficher le contenu textuel au hover (pour l'information)
         if (component.data.contentData) {
           // Si on a des données spécifiques pour le contenu
+          console.log(
+            "[InteractiveComponents] Using contentData:",
+            component.data.contentData
+          );
           textContentService.show({
             type: "simple",
             ...component.data.contentData,
             // Ajouter une propriété pour indiquer si c'est vraiment interactif
             isInteractive:
-              component.data.isInteractive && !!component.data.targetLevel,
+              component.data.isInteractive &&
+              (!!component.data.targetLevel ||
+                component.data.interactionType === "audio_fragment"),
           });
         } else if (component.data.text) {
           // Sinon utiliser le texte simple
+          console.log(
+            "[InteractiveComponents] Using simple text:",
+            component.data.text
+          );
           textContentService.show({
             type: "simple",
             text: component.data.text,
             // Ajouter une propriété pour indiquer si c'est vraiment interactif
             isInteractive:
-              component.data.isInteractive && !!component.data.targetLevel,
+              component.data.isInteractive &&
+              (!!component.data.targetLevel ||
+                component.data.interactionType === "audio_fragment"),
           });
+        } else {
+          console.log(
+            "[InteractiveComponents] No text content found for component"
+          );
         }
       }
 
@@ -198,12 +293,56 @@ const InteractiveComponents = memo(({ objectsData }) => {
       const interactTriggered = inputs.interact && !prevInteract.current;
       prevInteract.current = inputs.interact;
 
-      // Si l'action interact vient d'être déclenchée et qu'il y a un niveau cible
-      if (interactTriggered && component.data.targetLevel) {
-        setActiveLevel(component.data.targetLevel);
+      console.log(
+        `[InteractiveComponents] Interact state - triggered: ${interactTriggered}, inputs.interact: ${inputs.interact}, component.data.isInteractive: ${component.data.isInteractive}`
+      );
+
+      // Si l'action interact vient d'être déclenchée
+      if (interactTriggered && component.data.isInteractive) {
+        console.log(
+          "[InteractiveComponents] Interaction triggered for:",
+          component.data
+        );
+
+        // Gérer les différents types d'interaction
+        if (component.data.targetLevel) {
+          // Interaction de changement de niveau (existant)
+          console.log(
+            "[InteractiveComponents] Changing to level:",
+            component.data.targetLevel
+          );
+          setActiveLevel(component.data.targetLevel);
+        } else if (
+          component.data.interactionType === "audio_fragment" &&
+          component.data.audioFragment
+        ) {
+          // Nouvelle interaction audio fragment
+          console.log(
+            `[InteractiveComponents] Playing audio fragment: ${component.data.audioFragment}`
+          );
+          console.log(
+            `[InteractiveComponents] playFragment function:`,
+            playFragment
+          );
+          playFragment(component.data.audioFragment);
+        }
       }
     } else {
+      const nodeComponent = findContainingNode();
+      if (debug) {
+        console.log("[InteractiveComponents] Node found:", nodeComponent);
+      }
       if (lastComponentId.current !== null) {
+        if (debug) {
+          console.log(
+            "[InteractiveComponents] No collision detected, cleaning up"
+          );
+        }
+        if (debug) {
+          console.log(
+            "[InteractiveComponents] No component detected, hiding text content"
+          );
+        }
         lastComponentId.current = null;
         // Cacher le contenu du TextPanel
         textContentService.hide();
@@ -213,28 +352,74 @@ const InteractiveComponents = memo(({ objectsData }) => {
     camera,
     calculateDetectionPoint,
     findContainingNode,
+    findContainingInteractiveElement,
     inputs,
     setActiveLevel,
+    debug,
+    playFragment,
   ]);
 
   // Enregistrer les boîtes de collision
   useEffect(() => {
     if (!objectsData?.length) return;
 
-    registerComponentBoxes(componentBoxes);
-    setCollisionMask(CollisionLayers.CLUSTERS | CollisionLayers.NODES);
+    // Cleanup previous elements first
+    cleanupInteractiveElements();
+
+    if (debug) {
+      console.log(
+        "[InteractiveComponents] Registering component boxes:",
+        componentBoxes
+      );
+    }
+
+    // Enregistrer chaque élément interactif individuellement
+    Object.entries(componentBoxes).forEach(([id, box]) => {
+      if (debug) {
+        console.log(
+          "[InteractiveComponents] Registering interactive element:",
+          id,
+          box
+        );
+      }
+      registerInteractiveElement(id, box, box.data);
+      registeredElements.current.add(id); // Track registered element
+    });
+
+    // Inclure les éléments interactifs dans le masque de collision
+    const newMask =
+      CollisionLayers.CLUSTERS |
+      CollisionLayers.NODES |
+      CollisionLayers.INTERACTIVE;
+    if (debug) {
+      console.log("[InteractiveComponents] Calculated mask:", newMask);
+      console.log(
+        "[InteractiveComponents] CLUSTERS:",
+        CollisionLayers.CLUSTERS,
+        "NODES:",
+        CollisionLayers.NODES,
+        "INTERACTIVE:",
+        CollisionLayers.INTERACTIVE
+      );
+    }
+    setCollisionMask(newMask);
+
+    if (debug) {
+      console.log(
+        "[InteractiveComponents] Collision mask set to include INTERACTIVE"
+      );
+    }
 
     return () => {
-      registerComponentBoxes({});
-      setCollisionMask(CollisionLayers.CLUSTERS);
-      // Nettoyer le TextContentService au démontage
-      textContentService.hide();
+      // Use the cleanup function on unmount
+      cleanupInteractiveElements();
     };
   }, [
     componentBoxes,
-    registerComponentBoxes,
-    setCollisionMask,
+    registerInteractiveElement,
+    cleanupInteractiveElements,
     objectsData?.length,
+    debug,
   ]);
 
   // Utiliser useFrame au lieu de setInterval pour la détection des collisions

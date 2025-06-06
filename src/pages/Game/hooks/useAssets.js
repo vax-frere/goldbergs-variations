@@ -57,6 +57,7 @@ const useAssets = (options = { autoInit: true }) => {
   const getTexture = (id) => useAssetStore.getState().getTexture(id);
   const getSound = (id) => useAssetStore.getState().getSound(id);
   const getData = (id) => useAssetStore.getState().getData(id);
+  const getSVG = (id) => useAssetStore.getState().getSVG(id);
   const getImagePath = (path) => useAssetStore.getState().getImagePath(path);
   const getSoundPath = (path) => useAssetStore.getState().getSoundPath(path);
 
@@ -105,6 +106,7 @@ const useAssets = (options = { autoInit: true }) => {
     getTexture,
     getSound,
     getData,
+    getSVG,
     getImagePath,
     getSoundPath,
     loadGraphData,

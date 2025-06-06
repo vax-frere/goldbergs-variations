@@ -89,7 +89,7 @@ const ThematicLegend = ({ hasProgressCounter = false }) => {
   return (
     <LegendContainer
       style={{
-        bottom: hasProgressCounter ? "80px" : "30px", // Adjust position based on progress counter
+        bottom: hasProgressCounter ? "100px" : "30px", // Adjust position based on progress counter
       }}
     >
       <LegendTitle>Thematic Groups</LegendTitle>

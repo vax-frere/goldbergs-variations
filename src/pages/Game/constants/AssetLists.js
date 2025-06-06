@@ -49,6 +49,7 @@ export const SVG_FILES = [
   "hud.svg",
   "mute.svg",
   "unmute.svg",
+  "cassette.svg",
 
   // Plateformes et réseaux sociaux
   "platforms/4chan.svg",
@@ -122,6 +123,13 @@ export const SOUND_FILES = [
   "hover.mp3",
 
   "cluster-off.mp3",
+
+  // Sons de cassette
+  "cassette-in.mp3",
+  "cassette-out.mp3",
+
+  // Fragments audio
+  "fragments/intro.mp3",
 ];
 
 // Liste des fichiers de données à charger
@@ -142,7 +150,14 @@ export const DATA_FILES = [
     id: "platforms",
     file: "platforms.data.json",
   },
+  {
+    id: "srt_intro",
+    file: "fragments/intro.srt",
+  },
 ];
+
+// Liste des SVGs pour le HUD React (contenu brut)
+export const HUD_SVG_FILES = ["cassette.svg", "mute.svg", "unmute.svg"];
 
 /**
  * Fonction qui convertit la liste des SVGs en format attendu par l'AssetManager
@@ -216,6 +231,18 @@ export function getDataFiles() {
 }
 
 /**
+ * Fonction qui convertit la liste des SVG HUD en format attendu par l'AssetManager
+ * @returns {Array} Liste des SVG HUD à précharger comme contenu brut
+ */
+export function getHudSvgs() {
+  return HUD_SVG_FILES.map((file) => ({
+    id: file,
+    url: getImagePath(file),
+    type: "svg", // Type spécifique pour les SVG React
+  }));
+}
+
+/**
  * Fonction qui retourne toutes les listes d'assets à précharger
  * @returns {Object} Toutes les listes d'assets à précharger
  */
@@ -229,6 +256,7 @@ export function getAllAssets() {
     ],
     sounds: getSounds(),
     data: getDataFiles(),
+    hudSvgs: getHudSvgs(),
   };
 }
 
@@ -238,11 +266,13 @@ export default {
   CHARACTER_IMAGES,
   SOUND_FILES,
   DATA_FILES,
+  HUD_SVG_FILES,
   getSvgTextures,
   getImageTextures,
   getCharacterTextures,
   getPlatformTextures,
   getSounds,
   getDataFiles,
+  getHudSvgs,
   getAllAssets,
 };

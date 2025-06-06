@@ -178,7 +178,8 @@ const Footer = () => {
               <br />
               <strong>Data scraping:</strong> Aymeric Georgin, xxx
               <br />
-              <strong>Global advices:</strong> Paloma sanchez
+              <strong>Special thanks to:</strong> Paloma sanchez, Frank Weber,
+              Alexia Charoud, and all the people who helped us to make this
               <br />
               <strong>Based on:</strong> Joshua Ryne Goldberg's online
               activities

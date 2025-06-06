@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef, useMemo } from "react";
+import React, { useState, useEffect, useRef, useMemo, memo } from "react";
 import { styled } from "@mui/material/styles";
 import Box from "@mui/material/Box";
 import {
@@ -9,11 +9,15 @@ import {
 import useAssets from "../../hooks/useAssets";
 import AudioStatus from "./components/AudioStatus";
 import TextPanel from "./components/TextPanel";
-import Subtitles from "./components/Subtitles";
+import FragmentSubtitles from "./components/FragmentSubtitles";
 import InteractionPrompt from "./components/InteractionPrompt";
 import ThematicLegend from "./components/ThematicLegend";
 import ActiveLevelName from "./components/ActiveLevelName";
 import ExitWarningPanel from "./components/ExitWarningPanel";
+import CassetteIndicator from "./components/CassetteIndicator";
+import PlayerProgress from "./components/PlayerProgress";
+import AudioDebugPanel from "../debug/AudioDebugPanel";
+import "./HUD.css";
 
 const HUDOverlay = styled(Box)(({ theme }) => ({
   position: "fixed",
@@ -27,27 +31,11 @@ const HUDOverlay = styled(Box)(({ theme }) => ({
   opacity: 0.9,
 }));
 
-// Style plus discret pour le compteur de personas
-const VisitedPersonasCounter = styled(Box)(({ theme }) => ({
-  position: "fixed",
-  bottom: "25px",
-  right: "25px",
-  fontSize: "11px",
-  fontFamily: "monospace",
-  color: "rgba(255, 255, 255, 1)",
-  backgroundColor: "rgba(0, 0, 0, 1)",
-  border: "1px solid rgba(255, 255, 255, 1)",
-  borderRadius: "0px",
-  padding: "8px 12px",
-  zIndex: 1000,
-  pointerEvents: "none",
-  whiteSpace: "nowrap",
-}));
-
 /**
- * Composant HUD (Heads-Up Display) pour afficher des informations en overlay
+ * HUD principal du jeu
+ * Gère l'affichage des éléments d'interface utilisateur
  */
-const HUD = () => {
+const HUD = memo(() => {
   // État pour les données du HUD
   const [currentPosition, setCurrentPosition] = useState({ x: 0, y: 0, z: 0 });
   const [currentSpeed, setCurrentSpeed] = useState(0);
@@ -56,6 +44,7 @@ const HUD = () => {
   // Récupérer le niveau actif et le compteur de personas depuis le store
   const activeLevel = useActiveLevel();
   const visitedPersonasCount = useVisitedPersonasCount();
+  const debugMode = useGameStore((state) => state.debug); // Utiliser l'état debug centralisé
   const assets = useAssets({ autoInit: false });
 
   // Calculer le nombre total de clusters à partir des données du graphe
@@ -73,11 +62,6 @@ const HUD = () => {
 
     return uniqueClusters.size;
   }, [assets.isReady, assets.getData]);
-
-  // Calculer le pourcentage de complétion
-  const completionPercentage = Math.round(
-    (visitedPersonasCount / (totalClusters || 1)) * 100
-  );
 
   // Références pour la barre de vitesse
   const speedBarRef = useRef(null);
@@ -123,7 +107,7 @@ const HUD = () => {
   }, [currentSpeed]);
 
   return (
-    <>
+    <div className="hud-container">
       {/* Affichage du nom du niveau actif en haut à gauche */}
       <ActiveLevelName />
 
@@ -132,19 +116,19 @@ const HUD = () => {
         hasProgressCounter={visitedPersonasCount > 0 && totalClusters > 0}
       />
 
-      {/* Compteur de personas visitées - affiché si au moins 1 cluster visité */}
-      {visitedPersonasCount > 0 && totalClusters > 0 && (
-        <VisitedPersonasCounter>
-          {`${visitedPersonasCount}/${totalClusters} visited personas  (${completionPercentage}%)`}
-        </VisitedPersonasCounter>
-      )}
+      {/* Composant de progression du joueur */}
+      <PlayerProgress />
 
       {/* Composants d'interface utilisateur */}
       <AudioStatus />
-      <Subtitles />
+      <FragmentSubtitles />
       <TextPanel />
       <InteractionPrompt />
       <ExitWarningPanel />
+      <CassetteIndicator />
+
+      {/* Panneau de debug audio (P pour activer/désactiver le mode debug) */}
+      {debugMode && <AudioDebugPanel />}
 
       <HUDOverlay>
         <Box
@@ -244,8 +228,10 @@ const HUD = () => {
           </div>
         </Box>
       </HUDOverlay>
-    </>
+    </div>
   );
-};
+});
+
+HUD.displayName = "HUD";
 
 export default HUD;

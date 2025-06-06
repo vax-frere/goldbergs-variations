@@ -1,5 +1,5 @@
 import { create } from "zustand";
-import useAudioService from "./services/AudioService";
+import useAudioManager from "./services/AudioManager";
 
 // Fonction pour récupérer l'état debug persisté
 const getInitialDebugState = () => {
@@ -41,6 +41,7 @@ export const useGameStore = create((set, get) => ({
   visitedClusters: [],
   visitedNodes: [],
   visitedPersonasCount: 0,
+  visitedFragments: [], // Nouveau : tracking des fragments audio joués
 
   // État pour l'avertissement de sortie de cluster
   showExitWarning: false,
@@ -180,7 +181,7 @@ export const useGameStore = create((set, get) => ({
         currentLevel: GAME_LEVELS.WORLD,
         activeLevel: null,
       });
-    }, 160); // 10ms (starting) + 150ms (fadeIn) = écran noir plus rapide
+    }, 160); // 10ms (starting) + 150ms (fadeIn) = écran noir plus rapidez
 
     // Terminer la transition après le fade complet
     setTimeout(() => {
@@ -202,9 +203,9 @@ export const useGameStore = create((set, get) => ({
       if (!state.isClusterVisited(currentClusterData.id)) {
         // Programmer l'action différée (1.5 secondes après la fin de la transition)
         state.scheduleAction(() => {
-          // Jouer le son directement via AudioService
-          const audioService = useAudioService.getState();
-          audioService.playClusterOffSound();
+          // Jouer le son directement via AudioManager
+          const audioManager = useAudioManager.getState();
+          audioManager.playClusterOffSound();
         }, 10); // Son joué à 1.5 secondes
 
         // Programmer le marquage visuel avec un délai supplémentaire pour synchroniser avec le son
@@ -239,6 +240,13 @@ export const useGameStore = create((set, get) => ({
   isClusterVisited: (clusterId) => {
     const state = get();
     return state.visitedClusters.some((cluster) => cluster.id === clusterId);
+  },
+
+  isFragmentPlayed: (fragmentId) => {
+    const state = get();
+    return state.visitedFragments.some(
+      (fragment) => fragment.id === fragmentId
+    );
   },
 
   // Fonction pour marquer un cluster comme visité
@@ -296,6 +304,33 @@ export const useGameStore = create((set, get) => ({
     }
   },
 
+  // Fonction pour marquer un fragment comme joué
+  markFragmentAsPlayed: (fragmentId, fragmentName = null) => {
+    const state = get();
+    const alreadyPlayed = state.visitedFragments.some(
+      (fragment) => fragment.id === fragmentId
+    );
+
+    if (!alreadyPlayed) {
+      console.log(`[Store] Marking fragment ${fragmentId} as played`);
+      set((state) => ({
+        visitedFragments: [
+          ...state.visitedFragments,
+          {
+            id: fragmentId,
+            name: fragmentName || fragmentId,
+            playedAt: new Date().toISOString(),
+          },
+        ],
+      }));
+      console.log(
+        `[Store] Total played fragments: ${get().visitedFragments.length}`
+      );
+    } else {
+      console.log(`[Store] Fragment ${fragmentId} already played`);
+    }
+  },
+
   resetVisitedClusters: () =>
     set({
       visitedClusters: [],
@@ -307,11 +342,17 @@ export const useGameStore = create((set, get) => ({
       visitedNodes: [],
     }),
 
+  resetVisitedFragments: () =>
+    set({
+      visitedFragments: [],
+    }),
+
   resetAllVisitHistory: () =>
     set({
       visitedClusters: [],
       visitedPersonasCount: 0,
       visitedNodes: [],
+      visitedFragments: [],
     }),
 
   // Fonction de debug pour afficher l'état des visites
@@ -320,9 +361,11 @@ export const useGameStore = create((set, get) => ({
     console.log("=== ÉTAT DES VISITES ===");
     console.log(`Clusters visités: ${state.visitedClusters.length}`);
     console.log(`Nœuds visités: ${state.visitedNodes.length}`);
+    console.log(`Fragments joués: ${state.visitedFragments.length}`);
     console.log(`Compteur personas: ${state.visitedPersonasCount}`);
     console.log("Clusters:", state.visitedClusters);
     console.log("Nœuds:", state.visitedNodes);
+    console.log("Fragments:", state.visitedFragments);
     console.log("========================");
   },
 
@@ -420,6 +463,9 @@ export const useVisitedPersonasCount = () =>
 
 export const useVisitedNodesCount = () =>
   useGameStore((state) => state.visitedNodes.length);
+
+export const useVisitedFragmentsCount = () =>
+  useGameStore((state) => state.visitedFragments.length);
 
 // Nouveau selector pour forcer le re-render du Graph
 export const useVisitedClustersForGraph = () =>
