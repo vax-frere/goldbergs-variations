@@ -5,8 +5,9 @@ import useSound from "use-sound";
 import useGameStore, { useIsTransitioning } from "./store";
 import useAssets from "./hooks/useAssets";
 import useAudioManager from "./services/AudioManager";
-import { EffectComposer } from "@react-three/postprocessing";
-import { Bloom, ToneMapping } from "@react-three/postprocessing";
+import { getSoundPath } from "../../utils/assetLoader";
+import { EffectComposer, Bloom, ToneMapping, Glitch, Noise } from "@react-three/postprocessing";
+import usePostProcessingStore from "./services/PostProcessingService";
 import {
   CAMERA_FOV,
   BASE_CAMERA_DISTANCE,
@@ -23,13 +24,15 @@ import useCollisionStore, {
 } from "./services/CollisionService";
 import useDebugMode from "./hooks/useDebugMode";
 import { AdvancedCameraController } from "./components/AdvancedCameraController/AdvancedCameraController";
-import { DebugNavigationUI } from "./components/AdvancedCameraController/DebugNavigationUI";
+import DebugPanelManager from "./components/debug/DebugPanelManager";
+import StatsDebugPanel from "./components/debug/StatsDebugPanel";
 import GameAudio from "./components/GameAudio";
 import CollisionDebugRenderer from "./components/debug/CollisionDebugRenderer";
 import GridReferences from "./components/GridReferences";
 import { useFrame } from "@react-three/fiber";
 import textContentService from "./services/TextContentService";
 import EffectRenderer from "./components/EffectRenderer";
+import useIntro from "./hooks/useIntro";
 
 // Composant pour initialiser et gérer le service de collision
 const CollisionManager = memo(() => {
@@ -176,7 +179,7 @@ const CollisionManager = memo(() => {
 // Séparer le composant DebugStats pour n'afficher que si nécessaire
 const DebugStats = memo(() => {
   const debug = useGameStore((state) => state.debug);
-  return debug ? <Stats /> : null;
+  return debug ? <StatsDebugPanel /> : null;
 });
 
 // Composant pour afficher la grille de référence uniquement en mode debug
@@ -185,10 +188,10 @@ const DebugGridReferences = memo(() => {
   return debug ? <GridReferences /> : null;
 });
 
-// Composant pour afficher le DebugNavigationUI uniquement en mode debug
+// Composant pour afficher les panels de debug uniquement en mode debug
 const DebugNavigationDisplay = memo(() => {
   const debug = useGameStore((state) => state.debug);
-  return debug ? <DebugNavigationUI /> : null;
+  return debug ? <DebugPanelManager /> : null;
 });
 
 // Composant pour gérer les transitions entre niveaux avec fade
@@ -312,6 +315,7 @@ const TransitionOverlay = memo(() => {
 // Composant pour le Canvas et ses effets
 const GameCanvas = memo(({ children }) => {
   const isTransitioning = useIsTransitioning();
+  const postProcessingConfig = usePostProcessingStore((state) => state.config);
 
   // Activer l'écoute de la touche P pour le debug mode
   useDebugMode();
@@ -323,7 +327,7 @@ const GameCanvas = memo(({ children }) => {
         background: "#000",
         width: "100%",
         height: "100%",
-        pointerEvents: isTransitioning ? "none" : "auto", // Désactiver les interactions pendant la transition
+        pointerEvents: isTransitioning ? "none" : "auto",
       }}
       camera={{
         position: [0, -300, BASE_CAMERA_DISTANCE * 4],
@@ -351,13 +355,28 @@ const GameCanvas = memo(({ children }) => {
 
       <EffectComposer>
         <Bloom
-          intensity={0.15}
-          luminanceThreshold={0.01}
-          luminanceSmoothing={0.03}
+          intensity={postProcessingConfig.bloom.intensity}
+          luminanceThreshold={postProcessingConfig.bloom.luminanceThreshold}
+          luminanceSmoothing={postProcessingConfig.bloom.luminanceSmoothing}
         />
-        <ToneMapping exposure={1.5} gamma={0.8} vignette={0.5} />
+        <ToneMapping
+          exposure={postProcessingConfig.toneMapping.exposure}
+          contrast={postProcessingConfig.toneMapping.contrast}
+        />
+        {postProcessingConfig.glitch.active && (
+          <Glitch
+            delay={[0.5, 0.25]}
+            duration={postProcessingConfig.glitch.duration}
+            strength={postProcessingConfig.glitch.strength}
+          />
+        )}
+        {postProcessingConfig.noise.active && postProcessingConfig.noise.intensity > 0 && (
+          <Noise
+            opacity={postProcessingConfig.noise.intensity}
+            speed={postProcessingConfig.noise.speed}
+          />
+        )}
       </EffectComposer>
-      <DebugStats />
     </Canvas>
   );
 });
@@ -377,10 +396,13 @@ const Game = () => {
   const MIN_LOADING_TIME = 3000; // 3 secondes minimum
   const GAME_WARMUP_TIME = 650; // Temps pour que le jeu tourne en arrière-plan
   const FADE_OUT_DURATION = 350; // Durée du fade out
-  const [playEnterLevelSound] = useSound("/sounds/enter-level.mp3", {
+  const [playEnterLevelSound] = useSound(getSoundPath("enter-level.mp3"), {
     volume: 0.1,
   });
   const previousLevelRef = useRef(null);
+  
+  // Système d'intro automatique
+  const intro = useIntro(false); // debug à false en production
 
   useEffect(() => {
     // Play sound only when changing level and not on initial mount
@@ -439,13 +461,19 @@ const Game = () => {
       // Après le fade out, cacher complètement l'overlay
       const fadeOutTimer = setTimeout(() => {
         setShowLoadingOverlay(false);
+        
+        // NOUVEAU : Déclencher l'intro après que l'overlay de chargement disparaisse
+        if (intro.shouldTriggerIntro) {
+          console.log("[Game] Déclenchement de l'intro automatique");
+          intro.triggerIntroWhenReady(true);
+        }
       }, FADE_OUT_DURATION);
 
       return () => clearTimeout(fadeOutTimer);
     }, GAME_WARMUP_TIME);
 
     return () => clearTimeout(warmupTimer);
-  }, [gameReady, GAME_WARMUP_TIME, FADE_OUT_DURATION]);
+  }, [gameReady, GAME_WARMUP_TIME, FADE_OUT_DURATION, intro]);
 
   // Combinaison simplifiée pour gérer le chargement du jeu
   useEffect(() => {
@@ -503,6 +531,7 @@ const Game = () => {
           </GameCanvas>
           <HUD />
           <DebugNavigationDisplay />
+          <DebugStats />
         </>
       )}
 

@@ -38,7 +38,7 @@ export const BASE_THEMATIC_COLORS = {
 export const THEMATIC_COLORS = Object.fromEntries(
   Object.entries(BASE_THEMATIC_COLORS).map(([key, color]) => [
     key,
-    chroma(color).brighten(1.5).desaturate(2).hex(),
+    chroma(color).brighten(1.5).desaturate(1).hex(),
   ])
 );
 

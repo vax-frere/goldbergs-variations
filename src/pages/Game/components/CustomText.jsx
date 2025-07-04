@@ -103,13 +103,17 @@ export function CustomText({
               1 - (distance - minDistance) / (maxDistance - minDistance)
             );
     } else {
-      // Logique standard: visible de loin, invisible de près
-      targetOpacity =
-        distance >= maxDistance
-          ? 1
-          : distance <= minDistance
-          ? 0
-          : Math.max(0, (distance - minDistance) / (maxDistance - minDistance));
+      // Logique standard: visible à distance moyenne, invisible de près et de loin
+      const midDistance = (minDistance + maxDistance) / 2;
+      const halfRange = (maxDistance - minDistance) / 2;
+      
+      if (distance <= minDistance || distance >= maxDistance) {
+        targetOpacity = 0;
+      } else {
+        // Calculer l'opacité en fonction de la distance par rapport au point milieu
+        const distanceFromMid = Math.abs(distance - midDistance);
+        targetOpacity = Math.max(0, 1 - (distanceFromMid / halfRange));
+      }
     }
 
     // Calculer la taille du texte en fonction de la distance si dynamicSize est activé

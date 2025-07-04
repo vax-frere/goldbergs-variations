@@ -7,6 +7,7 @@ import {
   useVisitedPersonasCount,
 } from "../../store";
 import useAssets from "../../hooks/useAssets";
+import { useCameraSpeedWithLevels } from "../../hooks/useCameraSpeed";
 import AudioStatus from "./components/AudioStatus";
 import TextPanel from "./components/TextPanel";
 import FragmentSubtitles from "./components/FragmentSubtitles";
@@ -16,7 +17,10 @@ import ActiveLevelName from "./components/ActiveLevelName";
 import ExitWarningPanel from "./components/ExitWarningPanel";
 import CassetteIndicator from "./components/CassetteIndicator";
 import PlayerProgress from "./components/PlayerProgress";
-import AudioDebugPanel from "../debug/AudioDebugPanel";
+import SpeedIndicator from "./components/SpeedIndicator";
+import RetroWindowManager from "./components/RetroWindowManager";
+import { getImagePath } from "../../../../utils/assetLoader";
+
 import "./HUD.css";
 
 const HUDOverlay = styled(Box)(({ theme }) => ({
@@ -36,9 +40,9 @@ const HUDOverlay = styled(Box)(({ theme }) => ({
  * Gère l'affichage des éléments d'interface utilisateur
  */
 const HUD = memo(() => {
-  // État pour les données du HUD
+  
+  // État pour les données du HUD (legacy)
   const [currentPosition, setCurrentPosition] = useState({ x: 0, y: 0, z: 0 });
-  const [currentSpeed, setCurrentSpeed] = useState(0);
   const [svgContent, setSvgContent] = useState(null);
 
   // Récupérer le niveau actif et le compteur de personas depuis le store
@@ -63,15 +67,12 @@ const HUD = memo(() => {
     return uniqueClusters.size;
   }, [assets.isReady, assets.getData]);
 
-  // Références pour la barre de vitesse
-  const speedBarRef = useRef(null);
-  const speedBarFillRef = useRef(null);
-  const MAX_SPEED = 300; // Vitesse maximale pour la barre (pleine)
+
 
   // Charger le SVG directement
   useEffect(() => {
-    // Path absolu vers le fichier SVG, sans passer par l'asset manager
-    const svgPath = `${import.meta.env.BASE_URL || "/"}img/hud.svg`;
+    // Path vers le fichier SVG via l'asset loader
+    const svgPath = getImagePath("hud.svg");
 
     // Charger le SVG
     fetch(svgPath)
@@ -89,22 +90,8 @@ const HUD = memo(() => {
       });
   }, []);
 
-  // Mettre à jour les données du HUD à partir des variables globales
-  useEffect(() => {
-    const updateHUDData = () => {
-      // Récupérer la vitesse de la caméra
-      if (window.__cameraSpeed !== undefined) {
-        setCurrentSpeed(window.__cameraSpeed);
-      }
-    };
-
-    // Mettre à jour les données toutes les 100ms
-    const dataInterval = setInterval(updateHUDData, 100);
-
-    return () => {
-      clearInterval(dataInterval);
-    };
-  }, [currentSpeed]);
+  // **ANCIEN SYSTÈME SUPPRIMÉ** - Plus besoin de timer grâce au CameraMetricsManager
+  // La vitesse est maintenant gérée par useCameraMetric() avec throttling intelligent
 
   return (
     <div className="hud-container">
@@ -126,9 +113,11 @@ const HUD = memo(() => {
       <InteractionPrompt />
       <ExitWarningPanel />
       <CassetteIndicator />
+      
+      {/* Gestionnaire des fenêtres rétro */}
+      <RetroWindowManager />
 
-      {/* Panneau de debug audio (P pour activer/désactiver le mode debug) */}
-      {debugMode && <AudioDebugPanel />}
+      {/* Panneau de debug audio maintenant géré par DebugPanelManager dans Game.jsx */}
 
       <HUDOverlay>
         <Box
@@ -136,13 +125,6 @@ const HUD = memo(() => {
             width: "100%",
             height: "100%",
             position: "relative",
-            animation: "pulse 4s infinite ease-in-out",
-            "@keyframes pulse": {
-              "0%": { opacity: 0.7 },
-              "50%": { opacity: 0.9 },
-              "100%": { opacity: 0.7 },
-            },
-            filter: "drop-shadow(0 0 5px rgba(76, 175, 80, 0.5))",
           }}
         >
           <div
@@ -152,79 +134,8 @@ const HUD = memo(() => {
               position: "relative",
             }}
           >
-            {/* SVG du HUD */}
-            {/* <div
-              style={{
-                width: "100%",
-                height: "100%",
-                display: "flex",
-                justifyContent: "center",
-                alignItems: "center",
-                position: "absolute",
-                top: 0,
-                left: 0,
-              }}
-              dangerouslySetInnerHTML={{ __html: svgContent || "" }}
-            /> */}
-
-            {/* Carré de vitesse avec masque SVG */}
-            <div
-              style={{
-                position: "absolute",
-                left: "50%",
-                top: "50%",
-                transform: "translate(-50%, -50%)",
-                width: "20px",
-                height: "20px",
-              }}
-            >
-              {/* 
-                Structure du SVG :
-                - Un masque qui crée l'effet de bordure creuse
-                - Un contour statique pour la visibilité de base
-                - Un rectangle masqué qui se remplit selon la vitesse
-                - Une croix centrale pour le point de mire
-              */}
-              <svg width="20" height="20" viewBox="0 0 20 20">
-                <defs>
-                  <mask id="borderMask">
-                    {/* Rectangle blanc extérieur - définit la zone visible maximale */}
-                    <rect width="20" height="20" fill="white" />
-                    {/* Rectangle noir intérieur - crée le "creux" */}
-                    <rect x="2" y="2" width="16" height="16" fill="black" />
-                  </mask>
-                </defs>
-
-                {/* Contour statique - toujours visible */}
-                <rect
-                  width="20"
-                  height="20"
-                  fill="none"
-                  stroke="rgba(255, 255, 255, 0.5)"
-                  strokeWidth="1"
-                />
-
-                {/* Rectangle masqué qui se remplit selon la vitesse */}
-                <rect
-                  width="20"
-                  height={20 * Math.min(currentSpeed / MAX_SPEED, 1)}
-                  y={20 - 20 * Math.min(currentSpeed / MAX_SPEED, 1)}
-                  fill="rgba(255, 255, 255, 0.2)"
-                  mask="url(#borderMask)"
-                  style={{
-                    transition: "height 0.15s ease-out, y 0.15s ease-out",
-                  }}
-                />
-
-                {/* Croix centrale */}
-                <g stroke="rgba(255, 255, 255, 0.8)" strokeWidth="0.5">
-                  {/* Ligne horizontale */}
-                  <line x1="6" y1="10" x2="14" y2="10" />
-                  {/* Ligne verticale */}
-                  <line x1="10" y1="6" x2="10" y2="14" />
-                </g>
-              </svg>
-            </div>
+            {/* Indicateur de vitesse */}
+            <SpeedIndicator />
           </div>
         </Box>
       </HUDOverlay>

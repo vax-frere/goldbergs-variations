@@ -1,5 +1,5 @@
 import { useEffect, useRef, memo } from "react";
-import useAudioFragment from "../../../hooks/useAudioFragment";
+import { useAudioFragmentState } from "../../../hooks/useAudioFragment";
 import useGameStore from "../../../store";
 
 // Configuration des sous-titres de fragments
@@ -71,7 +71,7 @@ const parseTimeString = (timeString) => {
  */
 const FragmentSubtitles = memo(() => {
   const audioEnabled = useGameStore((state) => state.audioEnabled);
-  const fragmentState = useAudioFragment();
+  const fragmentState = useAudioFragmentState();
   const containerRef = useRef(null);
   const subtitlesRef = useRef([]);
   const currentSubtitleRef = useRef(null);

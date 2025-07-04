@@ -136,7 +136,7 @@ export const SOUND_FILES = [
 export const DATA_FILES = [
   {
     id: "database",
-    file: "database.data.json",
+    file: "database-without-posts.data.json",
   },
   {
     id: "graph",

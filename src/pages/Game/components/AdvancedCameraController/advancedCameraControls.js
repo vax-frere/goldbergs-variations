@@ -15,6 +15,7 @@ import {
   getFlightConfigForDevice,
   getAccelerationFactorsForDevice,
 } from "./navigationConstants";
+import { cameraMetricsManager, METRIC_TYPES } from "../../services/CameraMetricsManager";
 
 // Re-export des constantes importantes
 export { CAMERA_POSITIONS, DEFAULT_FLIGHT_CONFIG, CAMERA_MODES };
@@ -295,16 +296,17 @@ export class FlightController {
     // Utiliser le facteur d'accélération interpolé
     const accelerationFactor = this.currentAccelerationFactor;
 
-    // Exposer le facteur d'accélération actuel pour le DebugNavigationUI
-    window.__accelerationFactor = accelerationFactor;
-    window.__activeDeviceInFlight = this.activeDevice;
-
-    // Exposer les vitesses d'orientation pour le calcul du son d'accélération
-    window.__orientationVelocity = {
+    // Préparer les données pour le CameraMetricsManager
+    const orientationVel = {
       yaw: Math.abs(this.orientationVelocity.yaw),
       pitch: Math.abs(this.orientationVelocity.pitch),
       roll: Math.abs(this.orientationVelocity.roll),
     };
+
+    // Maintenir la compatibilité avec les variables globales pour le debug
+    window.__accelerationFactor = accelerationFactor;
+    window.__activeDeviceInFlight = this.activeDevice;
+    window.__orientationVelocity = orientationVel;
 
     // Système d'inertie pour l'orientation avec accélération progressive
     // Mouvement (utilise le lissage simple)
@@ -394,10 +396,21 @@ export class FlightController {
     const currentSpeed = this.velocity.length();
     // Ajuster la vitesse maximale en fonction du facteur d'accélération
     const adjustedMaxSpeed = config.maxSpeed * accelerationFactor;
-    // Exposer la vitesse maximale ajustée pour le DebugNavigationUI
+    
+    // Maintenir la compatibilité avec les variables globales pour le debug
     window.__adjustedMaxSpeed = adjustedMaxSpeed;
-    // Exposer la vitesse actuelle de la caméra pour le DebugNavigationUI
     window.__cameraSpeed = currentSpeed;
+
+    // **NOUVEAU SYSTÈME PRODUCTION GRADE**
+    // Envoyer toutes les métriques au gestionnaire centralisé
+    cameraMetricsManager.updateFromCamera({
+      position: this.camera.position,
+      velocity: this.velocity,
+      orientationVelocity: orientationVel,
+      accelerationFactor: accelerationFactor,
+      flightState: this.isReturningToDefault ? 'returning' : 'normal',
+      delta: delta
+    });
 
     if (currentSpeed > adjustedMaxSpeed) {
       this.velocity.multiplyScalar(adjustedMaxSpeed / currentSpeed);

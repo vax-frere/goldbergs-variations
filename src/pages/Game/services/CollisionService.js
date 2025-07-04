@@ -560,14 +560,6 @@ const useCollisionStore = create((set, get) => ({
 
     // Mettre à jour l'état de manière sécurisée (une seule fois)
     set((state) => {
-      // Si l'élément est identique, ne pas mettre à jour
-      if (
-        JSON.stringify(state.boundingBoxes.interactiveElements[elementId]) ===
-        JSON.stringify(newElement)
-      ) {
-        return {}; // Ne pas mettre à jour si pas de changement
-      }
-
       return {
         boundingBoxes: {
           ...state.boundingBoxes,
@@ -943,7 +935,7 @@ const useCollisionStore = create((set, get) => ({
       clusters: [],
       nodes: rawResults.nodes,
       interactiveElements: rawResults.interactiveElements,
-      hasCollisions: false,
+      hasCollisions: rawResults.nodes.length > 0 || rawResults.interactiveElements.length > 0,
     };
 
     // Traiter les clusters détectés avec hystérésis

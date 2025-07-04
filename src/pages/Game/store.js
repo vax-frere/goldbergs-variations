@@ -13,6 +13,30 @@ const getInitialDebugState = () => {
   }
 };
 
+// Fonction pour récupérer le volume audio persisté
+const getInitialAudioVolume = () => {
+  try {
+    const storedValue = localStorage.getItem("goldbergs_audio_volume");
+    const volume = storedValue ? parseFloat(storedValue) : 1.0;
+    return Math.max(0, Math.min(1, volume)); // Clamp entre 0 et 1
+  } catch (error) {
+    console.warn("Erreur lors de la lecture du volume audio:", error);
+    return 1.0;
+  }
+};
+
+// Fonction pour récupérer le volume précédent sauvegardé
+const getLastNonZeroVolume = () => {
+  try {
+    const storedValue = localStorage.getItem("goldbergs_last_volume");
+    const volume = storedValue ? parseFloat(storedValue) : 1.0;
+    return Math.max(0.1, Math.min(1, volume)); // Au minimum 0.1, maximum 1
+  } catch (error) {
+    console.warn("Erreur lors de la lecture du dernier volume:", error);
+    return 1.0;
+  }
+};
+
 // Définition des niveaux disponibles
 export const GAME_LEVELS = {
   WORLD: "world", // Niveau principal avec le graphe complet
@@ -24,6 +48,7 @@ export const GAME_LEVELS = {
 export const useGameStore = create((set, get) => ({
   // États gérés par ce store
   audioEnabled: true, // État du son (activé par défaut)
+  audioVolume: getInitialAudioVolume(), // Volume audio (0.0 à 1.0)
   debug: getInitialDebugState(), // État du mode debug initialisé depuis le localStorage
   camera: null, // Référence à la caméra principale
   hoveredCluster: null,
@@ -46,13 +71,60 @@ export const useGameStore = create((set, get) => ({
   // État pour l'avertissement de sortie de cluster
   showExitWarning: false,
 
+  // Nouveau : système d'intro automatique
+  introTriggered: false, // Pour s'assurer que l'intro ne se déclenche qu'une fois
+  introCompleted: false, // Pour savoir si l'intro est terminée
+  gameStarted: false, // Pour marquer quand le jeu a vraiment commencé
+
   // Nouveau : système d'actions différées
   scheduledActions: [],
 
   // Actions pour modifier les états
 
   // Fonction pour activer/désactiver le son
-  toggleAudio: () => set((state) => ({ audioEnabled: !state.audioEnabled })),
+  toggleAudio: () => set((state) => {
+    if (state.audioVolume > 0) {
+      // Son activé → le désactiver (volume → 0)
+      // Sauvegarder le volume actuel avant de le mettre à 0
+      try {
+        localStorage.setItem("goldbergs_last_volume", String(state.audioVolume));
+        localStorage.setItem("goldbergs_audio_volume", "0");
+      } catch (error) {
+        console.warn("Erreur lors de la sauvegarde du volume audio:", error);
+      }
+      return { audioVolume: 0, audioEnabled: false };
+    } else {
+      // Son désactivé (volume = 0) → l'activer (restaurer volume)
+      const restoredVolume = getLastNonZeroVolume();
+      try {
+        localStorage.setItem("goldbergs_audio_volume", String(restoredVolume));
+      } catch (error) {
+        console.warn("Erreur lors de la sauvegarde du volume audio:", error);
+      }
+      return { audioVolume: restoredVolume, audioEnabled: true };
+    }
+  }),
+
+  // Fonction pour modifier le volume audio
+  setAudioVolume: (volume) => {
+    const clampedVolume = Math.max(0, Math.min(1, volume));
+    
+    // Sauvegarder dans le localStorage
+    try {
+      localStorage.setItem("goldbergs_audio_volume", String(clampedVolume));
+      // Sauvegarder aussi comme dernier volume non-zéro si > 0
+      if (clampedVolume > 0) {
+        localStorage.setItem("goldbergs_last_volume", String(clampedVolume));
+      }
+    } catch (error) {
+      console.warn("Erreur lors de la sauvegarde du volume audio:", error);
+    }
+    
+    // Activer/désactiver automatiquement selon le volume
+    const newEnabled = clampedVolume > 0;
+    
+    set({ audioVolume: clampedVolume, audioEnabled: newEnabled });
+  },
 
   // Fonction pour activer/désactiver le mode debug
   toggleDebug: () => {
@@ -422,6 +494,39 @@ export const useGameStore = create((set, get) => ({
       ),
     }));
   },
+
+  // Nouveau : fonctions pour l'intro automatique
+  triggerIntro: () => {
+    const state = get();
+    if (!state.introTriggered && !state.introCompleted) {
+      console.log("[Store] Déclenchement de l'intro automatique");
+      set({ introTriggered: true });
+      return true;
+    }
+    return false;
+  },
+
+  markIntroCompleted: () => {
+    console.log("[Store] Intro marquée comme terminée");
+    set({ 
+      introCompleted: true,
+      gameStarted: true 
+    });
+  },
+
+  resetIntroState: () => {
+    set({
+      introTriggered: false,
+      introCompleted: false,
+      gameStarted: false,
+    });
+  },
+
+  // Fonction pour vérifier si l'intro doit être déclenchée
+  shouldTriggerIntro: () => {
+    const state = get();
+    return !state.introTriggered && !state.introCompleted && state.audioEnabled;
+  },
 }));
 
 export default useGameStore;
@@ -470,3 +575,13 @@ export const useVisitedFragmentsCount = () =>
 // Nouveau selector pour forcer le re-render du Graph
 export const useVisitedClustersForGraph = () =>
   useGameStore((state) => state.visitedClusters.length);
+
+// Selectors pour le système d'intro
+export const useIntroTriggered = () =>
+  useGameStore((state) => state.introTriggered);
+
+export const useIntroCompleted = () =>
+  useGameStore((state) => state.introCompleted);
+
+export const useGameStarted = () =>
+  useGameStore((state) => state.gameStarted);

@@ -20,7 +20,7 @@ const Home = () => {
   const handleEnterClick = () => {
     playSwitchSound();
     setTimeout(() => {
-      navigate("/intro");
+      navigate("/disclaimer");
     }, 300);
   };
 

@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useMemo, memo } from "react";
 import { styled } from "@mui/material/styles";
 import Box from "@mui/material/Box";
-import useAudioFragment from "../../../hooks/useAudioFragment";
+import { useAudioFragmentState } from "../../../hooks/useAudioFragment";
 import useAssets from "../../../hooks/useAssets";
 
 const CassetteContainer = styled(Box)(({ theme, isVisible }) => ({
@@ -36,8 +36,8 @@ const ProgressBar = styled(Box)(({ theme, progress }) => ({
   left: "0",
   height: "3px",
   width: `${progress}%`,
-  backgroundColor: "#FFFFFF", // Vert
-  transition: "width 0.1s ease",
+  backgroundColor: "#FFFFFF",
+  // transition: "width 0.1s ease", // ❌ Supprimé temporairement pour debug
 }));
 
 const CassetteIcon = styled("div")(({ theme }) => ({
@@ -106,15 +106,35 @@ MemoizedCassetteIcon.displayName = "MemoizedCassetteIcon";
 /**
  * Composant d'indicateur de cassette avec barre de progression
  * S'affiche pendant la lecture des fragments audio
+ * 
+ * ✅ TOUJOURS MONTÉ - Visibilité gérée par CSS uniquement
  */
-const CassetteIndicator = () => {
-  const fragmentState = useAudioFragment();
+const CassetteIndicator = ({ debug = false }) => {
+  const fragmentState = useAudioFragmentState(debug); // ✅ Hook léger sans listeners
   const assets = useAssets({ autoInit: false });
   const [cassetteIcon, setCassetteIcon] = useState(null);
-  const [isVisible, setIsVisible] = useState(false);
-  const [shouldRender, setShouldRender] = useState(false);
-  const [isExiting, setIsExiting] = useState(false);
-  const [lastProgress, setLastProgress] = useState(0); // Conserver la dernière progression
+  const [maxProgress, setMaxProgress] = useState(0); // ✅ Garder la progression max
+
+  // ✅ Log de montage/démontage du composant
+  useEffect(() => {
+    if (debug) console.log("🟢 [CassetteIndicator] COMPOSANT MONTÉ");
+    return () => {
+      if (debug) console.log("🔴 [CassetteIndicator] COMPOSANT DÉMONTÉ");
+    };
+  }, [debug]);
+
+  // ✅ Log à chaque render
+  if (debug) console.log("🔄 [CassetteIndicator] RENDER - sequenceState:", fragmentState.sequenceState, "isVisible:", fragmentState.isCassetteSequenceActive);
+
+  // ✅ Log détaillé de l'état pour debug
+  if (debug) console.log("🔍 [CassetteIndicator] État complet:", {
+    sequenceState: fragmentState.sequenceState,
+    isCassetteSequenceActive: fragmentState.isCassetteSequenceActive,
+    currentFragment: fragmentState.currentFragment,
+    isPlaying: fragmentState.isPlaying,
+    isLoading: fragmentState.isLoading,
+    serviceState: fragmentState.getState ? fragmentState.getState() : "pas de getState"
+  });
 
   // Charger l'icône cassette depuis l'AssetManager (memoized)
   const memoizedCassetteIcon = useMemo(() => {
@@ -130,54 +150,71 @@ const CassetteIndicator = () => {
     setCassetteIcon(memoizedCassetteIcon);
   }, [memoizedCassetteIcon]);
 
-  // Gérer l'animation d'apparition/disparition
+  // ✅ Visibilité basée sur l'état du fragment (pas de démontage)
+  const isVisible = fragmentState.isCassetteSequenceActive;
+
+  // Réinitialiser maxProgress quand une nouvelle séquence commence
   useEffect(() => {
-    const shouldShow = fragmentState.isCassetteSequenceActive; // Apparaître dès le début de la séquence
-
-    if (shouldShow && !shouldRender) {
-      // Apparition : rendre d'abord, puis animer
-      setIsExiting(false); // Réinitialiser l'état de sortie
-      setShouldRender(true);
-      setTimeout(() => setIsVisible(true), 50); // Petit délai pour permettre le rendu
-    } else if (!shouldShow && shouldRender) {
-      // Disparition : marquer comme en cours de sortie, animer d'abord, puis arrêter le rendu
-      setIsExiting(true);
-      setIsVisible(false);
-      setTimeout(() => setShouldRender(false), 400); // Attendre la fin de l'animation
+    if (fragmentState.sequenceState === 'cassette_in') {
+      setMaxProgress(0);
+      if (debug) console.log("🔄 [CassetteIndicator] Réinitialisation maxProgress pour nouvelle séquence");
     }
-  }, [fragmentState.isCassetteSequenceActive, shouldRender]);
+  }, [fragmentState.sequenceState, debug]);
 
-  // Calculer le pourcentage de progression incluant toute la séquence cassette
+  // Calculer le pourcentage de progression
   const progress = useMemo(() => {
-    // Progression simple basée sur le fragment audio actuel
-    if (fragmentState.duration > 0 && fragmentState.currentTime >= 0) {
-      const calculatedProgress = Math.min(
-        (fragmentState.currentTime / fragmentState.duration) * 100,
-        100
-      );
-
-      // Mettre à jour la dernière progression si on n'est pas en train de disparaître
-      if (!isExiting) {
-        setLastProgress(calculatedProgress);
-      }
-
-      return isExiting ? lastProgress : calculatedProgress;
+    // Utiliser la progression globale qui inclut toutes les phases cassette
+    const globalProgress = fragmentState.getGlobalProgress ? fragmentState.getGlobalProgress() : 0;
+    
+    // S'assurer que la progression est dans les limites 0-100
+    const finalProgress = Math.max(0, Math.min(100, globalProgress));
+    
+    // ✅ Ne jamais redescendre - garder la valeur max
+    const progressToUse = Math.max(maxProgress, finalProgress);
+    
+    // Mettre à jour maxProgress si on a une nouvelle valeur plus haute
+    if (finalProgress > maxProgress) {
+      setMaxProgress(finalProgress);
     }
+    
+    // Log détaillé pour traquer les changements
+    if (debug) console.log("🎯 [CassetteIndicator] Calcul progression:", {
+      globalProgress: globalProgress.toFixed(2),
+      finalProgress: finalProgress.toFixed(2),
+      maxProgress: maxProgress.toFixed(2),
+      progressToUse: progressToUse.toFixed(2),
+      sequenceState: fragmentState.sequenceState,
+      currentTime: fragmentState.currentTime,
+      duration: fragmentState.duration,
+      timestamp: Date.now()
+    });
+    
+    return progressToUse;
+  }, [fragmentState, maxProgress, debug]);
 
-    // Si pas de durée ou temps, retourner la dernière progression connue ou 0
-    return isExiting ? lastProgress : 0;
-  }, [
-    fragmentState.currentTime,
-    fragmentState.duration,
-    isExiting,
-    lastProgress,
-  ]);
+  // Debug logs pour comprendre l'état
+  useEffect(() => {
+    if (debug) {
+      const globalProgress = fragmentState.getGlobalProgress ? fragmentState.getGlobalProgress() : 0;
+      const state = fragmentState.getState ? fragmentState.getState() : {};
+      
+      console.log("🎵 [CassetteIndicator] État détaillé:", {
+        isVisible,
+        duration: fragmentState.duration,
+        currentTime: fragmentState.currentTime,
+        globalProgress: globalProgress.toFixed(1) + "%",
+        progress: progress.toFixed(1) + "%",
+        sequenceState: fragmentState.sequenceState,
+        isCassetteSequenceActive: fragmentState.isCassetteSequenceActive,
+        // Progressions de phases individuelles
+        phaseProgress: state.phaseProgress || "non disponible",
+        // Timestamp pour traquer l'ordre
+        timestamp: Date.now()
+      });
+    }
+  }, [debug, isVisible, fragmentState, progress]);
 
-  // Ne pas rendre si pas nécessaire
-  if (!shouldRender) {
-    return null;
-  }
-
+  // ✅ TOUJOURS RENDU - Pas de return null !
   return (
     <CassetteContainer isVisible={isVisible}>
       <ProgressBar progress={progress} />

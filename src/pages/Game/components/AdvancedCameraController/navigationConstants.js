@@ -92,7 +92,7 @@ export const CAMERA_FOV = 50;
 export const BASE_CAMERA_DISTANCE = 1900;
 export const BOUNDING_SPHERE_RADIUS = 2400; // Rayon de la sphère limite au-delà de laquelle on revient à la position par défaut
 export const ACCELERATION_DISTANCE_THRESHOLD = 10; // Distance à partir de laquelle on applique l'accélération
-export const ORBIT_DISTANCE = 1600; // Distance fixe pour le mode d'orbite automatique
+export const ORBIT_DISTANCE = 1900; // Distance fixe pour le mode d'orbite automatique
 
 // Paramètres des positions de caméra
 export const CAMERA_POSITIONS = [

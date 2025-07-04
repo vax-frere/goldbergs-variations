@@ -15,6 +15,7 @@ import {
 } from "../Game/scenes/WorldLevel/constants/worldObjects";
 import SvgPath from "../Game/components/SvgPath";
 import VibSvgPath from "../Game/components/VibSvgPath";
+import { getDataPath } from "../../utils/assetLoader";
 
 // Fonction utilitaire pour télécharger un fichier JSON
 const downloadJSON = (content, fileName) => {
@@ -123,7 +124,7 @@ const MovablePage = () => {
     setIsLoading(true);
     try {
       // Charger les données du graphe - utiliser le fichier spatialized_graph.data.json
-      const graphResponse = await fetch("/data/spatialized_graph.data.json");
+      const graphResponse = await fetch(getDataPath("spatialized_graph.data.json"));
       const graphJsonData = await graphResponse.json();
 
       // Validation basique des données du graphe

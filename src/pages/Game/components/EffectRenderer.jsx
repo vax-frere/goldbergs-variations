@@ -34,20 +34,20 @@ const EffectRenderer = memo(() => {
     updateEffects(deltaTime);
   });
 
-  // Debug: afficher les effets actifs
-  useEffect(() => {
-    if (activeEffects.length > 0) {
-      console.log("[EffectRenderer] Active effects:", activeEffects.length);
-      activeEffects.forEach((effect, index) => {
-        console.log(`Effect ${index}:`, {
-          id: effect.id,
-          type: effect.type,
-          progress: effect.progress,
-          position: effect.position,
-        });
-      });
-    }
-  }, [activeEffects]);
+  // Debug: afficher les effets actifs (désactivé pour éviter le spam)
+  // useEffect(() => {
+  //   if (activeEffects.length > 0) {
+  //     console.log("[EffectRenderer] Active effects:", activeEffects.length);
+  //     activeEffects.forEach((effect, index) => {
+  //       console.log(`Effect ${index}:`, {
+  //         id: effect.id,
+  //         type: effect.type,
+  //         progress: effect.progress,
+  //         position: effect.position,
+  //       });
+  //     });
+  //   }
+  // }, [activeEffects]);
 
   // Ne rien rendre s'il n'y a pas d'effets actifs
   if (activeEffects.length === 0) {

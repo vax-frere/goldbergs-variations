@@ -12,6 +12,7 @@ import { applyRadialDisplacement } from "./components/PostRenderer/utils/smoothD
 // import { applyRadialDisplacement } from "./components/PostRenderer/utils/displacementPass.js";
 import { spatializePostsAroundJoshuaNodesVND } from "./components/PostRenderer/utils/voronoiWithDisplacementPass.js";
 import { spatializePostsWithVolumetricDistribution } from "./components/PostRenderer/utils/volumetricVoronoiPass.js";
+import { getDataPath } from "../../utils/assetLoader";
 
 // Fonction utilitaire pour télécharger un fichier JSON
 const downloadJSON = (content, fileName) => {
@@ -719,7 +720,7 @@ const WorkPostPage = () => {
 
       // Charger les nœuds
       const nodesAndLinks = await loadJSON(
-        "/data/spatialized_nodes_and_links.data.json"
+        getDataPath("spatialized_nodes_and_links.data.json")
       );
       if (nodesAndLinks && nodesAndLinks.nodes) {
         setNodesData(nodesAndLinks.nodes);
@@ -727,7 +728,7 @@ const WorkPostPage = () => {
       setIsLoadingNodes(false);
 
       // Charger les posts
-      const posts = await loadJSON("/data/posts.data.json");
+      const posts = await loadJSON(getDataPath("posts.data.json"));
       if (posts) {
         setPostsData(posts);
       }

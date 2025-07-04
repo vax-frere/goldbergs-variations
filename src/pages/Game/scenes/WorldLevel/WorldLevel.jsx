@@ -5,6 +5,7 @@ import VibSvgPath from "../../components/VibSvgPath";
 
 import Graph from "./components/Graph/Graph";
 import InteractiveComponents from "./components/Graph/InteractiveComponents";
+import DistrictLabels from "./components/DistrictLabels";
 import useEffectStore from "../../services/EffectService";
 import useGameStore from "../../store";
 
@@ -78,6 +79,8 @@ const WorldLevel = memo(() => {
 
       {/* Composants interactifs - maintenant gérés en interne */}
       <InteractiveComponents objectsData={WORLD_INTERACTIVE_OBJECTS} />
+
+      <DistrictLabels />
 
       <Graph />
       <ShootingStars

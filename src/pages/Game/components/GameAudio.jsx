@@ -1,4 +1,4 @@
-import { useEffect, useRef, memo } from "react";
+import React, { useEffect, useRef } from "react";
 import { useThree } from "@react-three/fiber";
 import useGameStore from "../store";
 import useAudioManager from "../services/AudioManager";
@@ -26,11 +26,13 @@ export const getAudioState = () => {
 export const audioState = getAudioState();
 
 /**
- * Composant pour gérer l'audio du jeu avec le nouveau AudioManager
+ * Composant pour gérer l'audio du jeu
+ * @returns {null} - Ce composant ne rend aucun élément visuel
  */
-const GameAudio = memo(() => {
+const GameAudio = React.memo(() => {
   const { camera } = useThree();
   const audioEnabled = useGameStore((state) => state.audioEnabled);
+  const audioVolume = useGameStore((state) => state.audioVolume);
   const toggleAudio = useGameStore((state) => state.toggleAudio);
   const audioManager = useAudioManager();
   const initializationRef = useRef(false);
@@ -78,7 +80,7 @@ const GameAudio = memo(() => {
     }
   }, [camera, audioManager, audioEnabled]);
 
-  // Gérer l'activation/désactivation de l'audio
+  // Gérer l'audio ambiant
   useEffect(() => {
     if (!audioManager.isInitialized) return;
 
@@ -91,11 +93,13 @@ const GameAudio = memo(() => {
         });
       }
     } else {
-      // Arrêter l'audio ambiant
-      if (ambientInstanceRef.current) {
-        audioManager.stopAmbientAudio();
-        ambientInstanceRef.current = null;
-        console.log("🔇 [GameAudio] Ambient audio stopped (disabled)");
+      // Au lieu d'arrêter l'audio, on met juste son volume à 0
+      if (ambientInstanceRef.current && audioManager.audioInstances) {
+        const instance = audioManager.audioInstances.get(ambientInstanceRef.current);
+        if (instance) {
+          instance.updateAudio(0);
+          console.log("🔇 [GameAudio] Ambient audio volume set to 0 (disabled)");
+        }
       }
     }
   }, [audioEnabled, audioManager]);

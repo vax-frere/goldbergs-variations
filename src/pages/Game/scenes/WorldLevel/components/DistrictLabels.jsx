@@ -1,6 +1,6 @@
 import React, { useMemo } from "react";
 import CustomText from "../../../components/CustomText";
-import { BASE_THEMATIC_COLORS } from "../../../../../constants/thematicColors";
+import { BASE_THEMATIC_COLORS } from "../../../constants/thematicColors";
 import useAssets from "../../../hooks/useAssets";
 
 /**
@@ -28,11 +28,25 @@ const calculateThematicGroupCentroid = (nodes, thematicGroup) => {
     { x: 0, y: 0, z: 0 }
   );
 
-  return [
+  const centroid = [
     sum.x / groupNodes.length,
     sum.y / groupNodes.length,
     sum.z / groupNodes.length,
   ];
+
+  // Appliquer l'offset si défini pour ce district
+  const offset = DISTRICT_OFFSETS[thematicGroup] || [0, 0, 0];
+  return [
+    centroid[0] + offset[0],
+    centroid[1] + offset[1],
+    centroid[2] + offset[2],
+  ];
+};
+
+const DISTRICT_OFFSETS = {
+  "Religious": [0, 75, 0],    // +75 en Y
+  "Conservatives": [0, 75, 0], // +75 en Y
+  "Culture": [0, 75, 0], // +75 en Y
 };
 
 /**
@@ -47,8 +61,8 @@ const calculateThematicGroupCentroid = (nodes, thematicGroup) => {
 const DistrictLabels = ({
   textSize = 30,
   textColor = "#ffffff",
-  maxDistance = 1500,
-  minDistance = 1000,
+  maxDistance = 1250,
+  minDistance = 500,
 }) => {
   const assets = useAssets({ autoInit: false });
 
@@ -92,6 +106,7 @@ const DistrictLabels = ({
           color={BASE_THEMATIC_COLORS[district.text] || textColor}
           maxDistance={maxDistance}
           minDistance={minDistance}
+          reverseOpacity={false}
           outline={true}
           outlineWidth={2.0}
           outlineColor="#000000"

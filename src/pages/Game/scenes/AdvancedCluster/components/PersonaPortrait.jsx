@@ -1,6 +1,7 @@
 import React, { memo, useEffect, useRef, useState } from "react";
 import { useThree } from "@react-three/fiber";
 import * as THREE from "three";
+import { getImagePath } from "../../../../../utils/assetLoader";
 
 /**
  * Component to display the persona portrait very far in the background
@@ -33,7 +34,7 @@ const PersonaPortrait = memo(({ clusterId, assets }) => {
     setPersonaData(persona);
 
     // Try to load portrait image based on persona slug
-    const imagePath = `/img/characters/${persona.slug}.png`;
+    const imagePath = getImagePath(`characters/${persona.slug}.png`);
     console.log(`[PersonaPortrait] Trying to load image: ${imagePath}`);
 
     // Use THREE.TextureLoader to load the image

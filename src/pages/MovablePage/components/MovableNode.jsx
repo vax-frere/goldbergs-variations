@@ -3,6 +3,7 @@ import { useFrame, useThree } from "@react-three/fiber";
 import { TransformControls, Billboard, Text } from "@react-three/drei";
 import * as THREE from "three";
 import { SVGLoader } from "three/examples/jsm/loaders/SVGLoader";
+import { getImagePath } from "../../../utils/assetLoader";
 
 // Composant pour afficher une sphère si aucune image SVG n'est disponible
 const NodeSphere = ({
@@ -238,7 +239,7 @@ const useSVGLoader = (nodeName) => {
 
       try {
         // Chemin du SVG à charger
-        const svgPath = `/img/${nodeName}.svg`;
+        const svgPath = getImagePath(`${nodeName}.svg`);
 
         // Try to fetch the SVG
         const response = await fetch(svgPath);

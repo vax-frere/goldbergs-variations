@@ -34,7 +34,8 @@ const CASSETTE_SEQUENCE_CONFIG = {
  * Classe principale du service de fragments audio
  */
 class AudioFragmentService {
-  constructor() {
+  constructor(debug = false) {
+    this.debug = debug;
     this.audioManager = null;
     this.assetStore = null;
     this.gameStore = null;
@@ -49,13 +50,23 @@ class AudioFragmentService {
     this.fragmentDuration = 0;
     this.currentTime = 0;
 
+    // Progression des phases individuelles
+    this.phaseProgress = {
+      cassetteIn: 0,        // 0-100%
+      waitAfter: 0,         // 0-100%
+      fragment: 0,          // 0-100%
+      waitBefore: 0,        // 0-100%
+      cassetteOut: 0        // 0-100%
+    };
+
     // Listeners pour les événements
     this.listeners = new Set();
 
-    // Timer pour mettre à jour le temps
-    this.timeUpdateInterval = null;
+    // Timers pour mettre à jour le temps
+    this.timeUpdateInterval = null; // Timer global pour progression
+    this.fragmentTimeInterval = null; // Timer spécifique au fragment
 
-    console.log("🎵 [AudioFragmentService] Service créé");
+    if (this.debug) console.log("🎵 [AudioFragmentService] Service créé");
   }
 
   /**
@@ -79,7 +90,7 @@ class AudioFragmentService {
       }
 
       this.isInitialized = true;
-      console.log("🎵 [AudioFragmentService] Service initialisé");
+      if (this.debug) console.log("🎵 [AudioFragmentService] Service initialisé");
       return true;
     } catch (error) {
       console.error("🎵 [AudioFragmentService] Erreur initialisation:", error);
@@ -96,48 +107,51 @@ class AudioFragmentService {
     );
 
     if (!this.isInitialized || !this.audioManager) {
-      console.error("🎵 [AudioFragmentService] Service non initialisé");
-      console.log(
+      if (this.debug) console.error("🎵 [AudioFragmentService] Service non initialisé");
+      if (this.debug) console.log(
         "🎵 [AudioFragmentService] isInitialized:",
         this.isInitialized
       );
-      console.log("🎵 [AudioFragmentService] audioManager:", this.audioManager);
+      if (this.debug) console.log("🎵 [AudioFragmentService] audioManager:", this.audioManager);
       return false;
     }
 
     if (!this.gameStore.audioEnabled) {
-      console.log("🎵 [AudioFragmentService] Audio désactivé");
+      if (this.debug) console.log("🎵 [AudioFragmentService] Audio désactivé");
       return false;
     }
 
-    try {
-      console.log(
-        `🎵 [AudioFragmentService] Démarrage séquence fragment: ${fragmentId}`
-      );
+          try {
+        if (this.debug) console.log(
+          `🎵 [AudioFragmentService] Démarrage séquence fragment: ${fragmentId}`
+        );
 
-      // Arrêter la séquence actuelle si elle existe
-      await this.stopFragment();
+        // Arrêter la séquence actuelle si elle existe
+        await this.stopFragment();
 
-      // Charger les données du fragment
-      console.log(
-        `🎵 [AudioFragmentService] Chargement données fragment: ${fragmentId}`
-      );
-      this.fragmentData = await this._loadFragmentData(fragmentId);
-      if (!this.fragmentData) {
-        throw new Error(`Fragment ${fragmentId} non trouvé`);
-      }
-      console.log(
-        `🎵 [AudioFragmentService] Données fragment chargées:`,
-        this.fragmentData
-      );
+        // Charger les données du fragment
+        if (this.debug) console.log(
+          `🎵 [AudioFragmentService] Chargement données fragment: ${fragmentId}`
+        );
+        this.fragmentData = await this._loadFragmentData(fragmentId);
+        if (!this.fragmentData) {
+          throw new Error(`Fragment ${fragmentId} non trouvé`);
+        }
+        if (this.debug) console.log(
+          `🎵 [AudioFragmentService] Données fragment chargées:`,
+          this.fragmentData
+        );
 
-      this.currentFragment = fragmentId;
-      this.sequenceStartTime = Date.now();
-      this.currentTime = 0;
+        this.currentFragment = fragmentId;
+        this.sequenceStartTime = Date.now();
+        this.currentTime = 0;
+        
+        // Estimation simple de la durée (sera mise à jour quand l'audio se charge)
+        this.fragmentDuration = 45; // Estimation par défaut
 
-      // Démarrer la séquence
-      console.log(`🎵 [AudioFragmentService] Démarrage séquence cassette`);
-      await this._startCassetteSequence();
+        // Démarrer la séquence
+        if (this.debug) console.log(`🎵 [AudioFragmentService] Démarrage séquence cassette`);
+        await this._startCassetteSequence();
 
       return true;
     } catch (error) {
@@ -156,7 +170,7 @@ class AudioFragmentService {
   async stopFragment() {
     if (this.currentSequenceState === FRAGMENT_SEQUENCE_STATES.IDLE) return;
 
-    console.log("🛑 [AudioFragmentService] Arrêt séquence fragment");
+    if (this.debug) console.log("🛑 [AudioFragmentService] Arrêt séquence fragment");
 
     if (this.audioManager) {
       // Arrêter tous les sons
@@ -171,6 +185,11 @@ class AudioFragmentService {
       this.timeUpdateInterval = null;
     }
 
+    if (this.fragmentTimeInterval) {
+      clearInterval(this.fragmentTimeInterval);
+      this.fragmentTimeInterval = null;
+    }
+
     this._resetState();
     this._emitEvent("fragmentStopped");
   }
@@ -179,20 +198,23 @@ class AudioFragmentService {
    * Démarre la séquence cassette
    */
   async _startCassetteSequence() {
-    console.log(
+    if (this.debug) console.log(
       "🎵 [AudioFragmentService] _startCassetteSequence - Phase 1: Cassette-in"
     );
+
+    // Démarrer le timer de progression globale dès le début
+    this._startGlobalProgressTimer();
 
     // Phase 1: Cassette-in
     this.currentSequenceState = FRAGMENT_SEQUENCE_STATES.CASSETTE_IN;
     this._emitEvent("sequenceStateChanged", this.currentSequenceState);
 
-    console.log("🎵 [AudioFragmentService] Lecture son cassette-in.mp3");
+    if (this.debug) console.log("🎵 [AudioFragmentService] Lecture son cassette-in.mp3");
     await this.audioManager.playSound("cassette-in.mp3", { type: "sfx" });
-    console.log("🎵 [AudioFragmentService] Attente après cassette-in");
+    if (this.debug) console.log("🎵 [AudioFragmentService] Attente après cassette-in");
     await this._wait(CASSETTE_SEQUENCE_CONFIG.CASSETTE_IN_DURATION * 1000);
 
-    console.log(
+    if (this.debug) console.log(
       "🎵 [AudioFragmentService] _startCassetteSequence - Phase 2: Attente après cassette-in"
     );
 
@@ -200,11 +222,11 @@ class AudioFragmentService {
     this.currentSequenceState = FRAGMENT_SEQUENCE_STATES.WAIT_AFTER_CASSETTE_IN;
     this._emitEvent("sequenceStateChanged", this.currentSequenceState);
 
-    console.log("🎵 [AudioFragmentService] Début attente après cassette-in");
+    if (this.debug) console.log("🎵 [AudioFragmentService] Début attente après cassette-in");
     await this._wait(CASSETTE_SEQUENCE_CONFIG.WAIT_AFTER_CASSETTE_IN * 1000);
-    console.log("🎵 [AudioFragmentService] Fin attente après cassette-in");
+    if (this.debug) console.log("🎵 [AudioFragmentService] Fin attente après cassette-in");
 
-    console.log(
+    if (this.debug) console.log(
       "🎵 [AudioFragmentService] _startCassetteSequence - Phase 3: Fragment principal"
     );
 
@@ -243,7 +265,7 @@ class AudioFragmentService {
         loop: false,
       });
 
-      console.log(
+      if (this.debug) console.log(
         `🎵 [AudioFragmentService] Instance créée avec ID: ${instanceId}`
       );
 
@@ -255,15 +277,15 @@ class AudioFragmentService {
         throw new Error("Instance audio non trouvée après création");
       }
 
-      console.log(
+      if (this.debug) console.log(
         `🎵 [AudioFragmentService] Instance audio récupérée:`,
         audioInstance
       );
-      console.log(
+      if (this.debug) console.log(
         `🎵 [AudioFragmentService] Volume de l'instance:`,
         audioInstance.currentVolume
       );
-      console.log(`🎵 [AudioFragmentService] État de l'instance:`, {
+      if (this.debug) console.log(`🎵 [AudioFragmentService] État de l'instance:`, {
         isPlaying: audioInstance.isPlaying,
         isPaused: audioInstance.isPaused,
       });
@@ -273,7 +295,7 @@ class AudioFragmentService {
 
       // Vérifier après le play
       setTimeout(() => {
-        console.log(`🎵 [AudioFragmentService] État après 100ms:`, {
+        if (this.debug) console.log(`🎵 [AudioFragmentService] État après 100ms:`, {
           isPlaying: audioInstance.isPlaying,
           isPaused: audioInstance.isPaused,
           volume: audioInstance.currentVolume,
@@ -290,52 +312,12 @@ class AudioFragmentService {
       // Changer l'état
       this._changeSequenceState(FRAGMENT_SEQUENCE_STATES.FRAGMENT_PLAYING);
 
-      // Démarrer le timer pour les mises à jour de temps
-      this._startTimeUpdateTimer();
+      // Démarrer le timer spécifique au fragment (le timer global continue)
+      this._startFragmentTimeUpdater();
     } catch (error) {
       console.error("❌ [AudioFragmentService] Erreur Phase 3:", error);
       throw error;
     }
-  }
-
-  /**
-   * Démarre le timer de mise à jour du temps
-   */
-  _startTimeUpdater() {
-    if (this.timeUpdateInterval) {
-      clearInterval(this.timeUpdateInterval);
-    }
-
-    this.timeUpdateInterval = setInterval(() => {
-      if (
-        this.currentSequenceState === FRAGMENT_SEQUENCE_STATES.FRAGMENT_PLAYING
-      ) {
-        this.currentTime = (Date.now() - this.fragmentStartTime) / 1000;
-        this._emitEvent("timeUpdate", this.currentTime);
-      }
-    }, 100); // Mise à jour toutes les 100ms
-  }
-
-  /**
-   * Démarre le timer de mise à jour du temps (nouvelle version)
-   */
-  _startTimeUpdateTimer() {
-    console.log("🎵 [AudioFragmentService] Démarrage timer mise à jour temps");
-
-    if (this.timeUpdateInterval) {
-      clearInterval(this.timeUpdateInterval);
-    }
-
-    this.fragmentStartTime = Date.now();
-
-    this.timeUpdateInterval = setInterval(() => {
-      if (
-        this.currentSequenceState === FRAGMENT_SEQUENCE_STATES.FRAGMENT_PLAYING
-      ) {
-        this.currentTime = (Date.now() - this.fragmentStartTime) / 1000;
-        this._emitEvent("timeUpdate", this.currentTime);
-      }
-    }, 100); // Mise à jour toutes les 100ms
   }
 
   /**
@@ -353,7 +335,7 @@ class AudioFragmentService {
     const instance = this.audioManager.audioInstances.get("fragment_main");
 
     if (instance && instance.audioObject) {
-      console.log("🎵 [AudioFragmentService] Écouteur fin fragment configuré");
+      if (this.debug) console.log("🎵 [AudioFragmentService] Écouteur fin fragment configuré");
       const audioObject = instance.audioObject;
 
       // Pour HTML5 Audio
@@ -369,7 +351,7 @@ class AudioFragmentService {
           "loadedmetadata",
           () => {
             this.fragmentDuration = audioObject.duration;
-            console.log(
+            if (this.debug) console.log(
               "🎵 [AudioFragmentService] Durée fragment:",
               this.fragmentDuration
             );
@@ -384,7 +366,7 @@ class AudioFragmentService {
         // Estimer la durée pour THREE.js Audio
         if (audioObject.buffer) {
           this.fragmentDuration = audioObject.buffer.duration;
-          console.log(
+          if (this.debug) console.log(
             "🎵 [AudioFragmentService] Durée fragment (THREE.js):",
             this.fragmentDuration
           );
@@ -402,12 +384,12 @@ class AudioFragmentService {
    * Appelé quand le fragment se termine
    */
   async _onFragmentEnded(fragmentData) {
-    console.log("🎵 [AudioFragmentService] Fragment terminé");
+    if (this.debug) console.log("🎵 [AudioFragmentService] Fragment terminé");
 
-    // Arrêter le timer
-    if (this.timeUpdateInterval) {
-      clearInterval(this.timeUpdateInterval);
-      this.timeUpdateInterval = null;
+    // Arrêter seulement le timer du fragment (le timer global continue)
+    if (this.fragmentTimeInterval) {
+      clearInterval(this.fragmentTimeInterval);
+      this.fragmentTimeInterval = null;
     }
 
     // Phase 4: Attente avant cassette-out
@@ -424,9 +406,15 @@ class AudioFragmentService {
     await this.audioManager.playSound("cassette-out.mp3", { type: "sfx" });
     await this._wait(CASSETTE_SEQUENCE_CONFIG.CASSETTE_OUT_DURATION * 1000);
 
-    // Phase 6: Terminé
+    // Phase 6: Terminé - maintenant on peut arrêter le timer global
     this.currentSequenceState = FRAGMENT_SEQUENCE_STATES.COMPLETED;
     this._emitEvent("sequenceStateChanged", this.currentSequenceState);
+
+    // Arrêter le timer global maintenant que la séquence est terminée
+    if (this.timeUpdateInterval) {
+      clearInterval(this.timeUpdateInterval);
+      this.timeUpdateInterval = null;
+    }
 
     // Marquer le fragment comme joué
     this.gameStore.markFragmentAsPlayed(
@@ -521,16 +509,25 @@ class AudioFragmentService {
     this.fragmentStartTime = 0;
     this.fragmentDuration = 0;
     this.currentTime = 0;
+    
+    // Réinitialiser les progressions de phases
+    this.phaseProgress = {
+      cassetteIn: 0,
+      waitAfter: 0,
+      fragment: 0,
+      waitBefore: 0,
+      cassetteOut: 0
+    };
   }
 
   /**
    * Utilitaire pour attendre
    */
   _wait(ms) {
-    console.log(`🎵 [AudioFragmentService] _wait: ${ms}ms`);
+    if (this.debug) console.log(`🎵 [AudioFragmentService] _wait: ${ms}ms`);
     return new Promise((resolve) => {
       setTimeout(() => {
-        console.log(`🎵 [AudioFragmentService] _wait terminé: ${ms}ms`);
+        if (this.debug) console.log(`🎵 [AudioFragmentService] _wait terminé: ${ms}ms`);
         resolve();
       }, ms);
     });
@@ -558,14 +555,14 @@ class AudioFragmentService {
    * Émet un événement
    */
   _emitEvent(event, data = null) {
-    console.log(`🎵 [AudioFragmentService] Émission événement: ${event}`, data);
-    console.log(
+    if (this.debug) console.log(`🎵 [AudioFragmentService] Émission événement: ${event}`, data);
+    if (this.debug) console.log(
       `🎵 [AudioFragmentService] Nombre de listeners: ${this.listeners.size}`
     );
 
     this.listeners.forEach(({ event: listenerEvent, callback }) => {
       if (listenerEvent === event) {
-        console.log(`🎵 [AudioFragmentService] Appel callback pour: ${event}`);
+        if (this.debug) console.log(`🎵 [AudioFragmentService] Appel callback pour: ${event}`);
         callback(data);
       }
     });
@@ -582,6 +579,8 @@ class AudioFragmentService {
       fragmentData: this.fragmentData,
       currentTime: this.currentTime,
       fragmentDuration: this.fragmentDuration,
+      globalProgress: this._calculateGlobalProgress(),
+      phaseProgress: this.phaseProgress,
       isPlaying:
         this.currentSequenceState === FRAGMENT_SEQUENCE_STATES.FRAGMENT_PLAYING,
       isLoading:
@@ -595,24 +594,107 @@ class AudioFragmentService {
   }
 
   /**
+   * Calcule la progression globale de toute la séquence cassette (0-100%)
+   * VERSION SIMPLIFIÉE : Progression linéaire basée sur le temps écoulé total
+   */
+  _calculateGlobalProgress() {
+    if (this.currentSequenceState === FRAGMENT_SEQUENCE_STATES.IDLE) {
+      return 0;
+    }
+
+    if (this.currentSequenceState === FRAGMENT_SEQUENCE_STATES.COMPLETED) {
+      return 100;
+    }
+
+    // Si pas de temps de début, retourner 0
+    if (!this.sequenceStartTime) {
+      return 0;
+    }
+
+    // Durée totale de la séquence (en secondes)
+    const cassetteInDuration = CASSETTE_SEQUENCE_CONFIG.CASSETTE_IN_DURATION;
+    const waitAfterDuration = CASSETTE_SEQUENCE_CONFIG.WAIT_AFTER_CASSETTE_IN;
+    const fragmentDuration = this.fragmentDuration || 45; // Estimation par défaut
+    const waitBeforeDuration = CASSETTE_SEQUENCE_CONFIG.WAIT_BEFORE_CASSETTE_OUT;
+    const cassetteOutDuration = CASSETTE_SEQUENCE_CONFIG.CASSETTE_OUT_DURATION;
+
+    const totalDuration = 
+      cassetteInDuration + 
+      waitAfterDuration + 
+      fragmentDuration + 
+      waitBeforeDuration + 
+      cassetteOutDuration;
+
+    // Temps écoulé depuis le début (en secondes)
+    const elapsedTime = (Date.now() - this.sequenceStartTime) / 1000;
+
+    // Progression linéaire simple : temps écoulé / temps total
+    const percentage = Math.min((elapsedTime / totalDuration) * 100, 100);
+    
+    return Math.max(0, percentage);
+  }
+
+  /**
    * Nettoie le service
    */
   dispose() {
     this.stopFragment();
     this.listeners.clear();
     this.isInitialized = false;
-    console.log("🧹 [AudioFragmentService] Service nettoyé");
+    if (this.debug) console.log("🧹 [AudioFragmentService] Service nettoyé");
   }
 
   /**
    * Change l'état de la séquence et émet l'événement
    */
   _changeSequenceState(newState) {
-    console.log(
+    if (this.debug) console.log(
       `🎵 [AudioFragmentService] Changement état: ${this.currentSequenceState} -> ${newState}`
     );
     this.currentSequenceState = newState;
     this._emitEvent("sequenceStateChanged", this.currentSequenceState);
+  }
+
+  /**
+   * Démarre le timer de progression globale - VERSION SIMPLIFIÉE
+   */
+  _startGlobalProgressTimer() {
+    if (this.debug) console.log("🎵 [AudioFragmentService] Démarrage timer progression globale (simple)");
+
+    if (this.timeUpdateInterval) {
+      clearInterval(this.timeUpdateInterval);
+    }
+
+    // Timer simple qui émet juste la progression
+    this.timeUpdateInterval = setInterval(() => {
+      if (this.currentSequenceState !== FRAGMENT_SEQUENCE_STATES.IDLE && 
+          this.currentSequenceState !== FRAGMENT_SEQUENCE_STATES.COMPLETED) {
+        
+        const globalProgress = this._calculateGlobalProgress();
+        this._emitEvent("globalProgressUpdate", globalProgress);
+      }
+    }, 100); // Mise à jour toutes les 100ms
+  }
+
+  /**
+   * Démarre le timer spécifique au fragment
+   */
+  _startFragmentTimeUpdater() {
+    if (this.debug) console.log("🎵 [AudioFragmentService] Démarrage timer fragment");
+    
+    // Marquer le début du fragment
+    this.fragmentStartTime = Date.now();
+    
+    // Le timer global s'occupe déjà de la progression globale
+    // On ajoute juste la mise à jour du temps du fragment
+    if (!this.fragmentTimeInterval) {
+      this.fragmentTimeInterval = setInterval(() => {
+        if (this.currentSequenceState === FRAGMENT_SEQUENCE_STATES.FRAGMENT_PLAYING) {
+          this.currentTime = (Date.now() - this.fragmentStartTime) / 1000;
+          this._emitEvent("timeUpdate", this.currentTime);
+        }
+      }, 100);
+    }
   }
 }
 
@@ -622,9 +704,9 @@ let audioFragmentServiceInstance = null;
 /**
  * Hook pour utiliser l'AudioFragmentService
  */
-export const useAudioFragmentService = () => {
+export const useAudioFragmentService = (debug = false) => {
   if (!audioFragmentServiceInstance) {
-    audioFragmentServiceInstance = new AudioFragmentService();
+    audioFragmentServiceInstance = new AudioFragmentService(debug);
   }
   return audioFragmentServiceInstance;
 };

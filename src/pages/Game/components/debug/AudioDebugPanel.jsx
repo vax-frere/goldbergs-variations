@@ -32,22 +32,7 @@ const AudioDebugPanel = () => {
   }, [audioManager, navigationAudioService]);
 
   return (
-    <div
-      style={{
-        position: "fixed",
-        top: "10px",
-        right: "10px",
-        backgroundColor: "rgba(0, 0, 0, 0.8)",
-        border: "1px solid rgba(255, 255, 255, 0.2)",
-        borderRadius: "4px",
-        padding: "12px",
-        maxWidth: "320px",
-        zIndex: 10000,
-        fontSize: "11px",
-        fontFamily: "monospace",
-        color: "white",
-      }}
-    >
+    <div>
       <h3 style={{ margin: "0 0 12px 0", fontSize: "13px" }}>🎵 Audio Debug</h3>
 
       {/* Navigation Audio Service */}

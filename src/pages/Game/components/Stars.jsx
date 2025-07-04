@@ -1,21 +1,22 @@
-import { useRef, useMemo, useEffect } from "react";
+import { useRef, useMemo, useEffect, useState } from "react";
 import * as THREE from "three";
 import { useFrame } from "@react-three/fiber";
 import useAssets from "../hooks/useAssets";
+import useGameStore from "../store";
 
-/**
- * Composant qui génère un champ d'étoiles réaliste autour de la scène
- * Simule les vraies couleurs stellaires, magnitudes, et distribution spatiale
- *
- * @param {Object} props - Propriétés du composant
- * @param {number} [props.count=3000] - Nombre d'étoiles à générer
- * @param {number} [props.radius=3000] - Rayon de la sphère sur laquelle les étoiles sont placées
- * @param {number} [props.size=1.5] - Taille de base des étoiles
- */
-export function Stars({ count = 4000, radius = 5000, size = 8.0 }) {
+import seedrandom from "seedrandom";
+
+// Composant pour une instance d'étoiles
+const StarField = ({ count, radius, size, seed, forceUpdate }) => {
   const pointsRef = useRef();
   const materialRef = useRef();
   const assets = useAssets();
+
+  // Initialiser le générateur de nombres aléatoires
+  const random = useMemo(() => {
+    console.log("🎲 [StarField] Création d'un nouveau générateur avec seed:", seed);
+    return seedrandom(seed.toString());
+  }, [seed, forceUpdate]);
 
   // Couleurs stellaires réalistes basées sur la température
   const stellarColors = useMemo(
@@ -46,7 +47,7 @@ export function Stars({ count = 4000, radius = 5000, size = 8.0 }) {
 
   // Fonction pour sélectionner une couleur stellaire selon la probabilité
   const selectStellarColor = () => {
-    const rand = Math.random();
+    const rand = random();
     let cumulative = 0;
 
     for (const star of stellarColors) {
@@ -65,13 +66,13 @@ export function Stars({ count = 4000, radius = 5000, size = 8.0 }) {
     // Distribution réaliste des magnitudes stellaires
     // La plupart des étoiles sont faibles (magnitude élevée)
     // Quelques étoiles très brillantes (magnitude faible)
-    const rand = Math.random();
+    const rand = random();
 
-    if (rand < 0.005) return 0.5 + Math.random() * 1.0; // Plus d'étoiles très brillantes (0.5-1.5)
-    if (rand < 0.03) return 1.5 + Math.random() * 1.5; // Plus d'étoiles brillantes (1.5-3.0)
-    if (rand < 0.12) return 3.0 + Math.random() * 1.5; // Plus d'étoiles moyennes (3.0-4.5)
-    if (rand < 0.35) return 4.5 + Math.random() * 1.0; // Plus d'étoiles faibles (4.5-5.5)
-    return 5.5 + Math.random() * 1.5; // Étoiles très faibles mais pas trop (5.5-7.0)
+    if (rand < 0.005) return 0.5 + random() * 1.0; // Plus d'étoiles très brillantes (0.5-1.5)
+    if (rand < 0.03) return 1.5 + random() * 1.5; // Plus d'étoiles brillantes (1.5-3.0)
+    if (rand < 0.12) return 3.0 + random() * 1.5; // Plus d'étoiles moyennes (3.0-4.5)
+    if (rand < 0.35) return 4.5 + random() * 1.0; // Plus d'étoiles faibles (4.5-5.5)
+    return 5.5 + random() * 1.5; // Étoiles très faibles mais pas trop (5.5-7.0)
   };
 
   // Fonction pour convertir la magnitude en taille
@@ -79,7 +80,7 @@ export function Stars({ count = 4000, radius = 5000, size = 8.0 }) {
     // Plus la magnitude est faible, plus l'étoile est brillante et grande
     // Formule logarithmique inverse pour un rendu réaliste mais plus visible
     return (
-      size * Math.pow(2.512, -(magnitude - 6)) * (2.5 + Math.random() * 0.8)
+      size * Math.pow(2.512, -(magnitude - 6)) * (2.5 + random() * 0.8)
     );
   };
 
@@ -121,113 +122,108 @@ export function Stars({ count = 4000, radius = 5000, size = 8.0 }) {
     }
   }, [assets.isReady]);
 
-  // Créer les positions, couleurs et tailles des étoiles avec distribution réaliste
+  // Créer les positions, couleurs et tailles des étoiles
   const [positions, colors, sizes] = useMemo(() => {
+    console.log("✨ [StarField] Génération des étoiles avec seed:", seed);
     const positions = new Float32Array(count * 3);
     const colors = new Float32Array(count * 3);
     const sizes = new Float32Array(count);
 
-    // Paramètres pour la simulation de la Voie lactée
-    const milkyWayDensity = 0.5; // 50% des étoiles dans le plan galactique (plus visible)
-    const milkyWayThickness = 0.5; // Épaisseur relative du disque galactique (plus fin)
+    // Paramètres de la Voie Lactée
+    const milkyWayDensity = 0.4; // 60% des étoiles dans la Voie Lactée pour plus de densité
+    const milkyWayThickness = 0.5; // 30% de l'épaisseur pour un disque plus fin
+    const milkyWayInclinationX = 0; // 0
+    const milkyWayInclinationZ = Math.PI / 4; // 30 degrés sur l'axe Z
 
-    // Créer quelques amas d'étoiles
+    // Nombre de clusters
+    const numClusters = Math.floor(random() * 4) + 2; // 2-5 clusters
     const clusters = [];
-    const numClusters = 3 + Math.floor(Math.random() * 3);
+
+    // Créer les clusters
     for (let i = 0; i < numClusters; i++) {
       clusters.push({
         center: new THREE.Vector3(
-          (Math.random() - 0.5) * radius * 2,
-          (Math.random() - 0.5) * radius * 2,
-          (Math.random() - 0.5) * radius * 2
+          (random() - 0.5) * radius * 1.2, // Augmenté de 0.8 à 1.2 pour éloigner les clusters
+          (random() - 0.5) * radius * 1.2,
+          (random() - 0.5) * radius * 1.2
         ),
-        radius: radius * (0.1 + Math.random() * 0.2),
-        density: 0.05 + Math.random() * 0.1,
+        radius: radius * (0.05 + random() * 0.15), // 5-20% du rayon total
+        density: 0.1 + random() * 0.1, // 10-20% des étoiles
       });
     }
 
+    // Générer les étoiles
     for (let i = 0; i < count; i++) {
+      const i3 = i * 3;
       let x, y, z;
 
-      // Décider si cette étoile fait partie de la Voie lactée, d'un amas, ou est isolée
-      const distributionRand = Math.random();
+      // Déterminer si l'étoile fait partie de la Voie Lactée
+      const isMilkyWay = random() < milkyWayDensity;
 
-      if (distributionRand < milkyWayDensity) {
-        // Étoile dans le plan galactique (Voie lactée) - incliné de 30 degrés
-        const theta = Math.random() * Math.PI * 2;
-        const r = radius * (0.6 + Math.random() * 0.4); // Étendre un peu plus
+      if (isMilkyWay) {
+        // Étoile dans la Voie Lactée
+        const angle = random() * Math.PI * 2;
+        const distance = 0.7 + random() * 0.3; // 70-100% du rayon pour éviter le centre
+        const height = (random() - 0.5) * milkyWayThickness;
 
-        // Position dans le plan galactique (plan XZ)
-        const x_flat = r * Math.cos(theta);
-        const z_flat = r * Math.sin(theta);
-        const y_flat = (Math.random() - 0.5) * radius * milkyWayThickness;
+        x = Math.cos(angle) * radius * distance;
+        y = height * radius;
+        z = Math.sin(angle) * radius * distance;
 
-        // Incliner le plan galactique de 45 degrés autour de l'axe X pour plus de visibilité
-        const inclinationAngle = Math.PI / 4; // 45 degrés en radians (plus visible)
-        const cosAngle = Math.cos(inclinationAngle);
-        const sinAngle = Math.sin(inclinationAngle);
+        // Appliquer la rotation en biais (X puis Z)
+        // Rotation sur l'axe X
+        const rotatedY = y * Math.cos(milkyWayInclinationX) - z * Math.sin(milkyWayInclinationX);
+        const rotatedZ = y * Math.sin(milkyWayInclinationX) + z * Math.cos(milkyWayInclinationX);
+        y = rotatedY;
+        z = rotatedZ;
 
-        // Rotation autour de l'axe X (plus visible depuis la caméra)
-        x = x_flat;
-        y = y_flat * cosAngle - z_flat * sinAngle;
-        z = y_flat * sinAngle + z_flat * cosAngle;
+        // Rotation sur l'axe Z
+        const rotatedX = x * Math.cos(milkyWayInclinationZ) - y * Math.sin(milkyWayInclinationZ);
+        const rotatedY2 = x * Math.sin(milkyWayInclinationZ) + y * Math.cos(milkyWayInclinationZ);
+        x = rotatedX;
+        y = rotatedY2;
       } else {
-        // Vérifier si l'étoile peut être dans un amas
-        let inCluster = false;
-        for (const cluster of clusters) {
-          if (Math.random() < cluster.density) {
-            // Étoile dans un amas
-            const clusterTheta = Math.random() * Math.PI * 2;
-            const clusterPhi = Math.acos(2 * Math.random() - 1);
-            const clusterR = cluster.radius * Math.random();
+        // Étoile isolée ou dans un cluster
+        const inCluster = random() < 0.3; // 30% de chance d'être dans un cluster
+        if (inCluster) {
+          const cluster = clusters[Math.floor(random() * clusters.length)];
+          const clusterAngle = random() * Math.PI * 2;
+          const clusterDistance = random() * cluster.radius;
+          const clusterHeight = (random() - 0.5) * cluster.radius * 0.3;
 
-            x =
-              cluster.center.x +
-              clusterR * Math.sin(clusterPhi) * Math.cos(clusterTheta);
-            y =
-              cluster.center.y +
-              clusterR * Math.sin(clusterPhi) * Math.sin(clusterTheta);
-            z = cluster.center.z + clusterR * Math.cos(clusterPhi);
-            inCluster = true;
-            break;
-          }
-        }
+          x = cluster.center.x + Math.cos(clusterAngle) * clusterDistance;
+          y = cluster.center.y + clusterHeight;
+          z = cluster.center.z + Math.sin(clusterAngle) * clusterDistance;
+        } else {
+          // Étoile isolée
+          const angle = random() * Math.PI * 2;
+          const distance = 0.9 + random() * 0.3; // 90-120% du rayon pour éviter le centre et aller plus loin
+          const height = (random() - 0.5) * radius * 0.8; // Augmenté de 0.5 à 0.8 pour plus de dispersion verticale
 
-        if (!inCluster) {
-          // Étoile isolée - distribution sphérique normale
-          const theta = Math.random() * Math.PI * 2;
-          const phi = Math.acos(2 * Math.random() - 1);
-          const r = radius * (0.8 + Math.random() * 0.2);
-
-          x = r * Math.sin(phi) * Math.cos(theta);
-          y = r * Math.sin(phi) * Math.sin(theta);
-          z = r * Math.cos(phi);
+          x = Math.cos(angle) * radius * distance;
+          y = height;
+          z = Math.sin(angle) * radius * distance;
         }
       }
 
-      positions[i * 3] = x;
-      positions[i * 3 + 1] = y;
-      positions[i * 3 + 2] = z;
+      positions[i3] = x;
+      positions[i3 + 1] = y;
+      positions[i3 + 2] = z;
 
-      // Générer magnitude et taille réalistes
+      // Couleur basée sur la température
+      const temperature = 2000 + random() * 40000; // 2000K - 42000K
+      const color = selectStellarColor();
+      colors[i3] = color.r;
+      colors[i3 + 1] = color.g;
+      colors[i3 + 2] = color.b;
+
+      // Taille basée sur la magnitude
       const magnitude = generateMagnitude();
-      const starSize = magnitudeToSize(magnitude);
-      sizes[i] = starSize;
-
-      // Couleur stellaire réaliste
-      const stellarColor = selectStellarColor();
-
-      // Ajouter une légère variation de luminosité basée sur la magnitude
-      const brightness = Math.max(0.6, 1.0 - (magnitude - 0.5) / 6.0); // Luminosité minimale augmentée
-      stellarColor.multiplyScalar(brightness);
-
-      colors[i * 3] = stellarColor.r;
-      colors[i * 3 + 1] = stellarColor.g;
-      colors[i * 3 + 2] = stellarColor.b;
+      sizes[i] = magnitudeToSize(magnitude);
     }
 
     return [positions, colors, sizes];
-  }, [count, radius, size, stellarColors]);
+  }, [count, radius, size, random, seed, forceUpdate]);
 
   if (!assets.isReady) {
     return null;
@@ -237,7 +233,7 @@ export function Stars({ count = 4000, radius = 5000, size = 8.0 }) {
   if (!texture) return null;
 
   return (
-    <points ref={pointsRef}>
+    <points ref={pointsRef} key={`points-${seed}-${forceUpdate}`}>
       <bufferGeometry>
         <bufferAttribute
           attach="attributes-position"
@@ -267,9 +263,51 @@ export function Stars({ count = 4000, radius = 5000, size = 8.0 }) {
         vertexColors={true}
         sizeAttenuation={true}
         depthWrite={false}
-        blending={THREE.AdditiveBlending} // Meilleur rendu pour les étoiles brillantes
+        blending={THREE.AdditiveBlending}
       />
     </points>
+  );
+};
+
+// Composant principal qui gère la régénération
+export function Stars({ count = 4000, radius = 5000, size = 8.0 }) {
+  const debug = useGameStore((state) => state.debug);
+  const [seed, setSeed] = useState(1);
+  const [forceUpdate, setForceUpdate] = useState(0);
+
+  // Log pour vérifier le montage du composant et l'état du debug
+  useEffect(() => {
+    console.log("🌟 [Stars] Composant monté, debug:", debug);
+  }, [debug]);
+
+  // Gestionnaire d'événements pour la touche F
+  useEffect(() => {
+    const handleKeyDown = (event) => {
+      // En développement uniquement
+      if (process.env.NODE_ENV === 'development' && event.code === "KeyF") {
+        console.log("Touche F pressée en développement");
+        setSeed((prev) => prev + 1);
+        setForceUpdate((prev) => prev + 1);
+        event.preventDefault();
+        event.stopPropagation();
+      }
+    };
+
+    // Utiliser la phase de capture pour intercepter l'événement avant les autres handlers
+    window.addEventListener("keydown", handleKeyDown, true);
+    return () => window.removeEventListener("keydown", handleKeyDown, true);
+  }, []);
+
+  // Forcer la recréation du composant StarField à chaque changement
+  return (
+    <StarField 
+      key={`stars-${seed}-${forceUpdate}`}
+      count={count} 
+      radius={radius} 
+      size={size} 
+      seed={seed}
+      forceUpdate={forceUpdate}
+    />
   );
 }
 

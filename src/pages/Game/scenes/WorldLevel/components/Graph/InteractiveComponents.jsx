@@ -11,6 +11,7 @@ import VibSvgPath from "../../../../components/VibSvgPath";
 import useAssets from "../../../../hooks/useAssets";
 import useAudioManager from "../../../../services/AudioManager";
 import useAudioFragment from "../../../../hooks/useAudioFragment";
+import { useRetroWindowService } from "../../../../services/RetroWindowService";
 
 const DEFAULT_BOUNDING_BOX = {
   width: 20,
@@ -125,6 +126,7 @@ const InteractiveComponents = memo(({ objectsData, debug = false }) => {
   const prevInteract = useRef(false);
   const registeredElements = useRef(new Set()); // Track registered elements
   const { playFragment } = useAudioFragment();
+  const retroWindowService = useRetroWindowService();
 
   // Reset refs on hot reload
   useEffect(() => {
@@ -168,7 +170,7 @@ const InteractiveComponents = memo(({ objectsData, debug = false }) => {
       console.log("[InteractiveComponents] Processing object:", obj);
 
       if (obj.boundingBox) {
-        const position = obj.interactivePosition || obj.position;
+        const position = obj.position;
         console.log(
           "[InteractiveComponents] Object has boundingBox:",
           obj.boundingBox,
@@ -265,7 +267,8 @@ const InteractiveComponents = memo(({ objectsData, debug = false }) => {
             isInteractive:
               component.data.isInteractive &&
               (!!component.data.targetLevel ||
-                component.data.interactionType === "audio_fragment"),
+                component.data.interactionType === "audio_fragment" ||
+                component.data.interactionType === "retro_window"),
           });
         } else if (component.data.text) {
           // Sinon utiliser le texte simple
@@ -280,7 +283,8 @@ const InteractiveComponents = memo(({ objectsData, debug = false }) => {
             isInteractive:
               component.data.isInteractive &&
               (!!component.data.targetLevel ||
-                component.data.interactionType === "audio_fragment"),
+                component.data.interactionType === "audio_fragment" ||
+                component.data.interactionType === "retro_window"),
           });
         } else {
           console.log(
@@ -325,6 +329,29 @@ const InteractiveComponents = memo(({ objectsData, debug = false }) => {
             playFragment
           );
           playFragment(component.data.audioFragment);
+        } else if (
+          component.data.interactionType === "retro_window" &&
+          component.data.contentData?.retroWindow
+        ) {
+          // Nouvelle interaction fenêtre rétro
+          console.log(
+            `[InteractiveComponents] Opening retro window for: ${component.data.id}`
+          );
+          
+          const retroWindowConfig = {
+            id: `${component.data.id}_window`,
+            title: component.data.contentData.retroWindow.title,
+            width: 450,
+            height: 350,
+            position: {
+              x: (window.innerWidth - 450) / 2,
+              y: (window.innerHeight - 350) / 2
+            },
+            texts: component.data.contentData.retroWindow.texts,
+            image: component.data.contentData.retroWindow.image,
+          };
+          
+          retroWindowService.openWindow(retroWindowConfig);
         }
       }
     } else {
@@ -357,6 +384,7 @@ const InteractiveComponents = memo(({ objectsData, debug = false }) => {
     setActiveLevel,
     debug,
     playFragment,
+    retroWindowService,
   ]);
 
   // Enregistrer les boîtes de collision

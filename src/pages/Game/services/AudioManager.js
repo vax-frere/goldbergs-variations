@@ -2,6 +2,7 @@ import * as THREE from "three";
 import { create } from "zustand";
 import useGameStore from "../store";
 import useAssetStore from "./AssetManager";
+import { getSoundPath } from "../../../utils/assetLoader";
 
 /**
  * Types de sons gérés par l'AudioManager
@@ -70,6 +71,7 @@ class AudioInstance {
     this.id = id;
     this.type = type;
     this.config = { ...DEFAULT_CONFIGS[type], ...config };
+    this.baseVolume = this.config.volume; // Volume de base avant application du volume global
     this.audioObject = null;
     this.isPlaying = false;
     this.isPaused = false;
@@ -149,18 +151,47 @@ class AudioInstance {
    * Arrête la lecture avec fade-out
    */
   async stop() {
-    if (!this.audioObject || !this.isPlaying) return;
+    console.log(`🛑 [AudioInstance] Stopping ${this.id}`, {
+      hasAudioObject: !!this.audioObject,
+      isPlaying: this.isPlaying,
+      audioObjectType: this.audioObject?.constructor?.name,
+      audioObjectSrc: this.audioObject?.src || this.audioObject?.buffer?.constructor?.name
+    });
+
+    if (!this.audioObject || !this.isPlaying) {
+      console.log(`🛑 [AudioInstance] ${this.id} - Nothing to stop (no object or not playing)`);
+      return;
+    }
 
     if (this.config.fadeOutDuration > 0) {
+      console.log(`🛑 [AudioInstance] ${this.id} - Fading out over ${this.config.fadeOutDuration}ms`);
       await this.fadeToVolume(0, this.config.fadeOutDuration);
     }
 
-    this.audioObject.stop();
+    console.log(`🛑 [AudioInstance] ${this.id} - Calling audioObject.stop()`);
+    try {
+      this.audioObject.stop();
+      console.log(`🛑 [AudioInstance] ${this.id} - audioObject.stop() completed`);
+    } catch (error) {
+      console.error(`🛑 [AudioInstance] ${this.id} - Error calling stop():`, error);
+    }
+
+    // Force disconnect pour THREE.js Audio
+    if (this.audioObject.disconnect) {
+      try {
+        this.audioObject.disconnect();
+        console.log(`🛑 [AudioInstance] ${this.id} - Disconnected from audio graph`);
+      } catch (error) {
+        console.error(`🛑 [AudioInstance] ${this.id} - Error disconnecting:`, error);
+      }
+    }
+
     this.isPlaying = false;
     this.isPaused = false;
     this.currentVolume = 0;
 
     this.emit(AUDIO_EVENTS.SOUND_STOPPED, { id: this.id, type: this.type });
+    console.log(`🛑 [AudioInstance] ${this.id} - Stop completed`);
   }
 
   /**
@@ -189,8 +220,13 @@ class AudioInstance {
   updateAudio(volume, pitch = 1.0, smoothing = 0.1) {
     if (!this.audioObject) return;
 
+    // Mettre à jour le volume de base et appliquer le volume global
+    this.baseVolume = volume;
+    const gameStore = useGameStore.getState();
+    const finalVolume = volume * gameStore.audioVolume;
+
     // Lissage des valeurs
-    this.targetVolume = volume;
+    this.targetVolume = finalVolume;
     this.targetPitch = pitch;
 
     // Application progressive
@@ -214,8 +250,13 @@ class AudioInstance {
         clearInterval(this.fadeInterval);
       }
 
+      // Mettre à jour le volume de base et appliquer le volume global
+      this.baseVolume = targetVolume;
+      const gameStore = useGameStore.getState();
+      const finalTargetVolume = targetVolume * gameStore.audioVolume;
+
       const startVolume = this.currentVolume;
-      const volumeDiff = targetVolume - startVolume;
+      const volumeDiff = finalTargetVolume - startVolume;
       const steps = Math.max(duration / 50, 1); // 50ms par step
       const volumeStep = volumeDiff / steps;
       let currentStep = 0;
@@ -225,8 +266,8 @@ class AudioInstance {
         const newVolume = startVolume + volumeStep * currentStep;
 
         if (currentStep >= steps) {
-          this.currentVolume = targetVolume;
-          this.audioObject.setVolume(targetVolume);
+          this.currentVolume = finalTargetVolume;
+          this.audioObject.setVolume(finalTargetVolume);
           clearInterval(this.fadeInterval);
           this.fadeInterval = null;
           resolve();
@@ -285,6 +326,8 @@ class AudioManager {
     this.isInitialized = false;
     this.globalListeners = new Set();
     this.loadingPromises = new Map();
+    this.currentGlobalVolume = 1.0;
+    this.gameStoreUnsubscribe = null;
   }
 
   /**
@@ -309,6 +352,9 @@ class AudioManager {
       // Démarrer le nettoyage périodique des instances mortes
       this.startPeriodicCleanup();
 
+      // Écouter les changements de volume global
+      this.startGlobalVolumeListener();
+
       this.isInitialized = true;
       console.log("✅ [AudioManager] Audio system initialized");
 
@@ -328,31 +374,31 @@ class AudioManager {
    */
   async preloadEssentialSounds() {
     const essentialSounds = [
-      { key: "hover", path: "/sounds/hover.mp3", type: AUDIO_TYPES.SFX },
+      { key: "hover", path: getSoundPath("hover.mp3"), type: AUDIO_TYPES.SFX },
       {
         key: "cluster-off",
-        path: "/sounds/cluster-off.mp3",
+        path: getSoundPath("cluster-off.mp3"),
         type: AUDIO_TYPES.SFX,
       },
       {
         key: "acceleration",
-        path: "/sounds/acceleration.mp3",
+        path: getSoundPath("acceleration.mp3"),
         type: AUDIO_TYPES.ACCELERATION,
       },
       {
         key: "ambiant",
-        path: "/sounds/ambiant.mp3",
+        path: getSoundPath("ambiant.mp3"),
         type: AUDIO_TYPES.AMBIENT,
       },
       // Sons de cassette pour les fragments audio
       {
         key: "cassette-in.mp3",
-        path: "/sounds/cassette-in.mp3",
+        path: getSoundPath("cassette-in.mp3"),
         type: AUDIO_TYPES.SFX,
       },
       {
         key: "cassette-out.mp3",
-        path: "/sounds/cassette-out.mp3",
+        path: getSoundPath("cassette-out.mp3"),
         type: AUDIO_TYPES.SFX,
       },
     ];
@@ -436,8 +482,8 @@ class AudioManager {
     console.log(`🔊 [AudioManager] playSound called with key: ${key}`, options);
 
     const gameStore = useGameStore.getState();
-    if (!gameStore.audioEnabled) {
-      console.log(`🔇 [AudioManager] Audio disabled, skipping ${key}`);
+    if (!gameStore.audioEnabled || gameStore.audioVolume === 0) {
+      console.log(`🔇 [AudioManager] Audio disabled or volume at 0, skipping ${key}`);
       return null;
     }
 
@@ -469,10 +515,13 @@ class AudioManager {
       instanceId ||
       `${key}_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
 
-    // Créer l'instance audio
+    // Créer l'instance audio avec application du volume global
+    const baseVolume = volume !== undefined ? volume : DEFAULT_CONFIGS[type].volume;
+    const finalVolume = baseVolume * gameStore.audioVolume;
+    
     const config = {
       ...DEFAULT_CONFIGS[type],
-      ...(volume !== undefined && { volume }),
+      volume: finalVolume,
       ...(loop !== undefined && { loop }),
     };
 
@@ -521,10 +570,21 @@ class AudioManager {
   async stopSound(instanceId) {
     const instance = this.audioInstances.get(instanceId);
     if (instance) {
+      console.log(`🛑 [AudioManager] Stopping sound ${instanceId}`, {
+        isPlaying: instance.isPlaying,
+        isPaused: instance.isPaused,
+        hasAudioObject: !!instance.audioObject,
+        audioObjectType: instance.audioObject?.constructor?.name,
+        isConnected: instance.audioObject?.isConnected,
+        source: instance.audioObject?.source
+      });
+      
       await instance.stop();
       instance.dispose();
       this.audioInstances.delete(instanceId);
       console.log(`🛑 [AudioManager] Stopped sound ${instanceId}`);
+    } else {
+      console.warn(`🛑 [AudioManager] Tried to stop non-existent sound: ${instanceId}`);
     }
   }
 
@@ -639,7 +699,259 @@ class AudioManager {
    * Arrête l'audio ambiant
    */
   stopAmbientAudio() {
-    return this.stopSound("ambient_main");
+    console.log("🔇 [AudioManager] Stopping ambient audio...");
+    console.log("🔇 [AudioManager] Current instances:", Array.from(this.audioInstances.keys()));
+    
+    // FORCE STOP sans fade-out pour l'ambiance
+    const instance = this.audioInstances.get("ambient_main");
+    if (instance) {
+      console.log("🔇 [AudioManager] Force stopping ambient audio immediately (no fade)");
+      
+      // Stopper immédiatement le fade si en cours
+      if (instance.fadeInterval) {
+        clearInterval(instance.fadeInterval);
+        instance.fadeInterval = null;
+      }
+      
+      // Arrêter l'audio object directement
+      if (instance.audioObject) {
+        try {
+          instance.audioObject.stop();
+          if (instance.audioObject.disconnect) {
+            instance.audioObject.disconnect();
+          }
+          console.log("🔇 [AudioManager] Ambient audio object stopped and disconnected");
+        } catch (error) {
+          console.error("🔇 [AudioManager] Error force stopping ambient:", error);
+        }
+      }
+      
+      // Nettoyer l'instance
+      instance.isPlaying = false;
+      instance.isPaused = false;
+      instance.currentVolume = 0;
+      instance.dispose();
+      this.audioInstances.delete("ambient_main");
+      
+      console.log("🔇 [AudioManager] Ambient instance force removed");
+    } else {
+      console.warn("🔇 [AudioManager] No ambient instance found to stop");
+    }
+    
+    // Debug final
+    setTimeout(() => {
+      const stillExists = this.audioInstances.has("ambient_main");
+      console.log("🔇 [AudioManager] Ambient instance still exists after force stop:", stillExists);
+    }, 100);
+  }
+
+  /**
+   * Force l'arrêt de toutes les instances audio
+   */
+  forceStopAll() {
+    console.log("🛑 [AudioManager] Force stopping all audio instances");
+    this.audioInstances.forEach((instance, id) => {
+      console.log(`🛑 [AudioManager] Force stopping ${id}`);
+      if (instance.audioObject) {
+        try {
+          instance.audioObject.stop();
+          instance.audioObject.disconnect?.();
+        } catch (error) {
+          console.warn(`🛑 [AudioManager] Error stopping ${id}:`, error);
+        }
+      }
+      instance.dispose();
+    });
+    this.audioInstances.clear();
+    console.log("🛑 [AudioManager] All instances force stopped");
+  }
+
+  /**
+   * Démarre l'écoute des changements de volume global
+   */
+  startGlobalVolumeListener() {
+    // Initialiser le volume global actuel
+    const gameStore = useGameStore.getState();
+    this.currentGlobalVolume = gameStore.audioVolume;
+    console.log(`🔊 [AudioManager] Initial global volume: ${this.currentGlobalVolume}`);
+
+    // S'abonner aux changements du store
+    this.gameStoreUnsubscribe = useGameStore.subscribe(
+      (state) => state.audioVolume,
+      (newVolume) => {
+        console.log(`🔊 [AudioManager] Global volume changed: ${this.currentGlobalVolume} → ${newVolume}`);
+        this.currentGlobalVolume = newVolume;
+        this.updateAllInstancesVolume();
+        // Aussi essayer de contrôler Howler.js globalement
+        this.updateHowlerVolume(newVolume);
+      }
+    );
+  }
+
+  /**
+   * Tente de contrôler le volume global de Howler.js
+   */
+  updateHowlerVolume(volume) {
+    try {
+      // Howler.js expose une API globale
+      if (typeof window !== 'undefined' && window.Howler) {
+        console.log(`🔊 [AudioManager] Setting Howler global volume to ${volume}`);
+        window.Howler.volume(volume);
+      }
+    } catch (error) {
+      console.log(`🔊 [AudioManager] Could not control Howler volume:`, error);
+    }
+  }
+
+  /**
+   * DEBUG COMPLET - Trouve TOUS les éléments audio dans la page
+   */
+  debugAllAudioElements() {
+    console.log("🔍 [AudioManager] === COMPLETE AUDIO DEBUG ===");
+    
+    // 1. Éléments HTML5 Audio
+    const audioElements = document.querySelectorAll('audio');
+    console.log("🔍 [AudioManager] HTML5 Audio elements:", audioElements.length);
+    audioElements.forEach((audio, index) => {
+      console.log(`🔍 [AudioManager] HTML5 Audio ${index}:`, {
+        src: audio.src,
+        currentTime: audio.currentTime,
+        duration: audio.duration,
+        paused: audio.paused,
+        volume: audio.volume,
+        loop: audio.loop,
+        muted: audio.muted
+      });
+    });
+
+    // 2. AudioManager instances
+    console.log("🔍 [AudioManager] AudioManager instances:", this.audioInstances.size);
+    this.audioInstances.forEach((instance, id) => {
+      console.log(`🔍 [AudioManager] Instance ${id}:`, {
+        isPlaying: instance.isPlaying,
+        isPaused: instance.isPaused,
+        type: instance.audioObject?.constructor?.name,
+        volume: instance.currentVolume,
+        targetVolume: instance.targetVolume,
+        baseVolume: instance.baseVolume
+      });
+    });
+
+    // 3. Howler.js instances
+    try {
+      if (typeof window !== 'undefined' && window.Howler) {
+        console.log("🔍 [AudioManager] Howler.js detected");
+        console.log("🔍 [AudioManager] Howler global volume:", window.Howler.volume());
+        console.log("🔍 [AudioManager] Howler global mute:", window.Howler.mute());
+        
+        // Essayer d'accéder aux instances Howler
+        if (window.Howler._howls && window.Howler._howls.length > 0) {
+          console.log("🔍 [AudioManager] Howler instances:", window.Howler._howls.length);
+          window.Howler._howls.forEach((howl, index) => {
+            console.log(`🔍 [AudioManager] Howler ${index}:`, {
+              playing: howl.playing(),
+              volume: howl.volume(),
+              mute: howl.mute(),
+              loop: howl.loop(),
+              src: howl._src
+            });
+          });
+        }
+      }
+    } catch (error) {
+      console.log("🔍 [AudioManager] Error accessing Howler:", error);
+    }
+
+    // 4. THREE.js AudioContext
+    if (this.audioListener && this.audioListener.context) {
+      console.log("🔍 [AudioManager] THREE.js AudioContext state:", this.audioListener.context.state);
+      console.log("🔍 [AudioManager] THREE.js AudioContext destination:", this.audioListener.context.destination);
+    }
+
+    // 5. Tous les AudioContext du navigateur
+    try {
+      const audioContexts = [];
+      if (typeof window !== 'undefined') {
+        // Chercher dans les propriétés globales
+        Object.keys(window).forEach(key => {
+          if (window[key] && window[key].constructor && window[key].constructor.name === 'AudioContext') {
+            audioContexts.push({ key, context: window[key] });
+          }
+        });
+      }
+      console.log("🔍 [AudioManager] Global AudioContexts found:", audioContexts.length);
+      audioContexts.forEach(({ key, context }, index) => {
+        console.log(`🔍 [AudioManager] AudioContext ${index} (${key}):`, {
+          state: context.state,
+          sampleRate: context.sampleRate,
+          currentTime: context.currentTime
+        });
+      });
+    } catch (error) {
+      console.log("🔍 [AudioManager] Error accessing AudioContexts:", error);
+    }
+
+    console.log("🔍 [AudioManager] === END AUDIO DEBUG ===");
+  }
+
+  /**
+   * Met à jour le volume de toutes les instances audio existantes
+   */
+  updateAllInstancesVolume() {
+    console.log(`🔊 [AudioManager] Updating volume for ${this.audioInstances.size} instances`);
+    
+    this.audioInstances.forEach((instance, id) => {
+      if (instance.audioObject) {
+        // Recalculer le volume avec le nouveau volume global
+        const newVolume = instance.baseVolume * this.currentGlobalVolume;
+        
+        console.log(`🔊 [AudioManager] Updating instance ${id}: base=${instance.baseVolume.toFixed(2)}, global=${this.currentGlobalVolume.toFixed(2)}, final=${newVolume.toFixed(2)}`);
+        
+        // Mettre à jour le volume sans arrêter l'instance
+        instance.audioObject.setVolume(newVolume);
+        instance.currentVolume = newVolume;
+        instance.targetVolume = newVolume;
+      }
+    });
+  }
+
+  /**
+   * Nettoie les instances audio mortes (non en cours de lecture et non en pause)
+   */
+  cleanupDeadInstances() {
+    const deadInstances = [];
+
+    this.audioInstances.forEach((instance, id) => {
+      // Supprimer les instances qui ne sont ni en lecture ni en pause
+      if (!instance.isPlaying && !instance.isPaused) {
+        deadInstances.push(id);
+      }
+    });
+
+    if (deadInstances.length > 0) {
+      console.log(
+        `🧹 [AudioManager] Cleaning up ${deadInstances.length} dead instances:`,
+        deadInstances
+      );
+
+      deadInstances.forEach((id) => {
+        const instance = this.audioInstances.get(id);
+        if (instance) {
+          instance.dispose();
+          this.audioInstances.delete(id);
+        }
+      });
+    }
+  }
+
+  /**
+   * Démarre le nettoyage périodique des instances audio mortes
+   */
+  startPeriodicCleanup() {
+    // Nettoyer toutes les 5 secondes
+    this.cleanupInterval = setInterval(() => {
+      this.cleanupDeadInstances();
+    }, 5000);
   }
 
   /**
@@ -689,6 +1001,12 @@ class AudioManager {
       this.cleanupInterval = null;
     }
 
+    // Arrêter l'écoute du volume global
+    if (this.gameStoreUnsubscribe) {
+      this.gameStoreUnsubscribe();
+      this.gameStoreUnsubscribe = null;
+    }
+
     // Réinitialiser l'état
     this.isInitialized = false;
     this.audioListener = null;
@@ -698,42 +1016,55 @@ class AudioManager {
   }
 
   /**
-   * Démarre le nettoyage périodique des instances audio mortes
+   * Force l'arrêt de TOUS les éléments audio - AudioManager + Howler
    */
-  startPeriodicCleanup() {
-    // Nettoyer toutes les 5 secondes
-    this.cleanupInterval = setInterval(() => {
-      this.cleanupDeadInstances();
-    }, 5000);
-  }
-
-  /**
-   * Nettoie les instances audio mortes (non en cours de lecture et non en pause)
-   */
-  cleanupDeadInstances() {
-    const deadInstances = [];
-
-    this.audioInstances.forEach((instance, id) => {
-      // Supprimer les instances qui ne sont ni en lecture ni en pause
-      if (!instance.isPlaying && !instance.isPaused) {
-        deadInstances.push(id);
+  forceStopAllAudio() {
+    console.log("🚨 [AudioManager] FORCE STOPPING ALL AUDIO EVERYWHERE");
+    
+    // 1. Arrêter toutes nos instances AudioManager
+    this.forceStopAll();
+    
+    // 2. Arrêter tous les éléments HTML5 Audio
+    const audioElements = document.querySelectorAll('audio');
+    console.log(`🚨 [AudioManager] Stopping ${audioElements.length} HTML5 audio elements`);
+    audioElements.forEach((audio, index) => {
+      try {
+        audio.pause();
+        audio.currentTime = 0;
+        audio.volume = 0;
+        console.log(`🚨 [AudioManager] Stopped HTML5 audio ${index}`);
+      } catch (error) {
+        console.error(`🚨 [AudioManager] Error stopping HTML5 audio ${index}:`, error);
       }
     });
-
-    if (deadInstances.length > 0) {
-      console.log(
-        `🧹 [AudioManager] Cleaning up ${deadInstances.length} dead instances:`,
-        deadInstances
-      );
-
-      deadInstances.forEach((id) => {
-        const instance = this.audioInstances.get(id);
-        if (instance) {
-          instance.dispose();
-          this.audioInstances.delete(id);
-        }
-      });
+    
+    // 3. Arrêter Howler.js globalement
+    try {
+      if (typeof window !== 'undefined' && window.Howler) {
+        console.log("🚨 [AudioManager] Stopping all Howler instances");
+        window.Howler.stop();
+        window.Howler.mute(true);
+        console.log("🚨 [AudioManager] Howler stopped and muted");
+      }
+    } catch (error) {
+      console.error("🚨 [AudioManager] Error stopping Howler:", error);
     }
+    
+    // 4. Essayer de suspendre tous les AudioContexts
+    try {
+      if (typeof window !== 'undefined') {
+        Object.keys(window).forEach(key => {
+          if (window[key] && window[key].constructor && window[key].constructor.name === 'AudioContext') {
+            console.log(`🚨 [AudioManager] Suspending AudioContext: ${key}`);
+            window[key].suspend();
+          }
+        });
+      }
+    } catch (error) {
+      console.error("🚨 [AudioManager] Error suspending AudioContexts:", error);
+    }
+    
+    console.log("🚨 [AudioManager] ALL AUDIO FORCE STOPPED");
   }
 }
 
@@ -797,6 +1128,11 @@ const useAudioManager = create((set, get) => ({
     return instances;
   },
 
+  // Méthodes de debug avancées
+  debugAllAudioElements: () => audioManager.debugAllAudioElements(),
+  forceStopAllAudio: () => audioManager.forceStopAllAudio(),
+
+  // Utilitaire pour accéder à l'instance directe
   getAudioManagerInstance: () => audioManager,
 
   dispose: () => {
