@@ -1,6 +1,6 @@
 import React, { memo, useMemo, useState, useEffect } from "react";
 import * as THREE from "three";
-import { Billboard } from "@react-three/drei";
+import { Billboard, Text } from "@react-three/drei";
 import CustomText from "../../../components/CustomText";
 import SvgPath from "../../../components/VibSvgPath";
 import useGameStore from "../../../store";
@@ -13,6 +13,7 @@ import { THEMATIC_COLORS } from "../../../constants/thematicColors";
  */
 const AdvancedNode = memo(({ node, isActive = false }) => {
   const [svgError, setSvgError] = useState(false);
+  const [isReady, setIsReady] = useState(false);
   const assets = useAssets();
 
   // Vérifier si le nœud a déjà été visité
@@ -64,6 +65,40 @@ const AdvancedNode = memo(({ node, isActive = false }) => {
     const iconValue = node.icon || node.name || node.type || "default";
     return iconValue.endsWith(".svg") ? iconValue : `${iconValue}.svg`;
   }, [node, svgError, isClusterMaster, isPlatform]);
+
+  // Vérifier si c'est un nœud qui nécessite un texte (persona/journalist/fbi)
+  const shouldShowText = useMemo(() => {
+    const result = (
+      node.type === "persona_character" ||
+      node.type === "external_character" ||
+      node.name?.toLowerCase().includes("fbi")
+    );
+    
+    // Debug log pour voir les conditions
+    console.log("[AdvancedNode] shouldShowText check:", {
+      nodeName: node.name,
+      nodeType: node.type,
+      nodeId: node.id,
+      conditions: {
+        isPersonaCharacter: node.type === "persona_character",
+        isExternalCharacter: node.type === "external_character",
+        hasFbiInName: node.name?.toLowerCase().includes("fbi")
+      },
+      shouldShowText: result,
+      isReady: isReady
+    });
+    
+    return result;
+  }, [node.type, node.name, isReady]);
+
+  // Forcer le re-render après le montage pour résoudre le problème de timing
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setIsReady(true);
+    }, 1000);
+    
+    return () => clearTimeout(timer);
+  }, []);
 
   // Ajouter un useEffect pour logger quand le composant SvgPath a une erreur
   useEffect(() => {
@@ -121,20 +156,19 @@ const AdvancedNode = memo(({ node, isActive = false }) => {
       </Billboard>
 
       {/* Label du nœud */}
-      {node.name && !isPlatform && (
-        <Billboard position={[0, size + (isClusterMaster ? 7 : 3), 0]}>
-          <CustomText
-            text={node.name}
-            position={[0, 0, 0]}
-            size={isClusterMaster ? 5 : 2}
+      {node.name && shouldShowText && isReady && (
+        <Billboard position={[0, size + (isClusterMaster ? 10 : 3), 0]}>
+          <Text
+            fontSize={isClusterMaster ? 6 :3}
             color={nodeColor}
-            maxDistance={100}
-            minDistance={20}
-            outline={true}
-            outlineWidth={isClusterMaster ? 0.5 : 0}
+            anchorX="center"
+            anchorY="middle"
+            outlineWidth={isClusterMaster ? 0.8 : 0.4}
             outlineColor="#000000"
-            opacity={nodeStyle.textOpacity}
-          />
+            outlineOpacity={1.0}
+          >
+            {isClusterMaster ? `${node.name}` : node.name}
+          </Text>
         </Billboard>
       )}
     </group>

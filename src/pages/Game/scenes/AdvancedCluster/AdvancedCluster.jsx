@@ -465,6 +465,15 @@ const AdvancedCluster = memo(() => {
       {clusterData.nodes.map((node) => {
         // CORRECTION: Utiliser l'ID du nœud comme clé unique
         const nodeKey = String(node.id);
+        
+        // Debug log pour voir tous les nœuds
+        console.log("[AdvancedCluster] Rendering node:", {
+          id: node.id,
+          name: node.name,
+          type: node.type,
+          nodeKey: nodeKey
+        });
+        
         return (
           <AdvancedNode
             key={`advanced-node-${node.id}`}
