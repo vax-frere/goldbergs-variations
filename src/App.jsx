@@ -15,9 +15,11 @@ import Playground from "./pages/Playground";
 import TimelinePage from "./pages/TimelinePage";
 import DevIndex from "./pages/DevIndex";
 import ThirdPersonGame from "./pages/ThirdPersonGame/ThirdPersonGame";
+import GameJamExperiment from "./pages/GameJamExperiment/GameJamExperiment";
 import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
 import BackgroundCanvas from "./components/BackgroundCanvas";
+import TrollingGame from "./pages/TrollingGame/TrollingGame";
 
 function App() {
   const location = useLocation();
@@ -45,6 +47,8 @@ function App() {
           <Route path="/dev/timeline" element={<TimelinePage />} />
           <Route path="/dev/playground" element={<Playground />} />
           <Route path="/dev/thirdperson" element={<ThirdPersonGame />} />
+          <Route path="/dev/gamejam" element={<GameJamExperiment />} />
+          <Route path="/dev/trollinggame" element={<TrollingGame />} />
           <Route
             path="/dev/spatialize-and-export-forcegraph"
             element={<ExportForceGraphPage />}

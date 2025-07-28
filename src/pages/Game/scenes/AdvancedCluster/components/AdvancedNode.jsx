@@ -13,7 +13,6 @@ import { THEMATIC_COLORS } from "../../../constants/thematicColors";
  */
 const AdvancedNode = memo(({ node, isActive = false }) => {
   const [svgError, setSvgError] = useState(false);
-  const [isReady, setIsReady] = useState(false);
   const assets = useAssets();
 
   // Vérifier si le nœud a déjà été visité
@@ -84,21 +83,11 @@ const AdvancedNode = memo(({ node, isActive = false }) => {
         isExternalCharacter: node.type === "external_character",
         hasFbiInName: node.name?.toLowerCase().includes("fbi")
       },
-      shouldShowText: result,
-      isReady: isReady
+      shouldShowText: result
     });
     
     return result;
-  }, [node.type, node.name, isReady]);
-
-  // Forcer le re-render après le montage pour résoudre le problème de timing
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      setIsReady(true);
-    }, 1000);
-    
-    return () => clearTimeout(timer);
-  }, []);
+  }, [node.type, node.name]);
 
   // Ajouter un useEffect pour logger quand le composant SvgPath a une erreur
   useEffect(() => {
@@ -156,7 +145,7 @@ const AdvancedNode = memo(({ node, isActive = false }) => {
       </Billboard>
 
       {/* Label du nœud */}
-      {node.name && shouldShowText && isReady && (
+      {node.name && shouldShowText && (
         <Billboard position={[0, size + (isClusterMaster ? 10 : 3), 0]}>
           <Text
             fontSize={isClusterMaster ? 6 :3}
@@ -167,7 +156,7 @@ const AdvancedNode = memo(({ node, isActive = false }) => {
             outlineColor="#000000"
             outlineOpacity={1.0}
           >
-            {isClusterMaster ? `${node.name}` : node.name}
+            {node.name}
           </Text>
         </Billboard>
       )}

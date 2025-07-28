@@ -6,6 +6,7 @@ function DevIndex() {
     { path: "/dev/timeline", name: "Timeline des Personas", description: "Visualisation temporelle de l'activité des personas avec D3.js" },
     { path: "/dev/playground", name: "Playground", description: "Page de test et expérimentation" },
     { path: "/dev/thirdperson", name: "Third Person Game", description: "Jeu en vue third person style Yume Nikki avec R3F" },
+    { path: "/dev/gamejam", name: "Game Jam Experiment", description: "Jeu style Pokemon 2D avec Phaser - École avec étudiants et effets de bruit" },
     { path: "/dev/spatialize-and-export-forcegraph", name: "Spatialize & Export", description: "Export du graphe de force spatialisé" },
     { path: "/dev/move-and-export-forcegraph", name: "Move & Export", description: "Déplacement et export du graphe de force" }
   ];

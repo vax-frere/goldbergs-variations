@@ -29,6 +29,7 @@
     "d3-timer": "^3.0.1",
     "framer-motion": "^12.7.4",
     "leva": "^0.10.0",
+    "phaser": "^3.90.0",
     "postprocessing": "^6.37.1",
     "r3f-forcegraph": "^1.0.7",
     "react": "^19.0.0",

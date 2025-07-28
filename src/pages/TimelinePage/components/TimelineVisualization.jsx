@@ -32,6 +32,12 @@ const TimelineVisualization = ({
   useEffect(() => {
     if (!data || data.length === 0 || !events) return;
 
+    // Timeline axis positioning constants
+    const YEAR_LABEL_DY = '.8em';
+    const AGE_LABEL_DY = '3.2em';
+    const YEAR_FONT_SIZE = '16px';
+    const AGE_FONT_SIZE = '10px';
+
     // Clear previous SVG
     d3.select(svgRef.current).selectAll("*").remove();
 
@@ -97,6 +103,36 @@ const TimelineVisualization = ({
         
         // Update X axis
         g.select('.x-axis').call(d3.axisBottom(newXScale).tickFormat(d3.timeFormat('%Y')));
+        
+        // Reapply styles to year labels after axis update
+        g.select('.x-axis').selectAll('text')
+          .style('text-anchor', 'middle')
+          .attr('dy', YEAR_LABEL_DY)
+          .style('fill', '#ffffff')
+          .style('font-size', YEAR_FONT_SIZE);
+        
+        // Update Joshua's age labels
+        const updatedTicks = g.select('.x-axis').selectAll('.tick');
+        updatedTicks.selectAll('.age-label').remove(); // Remove old age labels
+        
+        updatedTicks.append('text')
+          .attr('class', 'age-label')
+          .attr('y', 0)
+          .attr('dy', AGE_LABEL_DY)
+          .style('text-anchor', 'middle')
+          .style('fill', '#ffffff')
+          .style('font-size', AGE_FONT_SIZE)
+          .style('opacity', 0.4)
+          .text(function() {
+            const tickElement = d3.select(this.parentNode);
+            const tickData = tickElement.datum();
+            if (tickData) {
+              const year = tickData.getFullYear();
+              const age = year - 1995;
+              return age >= 0 ? `${age} ans` : '';
+            }
+            return '';
+          });
         
         // Update all elements that depend on xScale
         updateVisualization(newXScale);
@@ -271,9 +307,32 @@ const TimelineVisualization = ({
       .call(xAxis)
       .selectAll('text')
       .style('text-anchor', 'middle')
-      .attr('dy', '1.2em')
+      .attr('dy', YEAR_LABEL_DY)
       .style('fill', '#ffffff')
-      .style('font-size', '16px');
+      .style('font-size', YEAR_FONT_SIZE);
+
+    // Add Joshua's age below the years (born in 1995)
+    const xAxisGroup = g.select('.x-axis');
+    const ticks = xAxisGroup.selectAll('.tick');
+    
+    ticks.append('text')
+      .attr('class', 'age-label')
+      .attr('y', 0)
+      .attr('dy', AGE_LABEL_DY) // Position further below the year
+      .style('text-anchor', 'middle')
+      .style('fill', '#ffffff')
+      .style('font-size', AGE_FONT_SIZE)
+      .style('opacity', 0.4)
+      .text(function() {
+        const tickElement = d3.select(this.parentNode);
+        const tickData = tickElement.datum();
+        if (tickData) {
+          const year = tickData.getFullYear();
+          const age = year - 1995;
+          return age >= 0 ? `${age} ans` : '';
+        }
+        return '';
+      });
 
     // Style axis lines
     g.selectAll('.domain, .tick line')
