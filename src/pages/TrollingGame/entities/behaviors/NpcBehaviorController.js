@@ -1,3 +1,5 @@
+import { AvoidanceBehavior } from './AvoidanceBehavior';
+
 // Système de mouvement simple inspiré de KIDS
 export class NpcBehaviorController {
   constructor(entity, config = {}) {
@@ -9,6 +11,14 @@ export class NpcBehaviorController {
     this.followSpeed = config.followSpeed || 40;    // Vitesse de suivi
     this.fleeSpeed = config.fleeSpeed || 60;        // Vitesse de fuite
     this.trembleIntensity = config.trembleIntensity || 2; // Force du tremblement
+    
+    // 🎯 NOUVEAU: Système de comportements modulaires
+    this.avoidanceBehavior = new AvoidanceBehavior(entity, {
+      exclusionRadius: 80,        // Distance d'évitement
+      maxAvoidanceForce: 180,     // Force d'évitement augmentée
+      avoidanceStrength: 1.0,     // Force normale
+      followingBonus: 1.4         // 🎯 40% plus fort en mode following
+    });
     
     // État interne
     this.wanderTarget = null;
@@ -196,16 +206,31 @@ export class NpcBehaviorController {
   // ===========================================
 
   /**
-   * Interface clean qui retourne velocity sans modifier l'entité
+   * 🎯 NOUVEAU: Architecture Layered Behaviors
+   * Interface clean qui combine primary + secondary behaviors
    */
   calculateVelocity(delta) {
     if (!this.entity || !this.entity.sprite) return { x: 0, y: 0 };
 
+    // LAYER 1: Mouvement principal (priorité absolue)
+    const primaryMovement = this.calculatePrimaryMovement(delta);
+    
+    // LAYER 2: Comportements secondaires (influence limitée)
+    const secondaryBehaviors = this.calculateSecondaryBehaviors(delta);
+    
+    // FUSION: Protéger le mouvement principal tout en ajoutant les behaviors
+    return this.blendBehaviors(primaryMovement, secondaryBehaviors);
+  }
+
+  /**
+   * 🎯 LAYER 1: Mouvement principal selon l'état (INTOUCHABLE)
+   */
+  calculatePrimaryMovement(delta) {
     switch (this.entity.state) {
       case 'normal':
         return this.calculateWanderVelocity(delta);
       case 'following':
-        return this.calculateFollowVelocity(delta);
+        return this.calculateFollowVelocity(delta); // SYSTÈME DE TRAIL PROTÉGÉ
       case 'trembling':
         return this.calculateTrembleVelocity(delta);
       case 'fleeing':
@@ -213,6 +238,84 @@ export class NpcBehaviorController {
       default:
         return { x: 0, y: 0 };
     }
+  }
+
+  /**
+   * 🎯 LAYER 2: Comportements secondaires modulaires
+   */
+  calculateSecondaryBehaviors(delta) {
+    const avoidance = this.avoidanceBehavior.calculate();
+    
+    // Futur: Ajouter d'autres behaviors ici
+    // const flocking = this.flockingBehavior?.calculate() || { x: 0, y: 0 };
+    // const curiosity = this.curiosityBehavior?.calculate() || { x: 0, y: 0 };
+    
+    return {
+      avoidance: avoidance
+      // flocking: flocking,
+      // curiosity: curiosity
+    };
+  }
+
+  /**
+   * 🎯 FUSION: Combine primary et secondary - VITESSE DE FOLLOW PRÉSERVÉE
+   */
+  blendBehaviors(primary, secondary) {
+    // RÈGLE 1: Mode normal = évitement pur (pas de mouvement principal)
+    if (this.entity.state === 'normal') {
+      return secondary.avoidance; // Évitement remplace complètement l'immobilité
+    }
+
+    // RÈGLE 2: Mode following = vitesse de follow préservée + évitement additionnel
+    if (this.entity.state === 'following') {
+      return this.blendFollowWithAvoidance(primary, secondary.avoidance);
+    }
+
+    // RÈGLE 3: Autres états = fusion pondérée classique
+    const avoidanceWeight = this.avoidanceBehavior.calculateSafeAvoidanceWeight();
+    
+    return {
+      x: primary.x * (1 - avoidanceWeight) + secondary.avoidance.x * avoidanceWeight,
+      y: primary.y * (1 - avoidanceWeight) + secondary.avoidance.y * avoidanceWeight
+    };
+  }
+
+  /**
+   * 🎯 NOUVEAU: Fusion spéciale pour le mode following
+   * MÊME INFLUENCE d'évitement + vitesse follow à 100%
+   */
+  blendFollowWithAvoidance(followMovement, avoidanceForce) {
+    // Vitesse originale du follow (vitesse cible à maintenir)
+    const followSpeed = Math.sqrt(followMovement.x ** 2 + followMovement.y ** 2);
+    
+    // Si pas de mouvement de follow, utiliser l'évitement pur
+    if (followSpeed < 0.1) {
+      return avoidanceForce;
+    }
+
+    // Calculer le poids d'évitement (MÊME logique qu'avant)
+    const avoidanceWeight = this.avoidanceBehavior.calculateSafeAvoidanceWeight();
+    
+    // 🎯 ÉTAPE 1: Calculer la DIRECTION finale avec blend pondéré (influence conservée)
+    const blendedX = followMovement.x * (1 - avoidanceWeight) + avoidanceForce.x * avoidanceWeight;
+    const blendedY = followMovement.y * (1 - avoidanceWeight) + avoidanceForce.y * avoidanceWeight;
+    
+    // Normaliser la direction
+    const blendedMagnitude = Math.sqrt(blendedX ** 2 + blendedY ** 2);
+    
+    if (blendedMagnitude < 0.1) {
+      return followMovement; // Fallback
+    }
+    
+    const directionX = blendedX / blendedMagnitude;
+    const directionY = blendedY / blendedMagnitude;
+    
+    // 🎯 ÉTAPE 2: Appliquer cette direction à la vitesse COMPLÈTE de follow
+    // Résultat: même influence d'évitement + vitesse follow préservée
+    return {
+      x: directionX * followSpeed,
+      y: directionY * followSpeed
+    };
   }
 
   /**

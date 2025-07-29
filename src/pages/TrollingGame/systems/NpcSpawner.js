@@ -10,7 +10,7 @@ export class NpcSpawner {
     this.npcs = []; // Liste directe des NPCs
     this.groupId = 'central_group';
     this.groupColor = 0x4ecdc4; // Turquoise pour tous les NPCs
-    this.groupSize = 6; // Nombre de NPCs
+    this.groupSize = 37; // Nombre de NPCs
     this.centerX = 0;
     this.centerY = 0;
     this.spawnRadius = 150; // Rayon compact pour former un cercle serré

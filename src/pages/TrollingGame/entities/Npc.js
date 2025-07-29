@@ -1,5 +1,6 @@
 import { BaseEntity } from './BaseEntity';
 import { NpcBehaviorController } from './behaviors/NpcBehaviorController';
+import { AvoidanceBehavior } from './behaviors/AvoidanceBehavior';
 import { ShoutBehavior } from './behaviors/ShoutBehavior';
 import { CharacterAnimationBehavior } from './behaviors/CharacterAnimationBehavior';
 
@@ -11,9 +12,10 @@ export class Npc extends BaseEntity {
     this.speed = config.speed || 150; // 🎯 NORMALISÉ : Même vitesse de base que le Player
     this.groupId = config.groupId || 0;
     
-    // Système NpcBehaviorController - SIMPLE ET EFFICACE inspiré de KIDS
+    // Système NpcBehaviorController - ARCHITECTURE LAYERED BEHAVIORS
     this.behaviorController = new NpcBehaviorController(this, {
       trembleIntensity: 3      // Intensité du tremblement
+      // Note: AvoidanceBehavior est maintenant intégré dans NpcBehaviorController
     });
     
     // 🎯 AAA: ACTUAL MOVEMENT DETECTION pour les animations
@@ -66,6 +68,7 @@ export class Npc extends BaseEntity {
     
     // Système de cri (pour les followers) - même taille que le joueur
     this.shoutBehavior = new ShoutBehavior(this, {
+      offsetX: 50,
       offsetY: -50, // Même distance que le joueur
       scale: 0.3, // Même taille que le joueur
       duration: 750 // Même durée que le joueur
@@ -296,15 +299,7 @@ export class Npc extends BaseEntity {
         finalVelocity.x += followingForces.x;
         finalVelocity.y += followingForces.y;
       }
-      // Ajouter l'évitement du player pour l'état normal
-      else if (this.state === 'normal') {
-        const player = this.getPlayer();
-        if (player && player.sprite) {
-          const avoidanceForce = this.applyPlayerAvoidance(player, 100, 50);
-          finalVelocity.x += avoidanceForce.x;
-          finalVelocity.y += avoidanceForce.y;
-        }
-      }
+      // Note: L'évitement du joueur est maintenant géré automatiquement par NpcBehaviorController
       
     } else if (this.state === 'fleeing') {
       // 🎯 PRÉSERVER: Velocity calculée par updateFleeingLogic
@@ -370,30 +365,7 @@ export class Npc extends BaseEntity {
 
 
 
-  // Éviter de se superposer avec le joueur (zone d'exclusion)
-  applyPlayerAvoidance(player, exclusionRadius = 20, avoidanceWeight = 1.0) {
-    const steer = { x: 0, y: 0 };
-    
-    if (!player || !player.sprite || !this.sprite) return steer;
-    
-    const dx = this.sprite.x - player.sprite.x;
-    const dy = this.sprite.y - player.sprite.y;
-      const distance = Math.sqrt(dx * dx + dy * dy);
-      
-    // Si trop proche du joueur, forcer l'éloignement
-    if (distance > 0 && distance < exclusionRadius) {
-      // Direction d'éloignement du joueur
-      const avoidDirection = { x: dx / distance, y: dy / distance };
-      
-      // Force inversement proportionnelle à la distance (plus proche = plus forte)
-      const intensity = (exclusionRadius - distance) / exclusionRadius;
-      
-      steer.x = avoidDirection.x * intensity * avoidanceWeight;
-      steer.y = avoidDirection.y * intensity * avoidanceWeight;
-    }
-    
-    return steer;
-  }
+  // 🎯 SUPPRIMÉ: applyPlayerAvoidance - Remplacé par AvoidanceBehavior modulaire
 
   /**
    * NOUVELLE VERSION CLEAN : Calcule la velocity de migration sans modifier this.velocity
