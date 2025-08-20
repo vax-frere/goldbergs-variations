@@ -23,9 +23,15 @@ export class NpcSpawner {
     
     // Configuration de la migration
     this.migrationConfig = {
-      staggerDelayMin: 0,     // Délai minimum (ms)
-      staggerDelayMax: 2000,  // Délai maximum (ms) - AUGMENTÉ pour effet plus visible
-      migrationSpeed: 120     // Vitesse de migration (CONSTANTE)
+      staggerDelayMin: 0,      // Certains peuvent partir immédiatement
+      staggerDelayMax: 3500,   // Délai max plus important
+      speedMin: 80,            // Vitesse min plus lente
+      speedMax: 180,           // Vitesse max plus rapide
+      migrationSpeed: 120,     // Vitesse de base (sera modulée)
+      spawnMargin: 800,        // Distance à droite de l'écran pour le spawn
+      verticalVariation: 150,  // Variation verticale au spawn
+      speedVariation: 60,      // Variation de vitesse
+      verticalSpeedVariation: 40 // Variation de vitesse verticale
     };
     
     // Écouter l'événement d'intro du joueur
@@ -36,8 +42,8 @@ export class NpcSpawner {
 
   // Spawner le groupe central de NPCs
   spawnGroups(playerPosition = { x: 0, y: 0 }) {
-    // Position au centre de l'écran
-    this.centerX = this.scene.scale.width / 2;
+    // Position à 2/3 de l'écran en X, centre en Y
+    this.centerX = this.scene.scale.width * 2/3;
     this.centerY = this.scene.scale.height / 2;
     
     this.createNpcs();
@@ -101,7 +107,7 @@ export class NpcSpawner {
     }
     
     // Calculer la position de spawn optimale selon la destination finale
-    const spawnPosition = this.calculateSpawnPosition(index, this.groupSize, { x: finalX, y: finalY });
+    const spawnPosition = this.calculateSpawnPosition(index, { x: finalX, y: finalY });
     
     // Configuration du NPC avec vitesse normale
     const npcConfig = {
@@ -123,64 +129,30 @@ export class NpcSpawner {
   }
 
   /**
-   * 🎯 UNIFIÉ : Calculer la position de spawn optimale selon la destination finale
+   * 🌟 KIDS-LIKE : Spawner directement dans la formation finale, décalée hors écran
    * @param {number} index - Index du NPC
    * @param {number} totalNpcs - Nombre total de NPCs
    * @param {Object} finalPosition - Position finale {x, y} du NPC
    * @returns {Object} Position {x, y}
    */
-  calculateSpawnPosition(index, totalNpcs, finalPosition) {
-    const screenWidth = this.scene.scale.width;
-    const screenHeight = this.scene.scale.height;
-    const margin = 120; // Distance hors écran
+  calculateSpawnPosition(index, finalPosition) {
+    // Plus de chaos dans le spawn
+    const verticalVariation = (Math.random() - 0.5) * this.migrationConfig.verticalVariation;
+    const horizontalVariation = Math.random() * 200; // Variation de profondeur de spawn
     
-    // Calculer le côté optimal en fonction de la destination finale
-    const centerX = screenWidth / 2;
-    const centerY = screenHeight / 2;
+    const spawnX = finalPosition.x + this.migrationConfig.spawnMargin + horizontalVariation;
+    const spawnY = finalPosition.y + verticalVariation;
     
-    // Calculer la direction vers la destination finale
-    const directionX = finalPosition.x - centerX;
-    const directionY = finalPosition.y - centerY;
+    // Ajouter un léger décalage basé sur l'index pour créer des motifs naturels
+    const angleOffset = (index / this.groupSize) * Math.PI * 2;
+    const circleRadius = 30;
+    const circleX = Math.cos(angleOffset) * circleRadius;
+    const circleY = Math.sin(angleOffset) * circleRadius;
     
-    // Déterminer le côté le plus proche (exclure gauche car le player arrive de là)
-    let optimalSide;
-    const absX = Math.abs(directionX);
-    const absY = Math.abs(directionY);
-    
-    if (absX > absY) {
-      // Direction plutôt horizontale
-      optimalSide = directionX > 0 ? 'right' : 'top'; // Si gauche → remplacer par haut
-    } else {
-      // Direction plutôt verticale  
-      optimalSide = directionY > 0 ? 'bottom' : 'top';
-    }
-    
-    let spawnX, spawnY;
-    
-    switch (optimalSide) {
-      case 'top':
-        // Côté haut : spawn près de la destination X, Y au-dessus de l'écran
-        spawnX = finalPosition.x + (Math.random() - 0.5) * 100; // ±50px de variation
-        spawnX = Math.max(50, Math.min(screenWidth - 50, spawnX)); // Rester dans les limites
-        spawnY = -margin - Math.random() * 50;
-        break;
-        
-      case 'right': 
-        // Côté droit : X à droite de l'écran, spawn près de la destination Y
-        spawnX = screenWidth + margin + Math.random() * 50;
-        spawnY = finalPosition.y + (Math.random() - 0.5) * 100; // ±50px de variation
-        spawnY = Math.max(50, Math.min(screenHeight - 50, spawnY)); // Rester dans les limites
-        break;
-        
-      case 'bottom':
-        // Côté bas : spawn près de la destination X, Y en-dessous de l'écran
-        spawnX = finalPosition.x + (Math.random() - 0.5) * 100; // ±50px de variation
-        spawnX = Math.max(50, Math.min(screenWidth - 50, spawnX)); // Rester dans les limites
-        spawnY = screenHeight + margin + Math.random() * 50;
-        break;
-    }
-    
-    return { x: spawnX, y: spawnY };
+    return { 
+      x: spawnX + circleX, 
+      y: spawnY + circleY 
+    };
   }
 
   // 🎯 UNIFIÉ : Configurer les collisions avec le joueur
@@ -211,9 +183,8 @@ export class NpcSpawner {
     const allNpcs = this.npcs;
     const groupCenter = this.getCenterPosition();
     
-    // Calculer la distance de chaque NPC par rapport au centre du groupe SELON LEUR DESTINATION FINALE
+    // Calculer la distance de chaque NPC par rapport au centre du groupe
     const npcsWithDistance = allNpcs.map((npc, originalIndex) => {
-      // Utiliser targetPosition (destination finale) au lieu de sprite.x/y (position de spawn)
       if (!npc.targetPosition) {
         console.warn(`⚠️ NPC ${originalIndex} n'a pas de targetPosition pour le tri!`);
         return null;
@@ -223,31 +194,60 @@ export class NpcSpawner {
       const dy = npc.targetPosition.y - groupCenter.y;
       const distanceFromCenter = Math.sqrt(dx * dx + dy * dy);
       
+      // Ajouter un facteur aléatoire pour briser la symétrie parfaite
+      const randomFactor = Math.random() * 0.4 + 0.8; // Entre 0.8 et 1.2
+      
       return {
         npc: npc,
         originalIndex: originalIndex,
-        distanceFromCenter: distanceFromCenter
+        distanceFromCenter: distanceFromCenter * randomFactor
       };
-    }).filter(data => data !== null); // Filtrer les NPCs sans targetPosition
+    }).filter(data => data !== null);
     
-    // Trier par distance croissante (centre en premier, extérieur en dernier)
-    npcsWithDistance.sort((a, b) => a.distanceFromCenter - b.distanceFromCenter);
+    // Trier avec un peu de chaos
+    npcsWithDistance.sort((a, b) => {
+      const baseComparison = a.distanceFromCenter - b.distanceFromCenter;
+      const randomInfluence = (Math.random() - 0.5) * 0.3; // ±15% de chaos dans le tri
+      return baseComparison + randomInfluence;
+    });
     
     const totalNpcs = npcsWithDistance.length;
+    const baseVelocity = { x: -this.migrationConfig.migrationSpeed, y: 0 };
     
     npcsWithDistance.forEach((npcData, sortedIndex) => {
-      // Calculer un délai staggeré basé sur la position dans le tri (centre → extérieur)
-      const baseDelay = (sortedIndex / totalNpcs) * (this.migrationConfig.staggerDelayMax - this.migrationConfig.staggerDelayMin);
-      const randomVariation = (Math.random() - 0.5) * 20; // ±10ms de variation légère
-      const delay = Math.max(0, this.migrationConfig.staggerDelayMin + baseDelay + randomVariation);
+      // Distribution plus chaotique des délais
+      const randomBase = Math.random();
+      const randomPower = 0.5 + Math.random() * 1.5; // Exposant variable pour la distribution
+      const normalizedIndex = sortedIndex / totalNpcs;
       
-      // Programmer le démarrage de la migration pour ce NPC
-      this.scene.time.delayedCall(delay, () => {
-        this.startNpcMigrationIndividual(npcData.npc, npcData.originalIndex, sortedIndex, npcData.distanceFromCenter);
+      const organicDelay = this.migrationConfig.staggerDelayMin + 
+        (Math.pow(randomBase * normalizedIndex, randomPower) * 
+        (this.migrationConfig.staggerDelayMax - this.migrationConfig.staggerDelayMin));
+      
+      // Variation de vitesse plus importante
+      const speedVariation = (Math.random() - 0.5) * this.migrationConfig.speedVariation;
+      const verticalVariation = (Math.random() - 0.5) * this.migrationConfig.verticalSpeedVariation;
+      
+      // Ajouter des micro-oscillations uniques à chaque NPC
+      const uniqueFrequency = 0.5 + Math.random(); // Entre 0.5 et 1.5 Hz
+      const uniquePhase = Math.random() * Math.PI * 2;
+      const oscillationAmplitude = 5 + Math.random() * 10;
+      
+      const globalVelocity = {
+        x: baseVelocity.x + speedVariation,
+        y: baseVelocity.y + verticalVariation,
+        oscillation: {
+          frequency: uniqueFrequency,
+          phase: uniquePhase,
+          amplitude: oscillationAmplitude
+        }
+      };
+      
+      this.scene.time.delayedCall(organicDelay, () => {
+        this.startNpcOrganismMigration(npcData.npc, globalVelocity, npcData.originalIndex);
       });
     });
     
-    // Créer le debug visuel si le mode debug est activé
     this.migrationDebugData = npcsWithDistance.map((npcData, sortedIndex) => ({
       npc: npcData.npc,
       originalIndex: npcData.originalIndex,
@@ -260,7 +260,32 @@ export class NpcSpawner {
   }
 
   /**
-   * Démarrer la migration d'un NPC individuel
+   * 🌟 Démarrer la migration d'organisme unifié
+   * @param {Npc} npc - Le NPC à faire migrer
+   * @param {Object} globalVelocity - Vélocité globale de l'organisme {x, y}
+   * @param {number} originalIndex - Index original du NPC pour debug
+   */
+  startNpcOrganismMigration(npc, globalVelocity, originalIndex) {
+    if (!npc.targetPosition) {
+      console.warn(`⚠️ NPC #${originalIndex} n'a pas de targetPosition!`);
+      return;
+    }
+    
+    // Variations organiques pour chaque NPC
+    const organicVariation = {
+      x: globalVelocity.x + (Math.random() - 0.5) * 10, // ±5px/s de variation
+      y: globalVelocity.y + (Math.random() - 0.5) * 5   // ±2.5px/s de variation verticale
+    };
+    
+    // Démarrer la migration avec la vélocité organique
+    npc.startOrganismMigration(npc.targetPosition, organicVariation);
+    
+    // Mettre à jour le debug visuel
+    this.updateMigrationDebugForNpc(originalIndex);
+  }
+
+  /**
+   * Démarrer la migration d'un NPC individuel (ancienne méthode - gardée pour compatibilité)
    * @param {Npc} npc - Le NPC à faire migrer
    * @param {number} originalIndex - Index original du NPC pour debug
    * @param {number} sortedIndex - Position dans l'ordre de migration (optionnel)
@@ -402,10 +427,36 @@ export class NpcSpawner {
   }
 
   /**
-   * Vérifier si le mode debug est activé
+   * Vérifier si le mode debug est activé pour les NPCs
    */
   isDebugMode() {
-    return window.game && window.game.debugShoutRadius;
+    return window.game && (window.game.debugPhysics || window.game.debugShoutRadius || window.game.debugNpcs);
+  }
+
+  /**
+   * Recréer les données de debug pour tous les NPCs (même après migration)
+   */
+  createDebugDataForAllNpcs() {
+    if (this.npcs.length === 0) return;
+    
+    const groupCenter = this.getCenterPosition();
+    
+    // Recréer les données de debug pour tous les NPCs existants
+    this.migrationDebugData = this.npcs.map((npc, index) => {
+      const dx = npc.targetPosition ? npc.targetPosition.x - groupCenter.x : 0;
+      const dy = npc.targetPosition ? npc.targetPosition.y - groupCenter.y : 0;
+      const distanceFromCenter = Math.sqrt(dx * dx + dy * dy);
+      
+      return {
+        npc: npc,
+        originalIndex: index,
+        sortedIndex: index, // Garder l'ordre actuel
+        distanceFromCenter: distanceFromCenter,
+        migrationStarted: true // Marquer comme déjà migré
+      };
+    });
+    
+    console.log(`🔍 Données de debug recréées pour ${this.npcs.length} NPCs`);
   }
 
   /**
@@ -426,7 +477,10 @@ export class NpcSpawner {
   checkMigrationComplete() {
     if (!this.migrationActive || this.npcs.length === 0) return;
     
-    const migrating = this.npcs.filter(npc => npc.state === 'migrating');
+    // Vérifier tous les types de migration (ancien et nouveau système)
+    const migrating = this.npcs.filter(npc => 
+      npc.state === 'migrating' || npc.state === 'organism_migrating'
+    );
     
     if (migrating.length === 0) {
       this.migrationActive = false;
@@ -434,6 +488,7 @@ export class NpcSpawner {
       // Nettoyer le debug visuel
       this.clearMigrationDebugVisual();
       
+      console.log('🎯 Tous les NPCs ont terminé leur migration');
       this.scene.events.emit('npcMigrationComplete');
     }
   }
@@ -448,18 +503,31 @@ export class NpcSpawner {
     }
     
     // Mettre à jour le debug visuel si nécessaire
-    if (this.migrationActive && this.debugGraphics) {
-      const shouldShowDebug = this.isDebugMode();
+    const shouldShowDebug = this.isDebugMode();
+    
+    if (shouldShowDebug) {
+      // Si le debug est activé mais qu'on n'a pas de données, les recréer
+      if (this.migrationDebugData.length === 0 && this.npcs.length > 0) {
+        this.createDebugDataForAllNpcs();
+      }
+      
+      // Créer les graphics si nécessaire
+      if (!this.debugGraphics && this.migrationDebugData.length > 0) {
+        this.createMigrationDebugVisual();
+      }
       
       // Mettre à jour la visibilité
-      if (this.debugGraphics.visible !== shouldShowDebug) {
+      if (this.debugGraphics && this.debugGraphics.visible !== shouldShowDebug) {
         this.debugGraphics.setVisible(shouldShowDebug);
       }
       
       // Redessiner en continu si visible (les lignes doivent suivre les NPCs)
-      if (shouldShowDebug) {
+      if (this.debugGraphics && this.debugGraphics.visible) {
         this.redrawMigrationDebugVisual();
       }
+    } else if (this.debugGraphics) {
+      // Cacher le debug si désactivé
+      this.debugGraphics.setVisible(false);
     }
   }
 

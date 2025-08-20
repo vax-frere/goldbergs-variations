@@ -4,7 +4,8 @@ import { CollisionSystem } from './CollisionSystem';
 import { SoundManager } from './SoundManager';
 import { FootstepsSystem } from '../systems/FootstepsSystem';
 import { DepthSortingSystem } from '../systems/DepthSortingSystem';
-import { MainLevel } from '../levels/MainLevel';
+import { PiedPiperLevel } from '../levels/PiedPiperLevel';
+import { ShepherdsGateLevel } from '../levels/ShepherdsGateLevel';
 
 export class GameScene extends Phaser.Scene {
   constructor() {
@@ -15,60 +16,163 @@ export class GameScene extends Phaser.Scene {
     this.footstepsSystem = null;
     this.depthSortingSystem = null;
     this.currentLevel = null;
+    
+    // 🎯 NOUVEAU: Gestion des niveaux multiples (SOLID)
+          this.availableLevels = {
+        'shepherd': ShepherdsGateLevel,     // 🕳️ Shepherd's Gate (second niveau)
+        'piper': PiedPiperLevel             // 🎵 Pied Piper (premier niveau avec tutorial)
+      };
+    this.currentLevelType = 'piper'; // Niveau par défaut : Pied Piper (avec tutorial)
+    this.caveatFontLoaded = false;
+  }
+
+    /**
+   * 🎯 FORCER LE CHARGEMENT DE CAVEAT : Assurer que la font est disponible AVANT create()
+   */
+ensureCaveatFont() {
+    console.log('📝 🔄 PRELOAD: Vérification et chargement forcé de Caveat...');
+    
+    // Créer une promise pour le chargement de font
+    this.caveatFontReady = new Promise((resolve) => {
+      const checkCaveat = () => {
+        if (document.fonts && document.fonts.check) {
+          return document.fonts.check('40px "Caveat"') || document.fonts.check('40px Caveat');
+        }
+        return false;
+      };
+      
+      // 1) Si déjà prête, on sort immédiatement
+      if (checkCaveat()) {
+        console.log('📝 ✅ PRELOAD: Caveat déjà disponible');
+        this.caveatFontLoaded = true;
+        resolve();
+        return;
+      }
+      
+      // 2) Essayer de charger la police locale via FontFace pour garantir la présence (évite le swap Google Fonts)
+      if (window.FontFace) {
+        try {
+          console.log('📝 ⏳ PRELOAD: Chargement via FontFace de fonts/caveat.ttf ...');
+          const face = new FontFace('Caveat', 'url(fonts/caveat.ttf) format("truetype")');
+          face.load().then((loadedFace) => {
+            try {
+              if (document.fonts && document.fonts.add) {
+                document.fonts.add(loadedFace);
+              }
+            } catch (e) {
+              console.warn('📝 ⚠️ PRELOAD: Ajout document.fonts.add a échoué', e);
+            }
+            console.log('📝 ✅ PRELOAD: Caveat chargée via FontFace');
+            this.caveatFontLoaded = true;
+            resolve();
+          }).catch((error) => {
+            console.warn('📝 ⚠️ PRELOAD: FontFace load a échoué, tentative via document.fonts.load', error);
+            if (document.fonts && document.fonts.load) {
+              document.fonts.load('40px "Caveat"').then(() => {
+                console.log('📝 ✅ PRELOAD: Caveat chargée via document.fonts.load');
+                this.caveatFontLoaded = true;
+                resolve();
+              }).catch((err2) => {
+                console.warn('📝 ⚠️ PRELOAD: document.fonts.load a échoué', err2);
+                resolve();
+              });
+            } else {
+              setTimeout(resolve, 800);
+            }
+          });
+        } catch (error) {
+          console.warn('📝 ⚠️ PRELOAD: Exception FontFace, fallback document.fonts.load', error);
+          if (document.fonts && document.fonts.load) {
+            document.fonts.load('40px "Caveat"').then(() => { this.caveatFontLoaded = true; resolve(); }).catch(() => resolve());
+          } else {
+            setTimeout(resolve, 800);
+          }
+        }
+      } else if (document.fonts && document.fonts.load) {
+        console.log('📝 ⏳ PRELOAD: FontFace non dispo, tentative via document.fonts.load');
+        document.fonts.load('40px "Caveat"').then(() => { this.caveatFontLoaded = true; resolve(); }).catch(() => resolve());
+      } else {
+        console.log('📝 ⚠️ PRELOAD: Aucune API de police, délai de sécurité');
+        setTimeout(resolve, 800);
+      }
+    });
+    
+    // 🎯 RETOURNER LA PROMISE pour que preload() puisse l'attendre
+    return this.caveatFontReady;
   }
 
   preload() {
-    // Charger le spritesheet pour les personnages (8 directions)
-    this.load.spritesheet('character-spritesheet', 'img/trolling-game/spritesheet-2.png', {
-      frameWidth: 126,
-      frameHeight: 190,
+    // 🎯 FORCER LE CHARGEMENT DE CAVEAT EN PREMIER pour éviter les font fallback
+    this.ensureCaveatFont();
+    
+    // 🎨 NOUVEAU : Charger le spritesheet SVG multi-animations  
+    // Chaque sprite : 120x200px (réduit pour optimiser la performance)
+    this.load.spritesheet('character-spritesheet', 'img/trolling-game/character-spritesheet.svg', {
+      frameWidth: 120,   // Largeur de chaque frame
+      frameHeight: 200, // Hauteur de chaque frame
       startFrame: 0,
-      endFrame: 71 // 9 lignes × 8 frames = 72 frames (0-71)
+      endFrame: -1       // Calculé automatiquement par Phaser
     });
     
-    // Créer une texture simple pour les murs
-    this.load.image('wall', 'data:image/svg+xml;base64,' + btoa(`
-      <svg width="32" height="32" xmlns="http://www.w3.org/2000/svg">
-        <rect width="32" height="32" fill="#8b4513"/>
-      </svg>
-    `));
-    
-    // Créer une texture simple pour les NPCs
-    this.load.image('npc', 'data:image/svg+xml;base64,' + btoa(`
-      <svg width="24" height="24" xmlns="http://www.w3.org/2000/svg">
-        <circle cx="12" cy="12" r="10" fill="#ff6b6b"/>
-        <circle cx="8" cy="9" r="2" fill="#ffffff"/>
-        <circle cx="16" cy="9" r="2" fill="#ffffff"/>
-        <circle cx="8" cy="9" r="1" fill="#000000"/>
-        <circle cx="16" cy="9" r="1" fill="#000000"/>
-        <path d="M 8 15 Q 12 18 16 15" stroke="#000000" stroke-width="1" fill="none"/>
-      </svg>
-    `));
+    // 🎨 Charger les métadonnées pour le découpage des animations
+    this.load.json('character-metadata', 'img/trolling-game/character-spritesheet-metadata.json');
     
     // Charger les onomatopées SVG pour les cris
-    for (let i = 1; i <= 11; i++) {
-      this.load.image(`onomatope-${i}`, `img/trolling-game/onomatope-${i}.svg`);
-    }
+    this.load.image(`onomatope-1`, `img/trolling-game/onomatope-1.png`);
     
-    // Charger l'image spéciale pour les cris des NPCs followers
-    this.load.image('npc-shout', 'img/trolling-game/npc-shout.svg');
+    // Charger l'image complète du tutorial (flèche + texte)
+    this.load.image('this-is-you', 'img/trolling-game/this-is-you.svg');
     
+    // Charger l'image tutorial (contrôles)
+    this.load.image('tutorial', 'img/trolling-game/tutorial.svg');
+    
+    // Charger le coeur pour l'effet de follow des NPCs
+    this.load.image('star-effect', 'img/trolling-game/heart.svg');
+
     // Charger les sons de pas
     for (let i = 1; i <= 11; i++) {
       this.load.audio(`foot-${i}`, `sounds/trolling-game/foot-${i}.mp3`);
     }
     
     // Charger le son de cri
-    this.load.audio('cry', 'sounds/trolling-game/cry.mp3');
+    this.load.audio('cry', 'sounds/trolling-game/cry.wav');
     
     // Charger le son de touch (NPC commence à suivre)
     this.load.audio('touch', 'sounds/trolling-game/touch.mp3');
     
     // Charger le son de célébration pour l'outro
     this.load.audio('claps', 'sounds/trolling-game/claps.mp3');
+    
+    // Charger le son splat pour les textes tutorial
+    this.load.audio('splat', 'sounds/trolling-game/splat.mp3');
   }
 
   create() {
+    // 🎯 ATTENDRE LE CHARGEMENT DE CAVEAT avant de créer quoi que ce soit
+    this.waitForFontThenCreate();
+  }
+
+  /**
+   * 🎯 Attendre Caveat puis lancer la création de la scène
+   */
+  async waitForFontThenCreate() {
+    console.log('📝 🔄 CREATE: Attente de Caveat...');
+    
+    // Attendre que Caveat soit prête
+    if (this.caveatFontReady) {
+      await this.caveatFontReady;
+    }
+    
+    console.log('📝 ✅ CREATE: Caveat prête - création de la scène');
+    
+    // Maintenant créer la scène normalement
+    this.createScene();
+  }
+
+  /**
+   * 🎯 Création effective de la scène (ancienne méthode create)
+   */
+  createScene() {
     // 🎯 TRANSITION DOUCE: Créer un overlay pour éviter le flickering
     this.createTransitionOverlay();
     
@@ -137,15 +241,85 @@ export class GameScene extends Phaser.Scene {
     this.soundManager.init();
   }
 
+  /**
+   * 🎯 OPEN/CLOSED PRINCIPLE : Charger un niveau (extensible pour nouveaux niveaux)
+   */
   loadMainLevel() {
+    this.loadLevel(this.currentLevelType);
+  }
+
+  /**
+   * 🎯 SINGLE RESPONSIBILITY : Charger un niveau spécifique
+   */
+  loadLevel(levelType = 'shepherd') {
     // Nettoyer le niveau précédent s'il existe
     if (this.currentLevel) {
       this.currentLevel.cleanup();
     }
     
-    // Créer et initialiser le niveau principal
-    this.currentLevel = new MainLevel(this, this.entityManager, this.collisionSystem, this.footstepsSystem);
+    // Vérifier que le niveau existe
+    if (!this.availableLevels[levelType]) {
+      console.error(`❌ Niveau '${levelType}' inexistant. Chargement de Shepherd's Gate.`);
+      levelType = 'shepherd';
+    }
+    
+    // Créer et initialiser le niveau demandé (Dependency Inversion)
+    const LevelClass = this.availableLevels[levelType];
+    this.currentLevel = new LevelClass(this, this.entityManager, this.collisionSystem, this.footstepsSystem);
+    this.currentLevelType = levelType;
+    
+    console.log(`🎯 Chargement niveau: ${levelType}`);
     this.currentLevel.init();
+    
+    // Afficher les stats du niveau
+    if (this.currentLevel.getLevelStats) {
+      const stats = this.currentLevel.getLevelStats();
+      console.log(`📊 Stats niveau:`, stats);
+    }
+  }
+
+  /**
+   * 🎯 PUBLIC API : Basculer vers un autre niveau
+   */
+  switchToLevel(levelType) {
+    if (levelType === this.currentLevelType) {
+      console.log(`📋 Déjà sur le niveau '${levelType}'`);
+      return;
+    }
+    
+    console.log(`🔄 Basculement: ${this.currentLevelType} → ${levelType}`);
+    this.loadLevel(levelType);
+  }
+
+  /**
+   * 🎯 PUBLIC API : Passer au niveau suivant
+   */
+  loadNextLevel() {
+    const levelProgression = ['piper', 'shepherd']; // Ordre des niveaux : Pied Piper → Shepherd's Gate
+    const currentIndex = levelProgression.indexOf(this.currentLevelType);
+    
+    if (currentIndex === -1) {
+      console.warn(`⚠️ Niveau actuel '${this.currentLevelType}' non trouvé dans la progression`);
+      return false;
+    }
+    
+    const nextIndex = currentIndex + 1;
+    
+    if (nextIndex >= levelProgression.length) {
+      console.log(`🎯 TOUS LES NIVEAUX TERMINÉS ! Retour au début.`);
+      this.loadLevel(levelProgression[0]); // Retour au premier niveau
+      return true;
+    }
+    
+    const nextLevelType = levelProgression[nextIndex];
+    console.log(`🎯 PROGRESSION AUTOMATIQUE: ${this.currentLevelType} → ${nextLevelType}`);
+    
+    // Petite pause pour que l'utilisateur voie le message
+    setTimeout(() => {
+      this.loadLevel(nextLevelType);
+    }, 500);
+    
+    return true;
   }
 
   setupInput() {
@@ -153,7 +327,7 @@ export class GameScene extends Phaser.Scene {
     this.cursors = this.input.keyboard.createCursorKeys();
     this.wasd = this.input.keyboard.addKeys('W,S,A,D');
     this.spaceKey = this.input.keyboard.addKey('SPACE'); 
-    this.debugKey = this.input.keyboard.addKey('P'); // Touche B pour Debug (Bounding boxes)
+    this.debugKey = this.input.keyboard.addKey('P'); // Touche P pour Debug (Bounding boxes)
 
     // États des touches pour éviter les répétitions
     this.spaceKeyPressed = false;

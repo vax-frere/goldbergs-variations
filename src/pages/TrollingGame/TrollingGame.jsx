@@ -19,8 +19,19 @@ const TrollingGame = () => {
       console.log('🔧 DEBUG MODE:');
       console.log('   Touche P = Activer/désactiver les colliders + rayon de cri');
       console.log('   Console:');
-      console.log('     window.game.toggleDebug() = Toggle tout le debug');
-      console.log('     window.game.toggleShoutRadiusDebug() = Toggle uniquement le rayon de cri');
+      console.log('     🎯 NIVEAUX:');
+      console.log('       window.game.switchLevel("shepherd") = Shepherd\'s Gate (pousser dans le trou)');
+      console.log('       window.game.switchLevel("piper") = Pied Piper (faire suivre)');
+      console.log('       window.game.getLevelInfo() = Infos niveau actuel');
+      console.log('     🔧 DEBUG:');
+      console.log('       window.game.toggleDebug() = Toggle tout le debug');
+      console.log('       window.game.toggleShoutRadiusDebug() = Toggle uniquement le rayon de cri');
+      console.log('       window.game.toggleNpcDebug() = Toggle les flèches de destination des NPCs');
+      console.log('     📝 TUTORIAL:');
+      console.log('       window.game.toggleTutorialArrow() = Toggle l\'image "this is you"');
+      console.log('       window.game.resetTutorial() = Remettre le tutorial à zéro');
+      console.log('       window.game.forceHideTutorial() = Forcer le masquage du tutorial');
+      console.log('       window.game.getTutorialDebugState() = État complet du tutorial');
     }
 
     return () => {
@@ -55,24 +66,6 @@ const TrollingGame = () => {
         }}
       />
       
-      {/* Légende des contrôles */}
-      <div
-        style={{
-          position: 'absolute',
-          bottom: '10px',
-          left: '10px',
-          color: 'white',
-          fontSize: '12px',
-          fontFamily: 'Arial, sans-serif',
-          backgroundColor: 'rgba(0, 0, 0, 0.5)',
-          padding: '5px 8px',
-          borderRadius: '3px',
-          zIndex: 1001,
-          lineHeight: '1.2',
-        }}
-              >
-          Controls: Arrows: move • Space: shout
-        </div>
     </>
   );
 };

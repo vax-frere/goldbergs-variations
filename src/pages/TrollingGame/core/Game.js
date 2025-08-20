@@ -10,6 +10,10 @@ export class Game {
     // Charger les paramètres de debug depuis le localStorage (désactivé par défaut)
     this.debugPhysics = this.loadDebugSetting('debugPhysics', false);
     this.debugShoutRadius = this.loadDebugSetting('debugShoutRadius', false);
+    this.debugNpcs = this.loadDebugSetting('debugNpcs', false); // 🎯 NOUVEAU: Flag dédié pour le debug des NPCs
+    
+    // État du tutorial pour cette session (pas persistant)
+    this.tutorialShown = false; // Toujours false au chargement de page
     
     this.init();
   }
@@ -27,6 +31,26 @@ export class Game {
 
   // Sauvegarder un paramètre de debug dans le localStorage
   saveDebugSetting(key, value) {
+    try {
+      localStorage.setItem(`trollingGame_${key}`, JSON.stringify(value));
+    } catch (error) {
+      console.warn(`Erreur lors de la sauvegarde de ${key} dans localStorage:`, error);
+    }
+  }
+
+  // Charger un paramètre de jeu depuis le localStorage
+  loadGameSetting(key, defaultValue) {
+    try {
+      const saved = localStorage.getItem(`trollingGame_${key}`);
+      return saved !== null ? JSON.parse(saved) : defaultValue;
+    } catch (error) {
+      console.warn(`Erreur lors du chargement de ${key} depuis localStorage:`, error);
+      return defaultValue;
+    }
+  }
+
+  // Sauvegarder un paramètre de jeu dans le localStorage
+  saveGameSetting(key, value) {
     try {
       localStorage.setItem(`trollingGame_${key}`, JSON.stringify(value));
     } catch (error) {
@@ -212,22 +236,33 @@ export class Game {
       // 🎯 FORCER la synchronisation Player debug (sans destroy/recreate)
       if (this.debugShoutRadius) {
         // Debug activé : s'assurer que les éléments existent et sont visibles
-        if (!level.player.isDebugEnabled) {
+        if (!level.player.debugRenderer || !level.player.debugRenderer.isDebugEnabled) {
           level.player.setDebugEnabled(true);
         }
-        // TOUJOURS redessiner pour être sûr
-        level.player.updateShoutRadiusDebug();
-        level.player.updateTremblingRadiusDebug();
+        // ✅ NOUVEAU: Utiliser le PlayerDebugRenderer pour forcer la mise à jour
+        level.player.debugRenderer.forceUpdateDebugVisuals();
       } else {
         // Debug désactivé : détruire les éléments
-        if (level.player.isDebugEnabled) {
+        if (level.player.debugRenderer && level.player.debugRenderer.isDebugEnabled) {
           level.player.setDebugEnabled(false);
         }
+        // 🚫 NE PAS appeler de mise à jour si debug désactivé !
       }
     }
     
-    // 2. Forcer la mise à jour des NPCs qui pourraient avoir des éléments de debug
+    // 2. Forcer la mise à jour des NPCs et de leur debug visuel
     if (level.npcSpawner) {
+      // Forcer la recréation du debug visuel des destinations NPCs
+      if (this.debugPhysics || this.debugShoutRadius || this.debugNpcs) {
+        level.npcSpawner.createDebugDataForAllNpcs();
+        level.npcSpawner.createMigrationDebugVisual();
+        console.log('🔧 FORÇAGE: Debug NPCs destinations activé');
+      } else {
+        level.npcSpawner.clearMigrationDebugVisual();
+        console.log('🔧 FORÇAGE: Debug NPCs destinations désactivé');
+      }
+      
+      // Mettre à jour les trails des NPCs individuels
       const allNpcs = level.npcSpawner.getAllNpcs();
       allNpcs.forEach(npc => {
         // Si des NPCs ont des trails ou autres éléments de debug, les mettre à jour ici
@@ -283,6 +318,154 @@ export class Game {
     }
     
     console.log('🔄 Mise à jour forcée de tous les éléments visuels de debug');
+  }
+
+  // TOGGLE TUTORIAL TEXT - Appel depuis la console avec game.toggleTutorialArrow()
+  toggleTutorialArrow() {
+    const gameScene = this.phaserGame.scene.getScene('GameScene');
+    if (!gameScene || !gameScene.currentLevel || !gameScene.currentLevel.tutorialTextManager) {
+      console.warn('⚠️ Impossible de toggle tutorial text: pas de tutorialTextManager disponible');
+      return false;
+    }
+
+    const tutorialManager = gameScene.currentLevel.tutorialTextManager;
+    const status = tutorialManager.getStatus();
+    
+    // Si des textes sont visibles, les masquer, sinon forcer leur affichage
+    const hasVisibleTexts = Object.values(status.texts).some(text => text.visible);
+    const hasVisibleImages = status.images.length > 0;
+    
+    if (hasVisibleTexts || hasVisibleImages) {
+      tutorialManager.hideAllTexts();
+      tutorialManager.hideAllTutorialImages();
+      console.log('📝 Tutorial text + images: CACHÉ');
+    } else {
+      // Forcer l'affichage pour debug
+      const player = tutorialManager.getPlayer();
+      if (player && player.sprite) {
+        tutorialManager.showYouText();
+        tutorialManager.showThemText();
+        // L'image tutorial apparaîtra automatiquement après le délai
+        console.log('📝 Tutorial text + images: AFFICHÉ (debug)');
+      }
+    }
+    
+    return !(hasVisibleTexts || hasVisibleImages);
+  }
+
+  // 🧪 DEBUG: Forcer le masquage du tutorial
+  forceHideTutorial() {
+    const gameScene = this.phaserGame.scene.getScene('GameScene');
+    if (!gameScene || !gameScene.currentLevel || !gameScene.currentLevel.tutorialTextManager) {
+      console.warn('⚠️ Impossible de forcer masquage tutorial: pas de tutorialTextManager disponible');
+      return;
+    }
+
+    const tutorialManager = gameScene.currentLevel.tutorialTextManager;
+    tutorialManager.forceHideAll();
+    console.log('📝 Tutorial: MASQUAGE FORCÉ');
+  }
+
+  // 🧪 DEBUG: Obtenir l'état du tutorial
+  getTutorialDebugState() {
+    const gameScene = this.phaserGame.scene.getScene('GameScene');
+    if (!gameScene || !gameScene.currentLevel || !gameScene.currentLevel.tutorialTextManager) {
+      console.warn('⚠️ Impossible d\'obtenir état tutorial: pas de tutorialTextManager disponible');
+      return null;
+    }
+
+    const state = gameScene.currentLevel.tutorialTextManager.getDebugState();
+    console.log('📝 DEBUG Tutorial State:', state);
+    return state;
+  }
+
+  // TOGGLE DEBUG NPCS - Appel depuis la console avec game.toggleNpcDebug()
+  toggleNpcDebug() {
+    const gameScene = this.phaserGame.scene.getScene('GameScene');
+    if (!gameScene || !gameScene.currentLevel || !gameScene.currentLevel.npcSpawner) {
+      console.warn('⚠️ Impossible de toggle NPC debug: pas de NPCs disponibles');
+      return false;
+    }
+
+    // 🎯 NOUVEAU: Toggle le flag dédié et sauvegarder
+    this.debugNpcs = !this.debugNpcs;
+    this.saveDebugSetting('debugNpcs', this.debugNpcs);
+    
+    const npcSpawner = gameScene.currentLevel.npcSpawner;
+    
+    if (this.debugNpcs) {
+      // Activer le debug des NPCs
+      npcSpawner.createDebugDataForAllNpcs();
+      npcSpawner.createMigrationDebugVisual();
+      console.log('🎯 NPCs debug: AFFICHÉ (destinations et flèches)');
+    } else {
+      // Désactiver le debug des NPCs
+      npcSpawner.clearMigrationDebugVisual();
+      console.log('🎯 NPCs debug: CACHÉ (destinations et flèches)');
+    }
+    
+    return this.debugNpcs;
+  }
+
+  // 🎯 NOUVEAU: SWITCH LEVELS - Appel depuis la console avec game.switchLevel('piper')
+  switchLevel(levelType = 'shepherd') {
+    const gameScene = this.phaserGame.scene.getScene('GameScene');
+    if (!gameScene) {
+      console.warn('⚠️ Impossible de changer de niveau: pas de GameScene disponible');
+      return false;
+    }
+
+    const availableLevels = ['piper', 'shepherd'];
+    if (!availableLevels.includes(levelType)) {
+      console.warn(`⚠️ Niveau '${levelType}' inexistant. Disponibles: ${availableLevels.join(', ')}`);
+      return false;
+    }
+
+    gameScene.switchToLevel(levelType);
+    
+    // Afficher les informations du nouveau niveau
+    if (gameScene.currentLevel && gameScene.currentLevel.getLevelStats) {
+      const stats = gameScene.currentLevel.getLevelStats();
+      console.log(`🎯 Niveau actuel: ${levelType}`, stats);
+    }
+    
+    return true;
+  }
+
+  // 🎯 NOUVEAU: GET CURRENT LEVEL INFO - Appel depuis la console avec game.getLevelInfo()
+  getLevelInfo() {
+    const gameScene = this.phaserGame.scene.getScene('GameScene');
+    if (!gameScene || !gameScene.currentLevel) {
+      console.warn('⚠️ Pas de niveau actuel');
+      return null;
+    }
+
+    const info = {
+      currentType: gameScene.currentLevelType,
+      availableLevels: Object.keys(gameScene.availableLevels),
+      stats: gameScene.currentLevel.getLevelStats ? gameScene.currentLevel.getLevelStats() : null
+    };
+
+    console.log('📊 Informations niveau actuel:', info);
+    return info;
+  }
+
+  // Vérifier si le tutorial doit être affiché (première fois seulement)
+  shouldShowTutorial() {
+    return !this.tutorialShown;
+  }
+
+  // Marquer le tutorial comme vu pour cette session
+  markTutorialAsShown() {
+    this.tutorialShown = true;
+    console.log('✅ Tutorial marqué comme vu - ne s\'affichera plus dans cette session');
+  }
+
+  // RESET DU TUTORIAL - Appel depuis la console avec game.resetTutorial()
+  resetTutorial() {
+    this.tutorialShown = false;
+    console.log('🔄 Tutorial remis à zéro - s\'affichera à nouveau dans cette session');
+    return false; // Tutorial réinitialisé = pas encore vu
   }
 
   destroy() {

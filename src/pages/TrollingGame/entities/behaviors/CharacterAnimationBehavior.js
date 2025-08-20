@@ -2,6 +2,8 @@
  * 🎯 SYSTÈME AAA : ACTUAL MOVEMENT DETECTION
  * Détecte le mouvement physique réel au lieu de la vélocité théorique
  * Parfait pour les NPCs poussés par d'autres !
+ * ✨ VERSION ANTI-FLICKERING avec hysteresis amélioré
+ * 🎨 NOUVEAU : Support du spritesheet multi-animations
  */
 export class CharacterAnimationBehavior {
   constructor(owner, config = {}) {
@@ -12,29 +14,56 @@ export class CharacterAnimationBehavior {
     this.config = {
       spriteKey: config.spriteKey || 'character-spritesheet',
       frameRate: config.frameRate || 8,
+      idleAnimation: config.idleAnimation || 'idle9', // Animation d'inactivité
+      walkAnimation: config.walkAnimation || 'walking', // Animation de marche
       ...config
     };
     
     // État d'animation
     this.isMoving = false;
     this.facing = 'down'; // Direction par défaut
-    this.currentAnimation = ''; // Pas d'animation au démarrage - sera définie par ACTUAL MOVEMENT DETECTION
+    this.currentAnimation = ''; // Pas d'animation au démarrage
+    
+    // Animation forcée (ex: trembling spécifique)
+    this.forcedAnimationName = null; // ex: 'headholdinpain'
     
     // 🎯 AAA: ACTUAL MOVEMENT DETECTION
     this.lastPosition = {
       x: owner.sprite.x,
       y: owner.sprite.y
     };
-    this.movementHistory = []; // Historique des mouvements
-    this.realMovementThreshold = 0.8; // Distance réelle minimum pour "bouger" (px/frame)
-    this.realIdleThreshold = 0.3; // En dessous = idle (px/frame)
+    
+    // 🛠️ AMÉLIORATION : Hysteresis renforcé pour éliminer le flickering
+    this.movementBuffer = []; // Buffer des derniers mouvements
+    this.bufferSize = 3; // Nombre de frames à analyser
+    this.movingFramesRequired = 2; // Frames consécutives requises pour considérer un mouvement
+    this.stoppedFramesRequired = 3; // Frames consécutives requises pour s'arrêter
+    
+    // 🛠️ AMÉLIORATION : Seuils plus stables
+    this.movementThreshold = 0.8; // Seuil pour détecter un mouvement
+    this.idleThreshold = 0.2; // Seuil pour détecter l'arrêt (plus bas)
     
     // Stabilisation pour éviter le flickering
     this.lastDirectionChange = 0;
-    this.directionChangeDelay = 150; // 150ms minimum entre changements
+    this.directionChangeDelay = 200; // 200ms minimum entre changements (augmenté)
+    this.directionBuffer = []; // Buffer pour la direction
+    this.directionStabilityRequired = 2; // Frames requises pour changer de direction
     
-    // Mapping des 8 directions
+    // 🎨 NOUVEAU : Mapping des directions (ancien format -> nouveau spritesheet)
     this.directions = ['up', 'up-right', 'right', 'down-right', 'down', 'down-left', 'left', 'up-left'];
+    // Mapping direct entre les directions logiques (jeu) et les lignes du spritesheet
+    // Spritesheet directions (par ligne) : front, frontright, right, backright, back, backleft, left, frontleft
+    this.directionMapping = {
+      'up': 'back',
+      'up-right': 'backright',
+      'right': 'right',
+      'down-right': 'frontright',
+      'down': 'front',
+      'down-left': 'frontleft',
+      'left': 'left',
+      'up-left': 'backleft'
+    };
+    
     this.directionAngles = [
       { dir: 'up', angle: -Math.PI/2, range: Math.PI/8 },
       { dir: 'up-right', angle: -Math.PI/4, range: Math.PI/8 },
@@ -46,21 +75,185 @@ export class CharacterAnimationBehavior {
       { dir: 'up-left', angle: -3*Math.PI/4, range: Math.PI/8 }
     ];
     
-    // Créer les animations si elles n'existent pas
-    this.createAnimations();
+    // 🎨 NOUVEAU : Métadonnées du spritesheet multi-animations
+    this.spritesheetMetadata = null;
+    this.metadataLoaded = false;
     
-    // 🚫 SUPPRIMÉ: Démarrage automatique en idle - seul ACTUAL MOVEMENT DETECTION contrôle
-    // this.playAnimation('idle-down');
+    // 🛠️ AMÉLIORATION : Créer les animations une seule fois de manière thread-safe
+    this.loadMetadataAndCreateAnimations();
   }
 
   /**
-   * Créer toutes les animations de personnage (8 directions)
+   * 🎨 NOUVEAU : Charger les métadonnées depuis Phaser cache et créer les animations
+   */
+  loadMetadataAndCreateAnimations() {
+    // Attendre que Phaser ait chargé les métadonnées
+    if (this.scene.cache.json.exists('character-metadata')) {
+      this.spritesheetMetadata = this.scene.cache.json.get('character-metadata');
+      this.metadataLoaded = true;
+      
+      console.log('🎨 Métadonnées du spritesheet chargées depuis Phaser:', this.spritesheetMetadata.animations);
+      
+      // Créer les animations maintenant qu'on a les métadonnées
+    this.ensureAnimationsExist();
+    } else {
+      // Réessayer plus tard si les métadonnées ne sont pas encore chargées
+      this.scene.time.delayedCall(100, () => this.loadMetadataAndCreateAnimations());
+    }
+  }
+
+  /**
+   * 🛠️ AMÉLIORATION : Gestion thread-safe des animations globales
+   */
+  ensureAnimationsExist() {
+    // Vérifier si les animations existent déjà (créées par une autre entité)
+    // Aligner la vérification sur les clés réellement créées: `walk-<direction>` et `zombiescream-<direction>`
+    const walkAnimationsExist = this.scene.anims.exists('walk-down');
+    const zombiescreamAnimationsExist = this.scene.anims.exists('zombiescream-down');
+    const headHoldInPainAnimationsExist = this.scene.anims.exists('headholdinpain-down');
+
+    if (!walkAnimationsExist || !zombiescreamAnimationsExist || !headHoldInPainAnimationsExist) {
+      this.createAnimations();
+    }
+  }
+
+  /**
+   * 🎨 NOUVEAU : Créer toutes les animations en utilisant les métadonnées JSON
    */
   createAnimations() {
-    // Vérifier si les animations existent déjà pour éviter les doublons
-    if (this.scene.anims.exists('walk-up')) return;
+    if (!this.metadataLoaded || !this.spritesheetMetadata) {
+      console.warn('⚠️ Métadonnées non chargées, utilisation du fallback');
+      this.createFallbackAnimations();
+      return;
+    }
+
+    // 🛠️ SÉCURITÉ : Vérifier si les animations existent déjà avant de créer
+    const walkExists = this.scene.anims.exists(`${this.config.walkAnimation}-front`);
+    const zombiescreamExists = this.scene.anims.exists('zombiescream-front');
+    if (walkExists && zombiescreamExists) {
+      return; // Les animations existent déjà, ne pas les recréer
+    }
+
+    console.log('🎬 Création des animations multi-animations...');
+
+    // Vérifier que les animations requises existent dans les métadonnées
+    const idleAnimData = this.spritesheetMetadata.animations[this.config.idleAnimation];
+    const walkAnimData = this.spritesheetMetadata.animations[this.config.walkAnimation];
+
+    if (!idleAnimData || !walkAnimData) {
+      console.error(`❌ Animations manquantes: idle=${this.config.idleAnimation}, walk=${this.config.walkAnimation}`);
+      this.createFallbackAnimations();
+      return;
+    }
 
     // Créer les animations pour les 8 directions
+    this.directions.forEach(direction => {
+      const spritesheetDirection = this.directionMapping[direction];
+      
+      // 🎨 Animation IDLE utilisant les métadonnées
+      const idleFrames = idleAnimData.frameData[spritesheetDirection];
+      if (idleFrames && idleFrames.frames.length > 0) {
+        this.scene.anims.create({
+          key: `idle-${direction}`,
+          frames: idleFrames.frames.map(frameData => ({
+            key: this.config.spriteKey,
+            frame: this.calculateFrameIndex(frameData.x, frameData.y)
+          })),
+          frameRate: 3, // Idle plus lent
+          repeat: -1
+        });
+      }
+
+      // 🎨 Animation WALK utilisant les métadonnées
+      const walkFrames = walkAnimData.frameData[spritesheetDirection];
+      if (walkFrames && walkFrames.frames.length > 0) {
+        this.scene.anims.create({
+          key: `walk-${direction}`,
+          frames: walkFrames.frames.map(frameData => ({
+            key: this.config.spriteKey,
+            frame: this.calculateFrameIndex(frameData.x, frameData.y)
+          })),
+          frameRate: this.config.frameRate,
+          repeat: -1
+        });
+      }
+
+      // 🎨 Animation ZOMBIESCREAM utilisant les métadonnées
+      const zombiescreamAnimData = this.spritesheetMetadata.animations['zombiescream'];
+      console.log(`🧟 DEBUG zombiescream pour ${direction} (${spritesheetDirection}):`, {
+        zombiescreamExists: !!zombiescreamAnimData,
+        allAnimations: Object.keys(this.spritesheetMetadata.animations)
+      });
+      
+      if (zombiescreamAnimData) {
+        const zombiescreamFrames = zombiescreamAnimData.frameData[spritesheetDirection];
+        console.log(`🧟 Frames pour ${spritesheetDirection}:`, {
+          framesExist: !!zombiescreamFrames,
+          frameCount: zombiescreamFrames?.frames?.length || 0,
+          frameDataKeys: zombiescreamAnimData.frameData ? Object.keys(zombiescreamAnimData.frameData) : []
+        });
+        
+        if (zombiescreamFrames && zombiescreamFrames.frames.length > 0) {
+          this.scene.anims.create({
+            key: `zombiescream-${direction}`,
+            frames: zombiescreamFrames.frames.map(frameData => ({
+              key: this.config.spriteKey,
+              frame: this.calculateFrameIndex(frameData.x, frameData.y)
+            })),
+            frameRate: 24, // Vitesse du cri (3x plus rapide)
+            repeat: 0 // Ne pas répéter, jouer une seule fois
+          });
+          console.log(`✅ Animation zombiescream-${direction} créée avec ${zombiescreamFrames.frames.length} frames`);
+        } else {
+          console.warn(`⚠️ Pas de frames zombiescream pour ${spritesheetDirection}`);
+        }
+      } else {
+        console.error(`❌ Données zombiescream non trouvées dans les métadonnées`);
+      }
+      
+      // 🎨 Animation HEADHOLDINPAIN (trembling visuel) si présente dans les métadonnées
+      const headHoldInPainData = this.spritesheetMetadata.animations['headholdinpain'];
+      if (headHoldInPainData) {
+        const headPainFrames = headHoldInPainData.frameData[spritesheetDirection];
+        if (headPainFrames && headPainFrames.frames.length > 0) {
+          this.scene.anims.create({
+            key: `headholdinpain-${direction}`,
+            frames: headPainFrames.frames.map(frameData => ({
+              key: this.config.spriteKey,
+              frame: this.calculateFrameIndex(frameData.x, frameData.y)
+            })),
+            frameRate: 10,
+            repeat: -1
+          });
+        }
+      }
+    });
+
+    console.log('✅ Animations multi-animations créées avec succès (idle, walk, zombiescream)');
+  }
+
+  /**
+   * 🎨 NOUVEAU : Calculer l'index de frame basé sur les coordonnées X,Y
+   */
+  calculateFrameIndex(x, y) {
+    const spriteWidth = this.spritesheetMetadata.spritesheet.spriteWidth;
+    const spriteHeight = this.spritesheetMetadata.spritesheet.spriteHeight;
+    const totalWidth = this.spritesheetMetadata.spritesheet.width;
+    
+    const col = Math.floor(x / spriteWidth);
+    const row = Math.floor(y / spriteHeight);
+    const maxCols = Math.floor(totalWidth / spriteWidth);
+    
+    return row * maxCols + col;
+  }
+
+  /**
+   * 🛠️ FALLBACK : Créer les animations avec l'ancien système si les métadonnées échouent
+   */
+  createFallbackAnimations() {
+    console.log('🎬 Création des animations (mode fallback)...');
+
+    // Créer les animations pour les 8 directions avec l'ancien système
     this.directions.forEach((direction, index) => {
       // Animations idle (première ligne du spritesheet)
       this.scene.anims.create({
@@ -82,20 +275,36 @@ export class CharacterAnimationBehavior {
         frameRate: this.config.frameRate,
         repeat: -1
       });
+
+      // Animations zombiescream (estimation pour le fallback)
+      // Note: En mode fallback, on utilise une estimation simple
+      const zombiescreamStartFrame = (index + 2) * 23; // Estimation basée sur la structure
+      const zombiescreamEndFrame = zombiescreamStartFrame + 22; // 23 frames pour zombiescream
+      
+      this.scene.anims.create({
+        key: `zombiescream-${direction}`,
+        frames: this.scene.anims.generateFrameNumbers(this.config.spriteKey, { 
+          start: zombiescreamStartFrame, 
+          end: zombiescreamEndFrame 
+        }),
+        frameRate: 24, // 3x plus rapide
+        repeat: 0 // Ne pas répéter
+      });
     });
+
+    console.log('✅ Animations fallback créées (idle, walk, zombiescream)');
   }
 
   /**
-   * 🎯 AAA: ACTUAL MOVEMENT DETECTION - Détecte le mouvement physique réel
+   * 🎯 AAA: ACTUAL MOVEMENT DETECTION avec anti-flickering amélioré
    * @param {number} delta - Temps écoulé depuis la dernière frame
    */
   update(delta = 16) {
     if (!this.owner || !this.owner.sprite) {
-      console.warn(`🎬 WARN: owner ou sprite manquant pour ${this.owner?.entityType || 'unknown'}`);
       return;
     }
 
-    const currentTime = Date.now();
+    const currentTime = this.scene.time.now; // 🛠️ AMÉLIORATION : Utiliser le timer de Phaser
     const currentPosition = {
       x: this.owner.sprite.x,
       y: this.owner.sprite.y
@@ -110,32 +319,47 @@ export class CharacterAnimationBehavior {
     // Distance réellement parcourue (physique)
     const realDistance = Math.sqrt(realMovement.x * realMovement.x + realMovement.y * realMovement.y);
     
-
-    // 🎯 SIMPLE: Détection directe sans moyennes compliquées
-    const isCurrentlyMoving = realDistance > 0.5; // Seuil simple: 0.5px par frame
-    
-    // Simple hysteresis: différents seuils pour entrer/sortir
-    if (this.isMoving) {
-      // Déjà en mouvement: seuil plus bas pour continuer (évite flickering)
-      this.isMoving = realDistance > 0.1;
-    } else {
-      // Immobile: seuil plus élevé pour commencer
-      this.isMoving = realDistance > 0.3;
+    // 🛠️ AMÉLIORATION : Buffer des mouvements pour hysteresis renforcé
+    this.movementBuffer.push(realDistance);
+    if (this.movementBuffer.length > this.bufferSize) {
+      this.movementBuffer.shift();
     }
 
+    // 🛠️ AMÉLIORATION : Analyse du buffer pour déterminer l'état
+    const movingFrames = this.movementBuffer.filter(dist => dist > this.movementThreshold).length;
+    const stoppedFrames = this.movementBuffer.filter(dist => dist < this.idleThreshold).length;
 
+    // 🛠️ AMÉLIORATION : Logique d'hysteresis strict
+    if (this.isMoving) {
+      // Déjà en mouvement: nécessite plusieurs frames d'arrêt pour s'arrêter
+      if (stoppedFrames >= this.stoppedFramesRequired) {
+        this.isMoving = false;
+      }
+    } else {
+      // Immobile: nécessite plusieurs frames de mouvement pour bouger
+      if (movingFrames >= this.movingFramesRequired) {
+        this.isMoving = true;
+      }
+    }
 
-    // Calculer la direction du mouvement réel (si suffisant)
-    if (this.isMoving && realDistance > 0.3) {
+    // 🛠️ AMÉLIORATION : Gestion de direction avec buffer de stabilité
+    if (this.isMoving && realDistance > this.movementThreshold) {
       // Empêcher les changements de direction trop fréquents
       if (currentTime - this.lastDirectionChange >= this.directionChangeDelay) {
         const newFacing = this.calculateDirectionFromMovement(realMovement);
         
-        if (newFacing !== this.facing) {
+        // 🛠️ AMÉLIORATION : Buffer de direction pour plus de stabilité
+        this.directionBuffer.push(newFacing);
+        if (this.directionBuffer.length > this.directionStabilityRequired) {
+          this.directionBuffer.shift();
+        }
+        
+        // Changer de direction seulement si la nouvelle direction est stable
+        const stableDirection = this.directionBuffer.every(dir => dir === newFacing);
+        if (stableDirection && newFacing !== this.facing) {
           this.facing = newFacing;
           this.lastDirectionChange = currentTime;
-          
- 
+          this.directionBuffer = []; // Reset du buffer après changement
         }
       }
     }
@@ -150,6 +374,7 @@ export class CharacterAnimationBehavior {
 
   /**
    * 🎯 AAA: Calculer la direction selon le mouvement physique réel (8 directions)
+   * 🛠️ AMÉLIORATION : Hysteresis plus strict pour les directions
    */
   calculateDirectionFromMovement(realMovement) {
     // Calculer l'angle du vecteur de mouvement réel
@@ -173,50 +398,72 @@ export class CharacterAnimationBehavior {
       }
     });
     
-    // Hystérésis : ne changer que si la différence d'angle est assez significative
-    const hysteresisThreshold = Math.PI / 16; // 22.5 degrés
+    // 🛠️ AMÉLIORATION : Hystérésis plus strict
+    const hysteresisThreshold = Math.PI / 12; // 30 degrés (plus strict)
     
-    if (minAngleDiff < hysteresisThreshold || this.facing === closestDirection) {
-      return closestDirection;
+    // Rester sur la direction actuelle si le changement n'est pas assez significatif
+    if (minAngleDiff >= hysteresisThreshold && this.facing !== closestDirection) {
+      return this.facing;
     }
     
-    // Si le changement n'est pas assez significatif, garder la direction actuelle
-    return this.facing;
+    return closestDirection;
   }
 
   /**
    * Mettre à jour l'animation selon l'état actuel
+   * 🛠️ AMÉLIORATION : Vérification plus stricte avant changement
    */
   updateAnimation() {
+    // Ne pas changer d'animation si un cri est en cours
+    if (this.owner && this.owner.shoutBehavior && this.owner.shoutBehavior.isScreaming) {
+      return;
+    }
+    // Priorité à une animation forcée (ex: trembling spécifique)
+    if (this.forcedAnimationName) {
+      const forcedKey = `${this.forcedAnimationName}-${this.facing}`;
+      if (this.scene.anims.exists(forcedKey)) {
+        if (this.currentAnimation !== forcedKey || this.owner?.sprite?.anims?.currentAnim?.key !== forcedKey) {
+          this.playAnimation(forcedKey);
+        }
+        return;
+      }
+    }
     const targetAnimation = this.isMoving ? `walk-${this.facing}` : `idle-${this.facing}`;
-    
 
-    if (this.currentAnimation !== targetAnimation) {
-
-      this.playAnimation(targetAnimation);
+    // 🛠️ AMÉLIORATION : Ne changer que si vraiment nécessaire et que l'animation existe
+    if (this.scene.anims.exists(targetAnimation)) {
+      const spriteCurrentKey = this.owner?.sprite?.anims?.currentAnim?.key;
+      if (this.currentAnimation !== targetAnimation || spriteCurrentKey !== targetAnimation) {
+        this.playAnimation(targetAnimation);
+      }
     }
   }
 
   /**
    * 🎯 AAA: Appliquer l'animation calculée par ACTUAL MOVEMENT DETECTION
+   * 🛠️ AMÉLIORATION : Gestion d'erreur plus robuste
    */
   playAnimation(animationKey) {
-    // 🔍 DEBUG: Vérifications
-    if (!this.owner.sprite) {
-      console.error(`🎬 ERROR: owner.sprite n'existe pas pour ${this.owner.entityType}`);
-      return;
+    try {
+      // 🔍 VÉRIFICATIONS de sécurité
+      if (!this.owner.sprite || !this.scene.anims.exists(animationKey)) {
+        return;
+      }
+      
+      // 🛠️ AMÉLIORATION : Vérifier que le sprite n'est pas déjà en train de jouer cette animation
+      if (this.owner.sprite.anims.currentAnim?.key === animationKey) {
+        return; // Animation déjà en cours
+      }
+      
+      // ✅ APPLIQUE l'animation au sprite
+      this.owner.sprite.play(animationKey, true); // Force restart si même animation
+      
+      // ✅ CONSERVÉ: Tracking d'état
+      this.currentAnimation = animationKey;
+      
+    } catch (error) {
+      console.warn(`🎬 Erreur lors de la lecture de l'animation ${animationKey}:`, error);
     }
-    
-    if (!this.scene.anims.exists(animationKey)) {
-      console.error(`🎬 ERROR: Animation ${animationKey} n'existe pas`);
-      return;
-    }
-    
-    // ✅ APPLIQUE l'animation au sprite (déclenchée par ACTUAL MOVEMENT DETECTION)
-    this.owner.sprite.play(animationKey);
-    
-    // ✅ CONSERVÉ: Tracking d'état pour ACTUAL MOVEMENT DETECTION
-    this.currentAnimation = animationKey;
   }
 
   /**
@@ -225,7 +472,8 @@ export class CharacterAnimationBehavior {
   setFacing(direction) {
     if (this.directions.includes(direction)) {
       this.facing = direction;
-      this.lastDirectionChange = Date.now();
+      this.lastDirectionChange = this.scene.time.now; // 🛠️ AMÉLIORATION : Utiliser le timer de Phaser
+      this.directionBuffer = []; // Reset du buffer
       this.updateAnimation();
     }
   }
@@ -235,6 +483,23 @@ export class CharacterAnimationBehavior {
    */
   setMoving(moving) {
     this.isMoving = moving;
+    this.movementBuffer = []; // Reset du buffer
+    this.updateAnimation();
+  }
+
+  /**
+   * Forcer une animation (par nom logique sans direction, ex: 'headholdinpain')
+   */
+  setForcedAnimation(name) {
+    this.forcedAnimationName = name;
+    this.updateAnimation();
+  }
+
+  /**
+   * Retirer l'animation forcée et revenir au système idle/walk
+   */
+  clearForcedAnimation() {
+    this.forcedAnimationName = null;
     this.updateAnimation();
   }
 
@@ -251,9 +516,57 @@ export class CharacterAnimationBehavior {
 
   /**
    * 🎯 AAA: Configurer les seuils de mouvement physique réel
+   * 🛠️ AMÉLIORATION : Reset des buffers lors du changement de seuils
    */
   setMovementThresholds(movementThreshold, idleThreshold) {
-    this.realMovementThreshold = movementThreshold;
-    this.realIdleThreshold = idleThreshold;
+    this.movementThreshold = movementThreshold;
+    this.idleThreshold = idleThreshold;
+    // Reset des buffers pour éviter les conflits
+    this.movementBuffer = [];
+    this.directionBuffer = [];
   }
-} 
+
+  /**
+   * 🎨 NOUVEAU : Changer d'animation (idle9, walking, running, etc.)
+   */
+  setAnimations(idleAnimation, walkAnimation) {
+    this.config.idleAnimation = idleAnimation;
+    this.config.walkAnimation = walkAnimation;
+    
+    // Recréer les animations avec les nouvelles données
+    if (this.metadataLoaded && this.spritesheetMetadata) {
+      this.createAnimations();
+    }
+  }
+
+  /**
+   * 🛠️ NOUVEAU : Méthode pour nettoyer l'état lors du reload
+   */
+  resetState() {
+    this.isMoving = false;
+    this.facing = 'down';
+    this.currentAnimation = '';
+    this.movementBuffer = [];
+    this.directionBuffer = [];
+    this.lastDirectionChange = 0;
+    
+    // Réinitialiser la position de référence
+    if (this.owner && this.owner.sprite) {
+      this.lastPosition = {
+        x: this.owner.sprite.x,
+        y: this.owner.sprite.y
+      };
+    }
+  }
+
+  /**
+   * 🎨 NOUVEAU : Obtenir les animations disponibles
+   */
+  getAvailableAnimations() {
+    if (!this.metadataLoaded || !this.spritesheetMetadata) {
+      return [];
+    }
+    
+    return Object.keys(this.spritesheetMetadata.animations);
+  }
+}

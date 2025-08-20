@@ -15,17 +15,11 @@ export class BaseEntity extends IUpdateable {
     this.sprite.setOrigin(0.5, 0.5);
     
     // AJOUTER PHYSIQUE CIRCULAIRE - COLLISION NON DÉPASSABLE
-    // Pour les murs : corps statique, pour les autres : corps dynamique
-    const isStatic = this.constructor.name === 'Wall';
-    scene.physics.add.existing(this.sprite, isStatic);
+    // Note: Les Wall ne passent plus par BaseEntity, ils gèrent leur propre physique
+    scene.physics.add.existing(this.sprite, false); // Toujours dynamique pour BaseEntity
     
-    if (isStatic) {
-      // Murs : corps rectangulaire statique (déjà immobile par nature)
-      this.sprite.body.setSize(32, 32); // Taille rectangulaire
-      // Pas besoin de setImmovable() - les corps statiques sont déjà immobiles
-    } else {
       // NPCs et joueur : corps circulaire dynamique
-      const radius = 36; // Rayon DOUBLÉ (18→36px) pour collision plus importante
+      const radius = 28; // Rayon réduit (36→28px) pour collision plus proportionnelle aux sprites
       
       // CENTRER le cercle par rapport au sprite
       const offsetX = (this.sprite.width * this.sprite.scaleX) / 2 - radius;
@@ -35,9 +29,8 @@ export class BaseEntity extends IUpdateable {
       this.sprite.body.setCollideWorldBounds(true); // Reste dans les limites
       this.sprite.body.setBounce(0.0, 0.0); // CORRECTION: Pas d'élasticité pour éviter les micro-rebonds
       this.sprite.body.setDrag(10, 10); // 🎯 FAIBLE DRAG : pour éviter le glissement sans ralentir
-    }
     
-    console.log(`🔵 Corps physique ${isStatic ? 'statique' : 'dynamique'} créé pour ${texture}`);
+    console.log(`🔵 Corps physique dynamique créé pour ${texture}`);
     
     this.id = null;
     this.entityType = this.constructor.name;
@@ -86,10 +79,10 @@ export class BaseEntity extends IUpdateable {
 
   getBounds() {
     return {
-      x: this.sprite.x - this.sprite.width / 2,
-      y: this.sprite.y - this.sprite.height / 2,
-      width: this.sprite.width,
-      height: this.sprite.height
+      x: this.sprite.x - this.sprite.displayWidth / 2,
+      y: this.sprite.y - this.sprite.displayHeight / 2,
+      width: this.sprite.displayWidth,
+      height: this.sprite.displayHeight
     };
   }
 

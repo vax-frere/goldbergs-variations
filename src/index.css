@@ -11,6 +11,15 @@
   will-change: transform, opacity;
 }
 
+/* Charger Caveat localement et bloquer le rendu tant que la police n'est pas prête */
+@font-face {
+  font-family: "Caveat";
+  src: url("fonts/caveat.ttf") format("truetype");
+  font-weight: 400;
+  font-style: normal;
+  font-display: block;
+}
+
 body {
   font-family: "Roboto", "Helvetica", "Arial", sans-serif;
   -webkit-font-smoothing: antialiased;

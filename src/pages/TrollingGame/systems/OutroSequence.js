@@ -1,292 +1,200 @@
 import { PlayerStates } from '../core/PlayerState';
 
+/**
+ * 🎯 SOLID REFACTOR: OutroSequence générique
+ * Responsabilité unique : gérer la sortie TOUJOURS PAR LA DROITE
+ * Indépendant du type de niveau et du nombre de followers
+ */
 export class OutroSequence {
   constructor(scene, player, level = null) {
     this.scene = scene;
     this.player = player;
-    this.level = level; // Référence au niveau pour les callbacks
+    this.level = level;
     this.isActive = false;
     this.exitStarted = false;
     this.everyoneExited = false;
     
-    // Configuration de l'outro
+    // Configuration générique - TOUJOURS DROITE
     this.config = {
-      exitDirection: 'right',           // Direction de sortie par défaut
-      exitSpeed: 200,                   // Vitesse de sortie (plus rapide que normal)
-      exitDistanceFactor: 1.5,          // Distance à parcourir = largeur écran * facteur
-      soundDelay: 500,                  // Délai avant de jouer le son (ms)
-      levelReloadDelay: 2000            // Délai avant rechargement (ms)
+      exitDirection: 'right',           // ⚠️ FORCÉ: Toujours droite
+      exitSpeed: 200,                   // Vitesse de sortie
+      exitDistanceFactor: 1.5,          // Distance = largeur écran * facteur
+      soundDelay: 500,                  // Délai avant son
+      levelReloadDelay: 2000            // Délai avant changement niveau
     };
     
-    // Calcul des positions de sortie
     this.calculateExitPositions();
   }
 
-  /**
-   * Calculer les positions de sortie selon la configuration
-   */
   calculateExitPositions() {
     const screenWidth = this.scene.scale.width;
     const screenHeight = this.scene.scale.height;
     
-    switch (this.config.exitDirection) {
-      case 'right':
-        this.exitTarget = screenWidth + (screenWidth * this.config.exitDistanceFactor);
-        break;
-      case 'left':
-        this.exitTarget = -(screenWidth * this.config.exitDistanceFactor);
-        break;
-      case 'up':
-        this.exitTarget = -(screenHeight * this.config.exitDistanceFactor);
-        break;
-      case 'down':
-        this.exitTarget = screenHeight + (screenHeight * this.config.exitDistanceFactor);
-        break;
-    }
+    // TOUJOURS sortir par la droite
+    this.exitTargetX = screenWidth + 100; // Hors écran à droite
+    this.exitTargetY = screenHeight / 2;  // Centre vertical
   }
 
   /**
-   * Démarrer la séquence d'outro
-   * @param {string} direction - Direction de sortie ('right', 'left', 'up', 'down')
+   * Démarrer la séquence d'outro (TOUJOURS par la droite)
    */
   start(direction = 'right') {
     if (this.isActive) return;
     
     this.isActive = true;
-    this.config.exitDirection = direction;
+    // ⚠️ IGNORER le paramètre direction - toujours droite
+    this.config.exitDirection = 'right';
     this.calculateExitPositions();
     
-    // 🎵 Jouer le son de victoire avec délai
+    console.log('🎯 OutroSequence: Sortie FORCÉE par la droite');
+    
+    // Son de victoire
     this.scene.time.delayedCall(this.config.soundDelay, () => {
       this.playCelebrationSound();
     });
     
-    // Mettre le joueur en état CUTSCENE pour désactiver les contrôles
+    // État cutscene + désactivation murs
     this.player.playerState.setState(PlayerStates.CUTSCENE);
-    
-    // Désactiver les murs comme dans l'intro
     this.disableWorldBounds();
-    
-    // Démarrer le mouvement de sortie
-    this.startExitMovement();
+
+    // Attendre la fin (ou quasi fin) d'un cri en cours avant de démarrer la sortie
+    const delay = this.computeExitDelay();
+    this.scene.time.delayedCall(delay, () => {
+      this.startExitMovement();
+    });
   }
 
-  /**
-   * Jouer le son de célébration
-   */
   playCelebrationSound() {
     try {
       if (this.scene.soundManager) {
         this.scene.soundManager.playClaps();
-      } else {
-        console.warn('🎵 SoundManager non trouvé');
       }
     } catch (error) {
-      console.error('🎵 Erreur lors de la lecture du son:', error);
+      console.error('🎵 Erreur son:', error);
     }
   }
 
-  /**
-   * Démarrer le mouvement de sortie automatique
-   */
   startExitMovement() {
-    // Définir le mouvement selon la direction
-    let movementInput = { right: false, left: false, up: false, down: false };
+    // TOUJOURS mouvement vers la droite
+    const movementInput = { right: true, left: false, up: false, down: false };
     
-    switch (this.config.exitDirection) {
-      case 'right':
-        movementInput.right = true;
-        break;
-      case 'left':
-        movementInput.left = true;
-        break;
-      case 'up':
-        movementInput.up = true;
-        break;
-      case 'down':
-        movementInput.down = true;
-        break;
-    }
-    
-    // Forcer le mouvement (forceMovement = true pour bypasser inputEnabled)
     this.player.setMovement(movementInput, true);
+    this.exitStarted = true;
+    
+    console.log('🚀 Mouvement de sortie vers la droite commencé');
   }
 
   /**
-   * Mettre à jour la surveillance de sortie (appelé par le niveau)
+   * Calculer un délai avant la sortie pour laisser finir l'animation de cri
    */
+  computeExitDelay() {
+    try {
+      const shout = this.player && this.player.shoutBehavior ? this.player.shoutBehavior : null;
+      if (shout && shout.isScreaming) {
+        const elapsed = Math.max(0, Date.now() - (shout.screamStartTime || 0));
+        const duration = Math.max(0, (shout.config && shout.config.duration) ? shout.config.duration : 0);
+        const remaining = Math.max(0, duration - elapsed);
+        // Petit buffer pour terminer proprement (100ms)
+        return Math.min(1500, remaining + 100);
+      }
+    } catch (e) {
+      // ignore et fallback
+    }
+    // Fallback: léger délai même sans cri pour une transition plus douce
+    return 150;
+  }
+
   update() {
-    if (!this.isActive || this.everyoneExited || !this.player.sprite) return;
-    
-    // 🎯 AAA: Vérification simple et robuste
-    const playerExited = this.isPlayerOffScreen();
-    const allNpcsExited = this.areAllNpcsOffScreen();
-    
-    if (playerExited && !this.exitStarted) {
-      this.exitStarted = true;
-    }
-    
-    // 🎯 RELOAD dès que Player + TOUS NPCs sont hors écran
-    if (playerExited && allNpcsExited) {
-      this.onOutroComplete();
+    if (!this.isActive) return;
+
+    this.checkPlayerExit();
+    this.checkFollowersExit();
+  }
+
+  checkPlayerExit() {
+    if (!this.exitStarted) return;
+
+    // Vérifier si le joueur est sorti de l'écran (droite)
+    if (this.player.sprite.x >= this.exitTargetX) {
+      this.onPlayerExited();
     }
   }
 
-  /**
-   * 🎯 AAA: Vérifier si le Player est complètement hors écran
-   */
-  isPlayerOffScreen() {
-    const screenWidth = this.scene.scale.width;
-    const screenHeight = this.scene.scale.height;
-    const playerX = this.player.sprite.x;
-    const playerY = this.player.sprite.y;
+  checkFollowersExit() {
+    if (!this.exitStarted || this.everyoneExited) return;
+
+    // Récupérer tous les followers du joueur (peut être 0)
+    const followers = this.player.followers || [];
     
-    switch (this.config.exitDirection) {
-      case 'right':
-        return playerX > screenWidth + 50; // Marge de 50px
-      case 'left':
-        return playerX < -50;
-      case 'up':
-        return playerY < -50;
-      case 'down':
-        return playerY > screenHeight + 50;
-      default:
-        return false;
+    if (followers.length === 0) {
+      // Pas de followers = immediate
+      this.onEveryoneExited();
+      return;
+    }
+
+    // Vérifier si tous les followers sont sortis
+    const followersExited = followers.every(follower => {
+      if (!follower || !follower.sprite) return true;
+      return follower.sprite.x >= this.exitTargetX;
+    });
+
+    if (followersExited) {
+      this.onEveryoneExited();
     }
   }
 
-  /**
-   * 🎯 AAA: Vérifier si TOUS les NPCs sont hors écran (plus robuste)
-   */
-  areAllNpcsOffScreen() {
-    if (!this.level || !this.level.npcSpawner) {
-      console.warn('🎬 Impossible de vérifier les NPCs - pas de npcSpawner');
-      return true; // Si pas de NPCs, considérer comme "tous sortis"
-    }
-    
-    const allNpcs = this.level.npcSpawner.getAllNpcs();
-    if (allNpcs.length === 0) return true;
-    
-    const screenWidth = this.scene.scale.width;
-    const screenHeight = this.scene.scale.height;
-    
-    for (const npc of allNpcs) {
-      if (!npc.sprite) continue;
-      
-      const npcX = npc.sprite.x;
-      const npcY = npc.sprite.y;
-      
-      // Vérifier si ce NPC est encore visible selon la direction de sortie
-      let isOffScreen = false;
-      
-      switch (this.config.exitDirection) {
-        case 'right':
-          isOffScreen = npcX > screenWidth + 50;
-          break;
-        case 'left':
-          isOffScreen = npcX < -50;
-          break;
-        case 'up':
-          isOffScreen = npcY < -50;
-          break;
-        case 'down':
-          isOffScreen = npcY > screenHeight + 50;
-          break;
-      }
-      
-      // Si UN SEUL NPC est encore visible, pas encore prêt
-      if (!isOffScreen) {
-        return false;
-      }
-    }
-    
-    return true;
+  onPlayerExited() {
+    console.log('🚪 Joueur sorti par la droite');
+    // Continue à attendre les followers si nécessaire
   }
 
-  /**
-   * Outro terminé - recharger le niveau
-   */
-  onOutroComplete() {
+  onEveryoneExited() {
     if (this.everyoneExited) return;
     
     this.everyoneExited = true;
+    const followerCount = (this.player.followers || []).length;
     
-    // Arrêter le mouvement
-    this.player.setMovement({ right: false, left: false, up: false, down: false }, true);
+    console.log(`✅ Sortie terminée! Joueur + ${followerCount} followers`);
     
-    // Recharger le niveau après un délai
+    // Délai avant changement de niveau
     this.scene.time.delayedCall(this.config.levelReloadDelay, () => {
-      this.reloadLevel();
+      this.triggerLevelChange();
     });
   }
 
-  /**
-   * Recharger le niveau
-   */
-  reloadLevel() {
-    try {
-      // 🎯 VÉRIFICATION: La scène existe-t-elle encore ?
-      if (!this.scene || !this.scene.time) {
-        console.warn('⚠️ Scene déjà détruite - restart direct...');
-        this.doDirectRestart();
-        return;
-      }
-      
-      // 🎯 TRANSITION DOUCE: Créer un overlay avant le reload
-      this.createReloadTransition();
-      
-      // 🎯 DÉLAI pour la transition puis restart via window.game
-      this.scene.time.delayedCall(200, () => {
-        // 🧹 CLEANUP qui va détruire this.scene
-        this.cleanupBeforeReload();
-        
-        // 🎯 RESTART via window.game (plus fiable)
-        this.doDirectRestart();
-      });
-      
-    } catch (error) {
-      console.error('🔄 Erreur lors du rechargement:', error);
-      console.warn('🆘 Erreur dans le processus principal de reload');
+  triggerLevelChange() {
+    console.log('🔄 Déclenchement changement de niveau...');
+    
+    this.createReloadTransition();
+    this.cleanupBeforeReload();
+    
+    // Délai court pour la transition puis reload
+    this.scene.time.delayedCall(500, () => {
       this.doDirectRestart();
-    }
+    });
   }
 
-  /**
-   * 🎯 Restart direct si scene détruite
-   */
   doDirectRestart() {
     try {
-      // Utiliser window.game pour accéder au jeu principal
-      if (window.game && window.game.phaserGame) {
-        const gameInstance = window.game.phaserGame;
-        const sceneManager = gameInstance.scene;
+      const oldScene = this.scene;
+      if (oldScene && oldScene.loadNextLevel) {
+        console.log('📝 Chargement du niveau suivant...');
         
-        // 🎯 CRUCIAL: S'assurer que la scène est complètement nettoyée
-        const oldScene = sceneManager.getScene('GameScene');
-        if (oldScene) {
-          // Forcer le nettoyage de la scène actuelle
-          if (oldScene.currentLevel) {
-            oldScene.currentLevel.cleanup();
+        // Appel sur le frame suivant
+        this.scene.time.delayedCall(1, () => {
+          if (oldScene.loadNextLevel) {
+            oldScene.loadNextLevel();
+            console.log('✅ Changement de niveau réussi!');
           }
-
-          // Arrêter la scène et la redémarrer proprement
-          sceneManager.stop('GameScene');
-          sceneManager.start('GameScene'); // Redémarre la scène existante au lieu d'en créer une nouvelle
-        }
-      } else {
-        console.error('❌ Impossible d\'accéder à window.game');
+        });
       }
     } catch (error) {
-      console.error('❌ Restart direct échoué:', error);
+      console.error('❌ Erreur changement niveau:', error);
     }
   }
 
-  /**
-   * 🎯 Créer une transition douce pour le reload (évite le flickering)
-   */
   createReloadTransition() {
     try {
-      // Créer un overlay noir qui couvre tout l'écran
       this.reloadOverlay = this.scene.add.rectangle(
         this.scene.cameras.main.centerX,
         this.scene.cameras.main.centerY,
@@ -295,91 +203,59 @@ export class OutroSequence {
         0x000000
       );
       
-      this.reloadOverlay.setDepth(20000); // Au-dessus de tout
-      this.reloadOverlay.setAlpha(0); // Commence transparent
+      this.reloadOverlay.setDepth(20000);
+      this.reloadOverlay.setAlpha(0);
       
-      // Transition douce vers noir
       this.scene.tweens.add({
         targets: this.reloadOverlay,
         alpha: 1,
-        duration: 200, // 200ms pour couvrir l'écran
+        duration: 200,
         ease: 'Power2'
       });
-      
     } catch (error) {
-      console.warn('⚠️ Impossible de créer la transition:', error);
+      console.warn('⚠️ Erreur transition:', error);
     }
   }
 
-  /**
-   * 🎯 Nettoyage complet avant reload pour éviter les erreurs
-   */
   cleanupBeforeReload() {
     try {
-      // 1. Nettoyer les debug texts du Player en premier (évite les erreurs)
-      if (this.player) {
-        if (this.player.destroyShoutRadiusDebug) {
-          this.player.destroyShoutRadiusDebug();
-        }
-        if (this.player.destroyTremblingRadiusDebug) {
-          this.player.destroyTremblingRadiusDebug();
-        }
-        
-        // 2. Vider la liste des followers sans appeler removeFollower (évite updateShoutPower)
-        if (this.player.followers) {
-          this.player.followers.length = 0; // Clear direct sans callbacks
-        }
-      }
-      
-      // 3. Arrêter tous les sons du niveau
-      if (this.scene.soundManager && this.scene.soundManager.stopAllSounds) {
-        // Utiliser SoundManager pour arrêter les sons du niveau
+      // Arrêter tous les sons
+      if (this.scene.soundManager) {
         this.scene.soundManager.stopAllSounds();
       } else if (this.scene.sound) {
-        // Fallback: arrêter les sons de cette scène
         this.scene.sound.stopAll();
       }
       
-      // 🎵 NOTE: Le son d'ambiance continue dans AmbientScene (scène persistante)
-      
-      // 4. Nettoyer le niveau si possible
+      // Nettoyer le niveau
       if (this.level && typeof this.level.cleanup === 'function') {
         this.level.cleanup();
       }
-      
     } catch (error) {
-      console.warn('⚠️ Erreur pendant le nettoyage:', error);
-      // Continuer quand même le reload
+      console.warn('⚠️ Erreur cleanup:', error);
     }
   }
 
-  /**
-   * Désactiver les collisions avec les limites du monde (player + NPCs) ET les murs
-   */
   disableWorldBounds() {
-    // Désactiver pour le joueur
+    // Player
     if (this.player.sprite && this.player.sprite.body) {
       this.player.sprite.body.setCollideWorldBounds(false);
     }
     
-    // 🎯 CRUCIAL: Désactiver les murs physiques comme dans l'intro !
-    if (this.level && typeof this.level.disablePerimeterWalls === 'function') {
+    // Murs via niveau
+    if (this.level && this.level.disablePerimeterWalls) {
       this.level.disablePerimeterWalls();
     }
     
-    // Désactiver pour tous les NPCs via le niveau
-    if (this.level && typeof this.level.disableWorldBoundsForAllNpcs === 'function') {
+    // NPCs via niveau
+    if (this.level && this.level.disableWorldBoundsForAllNpcs) {
       this.level.disableWorldBoundsForAllNpcs();
     }
   }
 
-  /**
-   * Nettoyage à la destruction
-   */
   destroy() {
     this.isActive = false;
-    this.scene = null;
-    this.player = null;
-    this.level = null;
+    if (this.reloadOverlay) {
+      this.reloadOverlay.destroy();
+    }
   }
 } 

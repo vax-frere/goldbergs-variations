@@ -149,7 +149,7 @@ export class TrailBehavior {
         // 🎯 CORRECTION: Seulement forcer setVisible(false) si vraiment invisible
         if (!this.isVisible) {
           this.graphics.setVisible(false);
-          console.log(`🧹 Graphics cleared et setVisible(false) forcé car invisible`);
+          // console.log(`🧹 Graphics cleared et setVisible(false) forcé car invisible`);
         } else {
           console.log(`🧹 Graphics cleared mais pas assez de points (${this.trailPoints.length})`);
         }

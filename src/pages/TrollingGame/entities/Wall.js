@@ -1,25 +1,46 @@
-import { BaseEntity } from './BaseEntity';
 import { ICollidable } from '../core/interfaces';
 
-export class Wall extends BaseEntity {
-  constructor(scene, x, y, invisible = false) {
-    super(scene, x, y, 'wall');
+export class Wall {
+  constructor(scene, x, y, invisible = true) {
+    this.scene = scene;
+    this.x = x;
+    this.y = y;
     this.entityType = 'wall';
     this.isStatic = true;
     
-    // Les murs ne bougent pas
-    this.speed = 0;
+    // Taille des murs
+    this.width = 40;
+    this.height = 40;
     
-    // Configurer l'apparence - MURS PLUS ÉPAIS
-    this.sprite.setOrigin(0.5, 0.5);
-    this.sprite.setDisplaySize(40, 40); // 🎯 ÉPAISSI : 32x32 → 40x40 pour éviter les fuites de NPCs
+    // 🎯 NOUVEAU : Créer uniquement un body physique, pas de sprite
+    this.body = this.scene.physics.add.staticBody(x, y, this.width, this.height);
     
-    // Rendre invisible si demandé
-    if (invisible) {
-      this.sprite.setVisible(false);
-      // Garder la physique mais rendre visuellement invisible
-      this.sprite.setAlpha(0);
-    }
+    // Configurer le body
+    this.body.setSize(this.width, this.height);
+    this.body.setOffset(0, 0);
+    
+    // Référence pour les collisions
+    this.body.entity = this;
+    
+    // ID unique pour l'EntityManager
+    this.id = `wall_${Math.random().toString(36).substr(2, 9)}`;
+    
+    console.log(`🧱 Mur créé (collision only) à (${x}, ${y}) - taille: ${this.width}x${this.height}`);
+  }
+
+  // Propriété pour compatibilité avec l'ancien code qui accède à wall.sprite
+  get sprite() {
+    return {
+      x: this.x,
+      y: this.y,
+      body: this.body,
+      destroy: () => {
+        if (this.body) {
+          this.body.destroy();
+          this.body = null;
+        }
+      }
+    };
   }
 
   update(delta) {
@@ -38,10 +59,10 @@ export class Wall extends BaseEntity {
 
   getBounds() {
     return {
-      x: this.sprite.x - this.sprite.width / 2,
-      y: this.sprite.y - this.sprite.height / 2,
-      width: this.sprite.width,
-      height: this.sprite.height
+      x: this.x - this.width / 2,
+      y: this.y - this.height / 2,
+      width: this.width,
+      height: this.height
     };
   }
 
@@ -51,10 +72,25 @@ export class Wall extends BaseEntity {
   }
 
   setSize(width, height) {
-    this.sprite.setDisplaySize(width, height);
+    this.width = width;
+    this.height = height;
+    if (this.body) {
+      this.body.setSize(width, height);
+    }
   }
 
-  setColor(color) {
-    this.sprite.setTint(color);
+  // 🎯 NOUVEAU : Méthode pour enable/disable le body
+  setEnabled(enabled) {
+    if (this.body) {
+      this.body.enable = enabled;
+    }
+  }
+
+  // 🎯 NOUVEAU : Méthode de destruction propre
+  destroy() {
+    if (this.body) {
+      this.body.destroy();
+      this.body = null;
+    }
   }
 } 

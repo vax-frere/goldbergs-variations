@@ -1,358 +1,377 @@
 import { BaseEntity } from './BaseEntity';
 import { NpcBehaviorController } from './behaviors/NpcBehaviorController';
-import { AvoidanceBehavior } from './behaviors/AvoidanceBehavior';
-import { ShoutBehavior } from './behaviors/ShoutBehavior';
 import { CharacterAnimationBehavior } from './behaviors/CharacterAnimationBehavior';
+import { StarEffectBehavior } from './behaviors/StarEffectBehavior';
 
+// 🎯 NOUVEAUX COMPOSANTS SOLID
+import { NpcStateController } from './npc/NpcStateController';
+import { NpcMovementController } from './npc/NpcMovementController';
+import { NpcFollowController } from './npc/NpcFollowController';
+import { NpcMigrationController } from './npc/NpcMigrationController';
+
+/**
+ * 🎯 SOLID REFACTOR: NPC simplifié
+ * Responsabilité unique : Coordonner les composants du NPC
+ * Délègue les responsabilités spécialisées aux composants dédiés
+ */
 export class Npc extends BaseEntity {
   constructor(scene, x, y, config = {}) {
-    super(scene, x, y, 'character-spritesheet', true); // Utiliser le spritesheet avec animations
+    super(scene, x, y, 'character-spritesheet', true);
     
     this.entityType = 'npc';
-    this.speed = config.speed || 150; // 🎯 NORMALISÉ : Même vitesse de base que le Player
     this.groupId = config.groupId || 0;
     
-    // Système NpcBehaviorController - ARCHITECTURE LAYERED BEHAVIORS
+    // 🎯 NOUVEAUX COMPOSANTS SOLID
+    this.stateController = new NpcStateController(this);
+    this.movementController = new NpcMovementController(this);
+    this.followController = new NpcFollowController(this);
+    this.migrationController = new NpcMigrationController(this);
+    
+    // Appliquer les valeurs temporaires stockées pendant super()
+    const speed = config.speed || this._tempSpeed || 150;
+    this.movementController.setSpeed(speed);
+    
+    if (this._tempVelocity) {
+      this.movementController.setVelocity(this._tempVelocity);
+      delete this._tempVelocity;
+    }
+    
+    if (this._tempTargetPosition) {
+      this.migrationController.targetPosition = this._tempTargetPosition;
+      delete this._tempTargetPosition;
+    }
+    
+    if (this._tempState) {
+      this.state = this._tempState; // Utiliser le setter pour appliquer correctement
+      delete this._tempState;
+    }
+    
+    if (this._tempFollowTarget !== undefined) {
+      this.followTarget = this._tempFollowTarget; // Utiliser le setter pour appliquer correctement
+      delete this._tempFollowTarget;
+    }
+    
+    // Nettoyer les valeurs temporaires
+    delete this._tempSpeed;
+    
+    // Behaviors existants (déjà bien organisés)
     this.behaviorController = new NpcBehaviorController(this, {
-      trembleIntensity: 3      // Intensité du tremblement
-      // Note: AvoidanceBehavior est maintenant intégré dans NpcBehaviorController
+      trembleIntensity: 3
     });
     
-    // 🎯 AAA: ACTUAL MOVEMENT DETECTION pour les animations
     this.animationBehavior = new CharacterAnimationBehavior(this);
-    this.animationBehavior.setMovementThresholds(0.8, 0.3); // Seuils adaptés aux NPCs
+    this.animationBehavior.setMovementThresholds(0.8, 0.3);
     
-    // États du NPC
-    this.state = 'normal'; // 'normal', 'fleeing', 'trembling', 'following', 'migrating'
-    this.stateTimer = 0;
-    this.stateDuration = 0;
-    
-    // Propriétés pour les différents états
-    this.fleeingSpeed = this.speed * 0.30; // 🎯 RÉAJUSTÉ : 0.9x en fuite (même un peu plus lent pour panique)
-    this.fleeDirection = { x: 0, y: 0 };
-    this.tremblingIntensity = 3; // Amplitude du tremblement
-    this.followTarget = null; // Joueur à suivre
-    
-    // Propriétés pour la migration (intro)
-    this.targetPosition = null; // Position finale de migration
-    this.migrationSpeed = 120; // Vitesse de migration (plus rapide que normal)
-    this.migrationTolerance = 15; // Tolérance d'arrivée en pixels
-    
-    // 🎯 SYSTÈME AAA : Zone de confort + détection de progrès
-    this.followState = {
-      mode: "MOVING",                 // "MOVING" ou "AT_REST"
-      lastDistanceToTarget: null,     // Distance précédente au point de trail
-      recentProgress: [],             // Historique du progrès des dernières frames
-      comfortZone: 25,                // Zone de confort (px) - peut s'arrêter si dedans
-      minProgressRate: 0.3,           // Progrès minimum requis (px par frame)
-      wakeUpDistance: 50              // Target doit bouger de 50px pour réveiller
-    };
-    
-    // Sauvegarde de la position pour le tremblement
-    this.basePosition = { x: x, y: y };
-    this.tremblingOffset = { x: 0, y: 0 };
-    
-    // 🎯 NOUVEAU: Rayon de collision du tremblement (variable selon les followers du player)
-    this.tremblingCollisionRadius = 25; // Valeur de base, sera ajustée dans startTrembling()
-    
-    // Vélocité pour le mouvement
-    this.velocity = { x: 0, y: 0 };
-    
-    // Configurer le sprite
-    this.setupSprite();
-    
-    // Position précédente pour les collisions
-    this.lastPosition = { x: x, y: y };
-    
-
-    
-    // Système de cri (pour les followers) - même taille que le joueur
-    this.shoutBehavior = new ShoutBehavior(this, {
-      offsetX: 50,
-      offsetY: -50, // Même distance que le joueur
-      scale: 0.3, // Même taille que le joueur
-      duration: 750 // Même durée que le joueur
+    this.starEffectBehavior = new StarEffectBehavior(this, {
+      offsetY: -65,
+      scale: 0.2,
+      duration: 600,
+      moveUpDistance: 25,
+      fadeOutDelay: 150
     });
+    
+    // Configuration du sprite
+    this.setupSprite();
     
     // S'enregistrer dans le système de tri par profondeur
     if (scene.depthSortingSystem) {
-      scene.depthSortingSystem.addEntity(this);
+      scene.depthSortingSystem.addEntity(this, 'characters');
     }
+    
+    console.log(`🤖 NPC SOLID créé (ID: ${this.groupId}) avec composants spécialisés`);
   }
 
   setupSprite() {
-    // Le sprite est déjà créé par BaseEntity avec le spritesheet
-    // On configure juste la taille et la teinte
-    this.sprite.setScale(0.5); // Même taille que le joueur
-    this.sprite.setTint(0xFFFFFF); // Toujours blanc
+    // Ajustement de l'échelle à 0.6
+    this.sprite.setScale(0.6);
+    this.sprite.setTint(0xFFFFFF);
     
-    // AJOUT: Configuration physique spéciale pour les NPCs - plus facilement poussés par le joueur
+    // Configuration physique pour les NPCs
     if (this.sprite.body) {
-      this.sprite.body.setMass(0.5); // 2x plus léger que le joueur (joueur=3, NPC=0.5) pour être facilement poussé
+      this.sprite.body.setMass(0.5); // Plus léger que le joueur
     }
     
-    // Ajouter une référence vers cette entité
     this.sprite.entity = this;
   }
 
+  // ================================
+  // 🎯 API PUBLIQUE SIMPLIFIÉE
+  // ================================
 
-
-
-
-  // Réaction au cri du joueur
+  /**
+   * Réaction au cri du joueur (délégué au StateController)
+   */
   onShoutHit(force, distance, maxRadius) {
-    // Ignorer si déjà en train de suivre
-    if (this.state === 'following') return;
-    
-    // 🎯 NOUVEAU: Obtenir le nombre de followers du player pour intensifier le tremblement
-    const player = this.getPlayer();
-    const followersCount = player && player.followers ? player.followers.length : 0;
-    
-    // Calculer l'intensité basée sur la distance (plus proche = plus fort)
-    const intensity = 1.0 - (distance / maxRadius);
-    const effectiveForce = force * intensity;
-    
-    // Ajouter un facteur aléatoire pour la réaction (±30%)
-    const randomFactor = 0.7 + Math.random() * 0.6; // Entre 0.7 et 1.3
-    const finalForce = effectiveForce * randomFactor;
-    
-    // 🎯 NOUVEAU: Augmenter la chance de trembler avec le nombre de followers
-    const baseTremblingChance = 0.25; // 🎯 AUGMENTÉ de 15% à 25% pour plus de chance de base
-    const forceBasedChance = Math.max(0, (finalForce - 0.6) / 1.0); // Graduel entre 0.6 et 1.6
-    const followersBonus = Math.min(0.2, followersCount * 0.05); // +1% par follower, max +20%
-    const totalTremblingChance = Math.min(0.9, baseTremblingChance + forceBasedChance + followersBonus); // Maximum 90%
-    
-
-    
-    // Décision aléatoire basée sur la force et le hasard
-    if (Math.random() < totalTremblingChance) {
-      // Le NPC tremble avec intensité variable selon les followers
-      this.startTrembling(followersCount);
-    } else {
-      // Le NPC fuit
-      this.startFleeing();
-    }
+    this.stateController.onShoutHit(force, distance, maxRadius);
   }
 
-  startFleeing() {
-    this.state = 'fleeing';
-    this.stateTimer = 0;
-    // Durée variable de fuite (1.5-2.5 secondes)
-    this.stateDuration = 1500 + Math.random() * 1000;
-    
-    // Calculer la direction de fuite (opposée au joueur)
-    const player = this.getPlayer();
-    if (player && player.sprite) {
-      const dx = this.sprite.x - player.sprite.x;
-      const dy = this.sprite.y - player.sprite.y;
-      const magnitude = Math.sqrt(dx * dx + dy * dy);
-      
-      if (magnitude > 0) {
-        this.fleeDirection.x = dx / magnitude;
-        this.fleeDirection.y = dy / magnitude;
-      } else {
-        // Direction aléatoire si superposé
-        const angle = Math.random() * Math.PI * 2;
-        this.fleeDirection.x = Math.cos(angle);
-        this.fleeDirection.y = Math.sin(angle);
-      }
-    }
-  }
-
-  startTrembling(followersCount = 0) {
-    this.state = 'trembling';
-    this.stateTimer = 0;
-    
-    // 🎯 NOUVEAU: Durée et intensité variables selon le nombre de followers
-    const baseDuration = 2000; // 2 secondes de base
-    const durationBonus = Math.min(1000, followersCount * 50); // +50ms par follower, max +1s
-    this.stateDuration = baseDuration + Math.random() * 2000 + durationBonus;
-    
-    // 🎯 NOUVEAU: Intensité du tremblement augmente avec les followers
-    const baseIntensity = 3;
-    const intensityBonus = Math.min(3, followersCount * 0.15); // +0.15 par follower, max +3
-    this.tremblingIntensity = baseIntensity + intensityBonus;
-    
-    // 🎯 NOUVEAU: Rayon de collision du tremblement (effet sur autres NPCs)
-    const baseCollisionRadius = 25;
-    const radiusBonus = Math.min(20, followersCount * 0.8); // +0.8px par follower, max +20px
-    this.tremblingCollisionRadius = baseCollisionRadius + radiusBonus;
-    
-    // Sauvegarder la position de base
-    this.basePosition.x = this.sprite.x;
-    this.basePosition.y = this.sprite.y;
-    
-    // Arrêter le mouvement normal
-    this.velocity.x = 0;
-    this.velocity.y = 0;
-  }
-
+  /**
+   * Commencer à suivre le joueur
+   */
   startFollowing(player) {
-    this.state = 'following';
-    this.followTarget = player;
-    this.stateTimer = 0;
-    this.stateDuration = Infinity; // Suit indéfiniment
+    this.stateController.startFollowing(player);
     
-    // 🎯 NOUVEAU: Reset du système AAA
-    this.followState.mode = "MOVING";
-    this.followState.recentProgress = [];
-    this.followState.lastDistanceToTarget = null;
+    // 🎯 Reset du système AAA
+    this.followController.resetFollowState();
     
-    // 🔊 NOUVEAU: Jouer le son touch quand un NPC commence à suivre
+    // Créer l'effet d'étoile
+    this.starEffectBehavior.createStarEffect();
+    
+    // Jouer le son touch
     if (this.scene.soundManager) {
       this.scene.soundManager.playTouch();
     }
   }
 
   /**
-   * Démarrer la migration vers la position cible
-   * @param {Object} targetPos - Position finale {x, y}
+   * Démarrer la migration normale
    */
   startMigration(targetPos) {
-    this.targetPosition = { x: targetPos.x, y: targetPos.y };
-    this.state = 'migrating';
-    this.stateTimer = 0;
+    this.migrationController.startMigration(targetPos, this.stateController);
   }
 
   /**
-   * Migration terminée - passer en état normal
+   * Démarrer la migration d'organisme unifié
    */
-  onMigrationComplete() {
-    // Arrêter le mouvement
-    this.velocity.x = 0;
-    this.velocity.y = 0;
-    
-    // Mettre à jour la position de base pour le comportement normal
-    this.basePosition.x = this.sprite.x;
-    this.basePosition.y = this.sprite.y;
-    
-    // 🎯 CRUCIAL: Mettre à jour la spawnPosition pour le wander
-    if (this.behaviorController) {
-      this.behaviorController.spawnPosition.x = this.sprite.x;
-      this.behaviorController.spawnPosition.y = this.sprite.y;
-    }
-    
-    // 🎯 AAA: Forcer l'orientation vers le bas après migration (intro)
-    if (this.animationBehavior) {
-      this.animationBehavior.setFacing('down');
-    }
-    
-    // Passer en état normal
-    this.state = 'normal';
-    this.targetPosition = null;
-    this.stateTimer = 0;
+  startOrganismMigration(targetPos, organicVelocity) {
+    this.migrationController.startOrganismMigration(targetPos, organicVelocity, this.stateController);
   }
 
+  /**
+   * Retourner à l'état normal
+   */
   returnToNormal() {
-    this.state = 'normal';
-    this.stateTimer = 0;
-    this.stateDuration = 0;
-    this.followTarget = null;
-    
-    // Réinitialiser la vélocité
-    this.velocity.x = 0;
-    this.velocity.y = 0;
+    this.stateController.returnToNormal();
+    this.movementController.stop();
   }
 
+  // ================================
+  // 🎯 GETTERS POUR COMPATIBILITÉ
+  // ================================
+
+  get state() {
+    return this.stateController ? this.stateController.getState() : 'normal';
+  }
+
+  set state(value) {
+    if (this.stateController) {
+      // Utiliser les méthodes appropriées du stateController selon la valeur
+      if (value === 'normal') {
+        this.stateController.returnToNormal();
+      } else {
+        // Pour autres états, utiliser setState directement
+        this.stateController.setState(value);
+      }
+    } else {
+      // Stocker temporairement si les composants ne sont pas encore créés
+      this._tempState = value;
+    }
+  }
+
+  get velocity() {
+    return this.movementController ? this.movementController.getVelocity() : { x: 0, y: 0 };
+  }
+
+  set velocity(value) {
+    if (this.movementController) {
+      this.movementController.setVelocity(value);
+    } else {
+      // Stocker temporairement si les composants ne sont pas encore créés
+      this._tempVelocity = value;
+    }
+  }
+
+  get speed() {
+    return this.movementController ? this.movementController.speed : this._tempSpeed || 150;
+  }
+
+  set speed(value) {
+    if (this.movementController) {
+      this.movementController.setSpeed(value);
+    } else {
+      // Stocker temporairement si les composants ne sont pas encore créés
+      this._tempSpeed = value;
+    }
+  }
+
+  get followTarget() {
+    return this.stateController ? this.stateController.getFollowTarget() : null;
+  }
+
+  set followTarget(value) {
+    if (this.stateController) {
+      // Si on définit followTarget à null, retourner à l'état normal
+      if (value === null) {
+        this.stateController.returnToNormal();
+      } else {
+        // Sinon commencer à suivre la target
+        this.stateController.startFollowing(value);
+      }
+    } else {
+      // Stocker temporairement si les composants ne sont pas encore créés
+      this._tempFollowTarget = value;
+    }
+  }
+
+  get tremblingCollisionRadius() {
+    return this.stateController ? this.stateController.getTremblingCollisionRadius() : 25;
+  }
+
+  get targetPosition() {
+    return this.migrationController ? this.migrationController.getTargetPosition() : null;
+  }
+
+  set targetPosition(value) {
+    if (this.migrationController) {
+      this.migrationController.targetPosition = value;
+    } else {
+      // Stocker temporairement si les composants ne sont pas encore créés
+      this._tempTargetPosition = value;
+    }
+  }
+
+  get migrationSpeed() {
+    return this.migrationController ? this.migrationController.migrationSpeed : 120;
+    }
+    
+  set migrationSpeed(value) {
+    if (this.migrationController) {
+      this.migrationController.migrationSpeed = value;
+    }
+  }
+
+  get migrationTolerance() {
+    return this.migrationController ? this.migrationController.migrationTolerance : 15;
+  }
+
+  set migrationTolerance(value) {
+    if (this.migrationController) {
+      this.migrationController.migrationTolerance = value;
+    }
+  }
+
+  // ================================
+  // 🎯 MÉTHODES LEGACY (compatibilité)
+  // ================================
+
+  /**
+   * Vérifier si au repos (système AAA)
+   */
+  isAtRest() {
+    return this.followController ? this.followController.isAtRest() : false;
+  }
+
+  /**
+   * Vérifier si une position est valide
+   */
+  isPositionValid(x, y) {
+    return this.movementController ? this.movementController.isPositionValid(x, y) : true;
+  }
+
+  /**
+   * Calculer les forces de following
+   */
+  calculateFollowingForces(delta) {
+    return this.followController ? this.followController.calculateFollowingForces(delta) : { x: 0, y: 0 };
+  }
+
+  /**
+   * Obtenir le joueur
+   */
+  getPlayer() {
+    if (this.scene.currentLevel && this.scene.currentLevel.player) {
+      return this.scene.currentLevel.player;
+  }
+    return null;
+  }
+
+  // ================================
+  // 🎯 CYCLE DE VIE
+  // ================================
+
+  /**
+   * Mettre à jour le NPC (orchestration des composants)
+   */
   update(delta) {
-    // NE PAS appeler super.update(delta) pour éviter le double mouvement !
-    // BaseEntity.update() applique automatiquement this.velocity, mais les NPCs
-    // gèrent leur mouvement différemment selon leur état
+    // NE PAS appeler super.update(delta) pour éviter double mouvement
     
     if (!this.sprite) return;
     
-    // Protection contre les deltas énormes
+    // Clamp delta pour éviter les téléportations
     const clampedDelta = Math.min(delta, 33);
     
-    // Sauvegarder la position précédente
-    this.lastPosition.x = this.sprite.x;
-    this.lastPosition.y = this.sprite.y;
+    // 1. Mettre à jour la logique d'état
+    this.stateController.updateStateLogic(clampedDelta);
     
-    // CORRECTION: Debug vélocité pour diagnostiquer les animations incorrectes
-    const velocityMagnitude = Math.sqrt(this.velocity.x ** 2 + this.velocity.y ** 2);
-    // DEBUG retiré pour éviter le spam maintenant que la répulsion est active
-    // if (velocityMagnitude > 0.1 && this.state === 'normal') {
-    //   console.log(`🐛 NPC ${this.groupId} a de la vélocité en état normal: ${velocityMagnitude.toFixed(2)}, velocity: x=${this.velocity.x.toFixed(2)}, y=${this.velocity.y.toFixed(2)}`);
-    // }
+    // 2. Mettre à jour le système de suivi AAA
+    this.followController.updateFollowState(this.stateController);
     
-    // Mettre à jour la logique d'état en premier
-    this.updateStateLogic(clampedDelta);
-    
-    // 🎯 NOUVEAU: Système AAA zone de confort
-    this.updateFollowState();
-    
-    // SOLUTION CLEAN: Calculer velocity finale UNE SEULE FOIS
+    // 3. Calculer et appliquer la vélocité finale
+    const currentState = this.stateController.getState();
     let finalVelocity = { x: 0, y: 0 };
     
-    // Déterminer si on doit utiliser NpcBehaviorController ou la logique d'état
-    const shouldUseBehaviorController = this.state === 'following' || this.state === 'normal';
-    
-    if (shouldUseBehaviorController && this.behaviorController) {
-      // 🎯 NOUVEAU: Utiliser NpcBehaviorController pour following et normal
-      const movementVelocity = this.behaviorController.calculateVelocity(clampedDelta);
-      finalVelocity.x = movementVelocity.x;
-      finalVelocity.y = movementVelocity.y;
+    // 4. Déterminer la source de vélocité selon l'état
+    if (currentState === 'migrating') {
+      this.migrationController.updateMigration(this.movementController, this.stateController, clampedDelta);
+      finalVelocity = this.movementController.getVelocity();
+    } else if (currentState === 'organism_migrating') {
+      this.migrationController.updateOrganismMigration(this.movementController, this.stateController, clampedDelta);
+      finalVelocity = this.movementController.getVelocity();
+    } else {
+      // Utiliser le MovementController pour calculer la vélocité
+      finalVelocity = this.movementController.calculateVelocity(currentState, this.stateController, clampedDelta);
       
-      // Ajouter les forces additionnelles pour following
-      if (this.state === 'following') {
-        const followingForces = this.calculateFollowingForces(clampedDelta);
+      // Ajouter les forces de following si nécessaire
+      if (currentState === 'following') {
+        const followingForces = this.followController.calculateFollowingForces(clampedDelta);
         finalVelocity.x += followingForces.x;
         finalVelocity.y += followingForces.y;
       }
-      // Note: L'évitement du joueur est maintenant géré automatiquement par NpcBehaviorController
-      
-    } else if (this.state === 'fleeing') {
-      // 🎯 PRÉSERVER: Velocity calculée par updateFleeingLogic
-      finalVelocity = this.velocity;
-    } else {
-      // Autres états (trembling, migrating) gèrent leur propre velocity
-      finalVelocity = this.velocity;
     }
     
-    // 🎯 NOUVEAU: LIMITATION VITESSE OBLIGATOIRE - Jamais dépasser la vitesse de base !
-    finalVelocity = this.capVelocity(finalVelocity);
+    // 5. Appliquer la vélocité finale
+    this.movementController.applyVelocity(finalVelocity);
     
-    // Appliquer la vélocité finale
-    this.velocity = finalVelocity;
+    // 6. Mettre à jour tous les composants
+    this.movementController.update(clampedDelta);
     
-    // Appliquer également au body physique de Phaser
-    if (this.sprite.body) {
-      this.sprite.body.setVelocity(finalVelocity.x, finalVelocity.y);
-    }
-
-    // 4. CORRECTION: Utiliser la velocity physique RÉELLE pour l'animation
-    // Pas finalVelocity calculée, mais celle après physique (collisions, drag, etc.)
-    const realVelocity = this.sprite.body ? {
-      x: this.sprite.body.velocity.x,
-      y: this.sprite.body.velocity.y
-    } : finalVelocity;
-    
-    // 5. Mettre à jour les onomatopées de cri via le behavior
-    this.shoutBehavior.update(clampedDelta);
-    
-    // 🎯 AAA: ACTUAL MOVEMENT DETECTION pour les animations
+    // 7. Mettre à jour les behaviors existants
+    this.starEffectBehavior.update(clampedDelta);
     this.animationBehavior.update(clampedDelta);
   }
 
+  /**
+   * Gérer les collisions (délégué au MovementController)
+   */
   onCollision(other) {
     if (!this.sprite) return;
-    
-    // Revenir à la position précédente en cas de collision
-    if (other.entityType === 'wall' || other.entityType === 'npc' || other.entityType === 'player') {
-      this.sprite.x = this.lastPosition.x;
-      this.sprite.y = this.lastPosition.y;
-    }
+    this.movementController.onCollision(other);
   }
 
+  /**
+   * Nettoyer le NPC
+   */
   destroy() {
-    // Nettoyer les références
-    if (this.followTarget) {
-      this.followTarget.removeFollower(this);
+    // Réinitialiser l'état des animations
+    if (this.animationBehavior && this.animationBehavior.resetState) {
+      this.animationBehavior.resetState();
     }
     
-    // Nettoyer le système de cri
-    if (this.shoutBehavior) {
-      this.shoutBehavior.destroy();
+    // Nettoyer les références de follow
+    const followTarget = this.stateController.getFollowTarget();
+    if (followTarget && followTarget.removeFollower) {
+      followTarget.removeFollower(this);
+    }
+    
+    // Détruire tous les composants SOLID
+    this.stateController.destroy();
+    this.movementController.destroy();
+    this.followController.destroy();
+    this.migrationController.destroy();
+    
+    // Détruire les behaviors
+    if (this.starEffectBehavior) {
+      this.starEffectBehavior.destroy();
     }
     
     // Se retirer du système de tri par profondeur
@@ -360,290 +379,45 @@ export class Npc extends BaseEntity {
       this.scene.depthSortingSystem.removeEntity(this);
     }
     
+    console.log(`🚮 NPC SOLID détruit (ID: ${this.groupId})`);
     super.destroy();
   }
 
-
-
-  // 🎯 SUPPRIMÉ: applyPlayerAvoidance - Remplacé par AvoidanceBehavior modulaire
+  // ================================
+  // 🎯 API D'INFORMATION/DEBUG
+  // ================================
 
   /**
-   * NOUVELLE VERSION CLEAN : Calcule la velocity de migration sans modifier this.velocity
+   * Obtenir des statistiques complètes du NPC
    */
-  calculateMigrationVelocity(delta) {
-    if (!this.targetPosition || !this.sprite) return { x: 0, y: 0 };
-    
-    const currentX = this.sprite.x;
-    const currentY = this.sprite.y;
-    const targetX = this.targetPosition.x;
-    const targetY = this.targetPosition.y;
-    
-    // Calculer la distance vers la cible
-    const dx = targetX - currentX;
-    const dy = targetY - currentY;
-    const distance = Math.sqrt(dx * dx + dy * dy);
-    
-    // Vérifier si arrivé à destination
-    if (distance <= this.migrationTolerance) {
-      // Migration terminée sera gérée par updateStateLogic()
-      return { x: 0, y: 0 };
-    }
-    
-    // Calculer la direction normalisée
-    const dirX = dx / distance;
-    const dirY = dy / distance;
-    
-    // Retourner la velocity de migration
+  getNpcStats() {
     return {
-      x: dirX * this.migrationSpeed,
-      y: dirY * this.migrationSpeed
+      groupId: this.groupId,
+      position: { x: this.sprite.x, y: this.sprite.y },
+      state: this.stateController.getState(),
+      stateTimer: this.stateController.getStateTimer(),
+      movement: {
+        speed: this.speed,
+        velocity: this.velocity,
+        isMoving: this.movementController.isMoving()
+      },
+      follow: this.followController.getFollowStats(),
+      migration: {
+        targetPosition: this.targetPosition,
+        migrationSpeed: this.migrationSpeed,
+        migrationTolerance: this.migrationTolerance
+      },
+      trembling: {
+        collisionRadius: this.tremblingCollisionRadius
+      }
     };
   }
 
-  updateStateLogic(delta) {
-    if (this.state === 'normal') return;
-    
-    this.stateTimer += delta;
-    
-    switch (this.state) {
-      case 'fleeing':
-        this.updateFleeingLogic(delta);
-        break;
-        
-      case 'trembling':
-        this.updateTremblingLogic(delta);
-        break;
-        
-      case 'following':
-        // Le nouveau système AAA gère tout automatiquement
-        break;
-        
-      case 'migrating':
-        this.updateMigration(delta);
-        break;
-    }
-  }
-
-  updateMigration(delta) {
-    if (!this.targetPosition || !this.sprite) return;
-    
-    const currentX = this.sprite.x;
-    const currentY = this.sprite.y;
-    const targetX = this.targetPosition.x;
-    const targetY = this.targetPosition.y;
-    
-    // Calculer la distance vers la cible
-    const dx = targetX - currentX;
-    const dy = targetY - currentY;
-    const distance = Math.sqrt(dx * dx + dy * dy);
-    
-    // Vérifier si arrivé à destination
-    if (distance <= this.migrationTolerance) {
-      this.onMigrationComplete();
-      return;
-    }
-    
-    // Calculer la direction normalisée
-    const dirX = dx / distance;
-    const dirY = dy / distance;
-    
-    // Appliquer la vitesse de migration
-    this.velocity.x = dirX * this.migrationSpeed;
-    this.velocity.y = dirY * this.migrationSpeed;
-  }
-
-  updateFleeingLogic(delta) {
-    // Mouvement de fuite
-    const deltaSeconds = Math.min(delta, 33) * 0.001;
-    const fleeSpeed = this.fleeingSpeed;
-    
-    // Force de fuite
-    const fleeForce = {
-      x: this.fleeDirection.x * fleeSpeed,
-      y: this.fleeDirection.y * fleeSpeed
-    };
-    
-    const newX = this.sprite.x + (fleeForce.x * deltaSeconds);
-    const newY = this.sprite.y + (fleeForce.y * deltaSeconds);
-    
-    if (this.isPositionValid(newX, newY)) {
-      this.sprite.x = newX;
-      this.sprite.y = newY;
-    }
-    
-    // Mettre à jour la vélocité pour les animations
-    this.velocity.x = fleeForce.x;
-    this.velocity.y = fleeForce.y;
-    
-    // Vérifier si la fuite est terminée
-    if (this.stateTimer >= this.stateDuration) {
-      this.returnToNormal();
-    }
-  }
-
-  updateTremblingLogic(delta) {
-    // Générer un tremblement aléatoire
-    this.tremblingOffset.x = (Math.random() - 0.5) * this.tremblingIntensity;
-    this.tremblingOffset.y = (Math.random() - 0.5) * this.tremblingIntensity;
-    
-    // 🎯 AAA: VISUAL TREMBLING ONLY - Ne pas déplacer la physique !
-    // Garder la position physique fixe (collision box ne bouge pas)
-    this.sprite.x = this.basePosition.x;
-    this.sprite.y = this.basePosition.y;
-    
-    // ✅ APPLIQUER LE TREMBLEMENT AU VISUEL SEULEMENT
-    // Utiliser setOrigin pour décaler l'affichage sans affecter la physique
-    const baseOriginX = 0.5;
-    const baseOriginY = 0.5;
-    const offsetFactorX = this.tremblingOffset.x / (this.sprite.displayWidth || 64);
-    const offsetFactorY = this.tremblingOffset.y / (this.sprite.displayHeight || 64);
-    
-    this.sprite.setOrigin(
-      baseOriginX - offsetFactorX,
-      baseOriginY - offsetFactorY
-    );
-    
-    // Mettre la vélocité à zéro pour l'animation d'arrêt
-    this.velocity.x = 0;
-    this.velocity.y = 0;
-    
-    // Vérifier si le tremblement est terminé
-    if (this.stateTimer >= this.stateDuration) {
-      // 🎯 RESTAURER L'ORIGINE NORMALE
-      this.sprite.setOrigin(baseOriginX, baseOriginY);
-      this.returnToNormal();
-    }
-  }
-
-  isPositionValid(x, y) {
-    if (!this.sprite) return false;
-    
-    const radius = 8; // Rayon du cercle
-    const screenWidth = this.scene.scale.width;
-    const screenHeight = this.scene.scale.height;
-    
-    return (
-      x - radius >= 0 &&
-      x + radius <= screenWidth &&
-      y - radius >= 0 &&
-      y + radius <= screenHeight
-    );
-  }
-
-  // Méthode pour obtenir le joueur
-  getPlayer() {
-    if (this.scene.currentLevel && this.scene.currentLevel.player) {
-      return this.scene.currentLevel.player;
-    }
-    return null;
-  }
-
   /**
-   * 🎯 LIMITATION VITESSE : Garantir que la vitesse ne dépasse jamais la vitesse de base
+   * Afficher les stats dans la console
    */
-  capVelocity(velocity) {
-    const currentSpeed = Math.sqrt(velocity.x * velocity.x + velocity.y * velocity.y);
-    
-    // Vitesse maximum selon l'état
-    let maxSpeed = this.speed; // Vitesse de base
-    
-    if (this.state === 'fleeing') {
-      maxSpeed = this.fleeingSpeed; // Exception pour la fuite
-    } else if (this.state === 'migrating') {
-      maxSpeed = this.migrationSpeed; // Exception pour la migration
-    }
-    
-    // Si la vitesse dépasse le maximum, on la limite
-    if (currentSpeed > maxSpeed) {
-      const ratio = maxSpeed / currentSpeed;
-      
-
-      
-      return {
-        x: velocity.x * ratio,
-        y: velocity.y * ratio
-      };
-    }
-    
-    return velocity; // Vitesse OK, pas de modification
-  }
-
-  /**
-   * 🎯 SYSTÈME AAA : Zone de confort avec détection de progrès
-   */
-  updateFollowState() {
-    if (this.state !== 'following') return;
-    
-    const trailTarget = this.followTarget.getFollowTargetPosition(this);
-    if (!trailTarget) return;
-    
-    const currentDistance = Math.sqrt(
-      (trailTarget.x - this.sprite.x)**2 + (trailTarget.y - this.sprite.y)**2
-    );
-    
-
-    
-    // Calculer le progrès (distance qui diminue = progrès positif)
-    let progress = 0;
-    if (this.followState.lastDistanceToTarget !== null) {
-      progress = this.followState.lastDistanceToTarget - currentDistance;
-    }
-    
-    // Garder historique des 10 dernières frames
-    this.followState.recentProgress.push(progress);
-    if (this.followState.recentProgress.length > 10) {
-      this.followState.recentProgress.shift();
-    }
-    
-    // Calculer progrès moyen
-    const avgProgress = this.followState.recentProgress.length > 0 
-      ? this.followState.recentProgress.reduce((a, b) => a + b, 0) / this.followState.recentProgress.length
-      : 0;
-    
-    // LOGIQUE AAA
-    if (this.followState.mode === "MOVING") {
-      // Mode actif : vérifier si on peut se reposer
-      const inComfortZone = currentDistance < this.followState.comfortZone;
-      const poorProgress = avgProgress < this.followState.minProgressRate;
-      
-      if (inComfortZone && poorProgress && this.followState.recentProgress.length >= 5) {
-        this.followState.mode = "AT_REST";
-      }
-      
-    } else if (this.followState.mode === "AT_REST") {
-      // Mode repos : vérifier si la target a bougé suffisamment
-      const farFromComfort = currentDistance > this.followState.wakeUpDistance;
-      
-      if (farFromComfort) {
-        this.followState.mode = "MOVING";
-        this.followState.recentProgress = []; // Reset historique
-      }
-    }
-    
-    this.followState.lastDistanceToTarget = currentDistance;
-  }
-
-  /**
-   * 🎯 SYSTÈME AAA : Vérifier si au repos
-   */
-  isAtRest() {
-    return this.state === 'following' && this.followState.mode === "AT_REST";
-  }
-
-  /**
-   * 🎯 SIMPLIFIÉ : Forces additionnelles pour following
-   */
-  calculateFollowingForces(delta) {
-    if (!this.followTarget || !this.followTarget.sprite) {
-      return { x: 0, y: 0 };
-    }
-    
-    // 🎯 NOUVEAU : Aucune force si au repos
-    if (this.isAtRest()) {
-      return { x: 0, y: 0 };
-    }
-    
-    // Pas de forces supplémentaires actuellement - géré par la physique Phaser
-    return { x: 0, y: 0 };
+  logStats() {
+    const stats = this.getNpcStats();
+    console.log(`📊 NPC ${this.groupId} Stats:`, stats);
   }
 } 

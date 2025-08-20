@@ -27,7 +27,7 @@ export class SoundManager {
     this.sounds.set('footsteps', footstepSounds);
     
     // Créer le son de cri
-    const crySound = this.scene.sound.add('cry', { volume: 0.6 });
+    const crySound = this.scene.sound.add('cry', { volume: 0.1 });
     this.sounds.set('cry', crySound);
     
     // Créer le son de touch (quand un NPC commence à suivre)
@@ -35,8 +35,12 @@ export class SoundManager {
     this.sounds.set('touch', touchSound);
     
     // Créer le son de célébration pour l'outro
-    const clapsSound = this.scene.sound.add('claps', { volume: 0.7 });
+    const clapsSound = this.scene.sound.add('claps', { volume: 0.4 });
     this.sounds.set('claps', clapsSound);
+    
+    // Créer le son splat pour les textes tutorial
+    const splatSound = this.scene.sound.add('splat', { volume: 0.4 });
+    this.sounds.set('splat', splatSound);
   }
 
   getRandomFootstep() {
@@ -56,23 +60,15 @@ export class SoundManager {
     return null;
   }
 
-  playCry(force = 1.0) {
+  playCry() {
     const crySound = this.sounds.get('cry');
     if (!crySound) return null;
     
-    // Calculer le volume basé sur la force (entre 0.3 et 1.0)
-    const baseVolume = 0.3;
-    const maxVolume = 1.0;
-    const volumeRange = maxVolume - baseVolume;
     
-    // Normaliser la force (généralement entre 1.0 et ~3.0)
-    const normalizedForce = Math.max(0, Math.min(1, (force - 1.0) / 2.0));
-    const finalVolume = baseVolume + (volumeRange * normalizedForce);
+    // Jouer avec le volume fixe
+    crySound.play();
     
-    // Jouer avec le volume calculé
-    crySound.play({ volume: finalVolume });
-    
-    console.log(`🔊 Cri joué - Force: ${force.toFixed(2)}, Volume: ${finalVolume.toFixed(2)}`);
+    console.log(`🔊 Cri joué`);
     return crySound;
   }
 
@@ -92,6 +88,15 @@ export class SoundManager {
     clapsSound.play();
     console.log('🔊 Son claps joué (célébration outro)');
     return clapsSound;
+  }
+
+  playSplat() {
+    const splatSound = this.sounds.get('splat');
+    if (!splatSound) return null;
+    
+    splatSound.play();
+    console.log('🔊 Son splat joué (tutorial text)');
+    return splatSound;
   }
 
   stopAllSounds() {
