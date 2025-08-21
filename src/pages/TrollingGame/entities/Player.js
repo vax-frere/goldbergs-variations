@@ -413,7 +413,7 @@ export class Player extends BaseEntity {
     
     if (!this.sprite) return;
     
-    // Clamp delta pour éviter les téléportations
+    // Clamp delta pour la physique seulement; garder delta brut pour l'animation
     const clampedDelta = Math.min(delta, 33);
     
     // Mettre à jour tous les composants
@@ -425,7 +425,8 @@ export class Player extends BaseEntity {
     
     // Mettre à jour les behaviors existants
     this.shoutBehavior.update(clampedDelta);
-    this.animationBehavior.update(clampedDelta);
+    // IMPORTANT: delta brut pour la vitesse réelle
+    this.animationBehavior.update(delta);
     this.trailBehavior.update(clampedDelta);
   }
 

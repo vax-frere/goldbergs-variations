@@ -22,7 +22,7 @@ export class GameScene extends Phaser.Scene {
         'shepherd': ShepherdsGateLevel,     // 🕳️ Shepherd's Gate (second niveau)
         'piper': PiedPiperLevel             // 🎵 Pied Piper (premier niveau avec tutorial)
       };
-    this.currentLevelType = 'piper'; // Niveau par défaut : Pied Piper (avec tutorial)
+    this.currentLevelType = 'shepherd'; // Niveau par défaut temporaire: Shepherd
     this.caveatFontLoaded = false;
   }
 
@@ -135,7 +135,7 @@ ensureCaveatFont() {
     }
     
     // Charger le son de cri
-    this.load.audio('cry', 'sounds/trolling-game/cry.wav');
+    this.load.audio('cry', 'sounds/trolling-game/shout-7.mp3');
     
     // Charger le son de touch (NPC commence à suivre)
     this.load.audio('touch', 'sounds/trolling-game/touch.mp3');
@@ -147,8 +147,11 @@ ensureCaveatFont() {
     this.load.audio('splat', 'sounds/trolling-game/splat.mp3');
   }
 
-  create() {
+  create(data) {
     // 🎯 ATTENDRE LE CHARGEMENT DE CAVEAT avant de créer quoi que ce soit
+    if (data && data.targetLevel && this.availableLevels[data.targetLevel]) {
+      this.currentLevelType = data.targetLevel;
+    }
     this.waitForFontThenCreate();
   }
 
@@ -295,7 +298,8 @@ ensureCaveatFont() {
    * 🎯 PUBLIC API : Passer au niveau suivant
    */
   loadNextLevel() {
-    const levelProgression = ['piper', 'shepherd']; // Ordre des niveaux : Pied Piper → Shepherd's Gate
+    // Progression temporaire: boucle sur Shepherd
+    const levelProgression = ['piper', 'piper'];
     const currentIndex = levelProgression.indexOf(this.currentLevelType);
     
     if (currentIndex === -1) {
@@ -327,6 +331,7 @@ ensureCaveatFont() {
     this.cursors = this.input.keyboard.createCursorKeys();
     this.wasd = this.input.keyboard.addKeys('W,S,A,D');
     this.spaceKey = this.input.keyboard.addKey('SPACE'); 
+    this.shiftKey = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SHIFT);
     this.debugKey = this.input.keyboard.addKey('P'); // Touche P pour Debug (Bounding boxes)
 
     // États des touches pour éviter les répétitions
@@ -396,6 +401,12 @@ ensureCaveatFont() {
 
     // Utiliser la nouvelle méthode de mouvement en 8 directions
     player.setMovement(directions);
+
+    // Sprint (Shift maintenu)
+    if (player.movementController && player.movementController.setSprintEnabled) {
+      const sprinting = !!(this.shiftKey && this.shiftKey.isDown);
+      player.movementController.setSprintEnabled(sprinting);
+    }
     
     // Gérer le cri avec ESPACE
     if (this.spaceKey.isDown && !this.spaceKeyPressed) {

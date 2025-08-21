@@ -65,12 +65,21 @@ export class Game {
       height: '100%',
       parent: this.container,
       backgroundColor: '#000000',
+      resolution: window.devicePixelRatio || 1,
       physics: {
         default: 'arcade',
         arcade: {
           gravity: { y: 0 },
-          debug: this.debugPhysics  // Utiliser la valeur depuis localStorage
+          debug: this.debugPhysics,  // Utiliser la valeur depuis localStorage
+          fixedStep: true,
+          fps: 60,
+          timeScale: 1
         }
+      },
+      fps: {
+        target: 60,
+        min: 60,
+        forceSetTimeOut: false
       },
       // 🎵 DEUX SCÈNES: AmbientScene (persistante) + GameScene (redémarrable)
       scene: [AmbientScene, GameScene],
@@ -85,12 +94,28 @@ export class Game {
         autoRound: true
       },
       render: {
-        antialias: false,
-        pixelArt: true
+        antialias: true,
+        pixelArt: false,
+        roundPixels: false,
+        antialiasGL: true
       }
     };
 
     this.phaserGame = new Phaser.Game(config);
+    
+    // Mettre en pause quand l'onglet est masqué, reprendre quand visible
+    this.phaserGame.events.on('hidden', () => {
+      const gameScene = this.phaserGame.scene.getScene('GameScene');
+      if (gameScene) this.phaserGame.scene.pause('GameScene');
+      const ambient = this.phaserGame.scene.getScene('AmbientScene');
+      if (ambient) this.phaserGame.scene.pause('AmbientScene');
+    });
+    this.phaserGame.events.on('visible', () => {
+      const ambient = this.phaserGame.scene.getScene('AmbientScene');
+      if (ambient) this.phaserGame.scene.resume('AmbientScene');
+      const gameScene = this.phaserGame.scene.getScene('GameScene');
+      if (gameScene) this.phaserGame.scene.resume('GameScene');
+    });
     
     // Écouter les changements de taille de l'écran
     window.addEventListener('resize', this.handleResize.bind(this));
@@ -410,12 +435,12 @@ export class Game {
   // 🎯 NOUVEAU: SWITCH LEVELS - Appel depuis la console avec game.switchLevel('piper')
   switchLevel(levelType = 'shepherd') {
     const gameScene = this.phaserGame.scene.getScene('GameScene');
-    if (!gameScene) {
+    if (!gameScene) {git 
       console.warn('⚠️ Impossible de changer de niveau: pas de GameScene disponible');
       return false;
     }
 
-    const availableLevels = ['piper', 'shepherd'];
+    const availableLevels = ['piper', 'piper'];
     if (!availableLevels.includes(levelType)) {
       console.warn(`⚠️ Niveau '${levelType}' inexistant. Disponibles: ${availableLevels.join(', ')}`);
       return false;

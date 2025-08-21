@@ -13,8 +13,8 @@ export class AmbientScene extends Phaser.Scene {
 
   preload() {
     // 🎵 Charger le son d'ambiance
-    this.load.audio('ambient', 'sounds/ambiant.mp3');
-    console.log('🎵 AmbientScene: Chargement ambiant.mp3');
+    this.load.audio('ambient', 'sounds/trolling-game/crowd.mp3');
+    console.log('🎵 AmbientScene: Chargement crowd.mp3');
   }
 
   create() {
@@ -33,7 +33,7 @@ export class AmbientScene extends Phaser.Scene {
     
     // 🎮 DÉMARRER GameScene maintenant que l'ambiance est prête
     console.log('🎮 AmbientScene: Lancement de GameScene...');
-    this.scene.start('GameScene');
+    this.scene.start('GameScene', { targetLevel: 'piper' });
   }
 
   /**
@@ -48,7 +48,7 @@ export class AmbientScene extends Phaser.Scene {
     try {
       // Créer le son avec les paramètres parfaits
       this.ambientSound = this.sound.add('ambient', {
-        volume: 0.025,  // Très léger comme demandé
+        volume: 0.075,  // Très léger comme demandé
         loop: true     // Boucle infinie
       });
 

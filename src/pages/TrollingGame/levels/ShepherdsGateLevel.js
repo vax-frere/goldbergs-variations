@@ -256,7 +256,7 @@ export class ShepherdsGateLevel extends ILevel {
       // Augmenter la masse du joueur pour qu'il puisse pousser plus fort
       this.player.sprite.body.setMass(2.0); // Plus lourd = pousse plus fort
       
-      // Réduire le drag pour un mouvement plus fluide
+      // Drag déjà configuré par le PlayerMovementController
       this.player.sprite.body.setDrag(60, 60);
     }
   }
@@ -374,7 +374,7 @@ export class ShepherdsGateLevel extends ILevel {
       if (npc.sprite && npc.sprite.body) {
         // 🔧 PHYSIQUE : Configuration pour être poussés facilement
         npc.sprite.body.setMass(0.5); // Légers
-        npc.sprite.body.setDrag(20, 20); // Peu de friction
+        npc.sprite.body.setDrag(20, 20); // Cohérent pour NPCs
         npc.sprite.body.setBounce(0.3, 0.3); // Rebondissent
         
         // 🎭 COMPORTEMENT : SEULEMENT peur + être poussable

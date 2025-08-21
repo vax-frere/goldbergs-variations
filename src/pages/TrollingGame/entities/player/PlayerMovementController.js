@@ -12,6 +12,8 @@ export class PlayerMovementController {
     this.velocity = { x: 0, y: 0 };
     this.canMove = true;
     this.lastPosition = { x: 0, y: 0 };
+    this.isSprinting = false;
+    this.sprintSpeed = 220; // Vitesse de course (doit dépasser le seuil run)
     
     // Limites du monde
     this.worldBounds = {
@@ -30,9 +32,9 @@ export class PlayerMovementController {
   setupPhysics() {
     if (this.sprite.body) {
       this.sprite.body.setMass(5000); // Plus lourd pour pousser les NPCs
-      this.sprite.body.setDrag(200, 200); // Drag réduit pour glisser facilement
-      this.sprite.body.setBounce(0.3, 0.3); // Légère élasticité pour pousser
-      console.log('💪 PlayerMovement: masse=5000, drag=200, bounce=0.3');
+      this.sprite.body.setDrag(60, 60); // Drag uniforme cohérent avec le niveau
+      this.sprite.body.setBounce(0.1, 0.1); // Moins de rebond pour stabilité de vitesse
+      console.log('💪 PlayerMovement: masse=5000, drag=60, bounce=0.1');
     }
   }
 
@@ -69,8 +71,9 @@ export class PlayerMovementController {
     
     // INTRO FIX: Appliquer immédiatement si mouvement forcé
     if (forceMovement && this.sprite.body) {
-      const physicsVelocityX = this.velocity.x * this.speed;
-      const physicsVelocityY = this.velocity.y * this.speed;
+      const currentSpeed = this.isSprinting ? this.sprintSpeed : this.speed;
+      const physicsVelocityX = this.velocity.x * currentSpeed;
+      const physicsVelocityY = this.velocity.y * currentSpeed;
       
       this.sprite.body.setVelocity(physicsVelocityX, physicsVelocityY);
     }
@@ -101,9 +104,10 @@ export class PlayerMovementController {
     
     if (isMoving) {
       if (this.sprite.body) {
+        const currentSpeed = this.isSprinting ? this.sprintSpeed : this.speed;
         this.sprite.body.setVelocity(
-          this.velocity.x * this.speed,
-          this.velocity.y * this.speed
+          this.velocity.x * currentSpeed,
+          this.velocity.y * currentSpeed
         );
       }
     } else {
@@ -111,6 +115,13 @@ export class PlayerMovementController {
         this.sprite.body.setVelocity(0, 0);
       }
     }
+  }
+
+  /**
+   * Activer/désactiver le sprint (Shift maintenu)
+   */
+  setSprintEnabled(enabled) {
+    this.isSprinting = !!enabled;
   }
 
   /**

@@ -16,7 +16,8 @@ export class NpcStateController {
       fleeing: {
         minDuration: 1500,
         maxDuration: 2500,
-        speedMultiplier: 0.30
+        speedMultiplier: 0.30,
+        safeDistance: 200 // Arrêt anticipé si distance suffisante
       },
       trembling: {
         baseDuration: 2000,
@@ -92,7 +93,7 @@ export class NpcStateController {
       // Le NPC tremble avec intensité variable selon les followers
       this.startTrembling(followersCount);
     } else {
-      // Le NPC fuit
+      // Le NPC fuit immédiatement dans la direction opposée au joueur
       this.startFleeing();
     }
   }
@@ -144,7 +145,7 @@ export class NpcStateController {
     
     // 🎯 Durée et intensité variables selon le nombre de followers
     const durationBonus = Math.min(1000, followersCount * config.durationPerFollower);
-    this.stateDuration = config.baseDuration + Math.random() * 2000 + durationBonus;
+    this.stateDuration = (config.baseDuration + Math.random() * 2000 + durationBonus) * 2.5;
     
     // 🎯 Intensité du tremblement augmente avec les followers
     const intensityBonus = Math.min(3, followersCount * config.intensityPerFollower);
@@ -240,7 +241,7 @@ export class NpcStateController {
         
       case 'fleeing':
         // Vérifier si la fuite est terminée
-        if (this.stateTimer >= this.stateDuration) {
+        if (this.stateTimer >= this.stateDuration || this.hasReachedSafeDistance()) {
           this.returnToNormal();
         }
         break;
@@ -249,6 +250,17 @@ export class NpcStateController {
         // Le following n'a pas de limite de temps
         break;
     }
+  }
+
+  hasReachedSafeDistance() {
+    const cfg = this.config.fleeing || {};
+    const safe = cfg.safeDistance || 200;
+    const player = this.getPlayer();
+    if (!player || !player.sprite) return false;
+    const dx = this.npc.sprite.x - player.sprite.x;
+    const dy = this.npc.sprite.y - player.sprite.y;
+    const dist = Math.sqrt(dx*dx + dy*dy);
+    return dist >= safe;
   }
 
   /**

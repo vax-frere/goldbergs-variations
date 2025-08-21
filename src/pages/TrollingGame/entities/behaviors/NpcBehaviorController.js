@@ -32,6 +32,67 @@ export class NpcBehaviorController {
     };
   }
 
+  /**
+   * Nouveau pipeline simple: produire une intention (direction) et des modificateurs bornés
+   */
+  computeMovementIntent(delta) {
+    const state = this.entity.state;
+    const player = this.getPlayer();
+    const intent = { desiredDirection: { x: 0, y: 0 }, context: {} };
+
+    switch (state) {
+      case 'following': {
+        if (!player) return intent;
+        const trailTarget = player.getFollowTargetPosition(this.entity);
+        if (!trailTarget) return intent;
+        const dx = trailTarget.x - this.entity.sprite.x;
+        const dy = trailTarget.y - this.entity.sprite.y;
+        const dist = Math.hypot(dx, dy);
+        intent.desiredDirection = dist > 0 ? { x: dx / dist, y: dy / dist } : { x: 0, y: 0 };
+        intent.context.nearFollowTarget = dist < 20;
+        break;
+      }
+      case 'fleeing': {
+        if (!player) return intent;
+        const dx = this.entity.sprite.x - player.sprite.x;
+        const dy = this.entity.sprite.y - player.sprite.y;
+        const dist = Math.hypot(dx, dy);
+        intent.desiredDirection = dist > 0 ? { x: dx / dist, y: dy / dist } : { x: 0, y: 0 };
+        break;
+      }
+      case 'migrating':
+      case 'organism_migrating': {
+        // Réutiliser la logique existante
+        const vel = this.entity.migrationController?.getVelocity?.() || this.entity.movementController.getVelocity();
+        const mag = Math.hypot(vel.x, vel.y);
+        intent.desiredDirection = mag > 0 ? { x: vel.x / mag, y: vel.y / mag } : { x: 0, y: 0 };
+        break;
+      }
+      case 'normal':
+      case 'trembling':
+      default:
+        intent.desiredDirection = { x: 0, y: 0 };
+    }
+
+    return intent;
+  }
+
+  /**
+   * Modificateurs bornés (évitement joueur; séparation NPCs à ajouter plus tard)
+   */
+  computeModifiers() {
+    const mods = [];
+    const avoid = this.avoidanceBehavior?.calculate?.() || { x: 0, y: 0 };
+    // Borner l'évitement pour qu'il soit additif sans dépasser le cap final
+    const maxAvoid = 80; // px/s max
+    const mag = Math.hypot(avoid.x, avoid.y);
+    if (mag > 0) {
+      const scale = Math.min(1, maxAvoid / mag);
+      mods.push({ x: avoid.x * scale, y: avoid.y * scale });
+    }
+    return mods;
+  }
+
   update(delta) {
     if (!this.entity || !this.entity.sprite) return;
 
@@ -395,9 +456,9 @@ export class NpcBehaviorController {
         y: this.entity.sprite.y + (dy / distance) * 100
       };
 
-      // CORRECTION: Utiliser vitesse de base de l'entité (plus rapide pour fuir)
-      const fleeSpeed = this.entity.speed * 1.0; // 🎯 CORRIGÉ: Vitesse normale (plus de cumul)
-      return this.moveTowards(fleeTarget, fleeSpeed);
+      // 🎯 Vitesse de fuite CONSTANTE (pas de scaling par la distance)
+      const fleeSpeed = this.entity.speed * 1.0;
+      return this.moveTowardsConstant(fleeTarget, fleeSpeed);
     }
 
     return { x: 0, y: 0 };

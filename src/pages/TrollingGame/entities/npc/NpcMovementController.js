@@ -6,16 +6,16 @@ export class NpcMovementController {
   constructor(npc) {
     this.npc = npc;
     
-    // Propriétés de mouvement
-    this.speed = 150; // Vitesse de base
+    // Propriétés de mouvement (alignées sur le joueur)
+    this.speed = 150; // Vitesse de base px/s – même valeur que le joueur
     this.velocity = { x: 0, y: 0 };
     this.lastPosition = { x: 0, y: 0 };
     
-    // Configuration des vitesses selon les états
+    // Configuration des vitesses selon les états (même référentiel que le joueur)
     this.speedConfig = {
       normal: 150,
       following: 150,
-      fleeing: 45, // 30% de la vitesse normale
+      fleeing: 200, // Fuite rapide (déclenche potentiellement le run)
       migrating: 120,
       trembling: 0
     };
@@ -30,7 +30,7 @@ export class NpcMovementController {
     this.speed = speed;
     this.speedConfig.normal = speed;
     this.speedConfig.following = speed;
-    this.speedConfig.fleeing = speed * 0.30;
+    this.speedConfig.fleeing = 200; // Fuite fixée à 200px/s
   }
 
   /**

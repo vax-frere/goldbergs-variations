@@ -16,6 +16,8 @@ export class CharacterAnimationBehavior {
       frameRate: config.frameRate || 8,
       idleAnimation: config.idleAnimation || 'idle9', // Animation d'inactivité
       walkAnimation: config.walkAnimation || 'walking', // Animation de marche
+      runAnimation: config.runAnimation || 'running',   // Animation de course
+      runningSpeedThreshold: config.runningSpeedThreshold || 160, // px/s (aligné sur fuite)
       ...config
     };
     
@@ -26,6 +28,9 @@ export class CharacterAnimationBehavior {
     
     // Animation forcée (ex: trembling spécifique)
     this.forcedAnimationName = null; // ex: 'headholdinpain'
+    
+    // Vitesse réelle (px/s) mesurée par déplacement effectif frame-à-frame
+    this.realSpeedPxPerSec = 0;
     
     // 🎯 AAA: ACTUAL MOVEMENT DETECTION
     this.lastPosition = {
@@ -40,8 +45,8 @@ export class CharacterAnimationBehavior {
     this.stoppedFramesRequired = 3; // Frames consécutives requises pour s'arrêter
     
     // 🛠️ AMÉLIORATION : Seuils plus stables
-    this.movementThreshold = 0.8; // Seuil pour détecter un mouvement
-    this.idleThreshold = 0.2; // Seuil pour détecter l'arrêt (plus bas)
+    this.movementThreshold = 0.5; // Seuil pour détecter un mouvement
+    this.idleThreshold = 0.3; // Seuil pour détecter l'arrêt (plus bas)
     
     // Stabilisation pour éviter le flickering
     this.lastDirectionChange = 0;
@@ -111,8 +116,9 @@ export class CharacterAnimationBehavior {
     const walkAnimationsExist = this.scene.anims.exists('walk-down');
     const zombiescreamAnimationsExist = this.scene.anims.exists('zombiescream-down');
     const headHoldInPainAnimationsExist = this.scene.anims.exists('headholdinpain-down');
+    const runAnimationsExist = this.scene.anims.exists('running-down');
 
-    if (!walkAnimationsExist || !zombiescreamAnimationsExist || !headHoldInPainAnimationsExist) {
+    if (!walkAnimationsExist || !zombiescreamAnimationsExist || !headHoldInPainAnimationsExist || !runAnimationsExist) {
       this.createAnimations();
     }
   }
@@ -130,7 +136,8 @@ export class CharacterAnimationBehavior {
     // 🛠️ SÉCURITÉ : Vérifier si les animations existent déjà avant de créer
     const walkExists = this.scene.anims.exists(`${this.config.walkAnimation}-front`);
     const zombiescreamExists = this.scene.anims.exists('zombiescream-front');
-    if (walkExists && zombiescreamExists) {
+    const runExists = this.scene.anims.exists(`${this.config.runAnimation}-front`);
+    if (walkExists && zombiescreamExists && runExists) {
       return; // Les animations existent déjà, ne pas les recréer
     }
 
@@ -227,6 +234,23 @@ export class CharacterAnimationBehavior {
           });
         }
       }
+
+      // 🎨 Animation RUNNING utilisant les métadonnées
+      const runAnimData = this.spritesheetMetadata.animations[this.config.runAnimation];
+      if (runAnimData) {
+        const runFrames = runAnimData.frameData[spritesheetDirection];
+        if (runFrames && runFrames.frames.length > 0) {
+          this.scene.anims.create({
+            key: `running-${direction}`,
+            frames: runFrames.frames.map(frameData => ({
+              key: this.config.spriteKey,
+              frame: this.calculateFrameIndex(frameData.x, frameData.y)
+            })),
+            frameRate: Math.max(this.config.frameRate, 12),
+            repeat: -1
+          });
+        }
+      }
     });
 
     console.log('✅ Animations multi-animations créées avec succès (idle, walk, zombiescream)');
@@ -318,6 +342,9 @@ export class CharacterAnimationBehavior {
     
     // Distance réellement parcourue (physique)
     const realDistance = Math.sqrt(realMovement.x * realMovement.x + realMovement.y * realMovement.y);
+    // Vitesse réelle (px/s) basée sur le déplacement net, indépendante de la vélocité du body
+    const deltaSeconds = Math.max(0.001, delta / 1000);
+    this.realSpeedPxPerSec = realDistance / deltaSeconds;
     
     // 🛠️ AMÉLIORATION : Buffer des mouvements pour hysteresis renforcé
     this.movementBuffer.push(realDistance);
@@ -428,7 +455,44 @@ export class CharacterAnimationBehavior {
         return;
       }
     }
-    const targetAnimation = this.isMoving ? `walk-${this.facing}` : `idle-${this.facing}`;
+    // Choisir run vs walk selon la vitesse réelle
+    let targetAnimation = `idle-${this.facing}`;
+    if (this.isMoving) {
+      // Vitesse effective: max(deplacement reel, velocite du body)
+      let speedReal = this.realSpeedPxPerSec || 0;
+      let speedBody = 0;
+      try {
+        const body = this.owner?.sprite?.body;
+        if (body && body.velocity) {
+          speedBody = Math.hypot(body.velocity.x, body.velocity.y);
+        }
+      } catch (_) {}
+      const effectiveSpeed = Math.max(speedReal, speedBody);
+
+      // Politique simple: on n'autorise le run que si l'état courant a une vitesse max >= seuil run (ex: fuite à 200)
+      // Par défaut, autoriser le run si la vitesse dépasse le seuil
+      // (NPCs pourront le restreindre via leur vitesse d'état)
+      let canRun = true;
+      try {
+        const state = this.owner?.stateController?.getState?.();
+        const mc = this.owner?.movementController;
+        if (state && mc && mc.getCurrentSpeed) {
+          const stateMax = mc.getCurrentSpeed(state);
+          // Si on connaît une vitesse max d'état, n'autoriser le run que si ce max dépasse le seuil
+          if (typeof stateMax === 'number') {
+            canRun = stateMax >= (this.config.runningSpeedThreshold - 0.5);
+          }
+        }
+      } catch (_) {}
+
+      const triggerThreshold = this.config.runningSpeedThreshold * 0.95; // petite marge
+
+      if (canRun && effectiveSpeed >= triggerThreshold && this.scene.anims.exists(`running-${this.facing}`)) {
+        targetAnimation = `running-${this.facing}`;
+      } else {
+        targetAnimation = `walk-${this.facing}`;
+      }
+    }
 
     // 🛠️ AMÉLIORATION : Ne changer que si vraiment nécessaire et que l'animation existe
     if (this.scene.anims.exists(targetAnimation)) {

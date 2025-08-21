@@ -54,12 +54,12 @@ function readSvgFile(filePath) {
     const viewBoxMatch = content.match(/viewBox="([^"]+)"/);
     const viewBox = viewBoxMatch ? viewBoxMatch[1] : '0 0 600 1000';
     
-    // Nettoyage: supprimer tous les attributs inkscape:* et forcer stroke-width="2.0"
+    // Nettoyage: supprimer tous les attributs inkscape:* et forcer  stroke-width="3.0"
     let inner = svgMatch[1]
       // retirer attributs inkscape:xxx="..."
       .replace(/\s+inkscape:[^=\s]+="[^"]*"/g, '')
       // forcer l'épaisseur de trait
-      .replace(/stroke-width="1\.0"/g, 'stroke-width="2.0"');
+      .replace(/stroke-width="1\.0"/g, ' stroke-width="3.0"');
     
     return {
       content: inner,
@@ -350,10 +350,10 @@ function main() {
   console.log('🎨 Conversion des traits noirs en blancs...');
   spritesheetSvg = spritesheetSvg.replace(/stroke="rgb\(0, 0, 0\)"/g, 'stroke="rgb(255, 255, 255)"');
   
-  // Nettoyage global de sécurité: supprimer les attributs inkscape:* restants et forcer stroke-width="2.0"
+  // Nettoyage global de sécurité: supprimer les attributs inkscape:* restants et forcer  stroke-width="3.0"
   spritesheetSvg = spritesheetSvg
     .replace(/\s+inkscape:[^=\s]+="[^"]*"/g, '')
-    .replace(/stroke-width="1\.0"/g, 'stroke-width="3.0"');
+    .replace(/stroke-width="1\.0"/g, ' stroke-width="3.0"');
   
   // Écrire le fichier SVG
   fs.writeFileSync(OUTPUT_FILE, spritesheetSvg, 'utf8');

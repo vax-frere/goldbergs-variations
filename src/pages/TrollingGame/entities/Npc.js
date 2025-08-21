@@ -297,7 +297,7 @@ export class Npc extends BaseEntity {
     
     if (!this.sprite) return;
     
-    // Clamp delta pour éviter les téléportations
+    // Clamp delta pour la physique seulement; garder le delta brut pour l'animation
     const clampedDelta = Math.min(delta, 33);
     
     // 1. Mettre à jour la logique d'état
@@ -327,6 +327,9 @@ export class Npc extends BaseEntity {
         finalVelocity.x += followingForces.x;
         finalVelocity.y += followingForces.y;
       }
+      
+      // RE-CAP: garantir le plafond de vitesse après toutes additions
+      finalVelocity = this.movementController.capVelocity(finalVelocity, currentState);
     }
     
     // 5. Appliquer la vélocité finale
@@ -337,7 +340,8 @@ export class Npc extends BaseEntity {
     
     // 7. Mettre à jour les behaviors existants
     this.starEffectBehavior.update(clampedDelta);
-    this.animationBehavior.update(clampedDelta);
+    // IMPORTANT: utiliser le delta brut pour la vitesse réelle de l'animation
+    this.animationBehavior.update(delta);
   }
 
   /**
