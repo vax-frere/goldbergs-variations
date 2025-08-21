@@ -52,8 +52,11 @@ ensureCaveatFont() {
       // 2) Essayer de charger la police locale via FontFace pour garantir la présence (évite le swap Google Fonts)
       if (window.FontFace) {
         try {
-          console.log('📝 ⏳ PRELOAD: Chargement via FontFace de fonts/caveat.ttf ...');
-          const face = new FontFace('Caveat', 'url(fonts/caveat.ttf) format("truetype")');
+          const baseUrl = (import.meta && import.meta.env && import.meta.env.BASE_URL) ? import.meta.env.BASE_URL : '/';
+          const normalizedBase = baseUrl.endsWith('/') ? baseUrl : baseUrl + '/';
+          const fontHref = `${normalizedBase}fonts/caveat.ttf`;
+          console.log('📝 ⏳ PRELOAD: Chargement via FontFace de', fontHref);
+          const face = new FontFace('Caveat', `url(${fontHref}) format("truetype")`);
           face.load().then((loadedFace) => {
             try {
               if (document.fonts && document.fonts.add) {
