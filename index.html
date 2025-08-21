@@ -13,7 +13,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@400;500;600&display=block" rel="stylesheet">
-    <!-- Preload local Caveat to avoid first-paint fallback (relative for GH Pages base path) -->
+    <!-- Preload local Caveat (relative path works both in dev and with GH Pages base) -->
     <link rel="preload" href="fonts/caveat.ttf" as="font" type="font/ttf" crossorigin>
     <!-- Google tag (gtag.js) -->
     <script
@@ -29,10 +29,12 @@
 
       gtag("config", "G-QNX5WSTRSR");
     </script>
-    <script type="module" crossorigin src="/goldbergs-variations/assets/index-0ZVmSJqD.js"></script>
-    <link rel="stylesheet" crossorigin href="/goldbergs-variations/assets/index-D8A5Bm6J.css">
+    <script type="module" crossorigin src="/goldbergs-variations/assets/index-rIlTEbwp.js"></script>
+    <link rel="stylesheet" crossorigin href="/goldbergs-variations/assets/index-CwCr-C8F.css">
   </head>
   <body>
+    <!-- Préchargeur CSS caché pour forcer le chargement de la police Caveat dès le parse -->
+    <div aria-hidden="true" class="font-preloader">you them YOU THEM 0123456789 !?&.,</div>
     <div id="root"></div>
   </body>
 </html>
