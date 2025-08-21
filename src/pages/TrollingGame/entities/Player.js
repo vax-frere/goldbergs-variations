@@ -64,7 +64,7 @@ export class Player extends BaseEntity {
       lineWidth: 3,
       lineColor: 0x00ff88,
       alpha: 0.8,
-      debugOnly: false, // 🎯 VISIBLE TOUJOURS pour voir le comportement pendant l'intro
+      debugOnly: true, // 🎯 VISIBLE EN MODE DEBUG SEULEMENT (touche P)
       
       // Points de suivi pour followers
       followersPerPoint: 6,
