@@ -2,6 +2,7 @@ import { BaseEntity } from './BaseEntity';
 import { NpcBehaviorController } from './behaviors/NpcBehaviorController';
 import { CharacterAnimationBehavior } from './behaviors/CharacterAnimationBehavior';
 import { StarEffectBehavior } from './behaviors/StarEffectBehavior';
+import { ShoutBehavior } from './behaviors/ShoutBehavior';
 
 // 🎯 NOUVEAUX COMPOSANTS SOLID
 import { NpcStateController } from './npc/NpcStateController';
@@ -68,6 +69,10 @@ export class Npc extends BaseEntity {
       duration: 600,
       moveUpDistance: 25,
       fadeOutDelay: 150
+    });
+    
+    this.shoutBehavior = new ShoutBehavior(this, {
+      duration: 750 // Durée du cri pour les NPCs
     });
     
     // Configuration du sprite
@@ -143,6 +148,15 @@ export class Npc extends BaseEntity {
   returnToNormal() {
     this.stateController.returnToNormal();
     this.movementController.stop();
+  }
+
+  /**
+   * 🎯 NOUVEAU: Faire crier ce NPC
+   */
+  shout() {
+    if (this.shoutBehavior) {
+      this.shoutBehavior.shout();
+    }
   }
 
   // ================================
@@ -340,6 +354,7 @@ export class Npc extends BaseEntity {
     
     // 7. Mettre à jour les behaviors existants
     this.starEffectBehavior.update(clampedDelta);
+    this.shoutBehavior.update(clampedDelta);
     // IMPORTANT: utiliser le delta brut pour la vitesse réelle de l'animation
     this.animationBehavior.update(delta);
   }
@@ -376,6 +391,10 @@ export class Npc extends BaseEntity {
     // Détruire les behaviors
     if (this.starEffectBehavior) {
       this.starEffectBehavior.destroy();
+    }
+    
+    if (this.shoutBehavior) {
+      this.shoutBehavior.destroy();
     }
     
     // Se retirer du système de tri par profondeur

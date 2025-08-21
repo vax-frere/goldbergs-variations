@@ -127,7 +127,7 @@ export class TutorialTextManager {
     }
     
     const offsetY = 75; // Distance sous le joueur
-    const x = player.sprite.x;
+    const x = player.sprite.x-5;
     const y = player.sprite.y + offsetY;
     
     console.log(`📝 Création texte "you" à (${x.toFixed(1)}, ${y.toFixed(1)}) - Caveat confirmée prête`);

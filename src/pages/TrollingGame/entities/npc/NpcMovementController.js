@@ -44,6 +44,11 @@ export class NpcMovementController {
    * Calculer la vélocité finale pour un état donné
    */
   calculateVelocity(state, stateController, delta) {
+    // 🎯 PRIORITÉ ABSOLUE: Si le NPC est en train de crier, il ne peut pas bouger
+    if (this.npc.shoutBehavior && this.npc.shoutBehavior.isScreaming) {
+      return { x: 0, y: 0 };
+    }
+    
     let finalVelocity = { x: 0, y: 0 };
     
     switch (state) {

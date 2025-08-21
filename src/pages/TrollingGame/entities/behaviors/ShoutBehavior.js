@@ -1,6 +1,7 @@
 /**
- * 🎯 NOUVEAU : Système de cri avec animation zombiescream
- * Remplace les onomatopées visuelles par l'animation zombiescream du personnage
+ * 🎯 SYSTÈME DE CRI DIFFÉRENCIÉ
+ * Player : Animation zombiescream (cri effrayant)
+ * NPCs : Animation cheerwithbothhandsup (célébration/encouragement)
  */
 export class ShoutBehavior {
   constructor(owner, config = {}) {
@@ -36,7 +37,36 @@ export class ShoutBehavior {
    */
   startScreamAnimation() {
     if (!this.owner.sprite || !this.owner.animationBehavior) {
+      console.error(`🧟 ❌ ${this.owner.entityType}: Sprite ou animationBehavior manquant`);
       return;
+    }
+
+    // 🎯 DIAGNOSTIC: Vérifier que les animations de cri existent
+    const diagnosticData = {
+      entityType: this.owner.entityType,
+      hasAnimationBehavior: !!this.owner.animationBehavior,
+      facing: this.owner.animationBehavior.facing
+    };
+    
+    if (this.owner.entityType === 'npc') {
+      // Diagnostic pour les animations cheerwithbothhandsup des NPCs
+      diagnosticData.cheerDownExists = this.scene.anims.exists('cheerwithbothhandsup-down');
+      diagnosticData.cheerUpExists = this.scene.anims.exists('cheerwithbothhandsup-up');
+      diagnosticData.cheerLeftExists = this.scene.anims.exists('cheerwithbothhandsup-left');
+      diagnosticData.cheerRightExists = this.scene.anims.exists('cheerwithbothhandsup-right');
+    } else {
+      // Diagnostic pour les animations zombiescream du joueur
+      diagnosticData.zombiescreamDownExists = this.scene.anims.exists('zombiescream-down');
+      diagnosticData.zombiescreamUpExists = this.scene.anims.exists('zombiescream-up');
+      diagnosticData.zombiescreamLeftExists = this.scene.anims.exists('zombiescream-left');
+      diagnosticData.zombiescreamRightExists = this.scene.anims.exists('zombiescream-right');
+    }
+    
+    console.log(`🎭 🔍 ${this.owner.entityType} diagnostic animations:`, diagnosticData);
+
+    // S'assurer que les animations existent pour cette entité
+    if (this.owner.animationBehavior.ensureAnimationsExist) {
+      this.owner.animationBehavior.ensureAnimationsExist();
     }
 
     // Sauvegarder l'animation actuelle pour y revenir plus tard
@@ -48,26 +78,46 @@ export class ShoutBehavior {
       
     // Arrêter le mouvement pendant le cri
     if (this.owner.movementController) {
-      this.owner.movementController.stopMovement();
+      // Utiliser la bonne méthode selon le type d'entité
+      if (this.owner.movementController.stopMovement) {
+        this.owner.movementController.stopMovement(); // Player
+      } else if (this.owner.movementController.stop) {
+        this.owner.movementController.stop(); // NPC
+      }
     }
     
     // Déterminer la direction du cri basée sur la direction actuelle
-    // IMPORTANT: les clés d'animations créées sont `zombiescream-<facing>`
-    // où <facing> ∈ {up, up-right, right, down-right, down, down-left, left, up-left}
     const facing = this.owner.animationBehavior.facing || 'down';
-    const screamAnimation = `zombiescream-${facing}`;
-    console.log(`🧟 Scream → facing=${facing}, animationKey=${screamAnimation}`);
+    
+    // 🎯 DIFFÉRENCIATION: Animation selon le type d'entité
+    let screamAnimation, fallbackKey, animationType;
+    
+    if (this.owner.entityType === 'npc') {
+      // 🙌 NPCs utilisent cheerwithbothhandsup (célébration)
+      screamAnimation = `cheerwithbothhandsup-${facing}`;
+      fallbackKey = 'cheerwithbothhandsup-down';
+      animationType = 'cheer';
+    } else {
+      // 🧟 Player garde zombiescream (cri effrayant)
+      screamAnimation = `zombiescream-${facing}`;
+      fallbackKey = 'zombiescream-down';
+      animationType = 'scream';
+    }
+    
+    console.log(`🎭 ${this.owner.entityType} ${animationType} → facing=${facing}, animationKey=${screamAnimation}`);
       
-    // Jouer l'animation zombiescream
+    // Jouer l'animation appropriée
     if (this.scene.anims.exists(screamAnimation)) {
-      console.log(`🧟 ${this.owner.entityType} commence à crier ! Animation: ${screamAnimation}`);
+      console.log(`🎭 ✅ ${this.owner.entityType} commence à ${animationType} ! Animation: ${screamAnimation}`);
       this.owner.sprite.play(screamAnimation);
     } else {
-      console.warn(`⚠️ Animation de cri non trouvée: ${screamAnimation}`);
+      console.warn(`🎭 ⚠️ ${this.owner.entityType} Animation ${animationType} non trouvée: ${screamAnimation}`);
       // Fallback cohérent sur une direction sûre
-      const fallbackKey = 'zombiescream-down';
       if (this.scene.anims.exists(fallbackKey)) {
+        console.log(`🎭 🔄 ${this.owner.entityType} Fallback vers: ${fallbackKey}`);
         this.owner.sprite.play(fallbackKey);
+      } else {
+        console.error(`🎭 💀 ${this.owner.entityType} AUCUNE animation ${animationType} disponible !`);
       }
     }
     
@@ -89,6 +139,12 @@ export class ShoutBehavior {
     
     this.isScreaming = false;
     this.screamStartTime = 0;
+    
+    // 🎯 NOUVEAU: Reprendre le mouvement pour les NPCs après le cri
+    if (this.owner.movementController && this.owner.entityType === 'npc') {
+      // Les NPCs reprennent automatiquement leur logique de mouvement normale
+      // (following, migrating, etc.) via leur update cycle
+    }
     
     // Reprendre le comportement d'animation normal
     if (this.owner.animationBehavior) {

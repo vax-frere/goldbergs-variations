@@ -114,13 +114,13 @@ export class CharacterAnimationBehavior {
    */
   ensureAnimationsExist() {
     // Vérifier si les animations existent déjà (créées par une autre entité)
-    // Aligner la vérification sur les clés réellement créées: `walk-<direction>` et `zombiescream-<direction>`
     const walkAnimationsExist = this.scene.anims.exists('walk-down');
     const zombiescreamAnimationsExist = this.scene.anims.exists('zombiescream-down');
+    const cheerAnimationsExist = this.scene.anims.exists('cheerwithbothhandsup-down');
     const headHoldInPainAnimationsExist = this.scene.anims.exists('headholdinpain-down');
     const runAnimationsExist = this.scene.anims.exists('running-down');
 
-    if (!walkAnimationsExist || !zombiescreamAnimationsExist || !headHoldInPainAnimationsExist || !runAnimationsExist) {
+    if (!walkAnimationsExist || !zombiescreamAnimationsExist || !cheerAnimationsExist || !headHoldInPainAnimationsExist || !runAnimationsExist) {
       this.createAnimations();
     }
   }
@@ -138,8 +138,9 @@ export class CharacterAnimationBehavior {
     // 🛠️ SÉCURITÉ : Vérifier si les animations existent déjà avant de créer
     const walkExists = this.scene.anims.exists(`${this.config.walkAnimation}-front`);
     const zombiescreamExists = this.scene.anims.exists('zombiescream-front');
+    const cheerExists = this.scene.anims.exists('cheerwithbothhandsup-front');
     const runExists = this.scene.anims.exists(`${this.config.runAnimation}-front`);
-    if (walkExists && zombiescreamExists && runExists) {
+    if (walkExists && zombiescreamExists && cheerExists && runExists) {
       return; // Les animations existent déjà, ne pas les recréer
     }
 
@@ -237,6 +238,28 @@ export class CharacterAnimationBehavior {
         }
       }
 
+      // 🎨 Animation CHEERWITHBOTHHANDSUP (célébration NPCs)
+      const cheerAnimData = this.spritesheetMetadata.animations['cheerwithbothhandsup'];
+      if (cheerAnimData) {
+        const cheerFrames = cheerAnimData.frameData[spritesheetDirection];
+        if (cheerFrames && cheerFrames.frames.length > 0) {
+          this.scene.anims.create({
+            key: `cheerwithbothhandsup-${direction}`,
+            frames: cheerFrames.frames.map(frameData => ({
+              key: this.config.spriteKey,
+              frame: this.calculateFrameIndex(frameData.x, frameData.y)
+            })),
+            frameRate: 12, // Vitesse modérée pour la célébration
+            repeat: 0 // Ne pas répéter
+          });
+          console.log(`✅ Animation cheerwithbothhandsup-${direction} créée avec ${cheerFrames.frames.length} frames`);
+        } else {
+          console.warn(`⚠️ Pas de frames cheerwithbothhandsup pour ${spritesheetDirection}`);
+        }
+      } else {
+        console.warn(`⚠️ Données cheerwithbothhandsup non trouvées dans les métadonnées`);
+      }
+
       // 🎨 Animation RUNNING utilisant les métadonnées
       const runAnimData = this.spritesheetMetadata.animations[this.config.runAnimation];
       if (runAnimData) {
@@ -255,7 +278,7 @@ export class CharacterAnimationBehavior {
       }
     });
 
-    console.log('✅ Animations multi-animations créées avec succès (idle, walk, zombiescream)');
+    console.log('✅ Animations multi-animations créées avec succès (idle, walk, zombiescream, cheerwithbothhandsup)');
   }
 
   /**
@@ -316,9 +339,23 @@ export class CharacterAnimationBehavior {
         frameRate: 24, // 3x plus rapide
         repeat: 0 // Ne pas répéter
       });
+
+      // Animations cheerwithbothhandsup (estimation pour le fallback)
+      const cheerStartFrame = (index + 3) * 23; // Estimation basée sur la structure après zombiescream
+      const cheerEndFrame = cheerStartFrame + 22; // 23 frames pour cheerwithbothhandsup
+      
+      this.scene.anims.create({
+        key: `cheerwithbothhandsup-${direction}`,
+        frames: this.scene.anims.generateFrameNumbers(this.config.spriteKey, { 
+          start: cheerStartFrame, 
+          end: cheerEndFrame 
+        }),
+        frameRate: 12, // Vitesse modérée pour la célébration
+        repeat: 0 // Ne pas répéter
+      });
     });
 
-    console.log('✅ Animations fallback créées (idle, walk, zombiescream)');
+    console.log('✅ Animations fallback créées (idle, walk, zombiescream, cheerwithbothhandsup)');
   }
 
   /**

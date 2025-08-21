@@ -26,7 +26,16 @@ export class SoundManager {
     
     this.sounds.set('footsteps', footstepSounds);
     
-    // Créer le son de cri
+    // Créer les sons de cri d'enfants (child-shout)
+    const childShoutSounds = [];
+    for (let i = 1; i <= 4; i++) {
+      const sound = this.scene.sound.add(`child-shout-${i}`, { volume: 0.1 });
+      childShoutSounds.push(sound);
+    }
+    
+    this.sounds.set('childShouts', childShoutSounds);
+    
+    // Créer le son de cri (legacy)
     const crySound = this.scene.sound.add('cry', { volume: 0.1 });
     this.sounds.set('cry', crySound);
     
@@ -58,6 +67,48 @@ export class SoundManager {
       return footstep;
     }
     return null;
+  }
+
+  getRandomChildShout() {
+    const childShouts = this.sounds.get('childShouts');
+    if (!childShouts || childShouts.length === 0) return null;
+    
+    const randomIndex = Math.floor(Math.random() * childShouts.length);
+    return childShouts[randomIndex];
+  }
+
+  playRandomChildShout() {
+    const childShout = this.getRandomChildShout();
+    if (childShout) {
+      childShout.play();
+      console.log(`🔊 Child shout joué aléatoirement`);
+      return childShout;
+    }
+    return null;
+  }
+
+  /**
+   * Jouer plusieurs child-shout pour les followers avec délais progressifs
+   * @param {number} count - Nombre de sons à jouer (max 4-5)
+   */
+  playMultipleChildShouts(count) {
+    const maxShouts = Math.min(count, 5); // Limiter à 5 maximum
+    const playedSounds = [];
+    
+    for (let i = 0; i < maxShouts; i++) {
+      const delay = i * 100; // 100ms entre chaque son
+      
+      setTimeout(() => {
+        const childShout = this.getRandomChildShout();
+        if (childShout) {
+          childShout.play();
+          playedSounds.push(childShout);
+        }
+      }, delay);
+    }
+    
+    console.log(`🔊 ${maxShouts} child-shout joués avec délais progressifs`);
+    return playedSounds;
   }
 
   playCry() {

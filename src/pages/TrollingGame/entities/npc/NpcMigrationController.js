@@ -57,6 +57,12 @@ export class NpcMigrationController {
   updateMigration(movementController, stateController, delta) {
     if (!this.targetPosition || !this.npc.sprite) return;
     
+    // 🎯 PRIORITÉ ABSOLUE: Si le NPC est en train de crier, il ne peut pas bouger
+    if (this.npc.shoutBehavior && this.npc.shoutBehavior.isScreaming) {
+      movementController.setVelocity({ x: 0, y: 0 });
+      return;
+    }
+    
     const currentX = this.npc.sprite.x;
     const currentY = this.npc.sprite.y;
     const targetX = this.targetPosition.x;
@@ -91,6 +97,12 @@ export class NpcMigrationController {
    */
   updateOrganismMigration(movementController, stateController, delta) {
     if (!this.targetPosition || !this.npc.sprite || !this.organicVelocity) return;
+    
+    // 🎯 PRIORITÉ ABSOLUE: Si le NPC est en train de crier, il ne peut pas bouger
+    if (this.npc.shoutBehavior && this.npc.shoutBehavior.isScreaming) {
+      movementController.setVelocity({ x: 0, y: 0 });
+      return;
+    }
     
     const currentX = this.npc.sprite.x;
     const currentY = this.npc.sprite.y;

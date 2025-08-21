@@ -272,6 +272,11 @@ export class NpcBehaviorController {
    */
   calculateVelocity(delta) {
     if (!this.entity || !this.entity.sprite) return { x: 0, y: 0 };
+    
+    // 🎯 PRIORITÉ ABSOLUE: Si le NPC est en train de crier, il ne peut pas bouger
+    if (this.entity.shoutBehavior && this.entity.shoutBehavior.isScreaming) {
+      return { x: 0, y: 0 };
+    }
 
     // LAYER 1: Mouvement principal (priorité absolue)
     const primaryMovement = this.calculatePrimaryMovement(delta);

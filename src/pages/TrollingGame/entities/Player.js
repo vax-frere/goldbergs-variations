@@ -107,14 +107,19 @@ export class Player extends BaseEntity {
       return; // Cri désactivé
     }
     
+    // 🎯 NOUVEAU: Empêcher de crier si déjà en train de crier (animation en cours)
+    if (this.shoutBehavior && this.shoutBehavior.isScreaming) {
+      return; // Animation de cri en cours
+    }
+    
     this.lastShoutTime = currentTime;
     
     // 🎯 ÉTAPE 1: Mettre à jour la force et le rayon basés sur les followers
     this.updateShoutPower();
     
-    // 🎯 ÉTAPE 2: Jouer son via le SoundManager
+    // 🎯 ÉTAPE 2: Jouer son aléatoire child-shout via le SoundManager
     if (this.scene.soundManager) {
-      this.scene.soundManager.playCry();
+      this.scene.soundManager.playRandomChildShout();
     }
     
     // 🎯 ÉTAPE 3: Créer onomatopée orientée selon direction du joueur
@@ -156,20 +161,41 @@ export class Player extends BaseEntity {
   }
 
   /**
-   * 🎯 RESTAURÉ: Faire crier les followers
+   * 🎯 RESTAURÉ: Faire crier les followers avec sons child-shout et animations (20% seulement)
    */
   makeFollowersShout() {
     const followers = this.followerManager.getFollowers();
+    const followerCount = followers.length;
     
-    followers.forEach((follower, index) => {
-      if (follower && follower.shoutBehavior) {
-        // Délai progressif pour les followers (effet de vague)
-        const delay = index * 100; // 100ms entre chaque follower
+    if (followerCount === 0) return;
+    
+    // 🎯 NOUVEAU: Sélectionner seulement 20% des followers pour crier
+    const shoutersCount = Math.max(1, Math.floor(followerCount * 0.2)); // Au moins 1 si il y a des followers
+    
+    // Sélectionner aléatoirement les followers qui vont crier
+    const shuffledFollowers = [...followers].sort(() => Math.random() - 0.5);
+    const shoutersArray = shuffledFollowers.slice(0, shoutersCount);
+    
+    console.log(`📢 ${shoutersCount}/${followerCount} followers vont crier (20%)`);
+    
+    // Jouer les sons child-shout pour les followers qui crient via le SoundManager
+    if (shoutersCount > 0 && this.scene.soundManager) {
+      this.scene.soundManager.playMultipleChildShouts(shoutersCount);
+    }
+    
+    // Faire crier les NPCs followers sélectionnés (animation zombiescream + arrêt de mouvement)
+    shoutersArray.forEach((follower, index) => {
+      if (follower && follower.shout) {
+        // Délai progressif pour les followers (effet de vague rapide)
+        const baseDelay = index * 25; // 3ms entre chaque follower qui crie
+        
+        // 🎯 NOUVEAU: Ajouter un décalage aléatoire de 0-100ms pour plus de naturel
+        const randomOffset = Math.random() * 300; // 0-100ms aléatoire
+        const totalDelay = baseDelay + randomOffset;
+        
         setTimeout(() => {
-          if (follower.shoutBehavior.shout) {
-            follower.shoutBehavior.shout();
-          }
-        }, delay);
+          follower.shout(); // Appel direct de la méthode shout() du NPC (inclut l'arrêt automatique)
+        }, totalDelay);
       }
     });
   }

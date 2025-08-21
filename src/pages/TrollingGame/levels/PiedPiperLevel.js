@@ -5,6 +5,7 @@ import { NpcSpawner } from '../systems/NpcSpawner';
 import { IntroSequence } from '../systems/IntroSequence';
 import { OutroSequence } from '../systems/OutroSequence';
 import { TutorialTextManager } from '../systems/TutorialTextManager';
+import { GroupFleeingSystem } from '../systems/GroupFleeingSystem';
 import { PlayerStates } from '../core/PlayerState';
 
 /**
@@ -38,6 +39,7 @@ export class PiedPiperLevel extends ILevel {
     this.introSequence = null;
     this.outroSequence = null;
     this.tutorialTextManager = null;
+    this.groupFleeingSystem = null; // 🎯 Système spécifique au niveau Piper
     
     // 🎵 CONFIGURATION PIED PIPER
     this.levelConfig = {
@@ -66,6 +68,7 @@ export class PiedPiperLevel extends ILevel {
     // Phase 3 : Systèmes
     this.createTutorialTextManager();
     this.createNpcSpawner();
+    this.createGroupFleeingSystem(); // 🎯 Système spécifique au niveau Piper
     
     // 🎯 SOLID: Écouter les events pour gérer l'activation des contrôles
     this.setupLevelEventListeners();
@@ -105,30 +108,31 @@ export class PiedPiperLevel extends ILevel {
     const gameWidth = this.scene.scale.width;
     const gameHeight = this.scene.scale.height;
 
-    // Murs du haut (invisibles) - juste au-dessus de l'écran
+    // Murs du haut (invisibles) - baissé d'une taille de NPC
     for (let x = 0; x < gameWidth; x += wallSize) {
-      const wall = new Wall(this.scene, x, -wallThickness, true); // 🎯 CORRIGÉ : Positionné pour que le bas du mur touche le haut de l'écran
+      const npcHeight = 64; // Taille approximative d'un NPC
+      const wall = new Wall(this.scene, x, -wallThickness + npcHeight, true); // 🎯 BAISSÉ : Position ajustée d'une taille de NPC
       this.walls.push(wall);
       this.entityManager.addEntity(wall, 'wall');
     }
 
-    // Murs du bas (invisibles) - juste en-dessous de l'écran  
+    // Murs du bas (invisibles) - rapprochés de 10px de l'écran  
     for (let x = 0; x < gameWidth; x += wallSize) {
-      const wall = new Wall(this.scene, x, gameHeight, true); // 🎯 CORRIGÉ : Positionné pour que le haut du mur touche le bas de l'écran
+      const wall = new Wall(this.scene, x, gameHeight - 10, true); // 🎯 RAPPROCHÉ : 10px plus près de l'écran
       this.walls.push(wall);
       this.entityManager.addEntity(wall, 'wall');
     }
 
-    // Murs de gauche (invisibles) - juste à gauche de l'écran
+    // Murs de gauche (invisibles) - rapprochés de 10px de l'écran
     for (let y = wallSize; y < gameHeight - wallSize; y += wallSize) {
-      const wall = new Wall(this.scene, -wallThickness, y, true); // 🎯 CORRIGÉ : Positionné pour que la droite du mur touche la gauche de l'écran
+      const wall = new Wall(this.scene, -wallThickness + 10, y, true); // 🎯 RAPPROCHÉ : 10px plus près de l'écran
       this.walls.push(wall);
       this.entityManager.addEntity(wall, 'wall');
     }
 
-    // Murs de droite (invisibles) - juste à droite de l'écran
+    // Murs de droite (invisibles) - rapprochés de 10px de l'écran
     for (let y = wallSize; y < gameHeight - wallSize; y += wallSize) {
-      const wall = new Wall(this.scene, gameWidth, y, true); // 🎯 CORRIGÉ : Positionné pour que la gauche du mur touche la droite de l'écran
+      const wall = new Wall(this.scene, gameWidth - 10, y, true); // 🎯 RAPPROCHÉ : 10px plus près de l'écran
       this.walls.push(wall);
       this.entityManager.addEntity(wall, 'wall');
     }
@@ -234,7 +238,27 @@ export class PiedPiperLevel extends ILevel {
       this.onTutorialFinished();
     });
     
+    // 🎯 PIPER-SPECIFIC: Contrôles de debug pour le GroupFleeingSystem
+    this.setupGroupFleeingDebugControls();
+    
     console.log('🎯 Event listeners configurés pour Pied Piper');
+  }
+
+  /**
+   * 🎯 PIPER-SPECIFIC: Configurer les contrôles de debug pour le GroupFleeingSystem
+   */
+  setupGroupFleeingDebugControls() {
+    // Ajouter les touches de debug spécifiques au niveau Piper
+    this.groupFleeKey = this.scene.input.keyboard.addKey('G'); // Stats
+    this.forceFleeKey = this.scene.input.keyboard.addKey('F'); // Forcer fuite
+    this.stopFleeKey = this.scene.input.keyboard.addKey('H');  // Arrêter fuite
+    
+    // États des touches
+    this.groupFleeKeyPressed = false;
+    this.forceFleeKeyPressed = false;
+    this.stopFleeKeyPressed = false;
+    
+    console.log('👥 Contrôles debug GroupFleeingSystem configurés (G/F/H) pour le niveau Piper');
   }
   
   /**
@@ -320,6 +344,23 @@ export class PiedPiperLevel extends ILevel {
   createNpcSpawner() {
     // Créer le système de spawn des NPCs
     this.npcSpawner = new NpcSpawner(this.scene, this.entityManager, this.collisionSystem);
+  }
+
+  /**
+   * 🎯 PIPER-SPECIFIC: Créer le système de fuite de groupe (exclusif au niveau Piper)
+   */
+  createGroupFleeingSystem() {
+    this.groupFleeingSystem = new GroupFleeingSystem(this.scene, this.entityManager);
+    
+    // Configuration spécifique au niveau Piper pour fuite constante
+    this.groupFleeingSystem.updateConfig({
+      triggerThreshold: 8,    // Quand ≤ 8 NPCs non-followers
+      checkInterval: 200,     // Vérifier plus souvent (200ms) pour maintenir la fuite constante
+      fleeRange: 300,         // Distance de fuite étendue
+      minNpcsForFlee: 1       // Au moins 1 NPC pour déclencher
+    });
+    
+    console.log('👥 GroupFleeingSystem créé spécifiquement pour le niveau Pied Piper');
   }
 
   spawnNpcs() {
@@ -494,6 +535,61 @@ export class PiedPiperLevel extends ILevel {
     if (this.npcSpawner) {
       this.npcSpawner.update(delta);
     }
+    
+    // 🎯 PIPER-SPECIFIC: Mise à jour du système de fuite de groupe
+    if (this.groupFleeingSystem) {
+      this.groupFleeingSystem.update(time, delta);
+    }
+    
+    // 🎯 PIPER-SPECIFIC: Gérer les contrôles de debug du GroupFleeingSystem
+    this.handleGroupFleeingDebugInput();
+  }
+
+  /**
+   * 🎯 PIPER-SPECIFIC: Gérer les contrôles de debug du GroupFleeingSystem
+   */
+  handleGroupFleeingDebugInput() {
+    if (!this.groupFleeKey || !this.forceFleeKey || !this.stopFleeKey) return;
+
+    // Afficher les stats avec G
+    if (this.groupFleeKey.isDown && !this.groupFleeKeyPressed) {
+      this.groupFleeKeyPressed = true;
+      
+      if (this.groupFleeingSystem) {
+        const stats = this.groupFleeingSystem.getSystemStats();
+        console.log('👥 [PIPER] Group Fleeing System Stats:', stats);
+        console.log(`👥 [PIPER] Status: ${stats.isActive ? 'ACTIF' : 'INACTIF'} | NPCs non-followers: ${stats.nonFollowerNpcs}/${stats.totalNpcs} | Seuil: ${stats.threshold}`);
+      }
+    }
+    if (!this.groupFleeKey.isDown) {
+      this.groupFleeKeyPressed = false;
+    }
+
+    // Forcer la fuite avec F
+    if (this.forceFleeKey.isDown && !this.forceFleeKeyPressed) {
+      this.forceFleeKeyPressed = true;
+      
+      if (this.groupFleeingSystem) {
+        this.groupFleeingSystem.forceGroupFleeing();
+        console.log('👥 [PIPER] 🧪 Fuite de groupe forcée ! (Touche F)');
+      }
+    }
+    if (!this.forceFleeKey.isDown) {
+      this.forceFleeKeyPressed = false;
+    }
+
+    // Arrêter la fuite avec H
+    if (this.stopFleeKey.isDown && !this.stopFleeKeyPressed) {
+      this.stopFleeKeyPressed = true;
+      
+      if (this.groupFleeingSystem) {
+        this.groupFleeingSystem.forceStopGroupFleeing();
+        console.log('👥 [PIPER] 🛑 Fuite de groupe arrêtée ! (Touche H)');
+      }
+    }
+    if (!this.stopFleeKey.isDown) {
+      this.stopFleeKeyPressed = false;
+    }
   }
 
   cleanup() {
@@ -515,6 +611,12 @@ export class PiedPiperLevel extends ILevel {
     if (this.tutorialTextManager) {
       this.tutorialTextManager.destroy();
       this.tutorialTextManager = null;
+    }
+    
+    // 🎯 PIPER-SPECIFIC: Nettoyer le système de fuite de groupe
+    if (this.groupFleeingSystem) {
+      this.groupFleeingSystem.destroy();
+      this.groupFleeingSystem = null;
     }
     
     // Nettoyer le système de NPCs

@@ -136,9 +136,15 @@ ensureCaveatFont() {
     for (let i = 1; i <= 11; i++) {
       this.load.audio(`foot-${i}`, `sounds/trolling-game/foot-${i}.mp3`);
     }
+
+    // Charger les sons de pas
+    for (let i = 1; i <= 4; i++) {
+      this.load.audio(`child-shout-${i}`, `sounds/trolling-game/child-shout-${i}.mp3`);
+    }
+    
     
     // Charger le son de cri
-    this.load.audio('cry', 'sounds/trolling-game/shout-7.mp3');
+    this.load.audio('cry', 'sounds/trolling-game/cry.mp3');
     
     // Charger le son de touch (NPC commence à suivre)
     this.load.audio('touch', 'sounds/trolling-game/touch.mp3');
