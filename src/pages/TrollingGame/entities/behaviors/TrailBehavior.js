@@ -1,5 +1,6 @@
 /**
- * Système réutilisable pour gérer le trail (traînée) derrière une entité
+ * Système réutilisable pour gérer le trail avec contraintes physiques
+ * Chaque point est lié au précédent par une distance fixe (système de chaîne organique)
  * Peut être utilisé par le Player et potentiellement d'autres entités
  * Respecte les principes SOLID et l'architecture du jeu
  */
@@ -10,22 +11,29 @@ export class TrailBehavior {
     
     // Configuration par défaut, peut être surchargée
     this.config = {
-      maxPoints: config.maxPoints || 50, // Nombre maximum de points dans le trail
-      minDistanceToAdd: config.minDistanceToAdd || 5, // Distance minimum pour ajouter un nouveau point
+      // 🎯 SYSTÈME DE CONTRAINTES PHYSIQUES
+      chainLength: config.chainLength || 15, // Nombre fixe de points dans la chaîne (plus court = plus réactif)
+      linkDistance: config.linkDistance || 30, // Distance fixe entre chaque point (plus grand = plus fluide)
+      constraintStrength: config.constraintStrength || 0.85, // Force des contraintes (0-1, plus élevé = plus rigide)
+      damping: config.damping || 0.92, // Amortissement des mouvements (plus bas = plus d'inertie)
+      
+      // Configuration visuelle (conservée)
       lineWidth: config.lineWidth || 2, // Épaisseur de la ligne
       lineColor: config.lineColor || 0x00ff00, // Couleur de la ligne (vert par défaut)
       alpha: config.alpha || 0.7, // Transparence de la ligne
-      fadeEnabled: config.fadeEnabled !== false, // Active le fade progressif
       debugOnly: config.debugOnly !== false, // Visible seulement en mode debug
+      
+      // Paramètres legacy conservés pour compatibilité
+      maxPoints: config.chainLength || 15, // Alias pour chainLength
       updateThreshold: config.updateThreshold || 1.0, // Seuil de mouvement pour mise à jour
       ...config
     };
     
-    // État interne du trail
-    this.trailPoints = []; // Points {x, y, timestamp} du trail
+    // 🎯 SYSTÈME UNIFIÉ - Les trailPoints sont maintenant des contraintes physiques
+    this.trailPoints = []; // Points avec contraintes physiques {x, y, prevX, prevY, index, velocity}
     this.graphics = null; // Object Phaser Graphics pour dessiner la ligne
-    this.lastPosition = { x: 0, y: 0 }; // Dernière position enregistrée
     this.isVisible = false; // État de visibilité actuel
+    this.isInitialized = false; // Flag pour l'initialisation de la chaîne
     
     // Système de points de suivi pour les followers
     this.followPoints = []; // Points de suivi calculés {x, y, index, occupied}
@@ -38,7 +46,19 @@ export class TrailBehavior {
   }
 
   /**
-   * Initialiser le système de trail
+   * 🎯 COMPATIBILITÉ LEGACY: Alias pour chainPoints
+   * Permet l'accès à trailPoints via l'ancien nom
+   */
+  get chainPoints() {
+    return this.trailPoints;
+  }
+
+  set chainPoints(value) {
+    this.trailPoints = value;
+  }
+
+  /**
+   * Initialiser le système de trail avec contraintes
    */
   init() {
     // Créer l'objet graphique pour dessiner la ligne
@@ -51,44 +71,78 @@ export class TrailBehavior {
     this.followPointsGraphics.setDepth(1001); // Au-dessus du trail
     this.followPointsGraphics.name = 'trail-points-debug'; // 🎯 AJOUT: Nom pour le nettoyage global
     
-    // Position initiale
-    if (this.owner.sprite) {
-      this.lastPosition.x = this.owner.sprite.x;
-      this.lastPosition.y = this.owner.sprite.y;
-    }
+    // 🎯 NOUVEAU: Initialiser la chaîne de contraintes
+    this.initializeChain();
     
     // Visibilité initielle selon le mode debug
     this.updateVisibility();
   }
 
   /**
-   * Mettre à jour le trail
+   * 🎯 CLEAN: Initialiser la chaîne de points avec contraintes (adaptation tutoriel)
+   */
+  initializeChain() {
+    if (!this.owner.sprite) return;
+    
+    const startX = this.owner.sprite.x;
+    const startY = this.owner.sprite.y;
+    
+    this.trailPoints = [];
+    
+    // 🎯 ADAPTATION TUTORIEL: Direction intelligente basée sur la position du joueur
+    let directionX = -1; // Par défaut vers la gauche (classique)
+    let directionY = 0;
+    
+    // Si le joueur est très à gauche (intro sequence), la chaîne doit partir vers la gauche aussi
+    // pour qu'elle puisse suivre naturellement quand il se déplace vers la droite
+    if (startX < 100) {
+      // Joueur en intro - chaîne vers la gauche (direction normale)
+      directionX = -1;
+      directionY = 0;
+      console.log(`🎯 Chaîne configurée pour intro: joueur en X=${startX}, chaîne vers la gauche`);
+    } else {
+      // Joueur normal - détecter la direction du mouvement récent si possible
+      directionX = -1; // Par défaut vers la gauche
+      directionY = 0;
+    }
+    
+    // Créer la chaîne initiale dans la direction calculée
+    for (let i = 0; i < this.config.chainLength; i++) {
+      const distance = (i + 1) * this.config.linkDistance;
+      const point = {
+        x: startX + directionX * distance,
+        y: startY + directionY * distance,
+        prevX: startX + directionX * distance,
+        prevY: startY + directionY * distance,
+        index: i,
+        velocity: { x: 0, y: 0 }, // Vélocité pour l'inertie
+        timestamp: Date.now() // 🎯 COMPATIBILITÉ: Pour l'API legacy
+      };
+      
+      this.trailPoints.push(point);
+    }
+    
+    this.isInitialized = true;
+    console.log(`🔗 Chaîne initialisée: ${this.config.chainLength} points, distance: ${this.config.linkDistance}px, direction: [${directionX}, ${directionY}]`);
+  }
+
+  /**
+   * 🎯 NOUVEAU: Mettre à jour le trail avec contraintes physiques
    * @param {number} delta - Temps écoulé depuis la dernière frame
    */
   update(delta) {
     if (!this.owner.sprite || !this.graphics) return;
     
-    const currentPosition = {
-      x: this.owner.sprite.x,
-      y: this.owner.sprite.y
-    };
-    
-    // Vérifier si l'entité a bougé suffisamment
-    const distanceMoved = this.calculateDistance(this.lastPosition, currentPosition);
-    
-    if (distanceMoved >= this.config.updateThreshold) {
-      // Ajouter un nouveau point si la distance est suffisante
-      if (distanceMoved >= this.config.minDistanceToAdd) {
-        this.addTrailPoint(currentPosition.x, currentPosition.y);
-      }
-      
-      // Mettre à jour la position précédente
-      this.lastPosition.x = currentPosition.x;
-      this.lastPosition.y = currentPosition.y;
+    // Initialiser la chaîne si ce n'est pas encore fait
+    if (!this.isInitialized) {
+      this.initializeChain();
     }
     
-    // Nettoyer les anciens points
-    this.cleanupOldPoints();
+    // 🎯 RÉINITIALISATION INTELLIGENTE: Si la chaîne devient trop désorganisée
+    this.checkAndReinitializeIfNeeded();
+    
+    // Appliquer les contraintes de distance pour maintenir la chaîne
+    this.updateConstraints(delta);
     
     // Mettre à jour les points de suivi pour les followers
     this.updateFollowPoints();
@@ -102,76 +156,184 @@ export class TrailBehavior {
   }
 
   /**
-   * Ajouter un nouveau point au trail
-   * @param {number} x - Coordonnée X
-   * @param {number} y - Coordonnée Y
+   * 🎯 NOUVEAU: Vérifier si la chaîne a besoin d'être réinitialisée
    */
-  addTrailPoint(x, y) {
-    const point = {
-      x: x,
-      y: y,
-      timestamp: Date.now()
+  checkAndReinitializeIfNeeded() {
+    if (this.trailPoints.length === 0) return;
+    
+    const playerPosition = { x: this.owner.sprite.x, y: this.owner.sprite.y };
+    const firstPoint = this.trailPoints[0];
+    
+    // Distance entre le joueur et le premier point de la chaîne
+    const distanceToFirstPoint = this.calculateDistance(playerPosition, firstPoint);
+    
+    // Si le premier point est trop loin du joueur (chaîne cassée), réinitialiser
+    if (distanceToFirstPoint > this.config.linkDistance * 3) {
+      console.log(`🔄 Réinitialisation de la chaîne: premier point trop loin (${distanceToFirstPoint.toFixed(1)}px > ${this.config.linkDistance * 3}px)`);
+      this.initializeChain();
+      return;
+    }
+    
+    // Vérifier la cohérence générale de la chaîne
+    let brokenLinks = 0;
+    for (let i = 1; i < this.trailPoints.length; i++) {
+      const distance = this.calculateDistance(this.trailPoints[i - 1], this.trailPoints[i]);
+      if (Math.abs(distance - this.config.linkDistance) > this.config.linkDistance * 0.5) {
+        brokenLinks++;
+      }
+    }
+    
+    // Si plus de la moitié des liens sont cassés, réinitialiser
+    if (brokenLinks > this.trailPoints.length / 2) {
+      console.log(`🔄 Réinitialisation de la chaîne: trop de liens cassés (${brokenLinks}/${this.trailPoints.length})`);
+      this.initializeChain();
+    }
+  }
+
+  /**
+   * 🎯 CLEAN: Appliquer les contraintes de distance pour chaque point de la chaîne
+   * @param {number} delta - Temps écoulé depuis la dernière frame
+   */
+  updateConstraints(delta) {
+    if (this.trailPoints.length === 0) return;
+    
+    const playerPosition = {
+      x: this.owner.sprite.x,
+      y: this.owner.sprite.y
     };
     
-    this.trailPoints.push(point);
+    // 🎯 ADAPTATION INTRO: Détecter mouvement rapide du joueur pour contraintes plus fortes
+    const playerSpeed = this.owner.movementController ? 
+      Math.sqrt(Math.pow(this.owner.movementController.velocity.x || 0, 2) + 
+               Math.pow(this.owner.movementController.velocity.y || 0, 2)) : 0;
     
-    // Log temporaire pour debug
-    if (this.trailPoints.length <= 5) {
-      console.log(`📍 Point ajouté: (${x.toFixed(1)}, ${y.toFixed(1)}) - Total: ${this.trailPoints.length}`);
-    }
+    const isMovingFast = playerSpeed > 100; // Seuil pour mouvement rapide (intro)
+    const adaptiveStrength = isMovingFast ? 
+      Math.min(this.config.constraintStrength * 1.5, 0.95) : // Plus fort pendant mouvement rapide
+      this.config.constraintStrength; // Normal sinon
     
-    // Limiter le nombre de points
-    if (this.trailPoints.length > this.config.maxPoints) {
-      this.trailPoints.shift(); // Retirer le plus ancien
+    // Appliquer les contraintes pour chaque point de la chaîne
+    for (let i = 0; i < this.trailPoints.length; i++) {
+      const currentPoint = this.trailPoints[i];
+      
+      // Déterminer le point de référence (joueur pour le premier point, point précédent pour les autres)
+      const referencePoint = i === 0 ? playerPosition : this.trailPoints[i - 1];
+      
+      // Calculer la distance actuelle
+      const currentDistance = this.calculateDistance(currentPoint, referencePoint);
+      
+      // Tolérance adaptative : plus stricte pendant mouvement rapide
+      const tolerance = isMovingFast ? 0.5 : 0.1;
+      
+      // Si la distance n'est pas exacte, projeter le point sur la circonférence
+      if (Math.abs(currentDistance - this.config.linkDistance) > tolerance) {
+        // Calculer la direction du point de référence vers le point actuel
+        let directionX = currentPoint.x - referencePoint.x;
+        let directionY = currentPoint.y - referencePoint.y;
+        
+        // Normaliser la direction
+        const length = Math.sqrt(directionX * directionX + directionY * directionY);
+        if (length > 0) {
+          directionX /= length;
+          directionY /= length;
+        } else {
+          // Si les points sont superposés, utiliser la direction opposée au mouvement du joueur
+          if (this.owner.movementController) {
+            const velX = this.owner.movementController.velocity.x || 0;
+            const velY = this.owner.movementController.velocity.y || 0;
+            const velLength = Math.sqrt(velX * velX + velY * velY);
+            
+            if (velLength > 0) {
+              directionX = -velX / velLength; // Direction opposée au mouvement
+              directionY = -velY / velLength;
+            } else {
+              directionX = -1; // Vers la gauche par défaut
+              directionY = 0;
+            }
+          } else {
+            directionX = -1; // Vers la gauche par défaut
+            directionY = 0;
+          }
+        }
+        
+        // 🎯 CONTRAINTE RIGIDE: Projeter sur la circonférence à distance exacte
+        const targetX = referencePoint.x + directionX * this.config.linkDistance;
+        const targetY = referencePoint.y + directionY * this.config.linkDistance;
+        
+        // Appliquer avec amortissement adaptatif
+        currentPoint.x += (targetX - currentPoint.x) * adaptiveStrength;
+        currentPoint.y += (targetY - currentPoint.y) * adaptiveStrength;
+        
+        // Appliquer l'amortissement pour un mouvement fluide et naturel
+        const velocityX = currentPoint.x - currentPoint.prevX;
+        const velocityY = currentPoint.y - currentPoint.prevY;
+        
+        currentPoint.velocity.x = currentPoint.velocity.x * this.config.damping + velocityX * (1 - this.config.damping);
+        currentPoint.velocity.y = currentPoint.velocity.y * this.config.damping + velocityY * (1 - this.config.damping);
+        
+        // Sauvegarder la position précédente pour l'inertie
+        currentPoint.prevX = currentPoint.x;
+        currentPoint.prevY = currentPoint.y;
+      }
     }
   }
 
   /**
-   * Nettoyer les points trop anciens (optionnel)
+   * 🎯 COMPATIBILITÉ LEGACY: addTrailPoint (stub - système de contraintes)
+   * Dans le nouveau système, les points sont gérés automatiquement par les contraintes
+   */
+  addTrailPoint(x, y) {
+    // Cette méthode ne fait rien dans le nouveau système de contraintes
+    // Les points sont automatiquement positionnés par updateConstraints()
+    console.log(`📍 addTrailPoint() appelé mais ignoré (système de contraintes actif)`);
+  }
+
+  /**
+   * 🎯 COMPATIBILITÉ LEGACY: cleanupOldPoints (stub - système de contraintes)
+   * Dans le nouveau système, la chaîne a une longueur fixe
    */
   cleanupOldPoints() {
-    // Pour l'instant, on se base seulement sur maxPoints
-    // Mais on pourrait ajouter un système de temps ici si nécessaire
-    while (this.trailPoints.length > this.config.maxPoints) {
-      this.trailPoints.shift();
-    }
+    // Cette méthode ne fait rien dans le nouveau système de contraintes
+    // La longueur de la chaîne est fixe
   }
 
   /**
-   * Redessiner le trail
+   * 🎯 CLEAN: Redessiner le trail avec la chaîne de contraintes
    */
   redrawTrail() {
-    // Ne pas dessiner si invisible
-    
-    if (!this.graphics || !this.isVisible || this.trailPoints.length < 2) {
+    if (!this.graphics || !this.isVisible || this.trailPoints.length < 1) {
       if (this.graphics) {
         this.graphics.clear();
-        // 🎯 CORRECTION: Seulement forcer setVisible(false) si vraiment invisible
         if (!this.isVisible) {
           this.graphics.setVisible(false);
-          // console.log(`🧹 Graphics cleared et setVisible(false) forcé car invisible`);
-        } else {
-          console.log(`🧹 Graphics cleared mais pas assez de points (${this.trailPoints.length})`);
         }
       }
       return;
     }
     
-    // Log temporaire pour debug
-    if (this.trailPoints.length === 2) {
-      console.log(`🎨 Premier dessin du trail: ${this.trailPoints.length} points, visible: ${this.isVisible}`);
-    }
-    
     this.graphics.clear();
-    // 🎯 COULEUR UNIFORME: Appliquer le style une seule fois pour tout le trail
+    // 🎯 STYLE UNIFORME: Appliquer le style une seule fois pour toute la chaîne
     this.graphics.lineStyle(this.config.lineWidth, this.config.lineColor, this.config.alpha);
     
-    // Dessiner la ligne en reliant tous les points avec une couleur uniforme
+    // Dessiner la chaîne depuis le joueur jusqu'au dernier point
+    const playerPosition = {
+      x: this.owner.sprite.x,
+      y: this.owner.sprite.y
+    };
+    
+    // Première liaison : Joueur → Premier point de la chaîne
+    if (this.trailPoints.length > 0) {
+      this.graphics.beginPath();
+      this.graphics.moveTo(playerPosition.x, playerPosition.y);
+      this.graphics.lineTo(this.trailPoints[0].x, this.trailPoints[0].y);
+      this.graphics.strokePath();
+    }
+    
+    // Liaisons suivantes : Point i → Point i+1
     for (let i = 0; i < this.trailPoints.length - 1; i++) {
       const point1 = this.trailPoints[i];
       const point2 = this.trailPoints[i + 1];
       
-      // Dessiner le segment sans changer le style
       this.graphics.beginPath();
       this.graphics.moveTo(point1.x, point1.y);
       this.graphics.lineTo(point2.x, point2.y);
@@ -244,10 +406,10 @@ export class TrailBehavior {
   }
 
   /**
-   * Mettre à jour les points de suivi pour les followers
+   * 🎯 CLEAN: Mettre à jour les points de suivi pour les followers (basé sur la chaîne)
    */
   updateFollowPoints() {
-    if (this.trailPoints.length < 2) {
+    if (this.trailPoints.length < 1) {
       this.followPoints = [];
       return;
     }
@@ -261,10 +423,14 @@ export class TrailBehavior {
     let currentDistance = 0;
     let pointIndex = 0;
 
-    // Parcourir le trail à rebours (du plus récent au plus ancien)
-    for (let i = this.trailPoints.length - 1; i > 0; i--) {
-      const point1 = this.trailPoints[i];
-      const point2 = this.trailPoints[i - 1];
+    // 🎯 UTILISER LA CHAÎNE: Parcourir les points de la chaîne pour créer les points de suivi
+    const playerPosition = { x: this.owner.sprite.x, y: this.owner.sprite.y };
+    const allTrailPoints = [playerPosition, ...this.trailPoints]; // Inclure le joueur comme premier point
+    
+    // Parcourir la chaîne du joueur vers la fin
+    for (let i = 0; i < allTrailPoints.length - 1; i++) {
+      const point1 = allTrailPoints[i];
+      const point2 = allTrailPoints[i + 1];
       
       const segmentDistance = this.calculateDistance(point1, point2);
       
@@ -396,7 +562,7 @@ export class TrailBehavior {
   }
 
   /**
-   * Obtenir une copie des points du trail pour usage externe
+   * 🎯 CLEAN: Obtenir une copie des points de la chaîne pour usage externe
    * Respecte le principe SOLID - Open/Closed
    */
   getTrailPoints() {
@@ -404,7 +570,7 @@ export class TrailBehavior {
   }
 
   /**
-   * Obtenir le dernier point du trail
+   * 🎯 CLEAN: Obtenir le dernier point de la chaîne
    */
   getLastPoint() {
     return this.trailPoints.length > 0 ? 
@@ -412,12 +578,20 @@ export class TrailBehavior {
   }
 
   /**
-   * Obtenir la longueur totale du trail
+   * 🎯 CLEAN: Obtenir la longueur totale de la chaîne
    */
   getTrailLength() {
-    if (this.trailPoints.length < 2) return 0;
+    if (this.trailPoints.length < 1) return 0;
     
+    // Inclure la distance du joueur au premier point
     let totalLength = 0;
+    const playerPosition = { x: this.owner.sprite?.x || 0, y: this.owner.sprite?.y || 0 };
+    
+    if (this.trailPoints.length > 0) {
+      totalLength += this.calculateDistance(playerPosition, this.trailPoints[0]);
+    }
+    
+    // Ajouter les distances entre les points de la chaîne
     for (let i = 0; i < this.trailPoints.length - 1; i++) {
       totalLength += this.calculateDistance(this.trailPoints[i], this.trailPoints[i + 1]);
     }
@@ -426,10 +600,11 @@ export class TrailBehavior {
   }
 
   /**
-   * Effacer le trail actuel
+   * 🎯 CLEAN: Effacer la chaîne actuelle
    */
   clearTrail() {
     this.trailPoints = [];
+    this.isInitialized = false;
     if (this.graphics) {
       this.graphics.clear();
     }
@@ -446,7 +621,7 @@ export class TrailBehavior {
   }
 
   /**
-   * Nettoyer le système de trail
+   * 🎯 CLEAN: Nettoyer le système de chaîne
    */
   destroy() {
     if (this.graphics) {
@@ -463,56 +638,74 @@ export class TrailBehavior {
     this.followPoints = [];
     this.owner = null;
     this.scene = null;
+    this.isInitialized = false;
   }
 
   /**
-   * Vérifier si le trail est actif
+   * 🎯 CLEAN: Vérifier si la chaîne est active
    */
   isActive() {
     return this.trailPoints.length > 0;
   }
 
   /**
-   * Obtenir des statistiques sur le trail
+   * 🎯 CLEAN: Obtenir des statistiques sur la chaîne
    */
   getStats() {
     return {
       pointCount: this.trailPoints.length,
       totalLength: this.getTrailLength(),
       isVisible: this.isVisible,
-      lastUpdate: this.trailPoints.length > 0 ? 
-        this.trailPoints[this.trailPoints.length - 1].timestamp : null
+      isInitialized: this.isInitialized,
+      linkDistance: this.config.linkDistance,
+      constraintStrength: this.config.constraintStrength
     };
   }
 
   /**
-   * Forcer la création de points de suivi supplémentaires si pas assez de trail naturel
+   * 🎯 CLEAN: Forcer la création de points de chaîne supplémentaires si nécessaire
    * @param {number} minPointsRequired - Nombre minimum de points requis
    */
   forceMoreTrailPoints(minPointsRequired) {
-    const currentPoints = this.followPoints.length;
-    const pointsToAdd = minPointsRequired - currentPoints;
+    const currentFollowPoints = this.followPoints.length;
+    const pointsToAdd = minPointsRequired - currentFollowPoints;
     
     if (pointsToAdd <= 0) {
       return;
     }
     
-    // Si on a au moins un point de trail existant, en créer d'autres derrière
-    if (this.trailPoints.length > 0) {
-      const lastTrailPoint = this.trailPoints[this.trailPoints.length - 1];
-      let baseX = lastTrailPoint.x;
-      let baseY = lastTrailPoint.y;
+    // 🎯 STRATÉGIE: Étendre la chaîne pour avoir plus de points de suivi
+    const currentChainLength = this.trailPoints.length;
+    const neededChainPoints = Math.ceil(minPointsRequired * this.followPointDistance / this.config.linkDistance);
+    
+    if (neededChainPoints > currentChainLength) {
+      // Étendre la chaîne
+      const pointsToAddToChain = neededChainPoints - currentChainLength;
       
-      // Calculer une direction "vers l'arrière" basée sur les derniers points du trail
-      let directionX = 0;
-      let directionY = 1; // Par défaut vers le bas
+      // Calculer la direction de la chaîne actuelle
+      let directionX = -1; // Par défaut vers la gauche
+      let directionY = 0;
       
       if (this.trailPoints.length >= 2) {
-        const prevPoint = this.trailPoints[this.trailPoints.length - 2];
-        directionX = lastTrailPoint.x - prevPoint.x;
-        directionY = lastTrailPoint.y - prevPoint.y;
+        const lastPoint = this.trailPoints[this.trailPoints.length - 1];
+        const beforeLastPoint = this.trailPoints[this.trailPoints.length - 2];
+        directionX = lastPoint.x - beforeLastPoint.x;
+        directionY = lastPoint.y - beforeLastPoint.y;
         
-        // Normaliser la direction
+        // Normaliser
+        const length = Math.sqrt(directionX * directionX + directionY * directionY);
+        if (length > 0) {
+          directionX /= length;
+          directionY /= length;
+        }
+      } else if (this.trailPoints.length === 1) {
+        const playerX = this.owner.sprite?.x || 0;
+        const playerY = this.owner.sprite?.y || 0;
+        const firstPoint = this.trailPoints[0];
+        directionX = firstPoint.x - playerX;
+        directionY = firstPoint.y - playerY;
+        
+        // Normaliser
         const length = Math.sqrt(directionX * directionX + directionY * directionY);
         if (length > 0) {
           directionX /= length;
@@ -520,41 +713,28 @@ export class TrailBehavior {
         }
       }
       
-      // Créer les points manquants le long de cette direction
-      for (let i = 0; i < pointsToAdd; i++) {
-        const pointIndex = currentPoints + i;
-        const distance = this.followPointDistance * (pointIndex + 1);
+      // Ajouter les nouveaux points à la chaîne
+      for (let i = 0; i < pointsToAddToChain; i++) {
+        const lastPoint = this.trailPoints[this.trailPoints.length - 1];
         
-        const artificialPoint = {
-          x: baseX + directionX * distance,
-          y: baseY + directionY * distance,
-          index: pointIndex,
-          assignedFollowers: [],
-          artificial: true // Marquer comme artificiel pour debug
+        const newPoint = {
+          x: lastPoint.x + directionX * this.config.linkDistance,
+          y: lastPoint.y + directionY * this.config.linkDistance,
+          prevX: lastPoint.x + directionX * this.config.linkDistance,
+          prevY: lastPoint.y + directionY * this.config.linkDistance,
+          index: this.trailPoints.length,
+          velocity: { x: 0, y: 0 },
+          timestamp: Date.now(), // 🎯 COMPATIBILITÉ: Pour l'API legacy
+          artificial: true // Marquer comme artificiel
         };
         
-        this.followPoints.push(artificialPoint);
+        this.trailPoints.push(newPoint);
       }
-    } else {
-      // Pas de trail du tout, créer des points autour du joueur
-      const playerX = this.owner.sprite?.x || 400;
-      const playerY = this.owner.sprite?.y || 300;
       
-      for (let i = 0; i < pointsToAdd; i++) {
-        const pointIndex = currentPoints + i;
-        const angle = (i / pointsToAdd) * Math.PI * 2; // Répartir en cercle
-        const distance = this.followPointDistance + (i * 20); // Distance croissante
-        
-        const artificialPoint = {
-          x: playerX + Math.cos(angle) * distance,
-          y: playerY + Math.sin(angle) * distance,
-          index: pointIndex,
-          assignedFollowers: [],
-          artificial: true
-        };
-        
-        this.followPoints.push(artificialPoint);
-      }
+      console.log(`🔗 Chaîne étendue de ${currentChainLength} à ${this.trailPoints.length} points pour supporter ${minPointsRequired} followers`);
     }
+    
+    // Régénérer les points de suivi avec la chaîne étendue
+    this.updateFollowPoints();
   }
 } 

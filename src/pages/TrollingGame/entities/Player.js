@@ -54,14 +54,19 @@ export class Player extends BaseEntity {
     });
     
     this.trailBehavior = new TrailBehavior(this, {
-      maxPoints: 300,
-      minDistanceToAdd: 1,
+      // 🎯 NOUVEAU SYSTÈME DE CONTRAINTES
+      chainLength: 15,
+      linkDistance: 30,
+      constraintStrength: 0.9, // Plus rigide pour réagir mieux pendant l'intro
+      damping: 0.88, // Moins d'amortissement pour plus de réactivité
+      
+      // Configuration visuelle
       lineWidth: 3,
       lineColor: 0x00ff88,
       alpha: 0.8,
-      fadeEnabled: true,
-      debugOnly: true,
-      updateThreshold: 0.5,
+      debugOnly: false, // 🎯 VISIBLE TOUJOURS pour voir le comportement pendant l'intro
+      
+      // Points de suivi pour followers
       followersPerPoint: 6,
       followPointDistance: 100
     });
