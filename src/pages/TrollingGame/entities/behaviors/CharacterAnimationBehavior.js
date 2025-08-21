@@ -83,6 +83,8 @@ export class CharacterAnimationBehavior {
     // 🎨 NOUVEAU : Métadonnées du spritesheet multi-animations
     this.spritesheetMetadata = null;
     this.metadataLoaded = false;
+    // Désynchronisation légère des animations bouclées (appliquée une seule fois par clé)
+    this._randomizedLoopKeys = new Set();
     
     // 🛠️ AMÉLIORATION : Créer les animations une seule fois de manière thread-safe
     this.loadMetadataAndCreateAnimations();
@@ -524,6 +526,14 @@ export class CharacterAnimationBehavior {
       
       // ✅ CONSERVÉ: Tracking d'état
       this.currentAnimation = animationKey;
+      
+      // 🎯 Désynchroniser légèrement les cycles bouclés (walk/idle/running) une seule fois
+      if ((animationKey.startsWith('walk-') || animationKey.startsWith('idle-') || animationKey.startsWith('running-')) &&
+          !this._randomizedLoopKeys.has(animationKey) && this.owner?.sprite?.anims) {
+        const progress = Math.random();
+        this.owner.sprite.anims.setProgress(progress);
+        this._randomizedLoopKeys.add(animationKey);
+      }
       
     } catch (error) {
       console.warn(`🎬 Erreur lors de la lecture de l'animation ${animationKey}:`, error);
