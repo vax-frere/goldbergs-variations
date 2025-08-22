@@ -54,8 +54,8 @@ export class Player extends BaseEntity {
     });
     
     this.trailBehavior = new TrailBehavior(this, {
-      // 🎯 NOUVEAU SYSTÈME DE CONTRAINTES
-      chainLength: 15,
+      // 🎯 NOUVEAU SYSTÈME DE CONTRAINTES - Optimisé pour 40 places
+      chainLength: 20, // Plus de points dans la chaîne pour supporter plus de followers
       linkDistance: 30,
       constraintStrength: 0.9, // Plus rigide pour réagir mieux pendant l'intro
       damping: 0.88, // Moins d'amortissement pour plus de réactivité
@@ -66,9 +66,9 @@ export class Player extends BaseEntity {
       alpha: 0.8,
       debugOnly: true, // 🎯 VISIBLE EN MODE DEBUG SEULEMENT (touche P)
       
-      // Points de suivi pour followers
-      followersPerPoint: 6,
-      followPointDistance: 100
+      // 🎯 CONFIGURATION 40 PLACES : Points de suivi pour followers
+      followersPerPoint: 8,    // 8 followers par point (8 x 5 points = 40 places)
+      followPointDistance: 80  // Points un peu plus rapprochés pour avoir plus de points
     });
     
     // Propriétés de cri

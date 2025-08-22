@@ -1,8 +1,12 @@
+import { SmartTrailAssignment } from './SmartTrailAssignment.js';
+
 /**
  * Système réutilisable pour gérer le trail avec contraintes physiques
  * Chaque point est lié au précédent par une distance fixe (système de chaîne organique)
  * Peut être utilisé par le Player et potentiellement d'autres entités
  * Respecte les principes SOLID et l'architecture du jeu
+ * 
+ * 🎯 AAA UPDATE: Intègre désormais SmartTrailAssignment pour une répartition optimale
  */
 export class TrailBehavior {
   constructor(owner, config = {}) {
@@ -41,6 +45,10 @@ export class TrailBehavior {
     this.followPointDistance = config.followPointDistance || 40; // Distance entre les points de suivi
     this.followPointsGraphics = null; // Graphics pour dessiner les points de suivi en debug
     
+    // 🎯 AAA SMART ASSIGNMENT SYSTEM
+    this.useSmartAssignment = config.useSmartAssignment !== false; // Activé par défaut
+    this.smartAssignment = null;
+    
     // Initialiser le système
     this.init();
   }
@@ -70,6 +78,17 @@ export class TrailBehavior {
     this.followPointsGraphics = this.scene.add.graphics();
     this.followPointsGraphics.setDepth(1001); // Au-dessus du trail
     this.followPointsGraphics.name = 'trail-points-debug'; // 🎯 AJOUT: Nom pour le nettoyage global
+    
+    // 🎯 AAA: Initialiser le système d'assignment intelligent
+    if (this.useSmartAssignment) {
+      this.smartAssignment = new SmartTrailAssignment(this, {
+        maxFollowersPerPoint: this.followersPerPoint, // Utiliser la capacité exacte (8 pour 40 places totales)
+        reassignmentCooldown: 800, // Plus réactif
+        stabilityThreshold: 25, // Seuil d'amélioration
+        debugAssignment: false // Pas de debug par défaut pour éviter le spam
+      });
+      console.log(`🧠 SmartTrailAssignment activé pour ${this.owner.constructor.name} (${this.followersPerPoint} par point)`);
+    }
     
     // 🎯 NOUVEAU: Initialiser la chaîne de contraintes
     this.initializeChain();
@@ -414,10 +433,10 @@ export class TrailBehavior {
       return;
     }
 
-    // 🎯 CALCUL DYNAMIQUE: Déterminer combien de points on a besoin
+    // 🎯 CALCUL DYNAMIQUE: Déterminer combien de points on a besoin (optimisé pour 40 places)
     const currentFollowers = this.owner.followers ? this.owner.followers.length : 0;
     const minPointsNeeded = Math.ceil(currentFollowers / this.followersPerPoint);
-    const maxPointsToGenerate = Math.max(minPointsNeeded + 2, 15); // Au moins 2 points d'avance, max 15 points
+    const maxPointsToGenerate = Math.max(minPointsNeeded + 2, 6); // 6 points max (8 x 6 = 48 places) pour supporter 40 followers
 
     const newFollowPoints = [];
     let currentDistance = 0;
@@ -500,11 +519,37 @@ export class TrailBehavior {
   }
 
   /**
-   * Obtenir le point de suivi pour un follower spécifique
-   * @param {number} followerIndex - Index du follower (0-based)
+   * 🎯 AAA: Obtenir le point de suivi pour un follower spécifique
+   * Utilise le nouveau SmartTrailAssignment si activé, sinon utilise l'ancien système
+   * @param {number} followerIndex - Index du follower (0-based) 
    * @returns {Object|null} Point de suivi {x, y} ou null
    */
   getFollowPointForFollower(followerIndex) {
+    // 🧠 NOUVEAU: Utiliser SmartAssignment si disponible
+    if (this.useSmartAssignment && this.smartAssignment) {
+      // Pour SmartAssignment, on a besoin du NPC lui-même, pas juste de l'index
+      // On va extraire le NPC à partir de l'index dans la liste des followers
+      const followers = this.owner.followers || [];
+      const npc = followers[followerIndex];
+      
+      if (npc) {
+        const assignedPoint = this.smartAssignment.getAssignedPoint(npc);
+        if (assignedPoint) {
+          return assignedPoint;
+        }
+        // Fallback vers l'ancien système si SmartAssignment échoue
+        console.warn(`⚠️ SmartAssignment échoué pour NPC ${npc.groupId}, fallback vers ancien système`);
+      }
+    }
+    
+    // 🔄 ANCIEN SYSTÈME (fallback ou si SmartAssignment désactivé)
+    return this.getLegacyFollowPoint(followerIndex);
+  }
+
+  /**
+   * 🔄 LEGACY: Ancien système de répartition séquentielle
+   */
+  getLegacyFollowPoint(followerIndex) {
     const pointIndex = Math.floor(followerIndex / this.followersPerPoint);
     const positionInGroup = followerIndex % this.followersPerPoint;
     
@@ -621,9 +666,58 @@ export class TrailBehavior {
   }
 
   /**
+   * 🎯 AAA: Activer/désactiver le SmartAssignment à la volée
+   */
+  setSmartAssignmentEnabled(enabled) {
+    this.useSmartAssignment = enabled;
+    
+    if (enabled && !this.smartAssignment) {
+      // Créer le système s'il n'existe pas
+      this.smartAssignment = new SmartTrailAssignment(this, {
+        maxFollowersPerPoint: this.followersPerPoint, // Utiliser la capacité exacte
+        reassignmentCooldown: 800,
+        stabilityThreshold: 25
+      });
+      console.log(`🧠 SmartTrailAssignment activé dynamiquement (${this.followersPerPoint} par point)`);
+    } else if (!enabled && this.smartAssignment) {
+      // Nettoyer le système
+      this.smartAssignment.destroy();
+      this.smartAssignment = null;
+      console.log('🔄 SmartTrailAssignment désactivé, retour au système legacy');
+    }
+  }
+
+  /**
+   * 🎯 Obtenir les statistiques du système d'assignment
+   */
+  getAssignmentStats() {
+    if (this.useSmartAssignment && this.smartAssignment) {
+      return {
+        system: 'SmartAssignment',
+        ...this.smartAssignment.getStats()
+      };
+    } else {
+      // Stats du système legacy
+      const followers = this.owner.followers || [];
+      return {
+        system: 'Legacy',
+        totalNpcs: followers.length,
+        pointsAvailable: this.followPoints.length,
+        followersPerPoint: this.followersPerPoint
+      };
+    }
+  }
+
+  /**
    * 🎯 CLEAN: Nettoyer le système de chaîne
    */
   destroy() {
+    // 🎯 AAA: Nettoyer SmartAssignment
+    if (this.smartAssignment) {
+      this.smartAssignment.destroy();
+      this.smartAssignment = null;
+    }
+    
     if (this.graphics) {
       this.graphics.destroy();
       this.graphics = null;
@@ -639,6 +733,8 @@ export class TrailBehavior {
     this.owner = null;
     this.scene = null;
     this.isInitialized = false;
+    
+    console.log('🗑️ TrailBehavior détruit (avec SmartAssignment)');
   }
 
   /**

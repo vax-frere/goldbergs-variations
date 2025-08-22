@@ -6,7 +6,7 @@ export class PlayerFollowerManager {
   constructor(player) {
     this.player = player;
     this.followers = [];
-    this.maxFollowers = 60;
+    this.maxFollowers = 40; // 🎯 Optimisé pour 40 places dans le trail
     
     console.log('👥 PlayerFollowerManager initialisé - max followers:', this.maxFollowers);
   }

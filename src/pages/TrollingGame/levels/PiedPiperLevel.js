@@ -245,7 +245,7 @@ export class PiedPiperLevel extends ILevel {
   }
 
   /**
-   * 🎯 PIPER-SPECIFIC: Configurer les contrôles de debug pour le GroupFleeingSystem
+   * 🎯 PIPER-SPECIFIC: Configurer les contrôles de debug pour le GroupFleeingSystem + SmartAssignment
    */
   setupGroupFleeingDebugControls() {
     // Ajouter les touches de debug spécifiques au niveau Piper
@@ -253,12 +253,26 @@ export class PiedPiperLevel extends ILevel {
     this.forceFleeKey = this.scene.input.keyboard.addKey('F'); // Forcer fuite
     this.stopFleeKey = this.scene.input.keyboard.addKey('H');  // Arrêter fuite
     
+    // 🎯 AAA: Nouvelles touches pour SmartAssignment
+    this.smartAssignmentToggleKey = this.scene.input.keyboard.addKey('S'); // Toggle SmartAssignment
+    this.assignmentStatsKey = this.scene.input.keyboard.addKey('A');       // Stats d'assignment
+    this.optimizeKey = this.scene.input.keyboard.addKey('O');              // Optimisation forcée
+    
+    // 🚨 EMERGENCY: Touche pour débloquer si le joueur est stuck
+    this.emergencyActivateKey = this.scene.input.keyboard.addKey('E');     // Force activation
+    this.debugAssignmentKey = this.scene.input.keyboard.addKey('D');       // Toggle debug assignment
+    
     // États des touches
     this.groupFleeKeyPressed = false;
     this.forceFleeKeyPressed = false;
     this.stopFleeKeyPressed = false;
+    this.smartAssignmentToggleKeyPressed = false;
+    this.assignmentStatsKeyPressed = false;
+    this.optimizeKeyPressed = false;
+    this.emergencyActivateKeyPressed = false;
+    this.debugAssignmentKeyPressed = false;
     
-    console.log('👥 Contrôles debug GroupFleeingSystem configurés (G/F/H) pour le niveau Piper');
+    console.log('👥 Contrôles debug configurés (G/F/H) + SmartAssignment (S/A/O/D) + Emergency (E) pour le niveau Piper');
   }
   
   /**
@@ -289,7 +303,52 @@ export class PiedPiperLevel extends ILevel {
     if (this.player && this.player.playerState) {
       this.player.playerState.setState(PlayerStates.PLAYING);
       console.log('🎮 ✅ Pied Piper: Contrôles du joueur ACTIVÉS !');
+      
+      // 🎯 URGENT: Réactiver les murs après activation des contrôles
+      this.enablePerimeterWalls();
     }
+  }
+
+  /**
+   * 🎯 EMERGENCY: Forcer l'activation si le joueur essaie de jouer mais est bloqué
+   */
+  forceActivateIfStuck() {
+    if (!this.player || !this.player.playerState) return;
+    
+    const currentState = this.player.playerState.getState();
+    if (currentState === PlayerStates.INTRO) {
+      console.log('🚨 EMERGENCY: Joueur bloqué en intro, activation forcée !');
+      
+      // Nettoyer l'intro si elle existe
+      if (this.introSequence) {
+        // Vérifier si forceComplete existe, sinon utiliser une méthode alternative
+        if (typeof this.introSequence.forceComplete === 'function') {
+          this.introSequence.forceComplete();
+        } else {
+          // Méthode alternative : émettre l'événement manuellement
+          console.log('🚨 forceComplete non disponible, émission manuelle de introSequenceComplete');
+          this.scene.events.emit('introSequenceComplete');
+        }
+      }
+      
+      // Forcer la fin du tutorial si nécessaire
+      if (this.tutorialTextManager && !this.tutorialTextManager.tutorialFinished) {
+        if (typeof this.tutorialTextManager.emitTutorialFinished === 'function') {
+          this.tutorialTextManager.emitTutorialFinished();
+        } else {
+          // Méthode alternative : émettre l'événement manuellement
+          console.log('🚨 emitTutorialFinished non disponible, émission manuelle de tutorialFinished');
+          this.scene.events.emit('tutorialFinished');
+        }
+      }
+      
+      // Activer les contrôles
+      this.activatePlayerControls();
+      
+      return true;
+    }
+    
+    return false;
   }
 
   /**
@@ -504,6 +563,9 @@ export class PiedPiperLevel extends ILevel {
   }
 
   update(time, delta) {
+    // 🚨 EMERGENCY CHECK: Vérifier si le joueur est bloqué et essaie de jouer
+    this.checkForStuckPlayer(time);
+    
     // Mise à jour de la séquence d'introduction
     if (this.introSequence) {
       this.introSequence.update();
@@ -546,7 +608,7 @@ export class PiedPiperLevel extends ILevel {
   }
 
   /**
-   * 🎯 PIPER-SPECIFIC: Gérer les contrôles de debug du GroupFleeingSystem
+   * 🎯 PIPER-SPECIFIC: Gérer les contrôles de debug du GroupFleeingSystem + SmartAssignment
    */
   handleGroupFleeingDebugInput() {
     if (!this.groupFleeKey || !this.forceFleeKey || !this.stopFleeKey) return;
@@ -589,6 +651,122 @@ export class PiedPiperLevel extends ILevel {
     }
     if (!this.stopFleeKey.isDown) {
       this.stopFleeKeyPressed = false;
+    }
+
+    // 🎯 AAA: NOUVEAUX CONTRÔLES SMARTASSIGNMENT
+
+    // Toggle SmartAssignment avec S
+    if (this.smartAssignmentToggleKey && this.smartAssignmentToggleKey.isDown && !this.smartAssignmentToggleKeyPressed) {
+      this.smartAssignmentToggleKeyPressed = true;
+      
+      if (this.player && this.player.trailBehavior) {
+        const currentState = this.player.trailBehavior.useSmartAssignment;
+        this.player.trailBehavior.setSmartAssignmentEnabled(!currentState);
+        console.log(`🧠 [PIPER] SmartAssignment ${!currentState ? 'ACTIVÉ' : 'DÉSACTIVÉ'} ! (Touche S)`);
+      }
+    }
+    if (this.smartAssignmentToggleKey && !this.smartAssignmentToggleKey.isDown) {
+      this.smartAssignmentToggleKeyPressed = false;
+    }
+
+    // Stats d'assignment avec A
+    if (this.assignmentStatsKey && this.assignmentStatsKey.isDown && !this.assignmentStatsKeyPressed) {
+      this.assignmentStatsKeyPressed = true;
+      
+      if (this.player && this.player.trailBehavior) {
+        const stats = this.player.trailBehavior.getAssignmentStats();
+        console.log('📊 [PIPER] Assignment System Stats:', stats);
+        
+        if (stats.system === 'SmartAssignment') {
+          console.log(`📊 [PIPER] Réassignations: ${stats.totalReassignments} | Distance moyenne: ${stats.averageDistance.toFixed(1)}px | Points utilisés: ${stats.pointsInUse}`);
+        } else {
+          console.log(`📊 [PIPER] Système Legacy: ${stats.totalNpcs} NPCs sur ${stats.pointsAvailable} points disponibles`);
+        }
+      }
+    }
+    if (this.assignmentStatsKey && !this.assignmentStatsKey.isDown) {
+      this.assignmentStatsKeyPressed = false;
+    }
+
+    // Optimisation forcée avec O
+    if (this.optimizeKey && this.optimizeKey.isDown && !this.optimizeKeyPressed) {
+      this.optimizeKeyPressed = true;
+      
+      if (this.player && this.player.trailBehavior && this.player.trailBehavior.smartAssignment) {
+        this.player.trailBehavior.smartAssignment.performGlobalOptimization();
+        console.log('⚡ [PIPER] Optimisation globale forcée ! (Touche O)');
+      } else {
+        console.log('⚠️ [PIPER] SmartAssignment non disponible pour optimisation');
+      }
+    }
+    if (this.optimizeKey && !this.optimizeKey.isDown) {
+      this.optimizeKeyPressed = false;
+    }
+
+    // 🚨 EMERGENCY: Activation forcée avec E
+    if (this.emergencyActivateKey && this.emergencyActivateKey.isDown && !this.emergencyActivateKeyPressed) {
+      this.emergencyActivateKeyPressed = true;
+      
+      const wasStuck = this.forceActivateIfStuck();
+      if (wasStuck) {
+        console.log('🚨 [PIPER] ✅ Activation d\'urgence réussie ! (Touche E)');
+      } else {
+        // Afficher l'état actuel du joueur pour debug
+        const playerState = this.player && this.player.playerState ? this.player.playerState.getState() : 'unknown';
+        console.log(`🚨 [PIPER] ℹ️ État actuel du joueur: ${playerState} (Touche E)`);
+      }
+    }
+    if (this.emergencyActivateKey && !this.emergencyActivateKey.isDown) {
+      this.emergencyActivateKeyPressed = false;
+    }
+
+    // 🐛 DEBUG: Toggle debug assignment avec D
+    if (this.debugAssignmentKey && this.debugAssignmentKey.isDown && !this.debugAssignmentKeyPressed) {
+      this.debugAssignmentKeyPressed = true;
+      
+      if (this.player && this.player.trailBehavior && this.player.trailBehavior.smartAssignment) {
+        const currentDebug = this.player.trailBehavior.smartAssignment.config.debugAssignment;
+        this.player.trailBehavior.smartAssignment.setDebugEnabled(!currentDebug);
+        console.log(`🐛 [PIPER] Debug Assignment ${!currentDebug ? 'ACTIVÉ' : 'DÉSACTIVÉ'} ! (Touche D)`);
+      } else {
+        console.log('⚠️ [PIPER] SmartAssignment non disponible pour debug toggle');
+      }
+    }
+    if (this.debugAssignmentKey && !this.debugAssignmentKey.isDown) {
+      this.debugAssignmentKeyPressed = false;
+    }
+  }
+
+  /**
+   * 🚨 EMERGENCY: Vérifier si le joueur est bloqué et auto-débloquer
+   */
+  checkForStuckPlayer(time) {
+    if (!this.player || !this.player.playerState) return;
+    
+    // Initialiser le timer de vérification
+    if (!this.stuckCheckTimer) {
+      this.stuckCheckTimer = time;
+      return;
+    }
+    
+    // Vérifier toutes les 3 secondes seulement
+    if (time - this.stuckCheckTimer < 3000) return;
+    this.stuckCheckTimer = time;
+    
+    const playerState = this.player.playerState.getState();
+    
+    // Si le joueur est en intro depuis trop longtemps (plus de 15s), forcer l'activation
+    if (playerState === PlayerStates.INTRO) {
+      if (!this.introStartTime) {
+        this.introStartTime = time;
+      } else if (time - this.introStartTime > 15000) { // 15 secondes
+        console.log('🚨 AUTO-DEBUG: Joueur bloqué en intro depuis 15s, activation automatique !');
+        this.forceActivateIfStuck();
+        this.introStartTime = null;
+      }
+    } else {
+      // Reset du timer si plus en intro
+      this.introStartTime = null;
     }
   }
 
