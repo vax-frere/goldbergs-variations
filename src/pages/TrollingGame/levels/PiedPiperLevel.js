@@ -6,6 +6,7 @@ import { IntroSequence } from '../systems/IntroSequence';
 import { OutroSequence } from '../systems/OutroSequence';
 import { TutorialTextManager } from '../systems/TutorialTextManager';
 import { GroupFleeingSystem } from '../systems/GroupFleeingSystem';
+import { FlowFieldService } from '../systems/FlowFieldService';
 import { PlayerStates } from '../core/PlayerState';
 
 /**
@@ -40,6 +41,7 @@ export class PiedPiperLevel extends ILevel {
     this.outroSequence = null;
     this.tutorialTextManager = null;
     this.groupFleeingSystem = null; // 🎯 Système spécifique au niveau Piper
+    this.flowFieldService = null;   // 🎯 Flow-field pour fuite organique
     
     // 🎵 CONFIGURATION PIED PIPER
     this.levelConfig = {
@@ -69,6 +71,7 @@ export class PiedPiperLevel extends ILevel {
     this.createTutorialTextManager();
     this.createNpcSpawner();
     this.createGroupFleeingSystem(); // 🎯 Système spécifique au niveau Piper
+    this.createFlowFieldService();   // 🎯 Nouveau: flow-field
     
     // 🎯 SOLID: Écouter les events pour gérer l'activation des contrôles
     this.setupLevelEventListeners();
@@ -422,6 +425,20 @@ export class PiedPiperLevel extends ILevel {
     console.log('👥 GroupFleeingSystem créé spécifiquement pour le niveau Pied Piper');
   }
 
+  createFlowFieldService() {
+    this.flowFieldService = new FlowFieldService(this.scene, {
+      cellSize: 50,
+      updateIntervalMs: 200,
+      weightBorders: 1.1,
+      weightPlayer: 1.4,
+      weightCenter: -0.25,
+      playerSigma: 180,
+      borderMargin: 140,
+      blurPasses: 2
+    });
+    console.log('🌊 FlowFieldService initialisé (Pied Piper)');
+  }
+
   spawnNpcs() {
     if (!this.npcSpawner || !this.player) return;
     
@@ -601,6 +618,10 @@ export class PiedPiperLevel extends ILevel {
     // 🎯 PIPER-SPECIFIC: Mise à jour du système de fuite de groupe
     if (this.groupFleeingSystem) {
       this.groupFleeingSystem.update(time, delta);
+    }
+    // Mettre à jour le flow-field
+    if (this.flowFieldService) {
+      this.flowFieldService.update(time, delta);
     }
     
     // 🎯 PIPER-SPECIFIC: Gérer les contrôles de debug du GroupFleeingSystem
@@ -796,6 +817,8 @@ export class PiedPiperLevel extends ILevel {
       this.groupFleeingSystem.destroy();
       this.groupFleeingSystem = null;
     }
+    // 🎯 Flow-field
+    this.flowFieldService = null;
     
     // Nettoyer le système de NPCs
     if (this.npcSpawner) {

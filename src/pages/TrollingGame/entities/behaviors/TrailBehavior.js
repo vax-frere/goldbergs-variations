@@ -82,10 +82,23 @@ export class TrailBehavior {
     // 🎯 AAA: Initialiser le système d'assignment intelligent
     if (this.useSmartAssignment) {
       this.smartAssignment = new SmartTrailAssignment(this, {
-        maxFollowersPerPoint: this.followersPerPoint, // Utiliser la capacité exacte (8 pour 40 places totales)
+        // Capacité par point = nombre de voies (remplit une rangée par point)
+        maxFollowersPerPoint: 4,
         reassignmentCooldown: 800, // Plus réactif
         stabilityThreshold: 25, // Seuil d'amélioration
-        debugAssignment: false // Pas de debug par défaut pour éviter le spam
+        debugAssignment: false, // Pas de debug par défaut pour éviter le spam
+        // 🎯 Formation bus par défaut (peut être tunée via config du Player)
+        // laneCount: nombre de voies latérales autour de l'axe du trail (épaisseur de la file)
+        laneCount: 4,
+        // laneSpacing: écart (en px) entre deux voies adjacentes (plus petit = file plus serrée)
+        laneSpacing: 6,
+        // staggerRatio: proportion de followPointDistance utilisée comme décalage longitudinal entre colonnes
+        // ex: 0.4 avec followPointDistance=80px → 32px de décalage par colonne vers l'arrière
+        staggerRatio: 0.4,
+        // jitterPx: micro-jitter aléatoire (en px) appliqué pour casser l'alignement parfait
+        jitterPx: 6,
+        // Bonus pour favoriser le remplissage des points proches du joueur
+        frontFillBias: 120
       });
       console.log(`🧠 SmartTrailAssignment activé pour ${this.owner.constructor.name} (${this.followersPerPoint} par point)`);
     }
@@ -433,10 +446,14 @@ export class TrailBehavior {
       return;
     }
 
-    // 🎯 CALCUL DYNAMIQUE: Déterminer combien de points on a besoin (optimisé pour 40 places)
+    // 🎯 CALCUL DYNAMIQUE: Déterminer combien de points on a besoin
     const currentFollowers = this.owner.followers ? this.owner.followers.length : 0;
-    const minPointsNeeded = Math.ceil(currentFollowers / this.followersPerPoint);
-    const maxPointsToGenerate = Math.max(minPointsNeeded + 2, 6); // 6 points max (8 x 6 = 48 places) pour supporter 40 followers
+    // Utiliser la capacité effective par point (SmartAssignment si dispo), sinon fallback sur followersPerPoint
+    const effectiveFollowersPerPoint = (this.smartAssignment && this.smartAssignment.config && this.smartAssignment.config.maxFollowersPerPoint)
+      ? this.smartAssignment.config.maxFollowersPerPoint
+      : this.followersPerPoint;
+    const minPointsNeeded = Math.ceil(Math.max(1, currentFollowers) / Math.max(1, effectiveFollowersPerPoint));
+    const maxPointsToGenerate = Math.max(minPointsNeeded + 2, 6);
 
     const newFollowPoints = [];
     let currentDistance = 0;
@@ -460,11 +477,24 @@ export class TrailBehavior {
         const ratio = remainingDistance / segmentDistance;
         
         // Interpoler la position sur le segment
+        // Calculer la tangente (direction du segment) et la normale (perpendiculaire)
+        let tx = point2.x - point1.x;
+        let ty = point2.y - point1.y;
+        const mag = Math.sqrt(tx * tx + ty * ty) || 1;
+        tx /= mag;
+        ty /= mag;
+        // Normale à gauche
+        const nx = -ty;
+        const ny = tx;
+
         const followPoint = {
           x: point1.x + (point2.x - point1.x) * ratio,
           y: point1.y + (point2.y - point1.y) * ratio,
           index: pointIndex,
-          assignedFollowers: []
+          assignedFollowers: [],
+          // 🎯 NOUVEAU: vecteurs de direction pour formations multi-voies
+          tangent: { x: tx, y: ty },
+          normal: { x: nx, y: ny }
         };
         
         newFollowPoints.push(followPoint);
@@ -484,7 +514,7 @@ export class TrailBehavior {
     
     // 🔍 VÉRIFICATION FINALE
     const pointsGenerated = this.followPoints.length;
-    const maxFollowersSupported = pointsGenerated * this.followersPerPoint;
+    const maxFollowersSupported = pointsGenerated * effectiveFollowersPerPoint;
     
     if (currentFollowers > maxFollowersSupported) {
       console.warn(`⚠️ ATTENTION: ${currentFollowers} followers mais seulement ${maxFollowersSupported} places disponibles!`);

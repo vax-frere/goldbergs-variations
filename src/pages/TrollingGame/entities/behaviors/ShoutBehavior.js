@@ -10,7 +10,11 @@ export class ShoutBehavior {
     
     // Configuration par défaut
     this.config = {
-      duration: config.duration || 800, // Durée du cri en millisecondes (réduite car animation 3x plus rapide)
+      // Durée générique minimale (fallback global)
+      duration: config.duration || 800,
+      // Fallbacks spécifiques plus sûrs par type
+      playerDurationMs: config.playerDurationMs || config.duration || 800, // scream (player)
+      npcCheerDurationMs: config.npcCheerDurationMs || 1800, // cheer (npc) souvent plus long
       ...config
     };
     
@@ -18,6 +22,10 @@ export class ShoutBehavior {
     this.isScreaming = false;
     this.screamStartTime = 0;
     this.originalAnimation = null; // Pour revenir à l'animation précédente
+    // Gestion des timers/écouteurs
+    this.screamTimer = null;
+    this._onAnimationComplete = null;
+    this._onAnimationEventName = null;
   }
 
   /**
@@ -107,24 +115,63 @@ export class ShoutBehavior {
     console.log(`🎭 ${this.owner.entityType} ${animationType} → facing=${facing}, animationKey=${screamAnimation}`);
       
     // Jouer l'animation appropriée
+    let playedKey = null;
     if (this.scene.anims.exists(screamAnimation)) {
       console.log(`🎭 ✅ ${this.owner.entityType} commence à ${animationType} ! Animation: ${screamAnimation}`);
       this.owner.sprite.play(screamAnimation);
+      playedKey = screamAnimation;
     } else {
       console.warn(`🎭 ⚠️ ${this.owner.entityType} Animation ${animationType} non trouvée: ${screamAnimation}`);
       // Fallback cohérent sur une direction sûre
       if (this.scene.anims.exists(fallbackKey)) {
         console.log(`🎭 🔄 ${this.owner.entityType} Fallback vers: ${fallbackKey}`);
         this.owner.sprite.play(fallbackKey);
+        playedKey = fallbackKey;
       } else {
         console.error(`🎭 💀 ${this.owner.entityType} AUCUNE animation ${animationType} disponible !`);
       }
     }
-    
-    // Programmer l'arrêt du cri
-    this.scene.time.delayedCall(this.config.duration, () => {
-      this.stopScreamAnimation();
-    });
+
+    // Arrêt synchronisé sur la fin réelle de l'animation + timer de secours
+    if (playedKey) {
+      // Listener one-shot sur la fin de l'animation (clé spécifique)
+      this._onAnimationEventName = `animationcomplete-${playedKey}`;
+      this._onAnimationComplete = () => {
+        this.stopScreamAnimation();
+      };
+      this.owner.sprite.once(this._onAnimationEventName, this._onAnimationComplete);
+
+      // Calcul de la durée réelle estimée de l'animation
+      // Base: fallback par type (NPC cheer plus long que le player scream)
+      const baseFallback = (this.owner.entityType === 'npc')
+        ? (this.config.npcCheerDurationMs || this.config.duration)
+        : (this.config.playerDurationMs || this.config.duration);
+      let safetyMs = baseFallback;
+      try {
+        const animObj = this.scene.anims.get(playedKey);
+        if (animObj) {
+          const frameCount = Array.isArray(animObj.frames) ? animObj.frames.length : (animObj.getTotalFrames ? animObj.getTotalFrames() : 0);
+          const rate = animObj.frameRate || 24;
+          if (frameCount > 0 && rate > 0) {
+            const estimated = Math.ceil((frameCount / rate) * 1000) + 120; // petite marge +120ms
+            safetyMs = Math.max(safetyMs, estimated);
+          }
+        }
+      } catch (_) {}
+
+      // Timer de secours pour s'assurer de la sortie du cri même si l'évènement ne se déclenche pas
+      this.screamTimer = this.scene.time.delayedCall(safetyMs, () => {
+        this.stopScreamAnimation();
+      });
+    } else {
+      // Si rien n'a été joué, fallback spécifique par type
+      const fallbackMs = (this.owner.entityType === 'npc')
+        ? (this.config.npcCheerDurationMs || this.config.duration)
+        : (this.config.playerDurationMs || this.config.duration);
+      this.screamTimer = this.scene.time.delayedCall(fallbackMs, () => {
+        this.stopScreamAnimation();
+      });
+    }
       }
       
   /**
@@ -139,6 +186,20 @@ export class ShoutBehavior {
     
     this.isScreaming = false;
     this.screamStartTime = 0;
+
+    // Nettoyage des timers et écouteurs
+    try {
+      if (this.screamTimer && this.screamTimer.remove) {
+        this.screamTimer.remove(false);
+      }
+    } catch (_) {}
+    this.screamTimer = null;
+    if (this._onAnimationComplete) {
+      const ev = this._onAnimationEventName || 'animationcomplete';
+      try { this.owner?.sprite?.off(ev, this._onAnimationComplete); } catch (_) {}
+    }
+    this._onAnimationComplete = null;
+    this._onAnimationEventName = null;
     
     // 🎯 NOUVEAU: Reprendre le mouvement pour les NPCs après le cri
     if (this.owner.movementController && this.owner.entityType === 'npc') {
@@ -157,13 +218,8 @@ export class ShoutBehavior {
    * Mise à jour du comportement (appelée chaque frame)
    */
   update(delta) {
-    // Vérifier si le cri doit s'arrêter (sécurité au cas où le timer échoue)
-    if (this.isScreaming) {
-      const elapsed = Date.now() - this.screamStartTime;
-      if (elapsed >= this.config.duration) {
-        this.stopScreamAnimation();
-      }
-    }
+    // Plus d'arrêt basé sur config.duration ici.
+    // On s'appuie sur l'évènement 'animationcomplete-<key>' et le timer de secours.
   }
 
   /**
@@ -173,6 +229,19 @@ export class ShoutBehavior {
     if (this.isScreaming) {
       this.stopScreamAnimation();
       }
+    // Nettoyage défensif
+    try {
+      if (this.screamTimer && this.screamTimer.remove) {
+        this.screamTimer.remove(false);
+      }
+    } catch (_) {}
+    this.screamTimer = null;
+    if (this._onAnimationComplete) {
+      const ev = this._onAnimationEventName || 'animationcomplete';
+      try { this.owner?.sprite?.off(ev, this._onAnimationComplete); } catch (_) {}
+    }
+    this._onAnimationComplete = null;
+    this._onAnimationEventName = null;
   }
 
   /**
