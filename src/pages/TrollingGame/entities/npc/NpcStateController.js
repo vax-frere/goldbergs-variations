@@ -142,10 +142,10 @@ export class NpcStateController {
     this.stateTimer = 0;
     
     const config = this.config.trembling;
-    
-    // 🎯 Durée et intensité variables selon le nombre de followers
-    const durationBonus = Math.min(1000, followersCount * config.durationPerFollower);
-    this.stateDuration = (config.baseDuration + Math.random() * 2000 + durationBonus) * 2.5;
+    // 🎯 On ne se base plus sur un timer fixe pour terminer trembling.
+    // La sortie d'état se fera sur l'évènement 'animationcomplete-headholdinpain-*'.
+    // Conserver un maximum de sécurité très long (mais on ne l'utilisera pas en pratique)
+    this.stateDuration = Infinity;
     
     // 🎯 Intensité du tremblement augmente avec les followers
     const intensityBonus = Math.min(3, followersCount * config.intensityPerFollower);
@@ -159,9 +159,33 @@ export class NpcStateController {
     this.basePosition.x = this.npc.sprite.x;
     this.basePosition.y = this.npc.sprite.y;
     
-    // 🎨 Forcer l'animation visuelle de douleur/tremblement
+    // 🎨 Forcer l'animation visuelle de douleur/tremblement (jouée une fois)
     if (this.npc.animationBehavior && this.npc.animationBehavior.setForcedAnimation) {
       this.npc.animationBehavior.setForcedAnimation('headholdinpain');
+      // S'abonner à la fin de l'animation spécifique pour sortir de l'état
+      try {
+        const facing = this.npc.animationBehavior.facing || 'down';
+        const key = `headholdinpain-${facing}`;
+        const ev = `animationcomplete-${key}`;
+        // Nettoyage préalable si déjà abonné
+        if (this._onTrembleAnimComplete) {
+          try { this.npc.sprite.off(this._onTrembleAnimEventName || 'animationcomplete', this._onTrembleAnimComplete); } catch (_) {}
+        }
+        this._onTrembleAnimEventName = ev;
+        this._onTrembleAnimComplete = () => {
+          // Restaurer l'origine normale
+          if (this.npc?.sprite) {
+            this.npc.sprite.setOrigin(0.5, 0.5);
+          }
+          // Quitter l'état trembling proprement
+          this.returnToNormal();
+          // Désabonnement
+          try { this.npc?.sprite?.off(ev, this._onTrembleAnimComplete); } catch (_) {}
+          this._onTrembleAnimComplete = null;
+          this._onTrembleAnimEventName = null;
+        };
+        this.npc.sprite.once(ev, this._onTrembleAnimComplete);
+      } catch (_) {}
     }
     
     console.log(`😰 NPC ${this.npc.groupId} commence à trembler (intensité: ${this.tremblingIntensity.toFixed(1)})`);
@@ -288,12 +312,7 @@ export class NpcStateController {
       baseOriginY - offsetFactorY
     );
     
-    // Vérifier si le tremblement est terminé
-    if (this.stateTimer >= this.stateDuration) {
-      // 🎯 RESTAURER L'ORIGINE NORMALE
-      this.npc.sprite.setOrigin(baseOriginX, baseOriginY);
-      this.returnToNormal();
-    }
+    // La fin de trembling est gérée par l'évènement d'animation 'animationcomplete-headholdinpain-*'.
   }
 
   /**
@@ -335,6 +354,13 @@ export class NpcStateController {
    */
   destroy() {
     this.followTarget = null;
+    // Nettoyage écouteur trembling si présent
+    if (this._onTrembleAnimComplete) {
+      const ev = this._onTrembleAnimEventName || 'animationcomplete';
+      try { this.npc?.sprite?.off(ev, this._onTrembleAnimComplete); } catch (_) {}
+      this._onTrembleAnimComplete = null;
+      this._onTrembleAnimEventName = null;
+    }
     console.log('🗑️ NpcStateController détruit');
   }
 } 

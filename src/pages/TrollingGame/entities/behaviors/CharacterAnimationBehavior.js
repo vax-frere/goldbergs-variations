@@ -233,7 +233,7 @@ export class CharacterAnimationBehavior {
               frame: this.calculateFrameIndex(frameData.x, frameData.y)
             })),
             frameRate: 10,
-            repeat: -1
+            repeat: 0 // jouer une fois, utilisé pour sortir de trembling sur animationcomplete
           });
         }
       }
