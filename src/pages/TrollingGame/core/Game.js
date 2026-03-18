@@ -435,14 +435,14 @@ export class Game {
   // 🎯 NOUVEAU: SWITCH LEVELS - Appel depuis la console avec game.switchLevel('piper')
   switchLevel(levelType = 'shepherd') {
     const gameScene = this.phaserGame.scene.getScene('GameScene');
-    if (!gameScene) {git 
+    if (!gameScene) {
       console.warn('⚠️ Impossible de changer de niveau: pas de GameScene disponible');
       return false;
     }
 
-    const availableLevels = ['piper', 'piper'];
-    if (!availableLevels.includes(levelType)) {
-      console.warn(`⚠️ Niveau '${levelType}' inexistant. Disponibles: ${availableLevels.join(', ')}`);
+    const gameSceneLevels = Object.keys(gameScene.availableLevels);
+    if (!gameSceneLevels.includes(levelType)) {
+      console.warn(`⚠️ Niveau '${levelType}' inexistant. Disponibles: ${gameSceneLevels.join(', ')}`);
       return false;
     }
 

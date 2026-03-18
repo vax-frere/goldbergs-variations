@@ -6,6 +6,7 @@ import { FootstepsSystem } from '../systems/FootstepsSystem';
 import { DepthSortingSystem } from '../systems/DepthSortingSystem';
 import { PiedPiperLevel } from '../levels/PiedPiperLevel';
 import { ShepherdsGateLevel } from '../levels/ShepherdsGateLevel';
+import { ScapegoatLevel } from '../levels/ScapegoatLevel';
 
 export class GameScene extends Phaser.Scene {
   constructor() {
@@ -17,12 +18,13 @@ export class GameScene extends Phaser.Scene {
     this.depthSortingSystem = null;
     this.currentLevel = null;
     
-    // 🎯 NOUVEAU: Gestion des niveaux multiples (SOLID)
-          this.availableLevels = {
-        'shepherd': ShepherdsGateLevel,     // 🕳️ Shepherd's Gate (second niveau)
-        'piper': PiedPiperLevel             // 🎵 Pied Piper (premier niveau avec tutorial)
-      };
-    this.currentLevelType = 'shepherd'; // Niveau par défaut temporaire: Shepherd
+    // 🎯 Gestion des niveaux multiples (SOLID)
+    this.availableLevels = {
+      'shepherd': ShepherdsGateLevel,
+      'piper': PiedPiperLevel,
+      'scapegoat': ScapegoatLevel
+    };
+    this.currentLevelType = 'scapegoat'; // Niveau par défaut: Scapegoat (en dev)
     this.caveatFontLoaded = false;
   }
 
@@ -307,8 +309,7 @@ ensureCaveatFont() {
    * 🎯 PUBLIC API : Passer au niveau suivant
    */
   loadNextLevel() {
-    // Progression temporaire: boucle sur Shepherd
-    const levelProgression = ['piper', 'piper'];
+    const levelProgression = ['scapegoat', 'piper', 'shepherd'];
     const currentIndex = levelProgression.indexOf(this.currentLevelType);
     
     if (currentIndex === -1) {

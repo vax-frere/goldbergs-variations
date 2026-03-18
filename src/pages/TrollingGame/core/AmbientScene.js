@@ -33,7 +33,7 @@ export class AmbientScene extends Phaser.Scene {
     
     // 🎮 DÉMARRER GameScene maintenant que l'ambiance est prête
     console.log('🎮 AmbientScene: Lancement de GameScene...');
-    this.scene.start('GameScene', { targetLevel: 'piper' });
+    this.scene.start('GameScene', { targetLevel: 'scapegoat' });
   }
 
   /**
