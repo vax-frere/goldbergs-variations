@@ -55,13 +55,14 @@ export class ScapegoatLevel extends ILevel {
       agitationCheckInterval: 800,  // Vérifier toutes les 800ms
       agitationChance: 0.15,        // 15% de chance par NPC par check d'être agité
       
-      // Isolation : victoire (distance par rapport au centre INITIAL, pas dynamique)
-      isolationDistance: 150,        // Distance min du centre INITIAL du groupe
+      // Isolation : victoire (aucun NPC proche du bouc émissaire)
+      isolationRadius: 200,          // Rayon autour du bouc émissaire pour compter les voisins
+      maxNearbyNpcs: 0,              // 0 = complètement seul pour être considéré isolé
       isolationDuration: 3000,       // Durée d'isolation requise (3 secondes)
     };
     
-    // 🐐 Centre initial du groupe (point de référence FIXE pour l'isolation)
-    this.initialGroupCenter = null;
+    // 🐐 Nombre de NPCs proches du bouc émissaire (diagnostic)
+    this.nearbyNpcCount = 0;
     
     // 🐐 Le level ne démarre qu'après l'intro (empêche le trigger prématuré)
     this.levelActive = false;
@@ -241,9 +242,7 @@ export class ScapegoatLevel extends ILevel {
     const allNpcs = this.npcSpawner.getAllNpcs();
     if (allNpcs.length === 0) return;
     
-    // 🐐 Sauvegarder le centre INITIAL du groupe (point de référence FIXE)
-    this.initialGroupCenter = this.getGroupCenter();
-    console.log(`🐐 Centre initial du groupe: (${this.initialGroupCenter.x.toFixed(0)}, ${this.initialGroupCenter.y.toFixed(0)})`);
+    console.log(`🐐 Condition de victoire: 0 NPC dans un rayon de ${this.levelConfig.isolationRadius}px pendant ${this.levelConfig.isolationDuration/1000}s`);
     
     // Choisir un NPC au hasard (pas le premier ni le dernier pour plus de subtilité)
     const minIndex = Math.floor(allNpcs.length * 0.2);
@@ -300,14 +299,10 @@ export class ScapegoatLevel extends ILevel {
     // 🐐 Activer la condition de victoire SEULEMENT maintenant
     this.levelActive = true;
     
-    // Recalculer le centre initial APRÈS l'intro (positions stables)
-    this.initialGroupCenter = this.getGroupCenter();
-    
-    // Reset le timer d'isolation (au cas où il aurait accumulé pendant l'intro)
     this.isolationTimer = 0;
     this.isScapegoatIsolated = false;
     
-    console.log(`🐐 Level actif ! Centre initial: (${this.initialGroupCenter.x.toFixed(0)}, ${this.initialGroupCenter.y.toFixed(0)})`);
+    console.log(`🐐 Level actif !`);
   }
 
   activatePlayerControls() {
@@ -372,16 +367,30 @@ export class ScapegoatLevel extends ILevel {
   }
 
   /**
-   * 🐐 Distance du bouc émissaire par rapport au centre INITIAL du groupe
-   * Utilisée pour la condition d'isolation (référence FIXE et stable)
+   * 🐐 Compter les NPCs dans le rayon d'isolation autour du bouc émissaire
+   * 0 = complètement isolé, c'est la vraie mesure de l'isolation
    */
-  getScapegoatDistanceFromInitialCenter() {
-    if (!this.scapegoatNpc || !this.scapegoatNpc.sprite) return 0;
+  countNpcsNearScapegoat() {
+    if (!this.scapegoatNpc || !this.scapegoatNpc.sprite || !this.npcSpawner) return 999;
     
-    const center = this.initialGroupCenter || this.getGroupCenter();
-    const dx = this.scapegoatNpc.sprite.x - center.x;
-    const dy = this.scapegoatNpc.sprite.y - center.y;
-    return Math.sqrt(dx * dx + dy * dy);
+    const allNpcs = this.npcSpawner.getAllNpcs();
+    const radius = this.levelConfig.isolationRadius;
+    const sx = this.scapegoatNpc.sprite.x;
+    const sy = this.scapegoatNpc.sprite.y;
+    let count = 0;
+    
+    for (const npc of allNpcs) {
+      if (npc === this.scapegoatNpc) continue;
+      if (!npc.sprite) continue;
+      
+      const dx = npc.sprite.x - sx;
+      const dy = npc.sprite.y - sy;
+      if (dx * dx + dy * dy < radius * radius) {
+        count++;
+      }
+    }
+    
+    return count;
   }
 
   /**
@@ -452,24 +461,24 @@ export class ScapegoatLevel extends ILevel {
 
   /**
    * 🐐 Vérifier la condition d'isolation (victoire)
+   * Le bouc émissaire est isolé quand aucun NPC n'est dans son rayon
    */
   updateIsolationCheck(delta) {
     if (!this.scapegoatNpc || !this.scapegoatNpc.sprite) return;
     
-    // Utiliser le centre INITIAL (stable) pour la condition de victoire
-    const scapegoatDistance = this.getScapegoatDistanceFromInitialCenter();
+    this.nearbyNpcCount = this.countNpcsNearScapegoat();
     const wasIsolated = this.isScapegoatIsolated;
-    this.isScapegoatIsolated = scapegoatDistance >= this.levelConfig.isolationDistance;
+    this.isScapegoatIsolated = this.nearbyNpcCount <= this.levelConfig.maxNearbyNpcs;
     
     if (this.isScapegoatIsolated) {
       this.isolationTimer += delta;
       
       if (!wasIsolated) {
-        console.log(`🐐 Bouc émissaire ISOLÉ ! Distance: ${scapegoatDistance.toFixed(0)}px (seuil: ${this.levelConfig.isolationDistance}px)`);
+        console.log(`🐐 Bouc émissaire ISOLÉ ! 0 NPC dans un rayon de ${this.levelConfig.isolationRadius}px`);
       }
     } else {
       if (wasIsolated && this.isolationTimer > 0) {
-        console.log(`🐐 Bouc émissaire revenu dans la zone...`);
+        console.log(`🐐 Isolation perdue — ${this.nearbyNpcCount} NPC(s) proches`);
       }
       this.isolationTimer = 0;
     }
@@ -633,11 +642,9 @@ export class ScapegoatLevel extends ILevel {
       }
     }
     
-    // 🐐 FALLBACK : si le level n'est pas actif après 10s, forcer l'activation
     if (!this.levelActive && time > 10000) {
       console.warn('⚠️ Fallback: activation forcée du level après 10s');
       this.levelActive = true;
-      this.initialGroupCenter = this.getGroupCenter();
       this.isolationTimer = 0;
       this.isScapegoatIsolated = false;
       if (this.player && this.player.playerState) {
@@ -646,26 +653,18 @@ export class ScapegoatLevel extends ILevel {
       }
     }
     
-    // 🐐 DEBUG : Log TOUJOURS toutes les secondes (diagnostic complet)
-    if (time - this._lastDebugLog > 1000) {
+    if (time - this._lastDebugLog > 2000) {
       this._lastDebugLog = time;
-      const distFromInitial = this.getScapegoatDistanceFromInitialCenter();
-      const distFromGroup = this.getScapegoatDistanceFromGroup();
-      const threshold = this.levelConfig.isolationDistance;
+      const nearby = this.nearbyNpcCount;
+      const radius = this.levelConfig.isolationRadius;
       const isolated = this.isScapegoatIsolated;
       const timer = this.isolationTimer;
       const duration = this.levelConfig.isolationDuration;
-      const active = this.levelActive;
-      const hasOutro = !!this.outroSequence;
-      const outroActive = this.outroSequence ? this.outroSequence.isActive : false;
-      const centerOK = !!this.initialGroupCenter;
       
       console.log(
-        `🐐 [${active ? 'ACTIF' : '⏳INTRO'}] ` +
-        `Dist: ${distFromInitial.toFixed(0)}/${threshold}px | ` +
-        `${isolated ? `ISOLÉ ${(timer/duration*100).toFixed(0)}% (${(timer/1000).toFixed(1)}s/${(duration/1000).toFixed(0)}s)` : 'pas isolé'} | ` +
-        `centre:${centerOK ? `(${this.initialGroupCenter.x.toFixed(0)},${this.initialGroupCenter.y.toFixed(0)})` : 'NULL'} | ` +
-        `outro:${hasOutro}/${outroActive}`
+        `🐐 [${this.levelActive ? 'ACTIF' : '⏳INTRO'}] ` +
+        `${nearby} NPC(s) dans ${radius}px | ` +
+        `${isolated ? `ISOLÉ ${(timer/duration*100).toFixed(0)}% (${(timer/1000).toFixed(1)}s/${(duration/1000).toFixed(0)}s)` : 'pas isolé'}`
       );
     }
   }
@@ -706,7 +705,7 @@ export class ScapegoatLevel extends ILevel {
     
     this.player = null;
     this.scapegoatNpc = null;
-    this.initialGroupCenter = null;
+    this.nearbyNpcCount = 0;
     this.levelActive = false;
     this.isolationTimer = 0;
     this.isScapegoatIsolated = false;
@@ -719,9 +718,6 @@ export class ScapegoatLevel extends ILevel {
   // ================================
 
   getLevelStats() {
-    const distFromInitial = this.getScapegoatDistanceFromInitialCenter();
-    const distFromGroup = this.getScapegoatDistanceFromGroup();
-    
     return {
       name: this.levelConfig.name,
       type: 'SCAPEGOAT',
@@ -729,9 +725,8 @@ export class ScapegoatLevel extends ILevel {
       description: this.levelConfig.description,
       npcCount: this.levelConfig.npcCount,
       scapegoatIsolated: this.isScapegoatIsolated,
-      scapegoatDistFromInitial: distFromInitial.toFixed(0),
-      scapegoatDistFromGroup: distFromGroup.toFixed(0),
-      isolationThreshold: this.levelConfig.isolationDistance,
+      nearbyNpcCount: this.nearbyNpcCount,
+      isolationRadius: this.levelConfig.isolationRadius,
       isolationProgress: Math.min(100, (this.isolationTimer / this.levelConfig.isolationDuration * 100)).toFixed(1) + '%',
       isolationRequired: (this.levelConfig.isolationDuration / 1000).toFixed(1) + 's'
     };

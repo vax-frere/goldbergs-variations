@@ -28,6 +28,9 @@ export class Player extends BaseEntity {
     // Ajustement de l'échelle à 0.6
     this.sprite.setScale(0.6);
     
+    // Aura violette sombre derrière le joueur
+    this._createAura(scene);
+    
     // Système d'état du joueur
     this.playerState = new PlayerState(this);
     this.inputEnabled = false; // Désactivé par défaut
@@ -85,6 +88,29 @@ export class Player extends BaseEntity {
     }
     
     console.log('🎮 Player SOLID créé avec composants spécialisés');
+  }
+
+  _createAura(scene) {
+    this.aura = scene.add.graphics();
+    this.aura.setDepth(999);
+    this._auraLayers = [
+      { radius: 70, color: 0x2a0845, alpha: 0.06 },
+      { radius: 55, color: 0x320a50, alpha: 0.08 },
+      { radius: 40, color: 0x3d0f5c, alpha: 0.10 },
+      { radius: 25, color: 0x4a1568, alpha: 0.12 },
+    ];
+  }
+
+  _updateAura() {
+    if (!this.aura || !this.sprite) return;
+    this.aura.clear();
+    const px = this.sprite.x;
+    const py = this.sprite.y;
+    for (const l of this._auraLayers) {
+      this.aura.fillStyle(l.color, l.alpha);
+      this.aura.fillCircle(px, py, l.radius);
+    }
+    this.aura.setDepth(this.sprite.depth - 1);
   }
 
   // ================================
@@ -459,6 +485,8 @@ export class Player extends BaseEntity {
     // IMPORTANT: delta brut pour la vitesse réelle
     this.animationBehavior.update(delta);
     this.trailBehavior.update(clampedDelta);
+    
+    this._updateAura();
   }
 
   /**
@@ -492,6 +520,11 @@ export class Player extends BaseEntity {
     
     if (this.trailBehavior) {
       this.trailBehavior.destroy();
+    }
+    
+    if (this.aura) {
+      this.aura.destroy();
+      this.aura = null;
     }
     
     // Se retirer du système de tri par profondeur
