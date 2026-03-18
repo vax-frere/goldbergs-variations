@@ -4,16 +4,8 @@
   box-sizing: border-box;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  text-rendering: optimizeLegibility;
-  backface-visibility: hidden;
-  transform-style: preserve-3d;
-  perspective: 1000;
-  will-change: transform, opacity;
 }
 
-/* @font-face retiré: la police est chargée via FontFace dans GameScene avec BASE_URL pour GH Pages */
-
-/* Élément caché qui force le chargement de Caveat via CSS */
 .font-preloader {
   position: absolute;
   width: 0;
@@ -38,11 +30,4 @@ body {
 #root {
   width: 100%;
   height: 100vh;
-}
-
-/* Appliquer les optimisations aux éléments animés */
-.motion-div {
-  will-change: transform, opacity;
-  transform: translateZ(0);
-  backface-visibility: hidden;
 }

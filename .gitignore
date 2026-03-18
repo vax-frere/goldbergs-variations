@@ -1,6 +1,4 @@
 node_modules
-.vscode
-public/data/
-**/*/.DS_Store
-public/.DS_Store
-/public/img/space.hdr
+dist
+.DS_Store
+*.blend1

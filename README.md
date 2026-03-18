@@ -1,58 +1,79 @@
-# R3F Force Graph Demo
+# Trolling Game
 
-Ce projet est une démonstration d'un graphe de force 3D utilisant React Three Fiber (R3F) et r3f-forcegraph.
+A 2D top-down game built with Phaser 3 and React. The player navigates levels, shouts to attract NPCs, and leads them through various objectives.
 
-## Prérequis
-
-- Node.js 20.x
-- Yarn
-
-## Installation
-
-1. Clonez ce dépôt
-2. Naviguez vers le dossier du projet
-3. Installez les dépendances avec Yarn :
+## Quick Start
 
 ```bash
-cd joshua-exhibition-graph/client-new
-nvm use 20  # Assurez-vous d'utiliser Node.js 20.x
-yarn
+npm install
+npm run dev
 ```
 
-## Développement
+## Controls
 
-Pour lancer le serveur de développement :
+- **Arrow keys / WASD** — Move
+- **Shift** — Sprint
+- **Space** — Shout (attracts nearby NPCs)
 
-```bash
-yarn dev
+## Levels
+
+| Level | Description |
+|---|---|
+| **Scapegoat** | Default starting level |
+| **Pied Piper** | Lead followers to objectives |
+| **Shepherd's Gate** | Push NPCs into goals |
+
+Switch levels via console: `window.game.switchLevel("piper")`
+
+## Architecture
+
+```
+src/pages/TrollingGame/
+├── TrollingGame.jsx          # React wrapper
+├── core/                     # Engine layer
+│   ├── Game.js               # Phaser config + debug API
+│   ├── GameScene.js          # Main scene (preload, create, update)
+│   ├── AmbientScene.js       # Persistent ambient audio
+│   ├── EntityManager.js      # Entity registry
+│   ├── CollisionSystem.js    # Physics collisions
+│   ├── SoundManager.js       # Audio pool
+│   ├── PlayerState.js        # Player state machine
+│   └── interfaces.js         # Shared types
+├── entities/                 # Game objects
+│   ├── BaseEntity.js
+│   ├── Player.js
+│   ├── Npc.js
+│   ├── Wall.js
+│   ├── behaviors/            # Composable behaviors (shout, trail, animation, etc.)
+│   ├── npc/                  # NPC sub-controllers (state, movement, follow, migration)
+│   └── player/               # Player sub-controllers (movement, collision, followers)
+├── levels/                   # Level definitions
+│   ├── ScapegoatLevel.js
+│   ├── PiedPiperLevel.js
+│   └── ShepherdsGateLevel.js
+└── systems/                  # Game systems
+    ├── NpcSpawner.js
+    ├── FootstepsSystem.js
+    ├── DepthSortingSystem.js
+    ├── FlowFieldService.js
+    ├── GroupFleeingSystem.js
+    ├── IntroSequence.js
+    ├── OutroSequence.js
+    └── TutorialTextManager.js
 ```
 
-L'application sera disponible à l'adresse [http://localhost:5173](http://localhost:5173).
+## Tech Stack
 
-## Fonctionnalités
+- **Phaser 3** — Game engine (physics, sprites, audio)
+- **React 19** — Mounting wrapper
+- **Vite** — Dev server & build
 
-- Graphe de force 3D interactif
-- Génération aléatoire de nœuds et de liens
-- Navigation 3D avec contrôles de caméra (zoom, rotation, panoramique)
-- Animation automatique du graphe
+## Debug Console
 
-## Technologies utilisées
-
-- React 19
-- Vite 6
-- React Three Fiber (R3F)
-- Three.js
-- r3f-forcegraph
-
-## Structure du projet
-
-- `src/App.jsx` - Composant principal de l'application
-- `src/components/ForceGraph.jsx` - Composant du graphe de force
-- `src/App.css` - Styles CSS pour l'application
-- `src/index.css` - Styles CSS globaux
-
-## Contrôles
-
-- **Rotation** : Cliquez et faites glisser avec la souris
-- **Zoom** : Utilisez la molette de la souris
-- **Panoramique** : Cliquez avec le bouton droit de la souris et faites glisser
+```js
+window.game.toggleDebug()          // Physics colliders + shout radius
+window.game.toggleNpcDebug()       // NPC destination arrows
+window.game.toggleShoutRadiusDebug() // Shout radius only
+window.game.getLevelInfo()         // Current level stats
+window.game.resetTutorial()       // Re-show tutorial
+```

@@ -4,34 +4,13 @@
     <meta charset="UTF-8" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta
-      name="description"
-      content="Interactive data visualization exploring the story of Joshua Ryne Goldberg, a nihilistic troll who manipulated the Internet under multiple identities. A galaxy of 40,000 posts revealing a fragmented mind confronting Internet's contradictions."
-    />
-    <title>Goldberg's Variations</title>
-    <!-- Google Fonts -->
+    <title>Trolling Game</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@400;500;600&display=block" rel="stylesheet">
-    <!-- Preload local Caveat (relative path works both in dev and with GH Pages base) -->
     <link rel="preload" href="fonts/caveat.ttf" as="font" type="font/ttf" crossorigin>
-    <!-- Google tag (gtag.js) -->
-    <script
-      async
-      src="https://www.googletagmanager.com/gtag/js?id=G-QNX5WSTRSR"
-    ></script>
-    <script>
-      window.dataLayer = window.dataLayer || [];
-      function gtag() {
-        dataLayer.push(arguments);
-      }
-      gtag("js", new Date());
-
-      gtag("config", "G-QNX5WSTRSR");
-    </script>
   </head>
   <body>
-    <!-- Préchargeur CSS caché pour forcer le chargement de la police Caveat dès le parse -->
     <div aria-hidden="true" class="font-preloader">you them YOU THEM 0123456789 !?&.,</div>
     <div id="root"></div>
     <script type="module" src="/src/main.jsx"></script>
