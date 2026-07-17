@@ -2,6 +2,7 @@
 
 import fs from 'fs';
 import path from 'path';
+import { optimize } from 'svgo';
 
 /**
  * 🎨 Générateur de Spritesheet SVG Multi-Animations
@@ -354,7 +355,24 @@ function main() {
   spritesheetSvg = spritesheetSvg
     .replace(/\s+inkscape:[^=\s]+="[^"]*"/g, '')
     .replace(/stroke-width="1\.0"/g, ' stroke-width="3.0"');
-  
+
+  // Optimisation SVGO: réduit la précision des coordonnées et simplifie les tracés.
+  // Sans ça le spritesheet Freestyle brut dépasse ~18 Mo, ce qui casse le chargement
+  // XHR de Phaser sur GitHub Pages (gros fichier gzip -> échec réseau, texture "missing").
+  // Les sprites font 120x200px, la précision entière est largement suffisante.
+  console.log('🗜️  Optimisation SVGO (précision entière)...');
+  const beforeSize = Buffer.byteLength(spritesheetSvg, 'utf8');
+  const optimized = optimize(spritesheetSvg, {
+    multipass: true,
+    floatPrecision: 0,
+  });
+  spritesheetSvg = optimized.data;
+  const afterSize = Buffer.byteLength(spritesheetSvg, 'utf8');
+  const reduction = ((1 - afterSize / beforeSize) * 100).toFixed(1);
+  console.log(
+    `🗜️  ${(beforeSize / 1e6).toFixed(1)} Mo -> ${(afterSize / 1e6).toFixed(1)} Mo (-${reduction}%)`
+  );
+
   // Écrire le fichier SVG
   fs.writeFileSync(OUTPUT_FILE, spritesheetSvg, 'utf8');
   console.log(`✅ Spritesheet sauvegardé : ${OUTPUT_FILE}`);
